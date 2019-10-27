@@ -1,0 +1,104 @@
+# Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
+[Bb]in/
+[Oo]bj/
+ext/
+.architect
+classic.json
+classic.jsonp
+modern.json
+modern.jsonp
+resources/sass/.sass-cache/
+resources/.arch-internal-preview.css
+.arch-internal-preview.css
+.sencha/
+generatedFiles/
+cordova/
+node_modules/
+upload/
+VMMS.Web.Host/[Cc]ard/
+VMMS.Web.Host/[Cc]ard[Bb]ackup/
+
+# Logs
+Logs/
+
+# Generated files
+project.lock.json
+.vs/
+.dotnet/
+.idea/
+
+# Nuget packages
+nupkg/*.nupkg
+nupkg/push.bat
+
+# Profile images
+ProfileImages/
+
+# mstest test results
+TestResults
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+*_i.c
+*_p.c
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.log
+*.vspscc
+*.vssscc
+.builds
+
+# Visual C++ cache files
+ipch/
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+
+# Guidance Automation Toolkit
+*.gpState
+
+# ReSharper is a .NET coding add-in
+_ReSharper*
+
+# Click-Once directory
+publish
+
+# Publish Web Output
+*.Publish.xml
+
+# Windows Azure Build Output
+csx
+*.build.csdef
+
+# Windows Store app package directory
+AppPackages/
+
+# Others
+[Bb]in
+[Oo]bj
+workspace/[Bb]uild/
+/temp/
+TestResults
+[Tt]est[Rr]esult*
+*.Cache
+ClientBin
+[Ss]tyle[Cc]op.*
