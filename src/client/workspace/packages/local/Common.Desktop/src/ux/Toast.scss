@@ -1,0 +1,11 @@
+.uxToast{
+    border: 1px solid $base-color;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+
+    .x-toast-body-el{
+        background-color:material-color('grey', '50');
+        color: #111;
+    }
+}

@@ -1,0 +1,55 @@
+.x-uploadpanel{
+    .x-inner-el{
+        height: 100%;
+        width: 100%;
+        padding: 10px;
+        overflow: hidden;
+
+        .x-body-el{
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            display: block;
+            border:1px dashed #bdbdbd;
+
+            .x-text-el{
+                position: absolute;
+                left: 20px;
+                height: 24px;
+                line-height: 24px;
+                text-align: center;
+                z-index: 2;
+            }
+            .x-text-el p{
+                padding: 0;
+                margin: 0;
+                text-align: center;
+            }
+            .x-image-el{
+                left: 0;
+                top:0;
+                position: absolute;
+                z-index: 3;
+            }
+            .x-progress{
+                left: 20px;
+                height: 20px;                
+                position: absolute;
+                z-index: 3;
+            }
+            .x-loading-el{
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-image: url(images/tree/loading.gif);
+                background-repeat: no-repeat;
+                background-position-x: center;
+                background-position-y: center;
+                background-size: 30px;
+                position: absolute;
+                z-index: 4;
+            }
+        }    
+    }
+}

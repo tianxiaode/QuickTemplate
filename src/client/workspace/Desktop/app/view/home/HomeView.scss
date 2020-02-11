@@ -1,0 +1,30 @@
+
+
+//Logo
+
+.sencha-logo {
+  background-color: $base-color;
+  height: 65px;
+  font-size: 24px;
+  color: $lightest-color;
+
+  .main-logo {
+      line-height: 65px;
+
+      img {
+          margin-left: 22px;
+          margin-right: 22px;
+          top: 8px;
+          position: relative;
+      }
+  }
+}
+
+.headerMenu {
+  &.x-pressed{
+    .x-inner-el {
+      background-color:var(--alt-background-color);
+    }
+  }
+} 
+

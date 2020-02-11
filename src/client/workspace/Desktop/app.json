@@ -17,6 +17,7 @@
      */
     "requires": [
         "font-awesome",
+        "Common.Overrides",
         "Common.Data",
         "Common.Shared",
         "Common.Desktop",
@@ -208,7 +209,11 @@
      */
     "js": [
         {
+            "path": "index.js"
+        },
+        {
             "path": "${framework.dir}/build/ext-modern-all-debug.js"
+            ,"bundle": true
         },
         {
             "path": "app.js",

@@ -1,0 +1,12 @@
+.auth-locked-body-el {
+    background-image: url('Common.Shared/images/lock-screen-background.jpg');
+    background-size: cover;
+
+    .x-panel-body-el.auth-locked-body-el {
+        background-color: transparent;
+    }
+}
+.auth-trigger-icon::before{
+    color: material-color('grey', '300');
+    font-size:30px !important;
+}

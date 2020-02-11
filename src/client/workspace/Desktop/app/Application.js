@@ -4,7 +4,7 @@
  * initialization details.
  */
 Ext.define('Desktop.Application', {
-    extend: 'Ext.app.Application',
+    extend: 'Common.Shared.Application',
 
     name: 'Desktop',
 
@@ -15,13 +15,35 @@ Ext.define('Desktop.Application', {
         }
     },
 
-    onAppUpdate: function () {
-        Ext.Msg.confirm('Application Update', 'This application has an update, reload?',
-            function (choice) {
-                if (choice === 'yes') {
-                    window.location.reload();
-                }
-            }
-        );
-    }
+    requires: [
+        'Ext.MessageBox',
+        'Common.Overrides.shared.*',
+        'Common.Overrides.desktop.*',
+        'Common.Shared.util.Config',
+        'Common.Shared.util.Url',
+        'Common.Shared.util.AccessControl',
+        'Common.Shared.util.DialogManager',
+        'Common.Shared.util.Failed',
+        'Common.Shared.util.Headers',
+        'Common.Shared.util.SignalR',
+        'Common.Shared.util.Download',
+        'Common.Shared.util.Enums',
+        'Desktop.view.home.HomeView',
+        'Common.Desktop.viewport.ViewportController',
+        'Common.Desktop.pages.*',
+        'Common.Desktop.authentication.*',
+        'Common.Desktop.ux.Toast',
+    ],
+
+    stores: [
+        'Common.Data.store.NavigationTree',
+        'Common.Data.store.Enums',
+    ],
+
+
+    launch: function(profile) {
+        Ext.ariaWarn = Ext.emptyFn;
+        Ext.Viewport.getController().onLaunch();
+    },
+
 });
