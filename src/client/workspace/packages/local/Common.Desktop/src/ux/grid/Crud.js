@@ -1,17 +1,19 @@
-Ext.define('Common.Desktop.view.base.grid.Grid',{
+Ext.define('Common.Desktop.ux.grid.Crud',{
     extend: 'Ext.grid.Grid',
-    xtype: 'baseGrid',
+    xtype: 'crudgrid',
 
     requires: [
         'Ext.layout.HBox',
         'Common.Shared.ux.field.Search',
-        'Common.Desktop.view.base.grid.GridController',
-        'Common.Desktop.view.base.form.Form'
+        'Common.Desktop.ux.grid.CrudController',
+        'Common.Desktop.mixin.grid.DeletedMessageTemplate',
     ],
 
     mixins:[
         'Common.Desktop.mixin.grid.StandardButtons',
     ],
+
+    isCrudGrid: true,
 
     config:{
         //自定义属性
@@ -40,14 +42,12 @@ Ext.define('Common.Desktop.view.base.grid.Grid',{
 
     autoText:true,
     emptyText: I18N.EmptyText,    
-    //controller: 'baseGrid',
-    //viewModel: 'baseGrid',
 
     selectable:{
         checkbox: true
     },
 
-    controller: 'baseGrid',
+    controller: 'crudgrid',
 
     bind: { store: '{mainStore}'},        
 

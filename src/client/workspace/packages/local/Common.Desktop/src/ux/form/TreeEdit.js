@@ -1,14 +1,14 @@
-Ext.define('Common.Desktop.view.base.tree.TreeEdit',{
-    extend: 'Common.Desktop.view.base.form.Form',
-    xtype: 'treeEditView',
+Ext.define('Common.Desktop.ux.form.TreeEdit',{
+    extend: 'Common.Desktop.ux.form.Dialog',
+    xtype: 'treeeditview',
 
     requires:[
         'Ext.field.Display',
         'Common.Data.model.SearchTree',
-        'Common.Desktop.view.base.tree.TreeEditController'
+        'Common.Desktop.ux.form.TreeEditController'
     ],
 
-    controller: 'baseTreeEdit',
+    controller: 'treeedit',
     entityName: 'SearchTree',
     items:[
         { xtype: 'hiddenfield', name:'id'},

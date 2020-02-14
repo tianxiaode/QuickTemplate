@@ -1,6 +1,6 @@
-Ext.define('Common.Desktop.view.base.tree.TreeModel',{
+Ext.define('Common.Desktop.ux.grid.TreeModel',{
     extend: 'Ext.app.ViewModel',
-    alias: 'viewmodel.baseTree',
+    alias: 'viewmodel.uxtree',
 
     requires:[
         'Common.Data.model.SearchTree',
@@ -50,7 +50,6 @@ Ext.define('Common.Desktop.view.base.tree.TreeModel',{
             },
             proxy: {
                 type: 'format',
-                //url: URI.get('productCategory', 'read')
             }
         },
         searchTreeStore:{
@@ -59,7 +58,6 @@ Ext.define('Common.Desktop.view.base.tree.TreeModel',{
             pageSize: 0,
             proxy: {
                 type: 'format',
-                //url: URI.get('productCategory', 'getAllQuery')
             }
         }
     }

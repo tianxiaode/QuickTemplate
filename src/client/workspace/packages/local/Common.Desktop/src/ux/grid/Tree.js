@@ -1,6 +1,6 @@
-Ext.define('Common.Desktop.view.base.tree.Tree',{
+Ext.define('Common.Desktop.ux.grid.Tree',{
     extend: 'Ext.Panel',
-    xtype: 'baseTree',
+    xtype: 'uxtree',
 
     requires: [
         'Ext.panel.Resizer',
@@ -9,7 +9,7 @@ Ext.define('Common.Desktop.view.base.tree.Tree',{
         'Ext.Toolbar',
         'Ext.dataview.List',
         'Common.Shared.ux.field.Search',
-        'Common.Desktop.view.base.tree.TreeController',
+        'Common.Desktop.ux.grid.TreeController',
         'Common.Desktop.view.base.tree.TreeEdit'
     ],
 
@@ -32,7 +32,7 @@ Ext.define('Common.Desktop.view.base.tree.Tree',{
         useSearchField: true
     },
 
-    controller: 'baseTree',
+    controller: 'uxtree',
 
     
     layout: {

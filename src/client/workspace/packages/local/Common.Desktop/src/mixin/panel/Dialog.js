@@ -1,10 +1,7 @@
-/**
- * 使用表单面板作为对话框
- */
-Ext.define('Common.Desktop.ux.panel.FormDialog', {
-    extend: 'Ext.form.Panel',
-    xtype: 'uxformdialog',
+Ext.define('Common.Desktop.mixin.panel.Dialog', {
+    mixinId: 'dialogmixin',
 
+    ariaRole: 'dialog',
     modal:true,
     minWidth: 600,
     width: 'auto',
@@ -29,10 +26,10 @@ Ext.define('Common.Desktop.ux.panel.FormDialog', {
         Ext.baseCSSPrefix + 'paneltool',
         Ext.baseCSSPrefix + 'dialogtool'
     ],
+
     header:{
         border: false
     },
-
 
     classCls: Ext.baseCSSPrefix + 'dialog', 
 

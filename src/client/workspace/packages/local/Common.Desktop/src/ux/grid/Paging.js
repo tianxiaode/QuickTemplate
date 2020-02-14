@@ -1,11 +1,11 @@
-Ext.define('Common.Desktop.view.base.grid.PagingGrid',{
-    extend: 'Common.Desktop.view.base.grid.Grid',
-    xtype: 'basePagingGrid',
+Ext.define('Common.Desktop.ux.grid.Paging',{
+    extend: 'Common.Desktop.ux.grid.Crud',
+    xtype: 'paginggrid',
 
     isPagingGrid: true,
 
     requires:[
-        'Common.Desktop.view.base.grid.PagingGridController'
+        'Common.Desktop.ux.grid.PagingController'
     ],
 
     config:{
@@ -29,6 +29,6 @@ Ext.define('Common.Desktop.view.base.grid.PagingGrid',{
       
     },
 
-    controller: 'basePagingGrid'
+    controller: 'paginggrid'
 
 })

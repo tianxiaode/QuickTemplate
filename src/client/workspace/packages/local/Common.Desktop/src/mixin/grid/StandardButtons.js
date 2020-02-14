@@ -2,7 +2,7 @@
  * 为面板混入操作按钮
  */
 Ext.define('Common.Desktop.mixin.grid.StandardButtons', {
-    mixinId: 'standardButtonsMixin',
+    mixinId: 'standardbuttonsmixin',
 
 
     requires:[
@@ -15,6 +15,7 @@ Ext.define('Common.Desktop.mixin.grid.StandardButtons', {
         'Common.Desktop.ux.button.Last',
         'Common.Desktop.ux.button.Create',
         'Common.Desktop.ux.button.Edit',
+        'Common.Desktop.ux.CountMessage',
     ],
 
     config:{
@@ -111,7 +112,7 @@ Ext.define('Common.Desktop.mixin.grid.StandardButtons', {
             },
             countMessage:{
                 weight: 130,
-                xtype: 'component'
+                xtype: 'uxcountmessage'
             }    
         }
 

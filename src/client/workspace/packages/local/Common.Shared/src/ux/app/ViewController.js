@@ -16,6 +16,14 @@ Ext.define('Common.Shared.ux.app.ViewController',{
         if(form.unmask) form.unmask();
         if(form.setMasked) form.setMasked(false);
         FAILED.form(form, result,data);
-    }
+    },
+
+    /**
+     * 获取实体名称
+     */
+    getEntityName(){
+        return this.getView().getEntityName();
+    },
+
 
 })

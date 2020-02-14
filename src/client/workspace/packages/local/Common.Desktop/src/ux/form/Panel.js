@@ -1,9 +1,9 @@
-Ext.define('Common.Desktop.view.base.form.Form',{
+Ext.define('Common.Desktop.ux.form.Panel',{
     extend: 'Ext.form.Panel',
-    xtype: 'baseForm',
+    xtype: 'uxform',
 
     mixins:[
-        'Common.Desktop.view.base.form.FormController',
+        'Common.Desktop.ux.form.PanelController',
     ],
  
     requires:[
@@ -21,38 +21,8 @@ Ext.define('Common.Desktop.view.base.form.Form',{
         'Common.Desktop.ux.Toast'
     ],
 
-    ariaRole: 'dialog',
-    modal:true,
-    minWidth: 600,
-    width: 'auto',
-    height: 'auto',
-    closable:true,
-    closeAction: 'onHide',
-    hideMode: 'display',
-    closeToolText: I18N.CloseToolText,
-    floated: true,
-    centered: true,
-    border: true,
-    bodyBorder: false,
-    shadow: true,
     trackResetOnLoad: true,
     defaultType: 'textfield',
-    buttonsAlign: 'right',    
-    focusable: false,
-    tabIndex: -1,
-  
-
-    headerCls: Ext.baseCSSPrefix + 'dialogheader',
-    titleCls: Ext.baseCSSPrefix + 'dialogtitle',
-    toolCls: [
-        Ext.baseCSSPrefix + 'paneltool',
-        Ext.baseCSSPrefix + 'dialogtool'
-    ],
-    header:{
-        border: false
-    },
-
-    classCls: Ext.baseCSSPrefix + 'dialog', 
 
     defaults: {
         labelWidth: 100
@@ -74,11 +44,6 @@ Ext.define('Common.Desktop.view.base.form.Form',{
             reset: { text: I18N.Reset, weight: 30 , ui: 'soft-purple', handler: 'onReset'},
             cancel: {weight: 40, ui: 'soft-grey', text: I18N.Cancel, handler: 'onHide'}
         },
-        buttonDefaults:{
-            ui: 'action',
-            margin: '0 5',
-            style: 'line-height:24px;'
-        }        
     },
 
     buttons:{ saveAndNew: true,save: true, reset: true, cancel: true},
@@ -117,14 +82,25 @@ Ext.define('Common.Desktop.view.base.form.Form',{
         me.hide();
     },
 
+    /**
+     * 添加记录
+     */
     addRecord: function(){
         this.getController().addRecord();
     },
 
+    /**
+     * 编辑记录
+     * @param {记录}} record 
+     */
     editRecord: function (record){
         this.getController().editRecord(record);
     },
 
+    /**
+     * 应用默认标题
+     * @param {标题} title 
+     */
     applyDefaultTitle(title){
         if(!Ext.isEmpty(title)){
             title = I18N[title];            

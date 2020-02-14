@@ -2,7 +2,7 @@
  * 将分页操作混入视图控制器
  */
 Ext.define('Common.Desktop.mixin.grid.Paging', {
-    mixinId: 'pagingGridMixin',
+    mixinId: 'paginggridmixin',
 
     emptyPageData: {
         total: 0,

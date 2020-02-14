@@ -1,14 +1,19 @@
-Ext.define('Common.Desktop.view.base.tree.TreeController',{
-    extend: 'Ext.app.ViewController',
-    alias: 'controller.baseTree',
+Ext.define('Common.Desktop.ux.grid.TreeController',{
+    extend: 'Common.Shared.ux.app.ViewController',
+    alias: 'controller.uxtree',
 
     deleteMessageField: 'displayName',
 
-    init:function(){
-        let me = this;
-        let view = me.getView();
-        let listView = me.listView = view.down('list');
-        let treeView = me.treeView = view.down('tree');
+    mixins:[
+        'Common.Desktop.mixin.grid.ButtonState',
+        'Common.Desktop.mixin.grid.DeletedMessageTemplate',
+    ],
+
+    init(){
+        let me = this,
+            view = me.getView(),
+            listView = me.listView = view.down('list'),
+            treeView = me.treeView = view.down('tree');
         me.currentView = treeView;
         listView.on('storechange', me.onSearchTreeStoreChange, me);
         treeView.on('storechange', me.onTreeStoreChange, me);
@@ -23,86 +28,32 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         ]);
     },
 
+    /**
+     * 根据查询值高亮显示
+     * @param {值} value 
+     */
     onListViewRenderItem(value){
-        let store = this.searchTreeStore;
-        let query = store.getProxy().extraParams.query;
+        let store = this.searchTreeStore,
+            query = store.getProxy().extraParams.query;
         return value.replace(new RegExp(query,'ig'), '<span style="color:red;">' + query +'</span>');
     },
 
-    //获取实体名称
-    getEntityName: function(){
-        return this.getView().getEntityName();
-    },
-
-    //获取当前选择
-    getCurrentSelections: function(){
-        let me = this;
-        let view = me.currentView;
+    /**
+     * 获取当前选择
+     */
+    getCurrentSelections(){
+        let me = this,
+            view = me.currentView;
         return view.getSelectable().getSelectedRecords();
     },
 
-    //获取按钮
-    getButton: function(itemId){
-        return this.getView().down('#' + itemId);
-    },
-
-
-    //设置按钮禁用状态
-    setButtonDisabled: function(itemId,disabled){
-        let button = this.getButton(itemId);
-        if(button) button.setDisabled(disabled);
-    },
-
-    //设置按钮显示状态
-    setButtonHidden: function(itemId,hidden){
-        let button = this.getButton(itemId);
-        if(button) button.setHidden(hidden);
-    },
-
-    //初始化CRUD按钮的显示
-    initCrudButtonHiddenState:function(){
-        let me = this
-        let [view, entityName] = [me.getView() ,me.getEntityName()];
-        me.setButtonHidden('create', !ACL.isGranted('Pages.'+ entityName + '.Create') || !view.getUseCreateButton());
-        me.setButtonHidden('edit', !ACL.isGranted('Pages.'+ entityName + '.Edit') || !view.getUseEditButton());
-        me.setButtonHidden('delete', !ACL.isGranted('Pages.'+ entityName + '.Delete') || !view.getUseDeleteButton());
-    },
-
-    editButtonStateValidation: function(selections){
-        if(selections.length <= 0) return true;
-        if(this.currentView.xtype === 'tree'){
-            let select = selections[0];
-            if(select.getId() <=0) return true;
-        }
-        return false;
-    },
-
-    deleteButtonStateValidation(selections){
-        if(selections.length <= 0) return true;
-        if(this.currentView.xtype === 'tree'){
-            let select = selections[0];
-            if(select.getId() <=0) return true;
-            if(!select.isLeaf()) return true;    
-        }
-        return false;
-    },
-
-
-    //附加编辑按钮状态验证
-    additionalEditButtonStateValidation: function(){return false},
-    //附加删除按钮状态验证
-    additionalDeleteButtonStateValidation: function(){return false},
     /**
-     * 更新CRUD按钮状态
+     * 绑定查询存储时，绑定选择事件
+     * @param {*} sender 
+     * @param {*} store 
+     * @param {*} oldStore 
+     * @param {*} eOpts 
      */
-    updateCrudButtonState:function(){
-        let me = this;
-        let selections = me.getCurrentSelections();
-        me.setButtonDisabled('edit',  me.additionalEditButtonStateValidation(selections) || me.editButtonStateValidation(selections));
-        me.setButtonDisabled('delete',me.additionalDeleteButtonStateValidation(selections) || me.deleteButtonStateValidation(selections));
-    },
-
-    //绑定搜索store时，绑定选择事件
     onSearchTreeStoreChange(sender, store, oldStore, eOpts){
         let me = this;
         me.searchTreeStore = store;
@@ -113,12 +64,16 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         //me.onRefreshStore();
     },
 
-    //搜索store加载前取消所有选择
+    /**
+     * 查询存储加载前取消所以选择
+     */
     onSearchTreeStoreBeforeLoad(){
         this.listView.getSelectable().deselectAll();
     },
 
-    //搜索store加载后选择默认记录
+    /**
+     * 查询存储加载后选择默认记录
+     */
     onSearchTreeStoreLoad(store, records, successful, operation, eOpts ){
         if(records.length>0){
             let record = records[0]
@@ -126,6 +81,10 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         }
     },
 
+    /**
+     * 
+     * @param {初始化根节点} store 
+     */
     initRoot(store){
         let root = store.getRoot();
         root.set('displayName',I18N.All + I18N[this.getEntityName()]);
@@ -133,7 +92,13 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         return root;
     },
 
-    //绑定treestore时，绑定选择事件
+    /**
+     * 绑定树村上时，绑定选择时间
+     * @param {} sender 
+     * @param {*} store 
+     * @param {*} oldStore 
+     * @param {*} eOpts 
+     */
     onTreeStoreChange(sender, store, oldStore, eOpts){
         let me = this;
         me.treeStore = store;
@@ -146,36 +111,57 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         me.onRefreshStore();
     },
 
-    //树store加载后选择第一个记录
+    /**
+     * 树加载后的操作
+     * @param {}} store 
+     * @param {*} records 
+     * @param {*} successful 
+     * @param {*} operation 
+     * @param {*} node 
+     */
     onTreeStoreLoad(store, records, successful, operation, node){
-        // let view = this.treeView;
-        // let selectable = view.getSelectable();
-        // let selects = selectable.getSelectedRecords();
-        if(records.length === 0){
+        //如果节点没有子节点，设置节点为叶子节点
+        if(successful && records.length === 0){
             node.set('leaf',true);
             node.commit();
         }
     },
 
-    //绑定store的select事件
+    /**
+     * 绑定选择事件
+     * @param {*} view 
+     */
     bindSelectEvents(view){
         let me = this;
         view.on('select', me.onViewSelect, me);
         view.on('deselect', me.onViewDeselect, me);
     },
 
+    /**
+     * 选择节点
+     * @param {} sender 
+     * @param {*} select 
+     * @param {*} eOpts 
+     */
     //选择记录时执行的操作
     onViewSelect(sender,select, eOpts){
         this.setViewModelTreeSelectValue(Ext.isArray(select) ? select[0] : select);
         this.updateCrudButtonState();
     },
 
-    //取消记录选择时执行的操作
+    /**
+     * 取消节点选择的操作
+     * @param {*} sender 
+     * @param {*} records 
+     * @param {*} eOpts 
+     */
     onViewDeselect(sender,records, eOpts){
         //this.getViewModel().set('treeSelected', null);
     },
 
-    //刷新store
+    /**
+     * 刷新存储
+     */
     onRefreshStore(){
         let me = this;
         let store = me.currentView.getStore();
@@ -192,12 +178,20 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         store.load({node: selection? selection : root});
     },
 
-    //执行查询
+    getSearchFieldValue(){
+        let field = this.getView().down('field[isSearch]');
+        return filed ? field.getValue() : null;
+    },
+
+    /**
+     * 执行查询
+     */
     doSearch(){
-        let me = this;
-        let [view, store] = [me.getView(), me.searchTreeStore];
-        let [proxy,value] = [store.getProxy(), view.down('#query').getValue()];
-        let params = proxy.extraParams;
+        let me = this,
+            store = me.searchTreeStore,
+            proxy = store.getProxy(),
+            value = me.getSearchFieldValue(),
+            params = proxy.extraParams;
         if(Ext.isEmpty(value)){
             if(Ext.isEmpty(params.query)) return;
             me.toggleView('tree');
@@ -208,14 +202,17 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         me.toggleView('search');
     },
 
-    //切换视图
+    /**
+     * 切换视图
+     * @param {视图名称} viewName 
+     */
     toggleView(viewName){
         let me = this;
         me.listView.setHidden(viewName !== 'search');
         me.treeView.setHidden(viewName !== 'tree');
         me.currentView = viewName === 'tree' ? me.treeView : me.listView;
         if(viewName === 'tree') {
-            //切换回树重新设置设置视图模型选择值，以刷新产品
+            //切换回树重新设置设置视图模型选择值
             me.setViewModelTreeSelectValue(this.treeView.getSelectable().getSelectedRecords()[0]);
             //根据树的选择更新按钮状态
             me.updateCrudButtonState();
@@ -227,15 +224,14 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         this.getViewModel().set('treeSelected',  select);
     },
 
-    /**********************开始：增删改操作**************************************/
 
     /**
-     * 获取编辑窗口，如果窗口不存在，调用Common.Shared.util.Config的getDialog创建窗口
+     * 获取编辑窗口
      */
     currentEditView:{},
-    getEditView: function(xtype,callback){
+    getEditView(xtype){
         let me = this;
-        xtype = xtype || 'treeEditView';
+        xtype = xtype || 'treeeditview';
         let edit = me.currentEditView[xtype];
         if(!edit){
             edit = me.currentEditView[xtype] = DialogManager.getDialog(
@@ -247,8 +243,10 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         return edit;
     },
 
-    //新建实体
-    onAddedEntity: function(){
+    /**
+     * 新建实体
+     */
+    onAddedEntity(){
         let me = this,  
             dlg = me.getEditView(),
             select = me.getCurrentSelections()[0];
@@ -259,14 +257,20 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         dlg.show();
     },
 
-    beforeEdited: function(){
+    /**
+     * 开始编辑前要执行的操作
+     */
+    beforeEdited(){
         return true;
     },
 
-    //编辑实体
-    onEditedEntity: function(){
-        let me = this;
-        let [dlg, selection] = [me.getEditView(), me.getCurrentSelections()[0] ];
+    /**
+     * 编辑实体
+     */
+    onEditedEntity(){
+        let me = this,
+            dlg = me.getEditView(),
+            selection = me.getCurrentSelections()[0];
         if (!selection) {
             Ext.Msg.alert(I18N.DefaultMessageTitle, Ext.String.format(I18N.NoSelection, I18N[me.getEntityName()], I18N.Edit));
             return;
@@ -284,14 +288,24 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         }
     },
 
+    /**
+     * 检查更新
+     * @param {*} id 
+     * @param {*} name 
+     */
     checkUpdate(id,name){
         let store = this.currentView.xtype === 'tree' ? this.searchTreeStore : this.treeStore;
         let record = store.getById(id);
         if(record && record.get('displayName') !== name) record.set('displayName', name);
     },
 
-    //新建或编辑实体后的回调函数，主要用于刷新存储
-    onEditViewHide: function(form, isSavedSuccess, hasNewInSaved){
+    /**
+     * 新建或编辑实体后的回调函数，主要用于刷新存储
+     * @param {*} form 
+     * @param {*} isSavedSuccess 
+     * @param {*} hasNewInSaved 
+     */
+    onEditViewHide(form, isSavedSuccess, hasNewInSaved){
         let me = this;
         if(me.currentView.xtype !== 'tree'){
             let [defaultValue, record] = [form.getDefaultModelValue(), form.getRecord()];
@@ -312,14 +326,21 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         }
     },
 
-    // 用户过滤不能删除的记录
-    filterByBeforeDeleted: function(){return true},
+    /**
+     * 过滤不能删除的记录
+     */
+    filterByBeforeDeleted(){return true},
 
-    //开始删除操作
-    onDeletedEntity: function(){
-        let me = this;
-        let [store, entityName, msgField,selections] = [me.treeStore, me.getEntityName(), me.deleteMessageField, me.getCurrentSelections()];
-        let url = URI.get(entityName, 'delete');
+    /**
+     * 删除操作
+     */
+    onDeletedEntity(){
+        let me = this,
+            store =- me.treeStore,
+            entityName = me.getEntityName(),
+            msgField = me.deleteMessageField,
+            selections = me.getCurrentSelections(),
+            url = URI.get(entityName, 'delete');
         if(store.isVirtualStore && me.isViewSelectAll){
             let proxy = store.getProxy();
             let params = Ext.clone(proxy.extraParams);
@@ -327,15 +348,15 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
             Ext.Msg.confirm(I18N.DeleteConfirmMessageTitle, I18N.DeleteAllConfirmMessage, 
                 function (btn) {
                     if (btn === "yes") {
-                        me.send(
-                            {
-                                method: 'DELETE',
-                                url: url,
-                                params: Ext.clone(params),
-                                success: me.onDeletedSuccess
-                            }, 
-                            I18N.DeleteWaitMsg
-                        );
+                        me.getView().mask(I18N.DeleteWaitMsg);
+                        Ext.Ajax.request({
+                            method: 'DELETE',
+                            url: url,
+                            params: Ext.clone(params),
+                            success: me.onDeletedSuccess,
+                            failure: me.onAjaxFailure,
+                            scope: me
+                        });
                     }
                 }    
             )
@@ -351,10 +372,16 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
             me.onDeletedSuccess);
     },
 
-    //删除操作的回调函数
-    onDeletedSuccess: function(response, opts){
-        let [me,obj, msg] = [this, Ext.decode(response.responseText), ''];
-        Ext.Viewport.unmask();
+    /**
+     * 
+     * @param {删除成功} response 
+     * @param {*} opts 
+     */
+    onDeletedSuccess(response, opts){
+        let me = this,
+            obj = Ext.decode(response.responseText, true),
+            msg = '';
+        me.getView().unmask();
         if (obj.success) {
             let select = me.getCurrentSelections()[0];
             if(me.currentView.xtype === 'tree'){
@@ -365,10 +392,10 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
                 //如果当前视图为查询视图，成功删除后，
                 // 如果在树中该节点已显示，需要删除该节点
                 //如果要删除的节点为已选择节点，需要将它的父节点作为选择节点
-                let store = me.treeStore;
-                let selectable = me.treeView.getSelectable();
-                let treeSelect = selectable.getSelectedRecords()[0];
-                let record = store.getById(select.getId());
+                let store = me.treeStore,
+                    selectable = me.treeView.getSelectable(),
+                    treeSelect = selectable.getSelectedRecords()[0],
+                    record = store.getById(select.getId());
                 if(record) {
                     if(treeSelect.getId() === record.getId()){
                         me.treeView.suspendEvents();
@@ -388,46 +415,24 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
 
     },
 
-    //发送请求
-    send: function (config, waitMsg) {
-        var me = this,
-            cfg = Ext.apply({
-                scope: me,
-                failure: function (response, opts) {
-                    Ext.Viewport.unmask();
-                    FAILED.ajax(response, opts);
-                }
-            }, config);
-        if (!Ext.isEmpty(waitMsg)) Ext.Viewport.mask(waitMsg);
-        Ext.Ajax.request(cfg);
-    },
 
-    //删除操作确认信息的模版
-    deletedMessageTemplate:[
-        '<div class="message-tips">',
-        '<ul class="message-tips-list">',
-        '<tpl for=".">', 
-        '<li class="pointthree">{.}</li>',
-        '</tpl>',
-        '</div>'
-    ],
-
-    //生成
-    buildDeletedMessage: function(){
-        var me = this,
-            template = me.deletedMessageTemplate;
-        if(Ext.isArray(template)){
-            template = me.deletedMessageTemplate = new Ext.XTemplate(template);
-        }
-        return template;
-    },
-
+    /**
+     * 执行删除操作
+     * @param {} selections 
+     * @param {*} url 
+     * @param {*} msgField 
+     * @param {*} entityName 
+     * @param {*} success 
+     */
     //执行删除操作
-    doDelete: function (selections, url, msgField, entityName, success) {
-        let [me,fm,ln,ids,contents] = [this,Ext.String.format,selections.length,[],[]];
+    doDelete(selections, url, msgField, entityName, success) {
+        let me = this,
+            fm = Ext.String.format,
+            ids = [],
+            contents= [];
 
         //如果没有要删除记录，显示提示
-        if (ln === 0) {
+        if (selections.length === 0) {
             Ext.Msg.alert(I18N.DefaultMessageTitle, fm(I18N.DeleteNoSelection, entityName));
             return;
         }
@@ -442,22 +447,21 @@ Ext.define('Common.Desktop.view.base.tree.TreeController',{
         	fm(I18N.DeleteConfirmMessage, entityName, me.buildDeletedMessage().apply(contents)),
             function (btn) {
                 if (btn === "yes") {
-                    me.send(
-	                    {
-                            method: 'DELETE',
-	                        url: url,
-	                        params: { id: ids },
-	                        success: success
-	                    }, 
-	                    I18N.DeleteWaitMsg
-                    );
+                    me.getView().mask(I18N.DeleteWaitMsg);
+                    Ext.Ajax.request({
+                        method: 'DELETE',
+                        url: url,
+                        params: { id: ids },
+                        success: success,
+                        failure: me.onAjaxFailure,
+                        scope: me
+                    });
                 }
             },
             me
         );
     },
 
-    /**********************结束：增删改操作**************************************/
 
 
 })
