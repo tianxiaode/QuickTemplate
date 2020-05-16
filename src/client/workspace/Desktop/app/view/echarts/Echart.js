@@ -7,11 +7,7 @@ Ext.define('Desktop.view.echarts.Echart', {
         'Desktop.view.echarts.EchartModel',
     ],
 
-    layout: {
-        type: 'box',
-        wrap: false,
-
-    },
+    layout: 'vbox',
 
     viewModel: 'desktop-echartmodel',
 
@@ -19,8 +15,7 @@ Ext.define('Desktop.view.echarts.Echart', {
         {
             xtype: 'echartcomponent',
             bind: { store: '{sales}'},            
-            width: '50%',
-            height: '50%',
+            flex:1,
             title: {
                 text: '堆叠区域图'
             },
@@ -49,7 +44,6 @@ Ext.define('Desktop.view.echarts.Echart', {
                 {
                     type: 'category',
                     boundaryGap: false,
-                    field: 'name'
                 }
             ],
             yAxis: [
@@ -63,28 +57,24 @@ Ext.define('Desktop.view.echarts.Echart', {
                     type: 'line',
                     stack: '总量',
                     //areaStyle: {},
-                    field: 'mail',
                 },
                 {
                     name: '联盟广告',
                     type: 'line',
                     stack: '总量',
                     //areaStyle: {},
-                    field: 'ad',
                 },
                 {
                     name: '视频广告',
                     type: 'line',
                     stack: '总量',
                     //areaStyle: {},
-                    field: 'videoAd'
                 },
                 {
                     name: '直接访问',
                     type: 'line',
                     stack: '总量',
                     //areaStyle: {},
-                    field: 'direct',
                 },
                 {
                     name: '搜索引擎',
@@ -97,15 +87,73 @@ Ext.define('Desktop.view.echarts.Echart', {
                     //     }
                     // },
                     // areaStyle: {},
-                    field: 'search'
                 }
             ]
         },
-        // {
-        //     xtype: 'echartcomponent',
-        //     width: '50%',
-        //     height: '50%',
-        // },
+        {
+            xtype: 'echartcomponent',
+            flex:1,
+            // width: '50%',
+            // height: '50%',
+            bind: { store: '{sales}'},            
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            legend: {
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '直接访问',
+                    type: 'bar',
+                },
+                {
+                    name: '邮件营销',
+                    type: 'bar',
+                    stack: '广告',
+                },
+                {
+                    name: '联盟广告',
+                    type: 'bar',
+                    stack: '广告',
+                },
+                {
+                    name: '视频广告',
+                    type: 'bar',
+                    stack: '广告',
+                },
+                {
+                    name: '搜索引擎',
+                    type: 'bar',
+                    markLine: {
+                        lineStyle: {
+                            type: 'dashed'
+                        },
+                        data: [
+                            [{type: 'min'}, {type: 'max'}]
+                        ]
+                    }
+                },
+            ]            
+        },
         // {
         //     xtype: 'echartcomponent',
         //     width: '50%',

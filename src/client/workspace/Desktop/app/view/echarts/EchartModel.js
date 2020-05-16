@@ -28,7 +28,7 @@ Ext.define('Desktop.view.echarts.EchartModel', {
                 console.log(result)
                 return result;
             }()            
-        }
+        },
     },
     data: {
         /* This object holds the arbitrary data that populates the ViewModel and is then available for binding. */

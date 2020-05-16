@@ -48,13 +48,31 @@ Ext.define('EChart.Component', {
     resizeTimerId: 0,
     size: null, // cached size
 
+    getTemplate: function() {
+        return [{
+            reference: 'innerElement',
+            cls: Ext.baseCSSPrefix + 'inner-el',
+            children: [{
+                reference: 'bodyElement',
+                cls: Ext.baseCSSPrefix + 'body-el',
+                children: [
+                    {
+                        reference: 'chartElement',
+                    }
+                ]
+            }]
+        }];
+    },
+
     constructor: function(config) {
         var me = this;
 
         me.callParent(arguments);
+        me.on('painted', me.onPainted, me);
         me.on('resize', 'onElementResize', me);
 
     },
+
 
 
     applyStore: function(store) {
@@ -108,29 +126,25 @@ Ext.define('EChart.Component', {
             hasLoadedStore = store && store.isLoaded();
         if(!me.isInitializing || !hasLoadedStore) return;
         let option = {},
-            data = {},
+            data = [],
             prototype = Object.getPrototypeOf(me),
-            config = Object.assign({}, prototype.config),
-            first = store.getAt(0),
-            fields = first.getFields();
+            config = Object.assign({}, prototype.config);
         store.each(record=>{
-            fields.forEach(field=>{
-                let fieldName = field.name;
-                if(data[fieldName] == null) data[fieldName] =[];
-                data[field.name].push(record.get(fieldName));
-                
-            })
+            data.push(Object.assign({}, record.data));
         })
 
+        option.dataset = {
+            source: data
+        },
         delete config.store;
         delete config.series;
         delete config.legend;
-        delete config.xAxis;
-        delete config.yAxis;
+        // delete config.xAxis;
+        // delete config.yAxis;
         let series = me.getSeries(),
             legend = me.getLegend(),
-            xAxis = me.getXAxis(),
-            yAxis = me.getYAxis(),
+            // xAxis = me.getXAxis(),
+            // yAxis = me.getYAxis(),
             legendData = [];
         series.forEach(s=>{
             legendData.push(s.name);
@@ -142,23 +156,23 @@ Ext.define('EChart.Component', {
             legend.data = legendData;
             option.legend = legend;
         }
-        if(xAxis){
-            if(!Ext.isArray(xAxis)) xAxis = [xAxis];
-            xAxis.forEach(x=>{
-                if(x.field){
-                    x.data = data[x.field];
-                    delete x.field;    
-                }    
-            })
-            option.xAxis = xAxis;
-        }
-        if(yAxis){
-            if(yAxis.field){
-                yAxis.data = data[yAxis.field];
-                delete yAxis.field;    
-            }
-            option.yAxis = yAxis;
-        }
+        // if(xAxis){
+        //     if(!Ext.isArray(xAxis)) xAxis = [xAxis];
+        //     xAxis.forEach(x=>{
+        //         if(x.field){
+        //             x.data = data[x.field];
+        //             delete x.field;    
+        //         }    
+        //     })
+        //     option.xAxis = xAxis;
+        // }
+        // if(yAxis){
+        //     if(yAxis.field){
+        //         yAxis.data = data[yAxis.field];
+        //         delete yAxis.field;    
+        //     }
+        //     option.yAxis = yAxis;
+        // }
 
         let keys = Object.keys(config);
         keys.forEach(key=>{
@@ -168,7 +182,6 @@ Ext.define('EChart.Component', {
             if(!value) return;
             option[key] = value;
         })
-        console.log(option);
         me.chartComponent.setOption(option);
 
     },
@@ -221,11 +234,11 @@ Ext.define('EChart.Component', {
         me.callParent();
     },
 
-    initElement(){
+    onPainted(){
         var me = this;
  
-        me.callParent();
-        me.chartComponent = echarts.init(me.innerElement.dom);
+        //me.callParent();
+        me.chartComponent = echarts.init(me.chartElement.dom);
         me.isInitializing = true;
         me.redraw();
     },
