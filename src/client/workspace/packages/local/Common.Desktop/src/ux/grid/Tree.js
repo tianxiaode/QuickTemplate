@@ -10,7 +10,6 @@ Ext.define('Common.Desktop.ux.grid.Tree',{
         'Ext.dataview.List',
         'Common.Shared.ux.field.Search',
         'Common.Desktop.ux.grid.TreeController',
-        'Common.Desktop.view.base.tree.TreeEdit'
     ],
 
     minWidth: 250,

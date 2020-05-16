@@ -18,13 +18,13 @@
     if((!!window.ActiveXObject || "ActiveXObject" in window) && !navigator.userAgent.match(/(Edge\/)([\w.]+)/) ){
         //如果浏览器是IE，那么切换安装支持浏览器页面
         window.location.href = 'resources/Locale/browse.html';
-    }else{
-        //加载语言
-        const locale  =location.href.match(/lang=([\w-]+)/),
-            currentLang = navigator.language || navigator.browserLanguage;
-        window.LANG = (locale && locale[1]) || currentLang;
-        document.write(`<script src="${defaultUrl}/Locale/${LANG.replace('-','_')}.js?_dc=${(new Date()).getTime()}" type="text/javascript"><\/script>`);
-    }    
+    }
+
+    //加载语言
+    const locale  =location.href.match(/lang=([\w-]+)/),
+        currentLang = navigator.language || navigator.browserLanguage;
+    window.LANG = (locale && locale[1]) || currentLang;
+    document.write(`<script src="${defaultUrl}/Locale/${LANG.replace('-','_')}.js?_dc=${(new Date()).getTime()}" type="text/javascript"><\/script>`);
     
     
     js.forEach(item=>{

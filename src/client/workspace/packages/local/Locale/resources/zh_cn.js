@@ -194,6 +194,7 @@ var I18N = {
     ImageField: '选择图片字段',
     TimePeriod: '时间区间',
     TestToast: '测试Toast',
+    EChart: 'EChart',
 
     Model: {
         User: {

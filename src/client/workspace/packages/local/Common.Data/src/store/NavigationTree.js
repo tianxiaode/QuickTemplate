@@ -45,6 +45,12 @@ Ext.define('Common.Data.store.NavigationTree', {
                 viewType: 'admindashboard',
                 iconCls: 'x-fa fa-home',
                 leaf: true
+            },
+            {
+                text: I18N.EChart,
+                viewType: 'echartview',
+                iconCls: 'x-fa fa-chart-line',
+                leaf: true
             }
         ]
     }

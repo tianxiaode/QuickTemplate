@@ -15,6 +15,7 @@ Ext.define('Desktop.view.home.HomeView', {
         'Desktop.view.home.HomeViewController',
         'Desktop.view.home.HomeViewModel',
         'Desktop.view.dashboard.Dashboard',
+        'Desktop.view.echarts.Echart',
     ],
 
     controller: 'homeview',

@@ -3,7 +3,6 @@ Ext.define('Common.Desktop.ux.form.Panel',{
     xtype: 'uxform',
 
     mixins:[
-        'Common.Desktop.ux.form.PanelController',
     ],
  
     requires:[

@@ -1,2 +1,0 @@
-# ModernDesktopTheme - Read Me
-

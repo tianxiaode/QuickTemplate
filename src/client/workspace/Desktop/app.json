@@ -4,7 +4,7 @@
     "version": "1.0.0.0",
     "framework": "ext",
     "toolkit": "modern",
-    "theme": "ModernDesktopTheme",
+    "theme": "theme-material",
 
     /**
      * The list of required packages (with optional versions; default is "latest").
@@ -21,7 +21,8 @@
         "Common.Data",
         "Common.Shared",
         "Common.Desktop",
-        "Locale"
+        "Locale",
+        "echart"
     ],
 
     /**
