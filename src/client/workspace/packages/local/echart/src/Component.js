@@ -39,6 +39,7 @@ Ext.define('EChart.Component', {
         color: null,
         backgroundColor: null,
         textStyle: null,
+        dataset: null
     },
 
     defaultBindProperty: 'store',
@@ -69,7 +70,7 @@ Ext.define('EChart.Component', {
 
         me.callParent(arguments);
         me.on('painted', me.onPainted, me);
-        me.on('resize', 'onElementResize', me);
+        me.on('resize', me.onElementResize, me);
 
     },
 
@@ -133,12 +134,15 @@ Ext.define('EChart.Component', {
             data.push(Object.assign({}, record.data));
         })
 
-        option.dataset = {
-            source: data
-        },
         delete config.store;
         delete config.series;
         delete config.legend;
+        delete config.dataset;
+
+        let dataset = me.getDataset() || {};
+        dataset.source = data;
+
+        option.dataset = dataset;
         // delete config.xAxis;
         // delete config.yAxis;
         let series = me.getSeries(),
@@ -156,23 +160,6 @@ Ext.define('EChart.Component', {
             legend.data = legendData;
             option.legend = legend;
         }
-        // if(xAxis){
-        //     if(!Ext.isArray(xAxis)) xAxis = [xAxis];
-        //     xAxis.forEach(x=>{
-        //         if(x.field){
-        //             x.data = data[x.field];
-        //             delete x.field;    
-        //         }    
-        //     })
-        //     option.xAxis = xAxis;
-        // }
-        // if(yAxis){
-        //     if(yAxis.field){
-        //         yAxis.data = data[yAxis.field];
-        //         delete yAxis.field;    
-        //     }
-        //     option.yAxis = yAxis;
-        // }
 
         let keys = Object.keys(config);
         keys.forEach(key=>{
@@ -185,6 +172,8 @@ Ext.define('EChart.Component', {
         me.chartComponent.setOption(option);
 
     },
+
+    
 
     handleResize: function(size, instantly) {
         var me = this,
