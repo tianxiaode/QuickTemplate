@@ -143,12 +143,8 @@ Ext.define('EChart.Component', {
         dataset.source = data;
 
         option.dataset = dataset;
-        // delete config.xAxis;
-        // delete config.yAxis;
         let series = me.getSeries(),
             legend = me.getLegend(),
-            // xAxis = me.getXAxis(),
-            // yAxis = me.getYAxis(),
             legendData = [];
         series.forEach(s=>{
             legendData.push(s.name);
