@@ -35,6 +35,7 @@ Ext.define('Desktop.view.echarts.Echart', {
         },
         {
             xtype: 'echartcomponent',
+            padding: 10,
             bind: { store: '{sales}'},            
             //flex:1,
             // title: {
@@ -113,6 +114,7 @@ Ext.define('Desktop.view.echarts.Echart', {
         },
         {
             xtype: 'echartcomponent',
+            padding: 10,
             //flex:1,
             // width: '50%',
             // height: '50%',
@@ -177,8 +179,15 @@ Ext.define('Desktop.view.echarts.Echart', {
         },
         {
             xtype: 'echartcomponent',
+            padding: 10,
             bind: { store: '{sales}'}, 
             legend: {},
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params, ticket, callback){
+                    return `${params.name}${I18N.LabelSeparator} ${params.data[params.dimensionNames[1]]} (${params.percent}%)`;
+                }
+            },                            
             series: [
                 {
                     name: '邮件营销',

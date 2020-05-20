@@ -171,33 +171,19 @@ Ext.define('EChart.Component', {
 
     
 
-    handleResize: function(size, instantly) {
-        var me = this,
-            el = me.element;
+    handleResize: function(width, height) {
+        let me = this,
+            xPadding = me.bodyElement.getPadding('lr'),
+            yPadding = me.bodyElement.getPadding('tb');
 
-        size = size || (el && el.getSize());
-
-        if (!(size && size.width && size.height)) {
-            return;
-        }
-
-        clearTimeout(me.resizeTimerId);
-
-        if (instantly) {
-            me.resizeTimerId = 0;
-        }
-        else {
-            me.resizeTimerId = Ext.defer(me.handleResize, me.resizeDelay, me, [size, true]);
-
-            return;
-        }
-
-        me.size = size;
-        if(me.chartComponent) me.chartComponent.resize(size);
+        if(me.chartComponent) me.chartComponent.resize({
+            width: width - xPadding,
+            height : height - yPadding -10
+        });
     },
 
     onElementResize: function(element, width ,height) {
-        this.handleResize({width:width, height: height});
+        this.handleResize(width, height);
     },
 
     destroy: function() {

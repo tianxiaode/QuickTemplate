@@ -90,53 +90,6 @@
             }
           ],
 
-          "builds": {
-            "triton": {
-              "lib": "${package.dir}/echarts.min.js",
-              "toolkit": "classic",
-              "theme": "theme-triton"
-            },
-            "neptune": {
-              "lib": "${package.dir}/echarts.min.js",
-              "toolkit": "classic",
-              "theme": "theme-neptune"
-            },
-            "crisp": {
-              "lib": "${package.dir}/echarts.min.js",
-              "toolkit": "classic",
-              "theme": "theme-crisp"
-            },
-            "classic": {
-              "lib": "${package.dir}/echarts.min.js",
-              "toolkit": "classic",
-              "theme": "theme-classic"
-            },
-            "classic-material": {
-              "lib": "${package.dir}/echarts.min.js",
-              "toolkit": "classic",
-              "theme": "theme-material"
-            },
-            "modern-triton": {
-              "lib": "${package.dir}/echarts.min.js",
-              "toolkit": "modern",
-              "theme": "theme-triton"
-            },
-            "modern-neptune": {
-              "lib": "${package.dir}/echarts.min.js",
-              "toolkit": "modern",
-              "theme": "theme-neptune"
-            },
-            "ios": {
-              "lib": "${package.dir}/echarts.min.js",
-              "toolkit": "modern",
-              "theme": "theme-ios"
-            },
-            "material": {
-              "lib": "${package.dir}/echarts.min.js",
-              "toolkit": "modern",
-              "theme": "theme-material"
-            }
-          },
 
         /**
          * Additional resources used during theme slicing operations
