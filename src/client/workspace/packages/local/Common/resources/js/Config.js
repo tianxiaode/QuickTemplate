@@ -12,8 +12,8 @@ window.AppConfig = {
         requireHttps: false
       },
     appName:{
-        en: 'Wo easy-Vending machine cloud management platform',
-        "zh-CN": '沃轻松-售卖机云管理平台'
+        en: 'Sencha',
+        "zh-CN": 'Sencha'
     },
     loadingText:{
         "en": 'Loading...',
