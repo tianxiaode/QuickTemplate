@@ -6,18 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10, user-scalable=yes">
 
     <title></title>
-    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="../build/development/Desktop/resources/Common/js/Config.js"></script>
     <!-- The line below must be kept intact for Sencha Cmd to build your application -->
     <script id="microloader" data-app="fad04933-1751-4c48-84af-1c0369973b5c" type="text/javascript" src="bootstrap.js"></script>
 
 </head>
 <body class="launching">
-    <div id="splash" style="text-align:center;width: 100%;height: 100%;display: table;">
-        <div style="display: table-cell;vertical-align: middle;font-size:64px;color:rgba(0, 0, 0, 0.87);">
-            <script type="text/javascript">document.write(I18N.IndexLoadingText)</script>
-            <br>
-            <img style="width:40px;" src="../build/development/Desktop/resources/images/tree/loading.gif">
-        </div>
-    </div>
+    <div id="splash" style="width: 100%;height:100%;font-size:64px;color:#404040;line-height: 80px;display:table;text-align: center;">
+        <div style="display: table-cell;vertical-align: middle;">
+            <img style="margin:20px;width:60px;" src="../build/development/Desktop/resources/Common/images/blue-loading.gif">    
+            <div id="theLoadingText">
+                <script type="text/javascript">document.write(window.AppConfig.currentLoadingText)</script>
+            </div>
+            </div>
+</div>
 </body>
 </html>

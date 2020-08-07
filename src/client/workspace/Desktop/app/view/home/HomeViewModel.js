@@ -5,7 +5,7 @@ Ext.define('Desktop.view.home.HomeViewModel', {
     data: {
         currentView: null,
         userName: null,
-        appTitle: I18N.AppTitle
+        appTitle: ''
     },
 
 

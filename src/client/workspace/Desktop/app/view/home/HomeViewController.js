@@ -7,7 +7,7 @@ Ext.define('Desktop.view.home.HomeViewController', {
      * 主视图显示后，显示用户名称
      */
     onHomeViewPainted(){
-        this.getViewModel().set('userName', (CFG.user && CFG.user.name) || I18N.None);
+        //this.getViewModel().set('userName', (CFG.user && CFG.user.name) || I18N.None);
     },
 
     /**
@@ -18,46 +18,57 @@ Ext.define('Desktop.view.home.HomeViewController', {
         let me = this,
             refs = me.getReferences(),
             mainCard = refs.mainCardPanel,
-            navigationList = refs.navigationTreeList,
-            store = navigationList.getStore(),
-            node = store.findNode('routeId', xtype) ||
-                   store.findNode('viewType', xtype),
-            view = (node && node.get('viewType')) ,
-            existingItem = mainCard.child('component[routeId=' + view + ']'),
-            parentNode = node ? node.parentNode : null,
-            newView;
-        // if(node && !node.get('visible')){
-        //     CFG.getDialog(view).show();
-        //     return;
-        // }
+            name = xtype.substring(xtype.indexOf('-')+1),
+            view = mainCard.down(xtype);
 
-        if(existingItem){
-            mainCard.setActiveItem(existingItem);
+        if(view){
+            mainCard.setActiveItem(view);
+            me.switchNavigation(name);
             return;
         }
 
-        newView = Ext.ClassManager.getByAlias('widget.' + view);
-        if(!newView){
-            DialogManager.show('page404');
+        let cls = Ext.ClassManager.getByAlias('widget.' + xtype);
+        if(!cls){
+            me.redirectTo('page404');
             return;
         }
 
 
-        newView = mainCard.add({
-            xtype: view,
-            routeId: xtype,  // for existingItem search later
-            hideMode: 'offsets'
+        view = mainCard.add({
+            xtype: xtype,
+            hideMode: 'display'
         });
 
+        mainCard.setActiveItem(view);
+        me.switchNavigation(name);
 
-        mainCard.setActiveItem(newView);
+    },
 
+    // onNavigationTreesLoaded(){
+    //     this.switchNavigation(Ext.util.History.getToken());
+    // },
 
+    switchNavigation(name){
+        const me = this,
+            navigationTree = me.lookup('navigationTreeList');
+        
+        if(!navigationTree.isReady){
+            navigationTree.on('ready', me.switchNavigation, me, {single: true, args: [name]});
+            return;
+        }
+            
+        const store = navigationTree.getStore(),
+            root = store.getRoot();
+        let node = store.findNode('viewType', name);
+            parentNode = node ? node.parentNode : null;
+            
         if (parentNode && !parentNode.isRoot() && !parentNode.isExpanded()){
             parentNode.expand();
         } 
-        navigationList.setSelection(node);
 
+        navigationTree.suspendEvent('selectionchange');
+        navigationTree.setSelection(node);    
+        navigationTree.resumeEvent ('selectionchange');
     },
 
     /**

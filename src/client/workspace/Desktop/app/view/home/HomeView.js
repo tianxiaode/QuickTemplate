@@ -12,6 +12,7 @@ Ext.define('Desktop.view.home.HomeView', {
         'Ext.layout.VBox',
         'Ext.field.Container',
         'Ext.Spacer',
+        'Common.desktop.view.home.NavigationTree',
         'Desktop.view.home.HomeViewController',
         'Desktop.view.home.HomeViewModel',
         'Desktop.view.dashboard.Dashboard',
@@ -54,7 +55,7 @@ Ext.define('Desktop.view.home.HomeView', {
                     xtype: 'component',
                     reference: 'senchaLogo',
                     cls: 'sencha-logo',
-                    html: `<div class="main-logo"><img src="${URI.getResource('logo')}">${I18N.Company}</div>`,
+                    html: `<div class="main-logo"><img src="${URI.getResource('logo')}"></div>`,
                     width: 250
                 },
                 {
@@ -72,10 +73,14 @@ Ext.define('Desktop.view.home.HomeView', {
                 { xtype: 'title', bind: {html:  '{appTitle}'}, style: 'font-size:24px;line-height:32px;color:#424242;margin-top:-5px;' },
                 '->',
                 {
+                    xtype: 'languagebutton',
+                    ui: 'header',
+                },
+                {
                     ui: 'header',
                     iconCls: 'x-fa fa-sign-out-alt',
                     handler: 'onLogout',
-                    tooltip: I18N.Logout
+                    langTooltip: 'Login'
                 },
                 {
                     xtype: 'spacer',width: 5
@@ -111,20 +116,9 @@ Ext.define('Desktop.view.home.HomeView', {
             },
             items: [
                 {
-                    xtype: 'treelist',
+                    xtype: 'commondesktop-navigationtree',
                     reference: 'navigationTreeList',
                     itemId: 'navigationTreeList',
-                    scrollable: 'y',
-                    ui: 'navigation',
-                    zIndex: 10,
-                    store: 'NavigationTree',
-                    width: 250,
-                    singleExpand: true,
-                    expanderFirst: false,
-                    expanderOnly: false,
-                    listeners: {
-                        selectionchange: 'onNavigationTreeSelectionChange'
-                    }
                 },
                 {
                     xtype: 'container',
