@@ -75,8 +75,8 @@ Ext.define('Desktop.view.dashboard.Dashboard',{
                 {
                     xtype: 'datefield',
                     name: 'login',
-                    minDate: '2020-08-02',
-                    maxDate: '2020-08-12',
+                    minDate: new Date(2018,1,1),
+                    maxDate: new Date(2020,11,30),
                 }
             ]
         },
