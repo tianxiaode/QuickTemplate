@@ -1,2 +1,0 @@
-# Common.Desktop - Read Me
-

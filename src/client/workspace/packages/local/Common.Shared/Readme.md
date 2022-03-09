@@ -1,2 +1,0 @@
-# Common.Shared - Read Me
-
