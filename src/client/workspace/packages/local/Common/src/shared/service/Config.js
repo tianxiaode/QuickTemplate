@@ -1,70 +1,175 @@
 Ext.define('Common.shared.service.Config', {
-    alternateClassName: 'ConfigService',
+    alternateClassName: 'Config',
     singleton: true,
 
     requires:[
-        'Common.shared.util.Url',
         'Common.shared.util.Failure',
-        'Common.shared.service.Storage',
+        'Common.shared.service.District'
     ],
 
+    mixins:[
+        'Ext.mixin.Observable'
+    ],
+
+    config:{
+        fileOptions: null,
+        district: null
+    },
+
+    images:{},
+
     isReady: false,
-    constructor(){
-        const me = this;
+    constructor(config){
+        let me = this;
+        me.mixins.observable.constructor.call(me, config);
         //me.loadConfiguration();
     },
 
     isAuthenticated(){
-        return this.data.currentUser && this.data.currentUser.isAuthenticated;
+        let me = this;
+        return me.data.user && me.data.user.id && me.data.user.id > 0;
+    },
+
+    isOrganizationAuthenticated(){
+        let me = this;
+        return me.data.organizationUnit 
+            && me.data.organizationUnit.id  
+            && me.data.organizationUnit.id > 0;
     },
 
     getCurrentOrganizationUnit(){
-        return this.data.currentOrganizationUnit;
+        return this.data.organizationUnit;
     },
 
     getCurrentUser(){
-        return this.data.currentUser;
+        return this.data.user;
     },
 
-    getSetting(){
-        return this.data.setting.values;
+    isAdmin(){
+        return this.getCurrentUser().isAdmin;
+    },
+
+    getPasswordSetting(){
+        return this.data.passwordSetting;
+    },
+
+    getFileOption(key){
+        let me = this,
+            fileOptions = me.getFileOptions();
+        return fileOptions[key];
+    },
+
+    getRealTimeSyncValue(){
+        return this.data.userSetting.realTimeSync;
     },
 
     loadConfiguration(){
-        const me = this;
+        let me = this;
         me.isReady = false;
-        const promise = Ext.Ajax.request({
-            url: URI.get('Configuration', ''),
-            withoutAuthorizationHeader: true,
-            headers: {
-                'Authorization' : 'Bearer ' +  StorageService.get('access_token'),
-                "accept-language": StorageService.get('lang')  || (AppConfig.lang === 'zh-CN' ? 'zh-Hans' 
-                : AppConfig.lang === 'zh-TW' ? 'zh-Hant' : AppConfig.lang )
-            },
-        });
-        promise.then(me.loadConfigurationSuccess, Failure.ajax, null ,me);
+        let promise = Http.get(URI.get('services/app/Session/GetCurrentLoginInformations'));
+        promise.then(me.loadConfigurationSuccess,null, null ,me);
         return promise;
+    },
+
+    initEnv(){
+        let me = this;
+        Enums.init();
+        District.init();
+        Signalr.connect();
+        //me.loadPasswordSetting();
+        me.checkClearingRule();
+    },
+
+    hasDescriptionFeature(){
+        let value = this.data.features.values['Products.Description'];
+        return value && value.toLowerCase() === 'true';
+    },
+
+    getCategoryRoot(){
+        return { id: -999, displayName: '全部', expanded: false, }
+    },
+
+    // loadPasswordSetting(){
+    //     let me = this;
+    //     Http.get(URI.crud('setting', 'password')).
+    //         then(me.onLoadPasswordSettingSuccess, Failure.ajax, null, me);
+       
+    // },
+
+    getImage(hash){
+        if(Ext.isEmpty(hash)) return null;
+        return this.images[hash];
+    },
+
+    setImage(hash, url){
+        if(Ext.isEmpty(hash)) return;
+        this.images[hash] = url;
+    },
+
+    checkClearingRule(){
+        let me = this;
+        if(!ACL.isGranted('Pages.ClearingRule.Create')) return;
+        Http.get(URI.crud('ClearingRule', 'check'))
+            .then(me.checkClearingRuleSuccess, me.onAjaxFailure, null, me);
+    },
+
+    clearAll(){
+        let me = this;
+        me.isReady = false;
+        me.data = null;
     },
 
     privates:{
         data: {},
 
-
         loadConfigurationSuccess(response){
-            const me = this;
+            let me = this;
             let obj = Ext.decode(response.responseText, true);
-            if(!obj){
-                MsgBox.alert(I18N.getDefaultMessageTitle(), I18N.getUnknownError());
+            if(!(obj && obj.result )){
+                MsgBox.alert(null, I18N.getUnknownError());
                 return;
             }
-            me.data = Object.assign({}, obj);   
+            let result = obj.result;
+            me.data = Object.assign({}, result);
+            me.setFileOptions(result.fileOption);
             me.isReady = true;
-            Ext.fireEvent('configisready', obj)             
+            me.fireEvent('ready', result);
         },
 
+        // onLoadPasswordSettingSuccess(response){
+        //     let me = this,
+        //         data = Http.parseResponseText(response);
+        //     me.passwordSetting = data.result;
+        // },
+
+        checkClearingRuleSuccess(response){
+            let me = this;
+                data = Http.parseResponseText(response).result;
+            if(!Ext.isObject(data)) return;
+            let resourceName = 'ClearingRules',
+                html = ['<ul  class="message-tips">'];
+            if(!data.hasWeChatDefault) html.push(`<li class='danger'>${I18N.get('NoWeChatDefault',resourceName)}</li>`);
+            if(!data.hasAplipayDefault) html.push(`<li class='danger'>${I18N.get('NoAlipayDefault',resourceName)}</li>`);
+            me.getClearingRuleExpirationHtml(html, resourceName, data.alerts, 'ExpirationByOneMonth', 'warning');
+            me.getClearingRuleExpirationHtml(html, resourceName, data.warnings, 'ExpirationByDays', 'danger');
+            html.push(`</ul>`);
+            if(html.length>2) MsgBox.alert(null, html.join(''));
+        },
+
+        getClearingRuleExpirationHtml(html,resourceName, data, title, cls){
+            if(!Ext.isArray(data)) return;            
+            if(data.length === 0) return;
+            html.push(`<li class='info'>${I18N.get(title,resourceName)}</li>`);
+            html.push(`<ul style="list-style:none">`);
+            data.forEach(m=>{
+                let payText = Format.clearingType(m.type);
+                    text = `${m.displayName}(${payText})`;
+                html.push(`<li class="${cls}">${text}</li>`);
+            });
+            html.push(`</ul>`);
+        }
     
     },
-
 
 
 });

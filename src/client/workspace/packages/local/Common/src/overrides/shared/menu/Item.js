@@ -6,8 +6,8 @@ Ext.define('Common.overrides.shared.menu.Item',{
     },
 
     onLocalized(){
-        const me = this,
-            resourceName = me.getResourceName(),
+        let me = this,
+            resourceName = me.resourceName || me.getContainerResourceName(),
             langText = me.getLangText();
         let text = me.getText();
         if(text && !langText){

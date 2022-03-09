@@ -3,13 +3,14 @@ Ext.define('Common.shared.view.authentication.Login',{
     xtype: 'shared-login',
 
     requires:[
+        'Ext.Button',
         'Ext.field.Text',
         'Ext.field.Password',
-        'Ext.dataview.List',
-        'Common.shared.service.OAuth'
+        'Common.shared.view.authentication.ForgotPassword',
+        'Common.shared.view.authentication.ResetPassword',
     ],
 
-    title: 'Login',
+    langTitle: 'Login',
     defaultListenerScope: true,
 
     items:[
@@ -33,17 +34,22 @@ Ext.define('Common.shared.view.authentication.Login',{
                 {
                     xtype: 'component',
                     userCls: 'lh-30',
-                    localized:[ 'html'],
-                    html: "Welcome to login"
+                    langHtml: 'WelcomeLogin'
                 },
                 {
                     xtype: 'textfield',
-                    name: 'username',
-                    itemId: 'username',
+                    autoLabel: false,
+                    itemId: 'username',                    
                     height: 55,
                     required: true,
                     autoComplete: false,
-                    placeholder: 'Username/Email/Phone',
+                    langPlaceholder: 'Username/Email/Phone',
+                    errorTarget: 'qtip',
+                    keyMap:{
+                        enter:{
+                            handler: 'doEnterNextField'
+                        }
+                    },
                     triggers:{
                         expand: {
                             iconCls: 'x-fa fa-user auth-trigger-icon',
@@ -54,11 +60,17 @@ Ext.define('Common.shared.view.authentication.Login',{
                 {
                     xtype: 'passwordfield',
                     height: 55,
-                    placeholder: 'Password',
-                    name: 'password',
+                    langPlaceholder: 'Password',
+                    autoLabel: false,
                     itemId: 'password',
                     autoComplete: false,
                     required: true,
+                    errorTarget: 'qtip',
+                    keyMap:{
+                        enter:{
+                            handler: 'onLogin'
+                        }
+                    },
                     triggers:{
                         expand: {
                             iconCls: 'x-fa fa-lock auth-trigger-icon',
@@ -68,19 +80,23 @@ Ext.define('Common.shared.view.authentication.Login',{
                 },
                 {
                     xtype: 'component',
-                    localized: [ 'html'],
-                    userCls: 'text-right lh-30',
-                    html: 'Forgot password'
+                    userCls: 'text-right lh-30 btn-link cursor-pointer',
+                    langHtml: 'ForgotPassword',
+                    listeners:{
+                        tap:{
+                            fn: 'onForgotPassword',
+                            element: 'element'
+                        }
+                    }
                 },
                 {
                     xtype: 'button',
-                    reference: 'loginButton',
                     height:48,
                     style: 'font-size:16px;line-height:20px',
-                    ui: 'soft-light-green',
+                    ui: 'soft-green',
                     iconAlign: 'right',
                     iconCls: 'x-fa fa-angle-right',
-                    text: 'Login',
+                    langText: 'Login',
                     formBind: true,
                     listeners:{
                         tap: 'onLogin',
@@ -88,6 +104,7 @@ Ext.define('Common.shared.view.authentication.Login',{
                 },
                 {
                     xtype: 'component',
+                    style: 'font-size:16px;',
                     itemId: 'errorCmp',
                     hidden: true,
                 }
@@ -96,35 +113,51 @@ Ext.define('Common.shared.view.authentication.Login',{
     ],
 
     onLogin(){
-        const me = this,
+        let me = this,
             username = me.down('#username'),
             password = me.down('#password');
-        if(!username.validate() && !password.validate()) return;
+        if(!username.validate() || !password.validate()) {
+            if(Ext.platformTags.phone){
+                me.showMessage(me.getValidateError(username, password) , me.errorCls);
+            }
+            return;
+        }
+        me.getErrorCmp().setHidden(true);
         me.setMasked(I18N.get('Signing'))
-        AuthService.login(username.getValue(), password.getValue())
-        .then(me.onLoginSuccess, me.onLoginFailure, null, me);
+        Auth.login(username.getValue(), password.getValue())
+            .then(me.onLoginSuccess, me.onLoginFailure, null, me);
+    },
+
+    getValidateError(username, password){
+        let usernameError= username.getError(),
+            passwordError = password.getError();
+        if(Ext.isEmpty(usernameError)) return passwordError;
+        if(Ext.isEmpty(passwordError)) return usernameError;
+        return `${usernameError}<br>${passwordError}`;
+
     },
 
     onLoginSuccess(){
-        const me = this,
-            errorCmp = me.down('#errorCmp');
-        me.setMasked(false);
-        errorCmp.setUserCls('text-success text-center lh-30')
-        errorCmp.setHtml(I18N.get('LoginSuccess'));
-        errorCmp.setHidden(false);
-        
+        let me = this;        
+        me.showMessage(I18N.get('LoginSuccess'), this.successCls);        
+        Config.loadConfiguration();
+        me.down('#password').setValue(null);
     },
 
-    onLoginFailure(response){        
-        const me = this,
-            obj = Ext.decode(response.responseText, true),
-            errorCmp = me.down('#errorCmp');
-        let error = I18N.getUnknownError();
-        me.setMasked(false);
-        if(obj && obj.error_description) error = obj.error_description;
-        errorCmp.setHtml(error);
-        errorCmp.setUserCls('text-danger text-center lh-30')
-        errorCmp.setHidden(false);
+    onLoginFailure(response){
+        let error = Failure.getError(response);
+        this.showMessage(error, this.errorCls);
+    },
+
+
+    doEnterNextField(event){
+        this.down('#password').focus();
+        event.preventDefault();
+        return false;
+    },
+
+    onForgotPassword(){
+        Ext.History.add('forgotpassword');
     }
 
 })

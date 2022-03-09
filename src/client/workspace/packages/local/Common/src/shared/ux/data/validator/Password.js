@@ -9,18 +9,27 @@ Ext.define('Common.shared.ux.data.validator.Password', {
     requireLower: true,
     requireUpper: false,
 
-    message: I18N.PasswordRegexText,
- 
-    validate: function(value){
-        var me = this,
-            setting = ConfigService.getSetting(),
-            len = parseInt(setting['Abp.Identity.Password.RequiredLength']);
-        if(value.length < len)  return me.message;
-        if(setting['Abp.Identity.Password.RequireDigit'] === 'true' && !me.isDigit(value) ) return me.message;
-        if(setting['Abp.Identity.Password.RequireLowercase'] === 'true' && !me.isLower(value) ) return me.message;
-        if(setting['Abp.Identity.Password.RequireUppercase'] === 'true' && !me.isUpper(value) ) return me.message;
-        if(setting['Abp.Identity.Password.RequireNonAlphanumeric'] === 'true' && !me.isNonAlphanumeric(value) ) return me.message;
+    validate(value){
+        let me = this,
+            setting = Config.getPasswordSetting(),
+            len = parseInt(setting.requiredLength),
+            message = me.getErrorMessage(setting);
+        if(value.length < len)  return message;
+        if(setting.requireDigit === 'true' && !me.isDigit(value) ) return message;
+        if(setting.requireLowercase === 'true' && !me.isLower(value) ) return message;
+        if(setting.requireUppercase === 'true' && !me.isUpper(value) ) return message;
+        if(setting.requireNonAlphanumeric === 'true' && !me.isNonAlphanumeric(value) ) return message;
         return true;
+    },
+
+    getErrorMessage(setting){
+        let msg = []
+        if(setting.requireDigit) msg.push(I18N.get('PasswordRequireDigit'));
+        if(setting.requireLowercase) msg.push(I18N.get('PasswordRequireLowercase'));
+        if(setting.requireUppercase) msg.push(I18N.get('PasswordRequireUppercase'));
+        if(setting.requireNonAlphanumeric) msg.push(I18N.get('PasswordRequireNonAlphanumeric'));
+        msg.push(Format.format(I18N.get('PasswordRequireLength'), setting.requiredLength));
+        return msg.join(',') ;
     },
 
     isDigit: function(value){

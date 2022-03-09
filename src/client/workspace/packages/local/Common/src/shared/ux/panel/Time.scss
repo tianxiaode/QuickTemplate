@@ -1,0 +1,31 @@
+
+.flex-grow-3{
+    flex-grow: 3 !important;
+}
+
+.flex-grow-5{
+    flex-grow: 5 !important;
+}
+
+.border-dashed{
+    border: 1px dashed #6c757d !important;
+}
+
+.x-time-panel{
+    background-color: $background-color;
+
+    .item > span{
+        display: block;
+        cursor: pointer;
+        margin: auto;
+        line-height: 30px;
+        width: 30px;
+        height: 30px;
+    }
+    .item.selected > span {
+        background-color: var(--base-color) !important;
+    }
+    .item:hover > span{
+        background-color: var(--hovered-background-color);
+    }
+}

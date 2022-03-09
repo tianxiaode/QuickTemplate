@@ -7,103 +7,87 @@
         'Common.shared.ux.Toast',
     ],
 
-    ajax(response) {
-        console.log(response)
-        const me = this,
-            view = me.isViewController ? view.getView() : me.isContainer ? me : Ext.Viewport,
+    ajax(response, resourceName, showAlert) {
+        let me = this,
+            view = me.isViewController ? me.getView() : me.isContainer ? me : Ext.Viewport,
             service = window.I18N,
              title = service && service.getDefaultMessageTitle();
         if(view && view.setMasked) view.setMasked(false);
-        if(!I18N.isReady){
-            Ext.on('localizedready', me.ajax, me ,{ single: true, args: [response]} );
+        if(view && view.unmask) view.unmask();
+        Ext.Viewport.unmask();
+        if(!service.isReady){
+            Ext.on('i18nready', me.ajax, me ,{ single: true, args: [response]} );
             return;
         }
-        if(response.status === 401){
-            const error = I18N.getLocalText('Error401');
-            MsgBox.alert(title , error);
-            return error;    
-        }
-        let obj  = response.responseJson || Ext.decode(response.responseText, true),
-            error = service && service.getUnknownError();
-        if(obj && obj.error) {
-            if(Ext.isString(obj.error)){
-                error = obj.error_description;
-            }else{
-                error = obj.error.message;
-                if(!Ext.isEmpty(obj.error.code)) error += `[${obj.error.code}]`;
-                if(!Ext.isEmpty(obj.error.details)) 
-                    error += `[${obj.error.code}]${service && service.getLabelSeparator() || ':'}${obj.error.details}`;
-                MsgBox.alert(title, error);
-                return error;    
-            }
-            
-        }
-        MsgBox.alert(title , error);
+        let error = Failure.getError(response, resourceName);
+        if(showAlert) MsgBox.alert(title , error);
         return error;
     },
 
-    // proxy: function (proxy, response, options, epots) {
-    //     var status = response.status;
-    //     if (status === 200 && !Ext.isEmpty(options.error)) {
-    //         Ext.Msg.alert(I18N.FailedTitle, options.error);
-    //     }else if (status === 500 || status === 400 ) {
-    //         let obj = response.responseJson;
-    //         if(obj && obj.error && obj.error.message){
-    //             Ext.Msg.alert(I18N.FailedTitle,obj.error.message);
-    //         }
-    //     } else {
-    //         FAILED.ajax(response, options);
-    //     }
-    // },
+    ajaxWithAlert(response, resourceName){
+        Failure.ajax(response, resourceName, true);
+    },
 
-    // form: function(form, result,responseText) {
-    //     if(form) {
-    //         if(form.unmask) form.unmask();
-    //         if(form.setMasked) form.setMasked(false);
-    //     }
-    //     var response = Ext.decode(responseText,true) || {};
-    //     if (response.error && response.error.validationErrors && 
-    //         Ext.isArray(response.error.validationErrors) && response.error.validationErrors.length>0) {  //abp errors
-    //         let errors = FAILED.processValidationErrors(response.error.validationErrors, form);
-    //         if(form) form.setErrors(errors);
-    //         return;
-    //     };
-    //     if (result.status === 500) {
-    //         if (response.error && response.error.message) {
-    //             FAILED.toast(response.error.message + (response.error.details ? response.error.details : ''),form,'bl');
-    //         }
-    //         return;
-    //     }
-    //     FAILED.ajax(result,null,form);
-    // },
 
-    // processValidationErrors: function(errors, form) {
-    //     console.log(form)
-    //     var result = {}, 
-    //         msg = [],
-    //         entityName = (form.getEntityName && form.getEntityName()) || form.entityName;
-    //     for (const error of errors) {
-    //         for (const field of error.members) {
-    //             if(!Ext.isArray(result[field])) result[field] = [];
-    //             result[field].push(error['message']);
-    //             if(I18N.Model[entityName] && I18N.Model[entityName][field])
-    //                 msg.push(`${I18N.Model[entityName][field]}-${error['message']}`);
-    //         }
-    //     }
-    //     Ext.toast(msg.join('<br>'), form);
-    //     return result;
-    // },
+    getValidationErrors(data, resourceName) {
+        let result = {}, 
+            validationErrors = data.error && data.error.validationErrors;
+        if(!validationErrors) return Failure.getError(data, resourceName);
+        validationErrors.forEach(e=>{
+            e.members.forEach(f=>{
+                if(!Ext.isArray(result[f])) result[f] = [];
+                result[f].push(e['message']);
+            })
+        })
+        return result;
+    },
 
-    // toast: function(msg, el,align){
-    //     if(FAILED.isPhone()){
-    //         Ext.toast(msg);
-    //     }else{
-    //         Ext.toast(
-    //             msg,
-    //             el,
-    //             align
-    //         );
-    //     }
-    // }
+    getError(response, resourceName){
+        let status = response && response.status,            
+            data = response,
+            returnObj = Http.parseResponseText(response),
+            error = returnObj && returnObj.error && returnObj.error.message;
+        if(status === 401) {
+            window.location.href = '.';
+            return;
+        };        
+        if(status === 404) {
+            if(Ext.isEmpty(error))  return I18N.getLocalText('Error404');
+            return error;
+        };
+        if(status === 405) return I18N.getLocalText('Error405');
+        if(status === 415) return I18N.getLocalText('Error415');
+        if(status === 400) {
+            error = Failure.getValidationErrors(response.responseJson || returnObj, resourceName);
+            error = Failure.buildValidationErrors(error, resourceName);
+            return error;
+        };
+        if(status) data = response.responseType === 'json' ? response.responseJson : returnObj;
+        if(!(data && data.error)) return response;
+        if(data.error.validationErrors) return Failure.getValidationErrors(data, resourceName);
+        if(!Ext.isString(data.error)){
+            error = data.error.message;
+            if(!Ext.isEmpty(data.error.details)) 
+            {
+                error += `:${data.error.details}`;
+            }
+        }
+        return error.replace('\r', '<br/>').replace('\r\n', '<br/>');
+    },
+
+    buildValidationErrors(errors,resourceName){
+        let msg = '<ul class="message-tips">';
+        for(let e in errors){
+            let error = errors[e];
+            if(!Ext.isArray(error)) continue;
+            let fieldName = I18N.get(Format.capitalize(e), resourceName);
+            if(Ext.isEmpty(fieldName)) continue;
+            msg += `<li class="danger lh-20"><b>${fieldName}</b>： ${error.join('<br>')}</li>`;
+        }
+        msg += '</ul>'
+        return msg;
+    },
+
+
 
 });

@@ -1,0 +1,136 @@
+$button-text-transform: dynamic(null);
+$button-border-radius: dynamic(null);
+@include button-ui(
+    $ui: 'soft-cyan',
+    $color: $info
+
+);
+
+@include button-ui(
+    $ui: 'soft-blue',
+    $color: $primary
+
+);
+
+@include button-ui(
+    $ui: 'soft-red',
+    $color: $danger
+
+);
+@include button-ui(
+    $ui: 'danger',
+    $color: $base-foreground-color,
+    $background-color: $danger,
+    $pressed-background-color: $base-pressed-color,
+    $hovered-background-color:  $red-700,
+    $disabled-background-color: rgba(0,0,0,0.12)
+
+);
+
+@include button-ui(
+    $ui: 'success',
+    $color: $base-foreground-color,
+    $background-color: $success,
+    $pressed-background-color: $base-pressed-color,
+    $hovered-background-color:  $green-700,
+
+);
+
+@include button-ui(
+    $ui: 'soft-orange',
+    $color: $base-foreground-color,
+    $background-color: $orange,
+    $pressed-background-color: $base-pressed-color,
+    $hovered-background-color:  $orange-700,
+    $disabled-background-color: rgba(0,0,0,0.12)
+
+);
+@include button-ui(
+    $ui: 'soft-amber',
+    $color: $base-foreground-color,
+    $background-color: $yellow,
+    $pressed-background-color: $base-pressed-color,
+    $hovered-background-color: $yellow-700,
+    $disabled-background-color: rgba(0,0,0,0.12)
+
+);
+@include button-ui(
+    $ui: 'soft-green',    
+    $color: $base-foreground-color,
+    $background-color: $green,
+    $pressed-background-color: $base-pressed-color,
+    $hovered-background-color: $green-700,
+    $disabled-background-color: rgba(0,0,0,0.12)
+
+);
+@include button-ui(
+    $ui: 'soft-light-green',
+    $color: $base-foreground-color,
+    $background-color: $teal,
+    $pressed-background-color: $base-pressed-color,
+    $hovered-background-color: $teal-700,
+    $disabled-background-color: rgba(0,0,0,0.12)
+
+);
+
+@include button-ui(
+    $ui: 'soft-purple',
+    $color: $base-foreground-color,
+    $background-color: $purple,
+    $pressed-background-color: $base-pressed-color,
+    $hovered-background-color: $purple-700,
+    $disabled-background-color: rgba(0,0,0,0.12)
+
+);
+@include button-ui(
+    $ui: 'header',
+    $color:  $gray-700,
+    $background-color: transparent,
+    $pressed-background-color: $base-pressed-color,
+    $hovered-background-color: $gray-300,
+    $disabled-background-color: rgba(0,0,0,0.12)
+
+);
+@include button-ui(
+    $ui: 'soft-grey',
+    $color: $base-foreground-color,
+    $background-color: $gray-500,
+    $pressed-background-color: $base-pressed-color,
+    $hovered-background-color: $gray-700,
+    $disabled-background-color: rgba(0,0,0,0.12)
+
+);
+
+@include button-ui(
+   $ui: 'action-segmented',
+   $color: $base-color,
+   $background-color: $faded-color,
+   $pressed-color: $base-foreground-color,
+   $pressed-background-color: $base-color,
+   $hovered-background-color: $base-pressed-color,
+   $pressed-hovered-background-color: $base-pressed-color,
+   $focused-hovered-background-color: $base-pressed-color
+);
+
+
+@include button-ui(
+ $ui: 'phone-badge',
+ $badge-background-color : transparent,
+ $badge-color :var(--accent-color),
+ $badge-border-color : transparent,
+ $badge-min-width : 40px
+);
+
+@include button-ui(
+ $ui: 'error',
+ $background-color: transparent,
+ $hovered-background-color: $gray-300,
+ $color: $red
+);
+@include button-ui(
+ $ui: 'success',
+ $background-color: transparent,
+ $hovered-background-color: $gray-300,
+ $color: $success
+);
+

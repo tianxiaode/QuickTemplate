@@ -15,8 +15,6 @@ generatedFiles/
 cordova/
 node_modules/
 upload/
-VMMS.Web.Host/[Cc]ard/
-VMMS.Web.Host/[Cc]ard[Bb]ackup/
 
 # Logs
 Logs/

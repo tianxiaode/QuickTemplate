@@ -1,0 +1,27 @@
+@include toolbar-ui(
+    $ui: 'light',
+    $background-color :transparent,
+    $box-shadow : none
+);
+
+@include toolbar-ui(
+    $ui: 'dark',
+    $background-color: #3a3a3a,
+    $color: #fff,
+    $padding-big: 8px 16px,
+    $min-height-big: 48px
+);
+
+@include toolbar-ui(
+    $ui: 'grid',
+    $background-color : $background-color,
+    $box-shadow : none
+);
+
+@include titlebar-ui(
+    $ui: 'dark',
+    $background-color: #3a3a3a,
+    $color: #fff,
+    $padding-big: 8px 16px,
+    $min-height-big: 48px
+);

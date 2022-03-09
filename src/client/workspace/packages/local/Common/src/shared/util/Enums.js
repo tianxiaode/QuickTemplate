@@ -2,21 +2,31 @@ Ext.define('Common.shared.util.Enums', {
     alternateClassName: 'Enums',
     singleton: true,
 
-
-    request:[
-        'Common.data.store.Enums'
+    mixins:[
+        'Ext.mixin.Observable'
     ],
 
+
+    requires:[
+        'Common.data.store.Enums',
+    ],
+    
+    constructor(config){
+        let me = this;
+        me.mixins.observable.constructor.call(me, config);
+    },
+  
     isReady: false,
     init(){
         let me = this,
             store = me.getStore();
+        me.defaultValue = {};
         store.on('load', me.onStoreLoad, me);
         store.load();
     },
 
     getStore(){
-        const me = this;
+        let me = this;
         let store = me.store;
         if(!store){
             store = me.store = Ext.create('Common.data.store.Enums');
@@ -25,16 +35,32 @@ Ext.define('Common.shared.util.Enums', {
     },
 
 
-    getEnumItem(v, name){
-        let store = this.getStore(),
-            id = `${Ext.util.Format.capitalize(name)}-${v}`;
-        return store.getById(id);
+    getEnumItem(v, name, isTextValue){
+        name = Format.uncapitalize(name);
+        if(!isTextValue){
+            let store = Enums.getStore(),
+                id = `${name}-${v}`; 
+            return store.getById(id);    
+        }
+        let data = this[name];
+        let item ;
+        Ext.Object.each(data, (k,m)=>{
+            if(m.textValue !== v) return;
+            item = m;
+            return false;
+        });
+        return item;
 
     },
 
-    getEnumText(v, name, defaultValue){
-            item = this.getEnumItem(v, name);
-        return item ? item.get('text')  : defaultValue ;
+    getEnumText(v, name, defaultValue, isTextValue){
+        let item = Enums.getEnumItem(v, name, isTextValue);
+        return item ? (item.text || (item.data && item.data.text) ) : defaultValue ;
+    },
+
+    add(name, enums){
+        name = Format.uncapitalize(name);
+        Enums[name] = enums;
     },
 
     privates:{
@@ -44,18 +70,67 @@ Ext.define('Common.shared.util.Enums', {
             let me = this;
             if(!successful) return;
             records.forEach(record => {
-                let type = record.get('type'),
+                let type = Format.uncapitalize(record.get('type')),
                     data = me[type];
                 if(!data){
                     data = me[type] = {};
                 }
-                data[record.get('key')] = Ext.clone(record.data);
+                let d = Ext.clone(record.data);
+                data[record.get('key')] = d;
+                if(record.get('isDefault')) me.defaultValue[type] = d;
             });
-            Enums.isReady = true;
-            Ext.fireEvent('enumsready');
+            me.updateModelFieldDefaultValue();
+            me.isReady = true;
+            me.fireEvent('ready');
         },
 
-
+        updateModelList:{
+            'merchantCategoryCode': {
+                'clearingaccountbase' : 'mcc'
+            },
+            'merchantType':{
+                'clearingaccountbase' : 'merchantType'
+            },
+            'bankAccountUsageType':{
+                'clearingaccountbank': 'accountUsageType'
+            },
+            'bankAccountType':{
+                'clearingaccountbank': 'accountType'
+            },
+            'certType':{
+                'clearingaccountbase': 'certType'
+            },
+            'clearingRulePattern':{
+                'clearingrule': 'pattern',
+                'marketingclearing': 'pattern'
+            },
+            'marketingType':{
+                'marketing': 'type'
+            },
+            'marketingDiscountType':{
+                'marketing': 'discountType'
+            }
+        },
+    
+        updateModelFieldDefaultValue(){
+            let me = this,
+                list = me.updateModelList,
+                 values = me.defaultValue;
+            Ext.Object.each(list,(k,v)=>{
+                let data = values[k];
+                if(!data) return;
+                Ext.Object.each(v,(entity,f)=>{
+                    let model = Ext.ClassManager.getByAlias(`entity.${entity}`);
+                    if(!model) return;
+                    let fields = model.fields;
+                    let field = fields.find(n=>n.name === f);
+                    if(!field) return;
+                    field.defaultValue = data.value;
+                    if(field.type === 'string') field.defaultValue = data.textValue;
+                })
+            })
+        }
+    
     
     }
 

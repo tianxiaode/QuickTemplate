@@ -2,8 +2,8 @@ Ext.define('Common.shared.view.pages.Page404',{
     extend: 'Common.shared.view.BasePage',
     xtype: 'shared-page404',
 
-    title: 'CompanyShortName',
-
+    langTitle: 'CompanyShortName',
+    
     items:[
         {
             xtype: 'component',
@@ -11,8 +11,7 @@ Ext.define('Common.shared.view.pages.Page404',{
         },
         {
             xtype: 'component',
-            localized: [ 'html'],
-            html: 'Page404Text'
+            langHtml: 'Page404Text'
         }
     ]
 

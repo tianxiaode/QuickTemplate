@@ -1,14 +1,26 @@
 Ext.define('Common.overrides.shared.Panel',{
     override: 'Ext.Panel',
 
+    requires:[
+        'Common.shared.ux.button.Message',
+    ],
+
     config:{
         langTitle: null,
         standardButtons: {
-            error:{
-                iconCls: 'x-fa fa-times-circle',
-                ui: 'error',
-                minWidth:24,
-                weight: 0
+            message:{
+                xtype: 'uxmessagebutton'
+            },
+            // error:{
+            //     xtype: 'uxerrorbutton'
+            // },
+            // success:{
+            //     xtype: 'uxsuccessbutton'
+            // },
+            fill:{
+                xtype: 'component',
+                flex: 1,
+                weight: 5
             },
             ok: {
                 ui: 'action',
@@ -42,9 +54,21 @@ Ext.define('Common.overrides.shared.Panel',{
                 ui: 'action',
                 langText: 'Apply'
             },
+            saveAndNew:{
+                xtype: 'uxsaveandnewbutton',
+                // ui: 'action',
+                // langText: 'SaveAndNew',
+                weight: 85
+            },
             save: {
                 ui: 'action',
                 langText: 'Save'
+            },
+            reset:{
+                xtype: 'uxresetbutton',
+                // langText: 'Reset',
+                weight: 95,
+                // ui: 'soft-purple'
             },
             submit: {
                 ui: 'action',
@@ -57,7 +81,7 @@ Ext.define('Common.overrides.shared.Panel',{
             close: {
                 ui: 'soft-grey',
                 langText: 'Close'
-            }
+            },
         }
 
     },
@@ -72,7 +96,8 @@ Ext.define('Common.overrides.shared.Panel',{
             ui: 'footer',
             defaultButtonUI: 'action',
             defaults:{
-                margin: '0 0 0 5'                
+                margin: '0 0 0 5',                
+                style: 'line-height:24px;'
             },
  
             layout: {
@@ -84,16 +109,26 @@ Ext.define('Common.overrides.shared.Panel',{
     },
 
     onLocalized(){
-        const me = this,
-            resourceName = me.getResourceName(),
-            title = me.getLangTitle(),
+        let me = this,
+            resourceName = me.resourceName || me.getContainerResourceName(),
+            langTitle = me.getLangTitle(),
             collapsible = me.getCollapsible && me.getCollapsible();
+        if(me.closeTool){
+            me.closeTool.setTooltip({ zIndex:20, html: I18N.get('Close') });
+        }
         if(collapsible){
             collapsible.setCollapseToolText(I18N.get('CollapseToolText'));
             collapsible.setExpandToolText(I18N.get('ExpandToolText'));
         }
-        if(title){
-            me.setTitle(I18N.get(title, resourceName));
+        if(Ext.isString(langTitle)){
+            me.setTitle(I18N.get(langTitle, resourceName));
+        }
+        if(Ext.isArray(langTitle)){
+            let title = '';
+            langTitle.forEach(t=>{
+                title+= I18N.get(t, resourceName);
+            });
+            me.setTitle(title);
         }
         me.callParent();
     },

@@ -1,0 +1,12 @@
+.x-listitem .point{
+    display: none;
+  }
+  
+  div.x-listitem:hover .point{
+    display: inline;
+    color: #6c757d ;
+  }
+  div.x-listitem.x-selected .point{
+    display: inline !important;
+    color: #4caf50 !important;
+  }

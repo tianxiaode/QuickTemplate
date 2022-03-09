@@ -6,7 +6,7 @@ Ext.define('Common.overrides.shared.plugin.Abstract',{
     },
 
     constructor: function(config) {
-        const me = this;
+        let me = this;
         if (config) {
             me.cmp = config.cmp;
             me.pluginConfig = config;
@@ -19,11 +19,11 @@ Ext.define('Common.overrides.shared.plugin.Abstract',{
     },
 
     onLocalized(){
-        const me = this,
+        let me = this,
             type = me.type;
         if(type === 'gridrowdragdrop'){
             me.dragText =  I18N.get('DragText');
-            const dragZone = me.dragZone;
+            let dragZone = me.dragZone;
             if(dragZone) dragZone.dragText = I18N.get('DragText');
             return;
         };

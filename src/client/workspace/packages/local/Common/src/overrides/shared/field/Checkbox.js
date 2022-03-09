@@ -2,25 +2,36 @@ Ext.define('Common.overrides.shared.field.Checkbox',{
     override: 'Ext.field.Checkbox',
 
     config:{
-        langBoxLabel: null
+        langBoxLabel: null,
+        bodyAlign: 'start'
     },
 
     isCheckbox: true,
 
     onLocalized(){
-        const me = this,
-            form = me.up('formpanel'),
-            resourceName = me.getResourceName() || (form && form.getResourceName());
+        let me = this,
+            resourceName = me.resourceName || me.getContainerResourceName();
 
         if(me.getAutoLabel()){
-            me.setLangBoxLabel(me.getName() || me.getItemId());
+            let name = Ext.util.Format.capitalize(me.getName() || me.getItemId());
+            me.setLangBoxLabel(name);
         }
 
         let langBoxLabel = me.getLangBoxLabel();
 
-        if(langBoxLabel) me.setBoxLabel(I18N.get(langBoxLabel, resourceName));
+        if(langBoxLabel){
+            me.setBoxLabel(I18N.get(langBoxLabel,resourceName, me.getEntityName()));
+        } 
     
         me.callParent();
-    }
+    },
+
+    getSubmitValue() {
+        let me = this,
+            unchecked = me.uncheckedValue,
+            uncheckedVal = Ext.isDefined(unchecked) ? unchecked : null;        
+        return me.getChecked() ? Ext.isEmpty(me._value) ? true : me._value : uncheckedVal;
+    },
+
 
 })

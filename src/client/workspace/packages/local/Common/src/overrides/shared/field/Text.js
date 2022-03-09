@@ -7,12 +7,10 @@ Ext.define('Common.overrides.shared.field.Text',{
     },
 
     onLocalized(){
-        const me = this,
-            form = me.up('formpanel'),
+        let me = this,
             badFormatMessage = me.getLangBadFormatMessage(),
             placeholder = me.getLangPlaceholder(),
-            resourceName = me.getResourceName() || (form && form.getResourceName());
-        
+            resourceName = me.resourceName || me.getContainerResourceName();
         if(placeholder){
             me.setPlaceholder(I18N.get(placeholder, resourceName));
         }
@@ -22,6 +20,21 @@ Ext.define('Common.overrides.shared.field.Text',{
         }
         me.badFormatMessage = I18N.get(me.getLangBadFormatMessage());
         me.callParent();
+    },
+
+    initialize(){
+        let me = this;
+        me.callParent(arguments);
+        me.initUi();
+    },
+
+    initUi(){
+        let me = this,
+            parent = me.up();
+        if(Ext.platformTags.phone && (parent && parent.isToolbar)){
+            me.setUi('solo');
+        }
     }
+
 
 })

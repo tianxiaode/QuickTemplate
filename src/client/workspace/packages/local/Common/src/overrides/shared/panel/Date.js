@@ -3,10 +3,9 @@ Ext.define('Common.overrides.shared.panel.Date', {
 
 
     onLocalized(){
-        const me = this;
+        let me = this;
         me.setNextText(I18N.get('NextText'));
         me.setPrevText(I18N.get('PrevText'));
-
     },
 
 });

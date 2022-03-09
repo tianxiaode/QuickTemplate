@@ -99,8 +99,8 @@ Ext.define('Common.shared.ux.MessageBox', {
     /**
      * @private
      */
-    constructor: function(config) {
-        var allowedConfigs = [
+    constructor(config) {
+        let allowedConfigs = [
                 'ui', 'showAnimation', 'hideAnimation', 'title', 'message', 'prompt',
                 'iconCls', 'buttons', 'defaultTextHeight'
             ],
@@ -133,7 +133,7 @@ Ext.define('Common.shared.ux.MessageBox', {
      * Creates a new {@link Ext.Toolbar} instance using {@link Ext#factory}.
      * @private
      */
-    applyTitle: function(config) {
+    applyTitle(config) {
         if (typeof config === "string") {
             return config;
         }
@@ -145,7 +145,7 @@ Ext.define('Common.shared.ux.MessageBox', {
      * Adds the new {@link Ext.Toolbar} instance into this container.
      * @private
      */
-    updateTitle: function(newTitle) {
+    updateTitle(newTitle) {
         var header = this.getHeader() || {};
  
         if (Ext.isSimpleObject(header)) {
@@ -160,7 +160,7 @@ Ext.define('Common.shared.ux.MessageBox', {
     /**
      * @private
      */
-    applyMessage: function(config) {
+    applyMessage(config) {
         config = {
             maxHeight: 510,
             html: config,
@@ -173,13 +173,13 @@ Ext.define('Common.shared.ux.MessageBox', {
     /**
      * @private
      */
-    updateMessage: function(newMessage) {
+    updateMessage(newMessage) {
         if (newMessage) {
             this.add(newMessage);
         }
     },
  
-    getMessage: function() {
+    getMessage() {
         if (this._message) {
             return this._message.getHtml();
         }
@@ -190,7 +190,7 @@ Ext.define('Common.shared.ux.MessageBox', {
     /**
      * @private
      */
-    applyIconCls: function(config) {
+    applyIconCls(config) {
  
         if (config) {
             config = {
@@ -211,7 +211,7 @@ Ext.define('Common.shared.ux.MessageBox', {
     /**
      * @private
      */
-    updateIconCls: function(newIconCls, oldIconCls) {
+    updateIconCls(newIconCls, oldIconCls) {
         // ensure the title and button elements are added first
         this.getTitle();
         this.getButtons();
@@ -224,7 +224,7 @@ Ext.define('Common.shared.ux.MessageBox', {
         }
     },
  
-    getIconCls: function() {
+    getIconCls() {
         var icon = this._iconCls,
             iconCls;
  
@@ -240,7 +240,7 @@ Ext.define('Common.shared.ux.MessageBox', {
     /**
      * @private
      */
-    applyPrompt: function(prompt) {
+    applyPrompt(prompt) {
         var config;
  
         if (prompt) {
@@ -272,7 +272,7 @@ Ext.define('Common.shared.ux.MessageBox', {
     /**
      * @private
      */
-    updatePrompt: function(newPrompt, oldPrompt) {
+    updatePrompt(newPrompt, oldPrompt) {
         if (newPrompt) {
             this.add(newPrompt);
         }
@@ -286,7 +286,7 @@ Ext.define('Common.shared.ux.MessageBox', {
      * @private
      * Pass `fn` config to show method instead.
      */
-    onClick: function(button) {
+    onClick(button) {
         var me = this,
             msgBoxOptions = me.msgBoxOptions,
             prompt = me.getPrompt(),
@@ -301,7 +301,7 @@ Ext.define('Common.shared.ux.MessageBox', {
  
                 me.on({
                     single: true,
-                    hiddenchange: function() {
+                    hiddenchange() {
                         fn.call(msgBoxOptions.scope || me, which, prompt, msgBoxOptions);
                         button.enable();
                     }
@@ -312,8 +312,8 @@ Ext.define('Common.shared.ux.MessageBox', {
         me.hide();
     },
  
-    show: function(msgBoxOptions, options) {
-        var me = this,
+    show(msgBoxOptions, options) {
+        let me = this,
             buttons, config, prompt;
  
         Ext.util.InputBlocker.blockInputs();
@@ -375,7 +375,7 @@ Ext.define('Common.shared.ux.MessageBox', {
         return me;
     },
  
-    alert: function(title, message, fn, scope) {
+    alert(title, message, fn, scope) {
         return this.show({
             title: title || I18N.getDefaultMessageTitle(),
             message: message || null,
@@ -391,7 +391,7 @@ Ext.define('Common.shared.ux.MessageBox', {
         });
     },
  
-    confirm: function(title, message, fn, scope) {
+    confirm(title, message, fn, scope) {
         return this.show({
             title: title || I18N.getDefaultMessageTitle(),
             message: message || null,
@@ -408,7 +408,7 @@ Ext.define('Common.shared.ux.MessageBox', {
         });
     },
  
-    prompt: function(title, message, fn, scope, multiLine, value, prompt) {
+    prompt(title, message, fn, scope, multiLine, value, prompt) {
         return this.show({
             title: title || I18N.getDefaultMessageTitle(),
             message: message || null,

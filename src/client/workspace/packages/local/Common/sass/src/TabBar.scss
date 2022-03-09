@@ -1,0 +1,77 @@
+@include tabbar-ui(
+    $ui: 'light',
+    $background-color : $background-color,
+    $box-shadow : none
+);
+
+@include tab-ui(
+    $ui: 'light',
+    $background-color : $background-color,
+    $color : var(--color),
+    $active-color: $base-color,
+    $active-icon-color: $base-color,
+    $pressed-color: $base-color,
+    $pressed-icon-color: $base-color,
+    $active-focused-color :$base-color,
+    $active-focused-icon-color :$base-color,
+    $hovered-color: #6c757d,
+    $hovered-background-color :$background-color,
+    $active-background-color:$background-color,
+    $box-shadow : none,
+    $disabled-color: var(--disabled-color)
+);
+
+@include tabbar-ui(
+    $ui: 'light-white',
+    $background-color : $white,
+    $box-shadow : none
+);
+
+@include tab-ui(
+    $ui: 'light-white',
+    $background-color : $white,
+    $color : var(--color),
+    $active-color: $base-color,
+    $active-icon-color: $base-color,
+    $pressed-color: $base-color,
+    $pressed-icon-color: $base-color,
+    $active-focused-color :$base-color,
+    $active-focused-icon-color :$base-color,
+    $hovered-color: #6c757d,
+    $hovered-background-color :$white,
+    $active-background-color:$white,
+    $box-shadow : none,
+    $disabled-color: var(--disabled-color)
+);
+
+
+@include tab-ui(
+    $ui: 'alginleft',
+    $background-color : $background-color,
+    $color : #6c757d,
+    $active-color: $base-color,
+    $active-icon-color: $base-color,
+    $pressed-color: $base-color,
+    $pressed-icon-color: $base-color,
+    $active-focused-color :$base-color,
+    $active-focused-icon-color :$base-color,
+    $hovered-color: #6c757d,
+    $hovered-background-color :$background-color,
+    $active-background-color:$background-color,
+    $box-shadow : none,
+    $position-active-indicator-el-width: 100%
+);
+
+.x-tab-alginleft.x-tab-position-left.x-active .x-active-indicator-el {
+    height: 4px;
+    right: 0;
+    left: inherit;
+}
+.x-tab-alginleft .x-body-el {
+    overflow: hidden;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: inherit;
+}

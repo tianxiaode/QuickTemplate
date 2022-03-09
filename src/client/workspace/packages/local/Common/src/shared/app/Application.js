@@ -4,18 +4,30 @@ Ext.define('Common.shared.app.Application', {
     name: 'CommonShared',
 
     requires:[
-        'Common.shared.view.viewport.ViewportController',
-        'Common.shared.view.viewport.ViewportModel'
+        'Common.shared.service.Storage',
+        'Common.shared.util.TemplateFn',
+        'Common.shared.util.Url',
+        'Common.shared.service.HttpClient',
+        'Common.shared.service.Localized',
+        'Common.shared.service.Config',
+        'Common.shared.service.OAuth',
     ],
 
-    viewport:{
-        controller: 'shared-viewport',
-        viewModel: 'shared-viewport'
+    responsiveConfig:{
+        desktop:{
+            quickTips: true,
+        },
     },
 
-    init: function() {
-        //Ajax提交时，注入认证头
-        Ext.Ajax.on('beforerequest', this.onAjaxBeforeRequest, this);
+    viewport:{
+        items:[
+            {
+                xtype: 'homeview'
+            }
+        ]
+    },
+
+    init() {
         //桌面应用允许用户选择文字
         if(Ext.platformTags.desktop){
             Ext.Viewport.setUserSelectable({
@@ -24,13 +36,16 @@ Ext.define('Common.shared.app.Application', {
             })    
         }
 
-        //简化代码书写
-        window.Ajax = Ext.bind(Ext.Ajax.request, Ext.Ajax);
-        window.Format= Ext.util.Format;
+        if(AppConfig.logError){
+            window.onerror = (msg, url, line, col, error)=>{
+                Http.postScriptError(msg, url, line, col, error);
+            }
+        }
+                
     },
 
     onAppUpdate() {
-        const title = AppConfig.applicationUpdate[AppConfig.lang] || AppConfig.applicationUpdate["en"],
+        let title = AppConfig.applicationUpdate[AppConfig.lang] || AppConfig.applicationUpdate["en"],
             message = AppConfig.applicationUpdateMessage[AppConfig.lang] || AppConfig.applicationUpdateMessage["en"];
         Ext.Msg.confirm(title, message,
             function (choice) {
@@ -43,14 +58,19 @@ Ext.define('Common.shared.app.Application', {
 
     launch(){
         //完成应用程序初始化再进行Viewport的初始化
-        Ext.Viewport.getController().onLaunch();
+        this.removeSplash();
     },
 
-    onAjaxBeforeRequest(conn , options , eOpts ){
-        if(options.withoutAuthorizationHeader) return;
-        if(!options.headers) options.headers = {}
-        Ext.apply( options.headers,  AuthService.getAuthorizationHeader());
+    /**
+    * 移除加载信息
+    */
+    removeSplash() {
+        Ext.getBody().removeCls('launching')
+        let elem = document.getElementById("splash")
+        if(elem)
+            elem.parentNode.removeChild(elem)
     },
+    
 
 
 });

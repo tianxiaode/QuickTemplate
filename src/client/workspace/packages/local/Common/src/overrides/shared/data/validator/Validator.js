@@ -6,7 +6,7 @@ Ext.define('Common.overrides.shared.data.validator.Validator',{
     },
 
     constructor: function(config) {
-        const me = this;
+        let me = this;
         if (typeof config === 'function') {
             me.fnOnly = true;
             me.validate = config;
@@ -21,7 +21,7 @@ Ext.define('Common.overrides.shared.data.validator.Validator',{
     },
 
     onLocalized(){
-        const me = this,
+        let me = this,
             langMessage = me.getLangMessage();
         if(!langMessage && me.getMessage){
             me.setLangMessage(me.getMessage());

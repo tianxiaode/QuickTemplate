@@ -9,7 +9,7 @@ Ext.define('Common.overrides.shared.data.validator.Bound',{
     },
 
     onLocalized(){
-        const me = this;
+        let me = this;
         me.setEmptyMessage(I18N.get(me.getLangEmptyMessage()))
         me.setMinOnlyMessage(I18N.get(me.getLangMinOnlyMessage()))
         me.setMaxOnlyMessage(I18N.get(me.getLangMaxOnlyMessage()))

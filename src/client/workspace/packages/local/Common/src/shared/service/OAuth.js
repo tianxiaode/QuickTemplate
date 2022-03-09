@@ -1,81 +1,69 @@
 Ext.define('Common.shared.service.OAuth', {
-    alternateClassName: 'AuthService',
+    alternateClassName: 'Auth',
     singleton: true,
 
-
-    requires:[
-        'Common.shared.service.Localized',
+    mixins:[
+        'Ext.mixin.Observable'
     ],
 
+    nonceStateSeparator: ';',
+    responseType : 'code',
+    loginUrl: '',
+    logoutUrl: '',
+    oidc: true,
+    disablePKCE: false,
+    resource: '',
+
+    constructor(config){
+        let me = this;
+        me.mixins.observable.constructor.call(me, config);
+    },
+
+
     /**
-     * 验证是否已认证
-     * 验证方式为access_token是否存在，且是否已过期
+     * 验证是否已认�?
+     * 验证方式为access_token是否存在，且是否已过�?
      */
     isAuthenticated(){
-        const me = this,
-            storage = StorageService,
+        let me = this,
+            storage = AppStorage,
             keys = me.storageKeys,
             token = storage.get(keys.accessToken);
-        if(token){
-            const expiresAt = storage.get(keys.expiresAt),
-                now = new Date(),
-                isAuthenticated = expiresAt && parseInt(expiresAt, 10) > now.getTime();
-            //如果token已过期，清除全部数据
-            if(!isAuthenticated) me.removeAllStorageItem();
-            me.setCurrentOrganizationUnit(Ext.decode(storage.get(keys.currentOrganizationUnit),true));
-            me.organizationUnits = Ext.decode(storage.get(keys.organizationUnits),true);
-            console.log(me.currentOrganizationUnit, me.organizationUnits);
-            return isAuthenticated;
-        }
-        return false;
+        if(!token) return false;
+        let expireInSeconds = storage.get(keys.expireInSeconds),
+            now = new Date(),
+            isAuthenticated = expireInSeconds && parseInt(expireInSeconds, 10) > now.getTime();
+        //如果token已过期，清除全部数据
+        if(!isAuthenticated) me.removeAllStorageItem();
+        return isAuthenticated;
     },
 
     /**
      * 登录
-     * 通过用户名/邮箱/手机和密码获取access_token
+     * 通过用户�?/邮箱/手机和密码获取access_token
      * @param {用户名} username 
      * @param {密码} password 
      */
     login(username, password){
-        const me = this,
+        let me = this,
             data = {
-                'grant_type': 'password',
-                'scope': me.scopes,
-                'username': username,
+                'userNameOrEmailAddress': username,
                 'password': password,
             };
-        let promise = me.send(data, me.endpoints.token);
+        let promise = me.send(data, 'TokenAuth/Authenticate');
         promise.then(me.loginSuccess, null,null, me)
         return promise;
     },
 
+
+
+
     /**
-     * 退出
-     * 需要注销access_token和refresh_token并移除存储数据
+     * 退�?
+     * 需要注销access_token和refresh_token并移除存储数�?
      */
     logout(){
-        const me = this,
-            storage = StorageService,
-            keys = me.storageKeys,
-            tokenKey = keys.accessToken,
-            refreshTokenKey = keys.refreshToken,
-            token = storage.get(tokenKey),
-            refreshToken = storage.get(refreshTokenKey);
-        if(token){
-            const data = {
-                'token' : token,
-                'token_type_hint': tokenKey
-                };
-            me.send(data, me.endpoints.revocation);
-        }
-        if(refreshToken){
-            const data ={
-                'token' : refreshToken,
-                'token_type_hint': refreshTokenKey
-            };
-            me.send(data, me.endpoints.revocation);
-        }
-        me.removeAllStorageItem();
+        this.removeAllStorageItem();
     },
 
 
@@ -84,11 +72,11 @@ Ext.define('Common.shared.service.OAuth', {
      * @param {是否包含JSON Content头}} includeJsonContent 
      */
     getAuthorizationHeader(includeJsonContent){
-        const me = this,
+        let me = this,
             headers = {
-                'Authorization' : 'Bearer ' +  StorageService.get(me.storageKeys.accessToken),
+                'Authorization' : 'Bearer ' +  AppStorage.get(me.storageKeys.accessToken),
                 //'Access-Control-Allow-Origin': '*',
-                "accept-language": StorageService.get('lang')
+                "accept-language": AppStorage.get('lang')
             };
         if(includeJsonContent){
             headers['Content-Type'] = 'application/json;charset=utf-8';
@@ -96,13 +84,34 @@ Ext.define('Common.shared.service.OAuth', {
         return headers;
     },
 
+    /**
+     * 刷新令牌
+     * @param {组织编号} organizationUnitId 
+     */
+        refreshToken(id, name){
+        Ext.Viewport.setMasked(Ext.String.format(I18N.get('RefreshToken'), name));
+        let me = this,
+            data = {
+                'organizationUnitId': id
+            };
+        let promise = me.send(data, 'TokenAuth/AuthenticateOrganizationUnit')
+        promise.then(me.refreshTokenSuccess, me.getTokenFailure, null, me);
+        return promise;
+    },
+
+    getEncToken(){
+        let me = this,
+            storage = AppStorage;
+        return storage.get(me.storageKeys.encryptedAccessToken);
+    },
+
+
     privates:{
 
         storageKeys:{
             accessToken: 'access_token',
-            idToken: 'id_token',
-            expiresAt: 'expires_at',
-            refreshToken: 'refresh_token',
+            encryptedAccessToken: 'encryptedAccessToken',
+            expireInSeconds: 'expireInSeconds',
         },
     
         remoteController: 'connect',
@@ -120,39 +129,22 @@ Ext.define('Common.shared.service.OAuth', {
          * @param {获取令牌的结果} response 
          */
         loginSuccess(response){
-            const me = this,
+            let me = this,
                 obj = me.processToken(response);
-            Ext.fireEvent('loginsuccess', obj);
+            me.fireEvent('loginsuccess', obj);
         },
 
-        /**
-         * 刷新令牌
-         * @param {组织编号} organizationUnitId 
-         */
-        refreshToken(id, name){
-            Ext.Viewport.setMasked(Ext.String.format(I18N.get('RefreshToken'), name));
-            const me = this,
-                data = {
-                    'grant_type': 'refresh_token',
-                    'refresh_token': StorageService.get(me.storageKeys.refreshToken),
-                    'scope': me.scopes,
-                    'organizationUnitId': id
-                };
-            const promise = me.send(data, me.endpoints.token)
-            promise.then(me.refreshTokenSuccess, me.getTokenFailure, null, me);
-            return promise;
-        },
-    
+   
         /**
          * 
          * @param {获取令牌的结果} response 
          */
         refreshTokenSuccess(response){
             Ext.Viewport.setMasked(false);
-            const me = this,
+            let me = this,
                 obj = me.processToken(response);
             //发送登录已完成事件
-            Ext.fireEvent('refreshtokensuccess', obj);
+            me.fireEvent('refreshtokensuccess', obj);
         },
 
         /**
@@ -162,17 +154,18 @@ Ext.define('Common.shared.service.OAuth', {
         processToken(response){
             let obj  = Ext.decode(response.responseText,true);
             if(!obj) {
-                MsgBox(I18N.getDefaultMessageTitle(), I18N.getUnknownError());
+                MsgBox(null, I18N.getUnknownError());
                 return;
             }
-            const me = this,
-                storage = StorageService,
+            let data = obj.result;
+            let me = this,
+                storage = AppStorage,
                 keys = me.storageKeys,
                 now = new Date(),
-                expiresAt = now.getTime() + (obj.expires_in || 0) * 1000;
-            storage.set(keys.accessToken, obj[keys.accessToken]);
-            storage.set(keys.expiresAt, expiresAt, true);
-            storage.set(keys.refreshToken, obj[keys.refreshToken]);
+                expireInSeconds = now.getTime() + (data.expireInSeconds || 0) * 1000;
+            storage.set(keys.accessToken, data.accessToken);
+            storage.set(keys.expireInSeconds, expireInSeconds, true);
+            storage.set(keys.encryptedAccessToken, data.encryptedAccessToken);
             return obj;
         },
     
@@ -181,7 +174,7 @@ Ext.define('Common.shared.service.OAuth', {
          * @param {获取令牌结果} response 
          */
         getTokenFailure(response){
-            return Failure.ajax.apply(this, [response]);
+            return Failure.ajax.apply(this, [response, null, true]);
         },
 
         /**
@@ -190,26 +183,12 @@ Ext.define('Common.shared.service.OAuth', {
          * @param {端点} endpoint 
          */
         send(data, endpoint){
-            const me = this,
-                clientId = AppConfig.oAuthConfig.clientId,
-                clientSecret = AppConfig.oAuthConfig.dummyClientSecret,
-                headers = {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    "accept-language": StorageService.get('lang')
-                };
-            if(endpoint === me.endpoints.revocation){
-                headers['Authorization'] = `Basic ${btoa(`${clientId}:${clientSecret}`)}`
-            }else{
-                data['client_id'] = clientId;
-                data['client_secret'] = clientSecret;    
-            }
-            return Ext.Ajax.request({
-                url: URI.get(me.remoteController, endpoint,null, true),
-                withoutAuthorizationHeader: true,
-                method: 'POST',
-                rawData: Ext.Object.toQueryString(data),                
-                headers: headers,
-            });
+            let me = this;
+            return Http.post(
+                URI.get(endpoint),
+                data
+                //headers
+            );
         }
     },
 
@@ -218,9 +197,9 @@ Ext.define('Common.shared.service.OAuth', {
      */
     removeAllStorageItem(){
         Object.keys(this.storageKeys).forEach(key=>{
-            StorageService.remove(this.storageKeys[key]);
+            AppStorage.remove(this.storageKeys[key]);
         })
     },
 
-    
+
 });

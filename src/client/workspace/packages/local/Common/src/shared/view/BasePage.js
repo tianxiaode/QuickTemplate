@@ -1,15 +1,16 @@
 Ext.define('Common.shared.view.BasePage', {
     extend: 'Ext.Panel',
+    xtype: 'basepage',
     
     requires: [
-        'Common.shared.ux.button.Language'
+        'Ext.Responsive'
     ],
 
     config:{
         bottomMessage: `<div class="{6}">
             Copyright © {0}{1} 
-            <a class="white" href="{2}" target="_blank">{3}</a> {4}
-            <a class="grey-700" href="http://www.miitbeian.gov.cn/" target="_blank" >{5}</a>
+            <a class="text-light" href="{2}" target="_blank">{3}</a> {4}
+            <a class="text-light" href="http://www.miitbeian.gov.cn/" target="_blank" >{5}</a>
             </div>
         `,
         bottomBar:{
@@ -17,55 +18,12 @@ Ext.define('Common.shared.view.BasePage', {
             docked: 'bottom',
             itemId: 'bottomBar',
             height: 60,
-            userCls: 'bg-dark text-center grey-700 p-2'
+            userCls: 'bg-dark text-center text-light p-2'
         },
     
     },
 
-    header:{
-        items:[
-            {
-                xtype: 'languagebutton',
-                docked: 'right'
-            }
-        ]
-    },
 
-    // responsiveConfig:{
-    //     desktop:{
-    //         },
-    //     phone:{
-    //         tbar:{
-    //             //userCls:'bg-base-color',
-    //             layout: {
-    //                 type: 'box',
-    //                 vertical: false,
-    //                 pack: 'center'
-    //             },
-    //             items:[
-    //                 // {
-    //                 //     xtype: 'languagebutton',
-    //                 // },
-    //                 {
-    //                     xtype: 'button',
-    //                     //ui: 'default',
-    //                     text: 'abc',
-    //                     menu:{
-    //                         items: [
-    //                         {
-                                
-    //                             text: 'a'
-    //                         }
-    //                         ]
-    //                     }
-    //                 }
-    //             ]
-    //         }
-    //     }
-    // },
-
-
-    //fullscreen: true,
     isGlobalView: true,
     responsiveConfig:{
         desktop:{
@@ -98,12 +56,12 @@ Ext.define('Common.shared.view.BasePage', {
     },
 
     createBottomBar(config) {
-        const me = this;
+        let me = this;
         return Ext.apply({}, config);
     },
     
     onLocalized(){
-        const me = this,
+        let me = this,
             bar = me.down('#bottomBar'),
             currentYear = new Date().getFullYear(),
             startYear = parseInt(I18N.get('CopyrightStartValue')),
@@ -120,6 +78,7 @@ Ext.define('Common.shared.view.BasePage', {
             desktop ? 'lh-50': 'lh-24'
          ))
 
-    }
+    },
+
 
 });

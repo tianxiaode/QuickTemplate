@@ -3,23 +3,26 @@ Ext.define('Common.overrides.shared.grid.column.Column',{
 
     config:{
         autoText: true,
-        langText: null
-
+        langText: null,
+        groupable: false,
     },
 
     onLocalized(){
-        const me = this,
-            grid = me.up('grid'),
-            resourceName = me.getResourceName() 
-                || (grid && grid.getResourceName());
+        let me = this,
+            resourceName = me.resourceName || me.getContainerResourceName();
         if(me.getAutoText()){
-            const name = Ext.util.Format.capitalize(me.getDataIndex());
+            let name = Ext.util.Format.capitalize(me.getDataIndex());
             me.setLangText(name);
         }
-        const text = me.getLangText();
+        let text = me.getLangText();
         if(text){
-            me.setText(I18N.get(text, resourceName));
+            me.setText(I18N.get(text, resourceName, me.getEntityName() ));
         }
-    }
+    },
+
+    applyTpl(config) {
+        return Template.getTplWithScope(config, this);
+    },
+
 
 })

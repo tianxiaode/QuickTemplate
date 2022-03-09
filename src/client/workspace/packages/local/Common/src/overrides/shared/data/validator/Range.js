@@ -10,7 +10,7 @@ Ext.define('Common.overrides.shared.data.validator.Range',{
     },
 
     onLocalized(){
-        const me = this;
+        let me = this;
         me.setNanMessage(I18N.get(me.getLangNanMessage()))
         me.callParent();
     },

@@ -2,46 +2,76 @@ Ext.define('Common.shared.service.Localized', {
     alternateClassName: 'I18N',
     singleton: true,
 
+    mixins:[
+        'Ext.mixin.Observable'
+    ],
+
     config:{
         currentLanguage: null,
         labelSeparator: '',
     },
 
-    requires:[
-        'Common.shared.util.Url',
-        'Common.shared.util.Failure',
-        'Common.shared.service.Storage',
-    ],
-  
     isReady: false,
 
     constructor(config){
-        const me = this;        
+        let me = this;        
         me.initConfig(config)
         me.initLanguages();
     },
 
     initLanguages(){
-        const me = this;
-        let current = StorageService.get('lang');
+        let me = this;
+        let current = AppStorage.get('lang');
         if(!current) {
             current = AppConfig.lang === 'zh-CN' ? 'zh-Hans' 
             : AppConfig.lang === 'zh-TW' ? 'zh-Hant' : AppConfig.lang;
         }
         me.setCurrentLanguage(current);
-        StorageService.set('lang', current);
+        AppStorage.set('lang', current);
         me.loadResources();
     },
-
-    get(key, resourceName){
-        const me = this,
+    
+    get(key, resourceName, entityName){
+        resourceName = Format.capitalize(resourceName);
+        entityName = Format.capitalize(entityName);
+        key = Format.capitalize(key);
+        let me = this,
             defaultResourceName = me.remoteRawValue.defaultResourceName,
             values = me.remoteRawValue.values;
-        return resourceName && values[resourceName] && values[resourceName][key] 
-            || ( values && values['ExtResource'] && values['ExtResource'][key] )
-            || ( values && values[defaultResourceName] && values[defaultResourceName][key] )
-            || key;
+        if(!values) return;
+        let extResource = values['ExtResource'] || {},
+            defaultResource = values[defaultResourceName] ,  
+            displayNameKey = `DisplayName:${key}`,
+            entityKey = `${entityName}.${key}`;
+        if(resourceName){
+            let resource = values[resourceName];  
+            if(resource){
+                if(resource.hasOwnProperty(key)) return resource[key];
+                if(resource.hasOwnProperty(entityKey)) return resource[entityKey];
+                if(resource.hasOwnProperty(displayNameKey)) return resource[displayNameKey];    
+            }
+        }
+        if(extResource.hasOwnProperty(key)) return extResource[key];
+        if(defaultResource.hasOwnProperty(key)) return defaultResource[key];
+        if(extResource.hasOwnProperty(entityKey)) return extResource[entityKey];
+        if(defaultResource.hasOwnProperty(entityKey)) return defaultResource[entityKey];
+        if(extResource.hasOwnProperty(displayNameKey)) return extResource[displayNameKey];
+        if(defaultResource.hasOwnProperty(displayNameKey)) return defaultResource[displayNameKey];
+        return key;
     },
+
+    // getPermissionText(key){
+    //     let me = this,
+    //         values = me.remoteRawValue.values,
+    //         keys = Object.keys(values),
+    //         value = null;
+    //     for(let k in keys)
+    //     {
+    //         value = values[k][key];
+    //         if(!Ext.isEmpty(value)) break;
+    //     }
+    //     return value; 
+    // },
 
     getLanguages(){
         return this.remoteRawValue.languages;
@@ -52,48 +82,14 @@ Ext.define('Common.shared.service.Localized', {
     },
 
     switchLanguages(value){
-        const me = this, 
+        let me = this, 
             current = me.getCurrentLanguage();
         if(current === value) return;
         me.setCurrentLanguage(value);
-        StorageService.set('lang', value);
+        AppStorage.set('lang', value);
         me.loadResources();
     },
 
-    // localized(cls, name,  resourceName){
-    //     name = Ext.String.capitalize(name);
-    //     const me = this,
-    //         originLocalized = cls.getOriginLocalized(),
-    //         hasLabelSeparator = me.getCurrentLanguage() === 'zh-Hans' && name === 'Label',
-    //         labelSeparator  = hasLabelSeparator ? me.getLabelSeparator() : '',
-    //         get = cls[`get${name}`],
-    //         set = cls[`set${name}`];
-    //     let value =  originLocalized[name];
-    //     //有原始值的，使用原始值返回
-    //     if(value){
-    //         if(set){
-    //             let returnValue = I18N.get(value,resourceName) + labelSeparator;
-    //             if(name === 'Tooltip') returnValue = { html: returnValue};
-    //             set.apply(cls, [returnValue]);
-    //             return;
-    //         }
-    //         return I18N.get(value,resourceName);
-    //     }
-    //     //没有原始值的处理
-    //     if(!get || !set) {
-    //         //没有set或get方法的，直接返回
-    //         value = name;
-    //         originLocalized[name] = value;
-    //         return I18N.get(value,resourceName);
-    //     };
-    //     value = get.apply(cls);
-    //     if(!value) return;
-    //     originLocalized[name] = name === 'Tooltip' ? value.html : value;        
-    //     let returnValue = I18N.get(originLocalized[name],resourceName) + labelSeparator;
-    //     if(name === 'Tooltip') returnValue = { html: returnValue};
-    //     set.apply(cls, [returnValue]);
-    // },
-    
     getUnknownError(){
         return this.localText.UnknownError[this.getCurrentLanguage()];
     },
@@ -105,7 +101,19 @@ Ext.define('Common.shared.service.Localized', {
     getLocalText(key){
         return this.localText[key][this.getCurrentLanguage()];
     },
+
+    getResourceName(){
+        return Object.keys(this.remoteRawValue.values);
+    },
     
+    loadResources(){
+        let me= this;
+        me.isReady = false;
+        let promise =Http.get(URI.getResource('zh-Hans'));
+        promise.then(me.loadSuccess, me.loadFailure, null, me);
+        return promise;
+    },
+
     privates:{
         remoteRawValue: {},
         localText:{
@@ -127,7 +135,7 @@ Ext.define('Common.shared.service.Localized', {
             },
             'OrganizationUnitNotExist':{
                 'en': 'The organization does not exist.',
-                'zh-Hans': '组织不存在'
+                'zh-Hans': '组织不存在?'
             },
             'LoadingUserConfiguration':{
                 'en': 'Loading the configuration...',
@@ -137,6 +145,18 @@ Ext.define('Common.shared.service.Localized', {
                 'en': 'There is no permission to do this.',
                 'zh-Hans': '没有权限执行此操作.'
             },
+            'Error404':{
+                'en': 'The requested resource is not avail.',
+                'zh-Hans': '请求的资源不可用.'
+            },
+            'Error405':{
+                'en': 'Method Not Allowed.',
+                'zh-Hans': '方法不被允许.'
+            },
+            'Error415':{
+                'en': 'Unsupported Media Type.',
+                'zh-Hans': '不支持的媒体类型.'
+            },
             'WaitSwitch':{
                 'en': 'Wait for the last organizational switch before switching.',
                 'zh-Hans': '请等待上一次组织切换以后再进行切换'
@@ -144,7 +164,7 @@ Ext.define('Common.shared.service.Localized', {
         },
     
         doOverride(){
-            const me = this,
+            let me = this,
                 values = me.remoteRawValue.values.ExtResource,
                 newMonthNames = [],
                 newDayNames = [],
@@ -174,7 +194,7 @@ Ext.define('Common.shared.service.Localized', {
             Ext.Date.formatCodes.a = `(this.getHours() < 12 ? '${am}' : '${pm}')`;
             Ext.Date.formatCodes.A = `(this.getHours() < 12 ? '${am}' : '${pm}')`;
     
-            const parseCodes = {
+            let parseCodes = {
                 g: 1,
                 c: "if (/(" + am + ")/i.test(results[{0}])) {\n" +
                     "if (!h || h == 12) { h = 0; }\n" +
@@ -189,25 +209,11 @@ Ext.define('Common.shared.service.Localized', {
         },
     },
 
-    loadResources(){
-        const me= this;
-        me.isReady = false;
-        Ext.Ajax.request({
-            url: URI.getResource(me.getCurrentLanguage()),
-            headers: {
-                'Authorization' : 'Bearer ' +  StorageService.get('access_token'),
-                //'Access-Control-Allow-Origin': '*',
-                "accept-language": StorageService.get('lang')                
-            },
-            scope: me
-        }).then(me.loadSuccess,Failure.ajax, null, me);
-    },
 
     loadSuccess(response){
-        const me = this,
+        let me = this,
             obj = Ext.decode(response.responseText,true);        
         if(obj){
-            
             me.remoteRawValue = Object.assign({}, obj);
             me.doOverride();
             if(obj.values && obj.values.ExtResource){
@@ -219,5 +225,23 @@ Ext.define('Common.shared.service.Localized', {
 
     },
 
+    loadFailure(response){
+        let obj  = Ext.decode(response.responseText, true),
+            error = me.getUnknownError();
+        if(obj && obj.error) {
+            if(Ext.isString(obj.error)){
+                error = obj.error_description;
+            }else{
+                error = obj.error.message;
+                if(!Ext.isEmpty(obj.error.code)) error += `[${obj.error.code}]`;
+                if(!Ext.isEmpty(obj.error.details)) 
+                    error += `[${obj.error.code}]${service && service.getLabelSeparator() || ':'}${obj.error.details}`;
+                MsgBox.alert(title, error);
+                return error;    
+            }
+            
+        }
+
+    }
 
 })

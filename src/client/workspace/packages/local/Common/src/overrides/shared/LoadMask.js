@@ -6,8 +6,8 @@ Ext.define('Common.overrides.shared.LoadMask',{
     },
 
     onLocalized(){
-        const me = this,
-            resourceName = me.getResourceName(),
+        let me = this,
+            resourceName = me.resourceName || me.getContainerResourceName(),
             langMessage = me.getLangMessage();
         if(!langMessage){
             me.setLangMessage(me.getMessage());

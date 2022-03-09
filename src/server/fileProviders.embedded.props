@@ -1,0 +1,8 @@
+<Project>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="5.0.2" />
+  </ItemGroup>
+
+
+</Project>

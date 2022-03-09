@@ -1,0 +1,28 @@
+.x-month-panel{
+    background-color: $background-color;
+    position: absolute;    
+}
+.x-month-panel .list{
+    height: calc(100% - 40px);
+}
+.x-month-panel .list-item{
+    //vertical-align: middle;
+    font-size: 18px;
+    cursor: pointer;
+    margin: auto;
+    //display: inline-block;
+}
+.x-month-panel .list-item:hover{
+    background-color: $hovered-background-color;
+}
+.x-month-panel .list-item.selected{
+    background-color: $base-color;
+    color: #fff;
+}
+.x-month-panel .list-item.disabled{
+    color: $disabled-color !important;
+    cursor: auto;
+}
+.x-month-panel .list-item.disabled:hover{
+    background-color: transparent;
+}

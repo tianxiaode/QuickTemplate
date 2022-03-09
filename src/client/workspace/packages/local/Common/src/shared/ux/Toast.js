@@ -6,7 +6,7 @@ Ext.define('Common.shared.ux.Toast', {
     ],
 
     minWidth: 300,
-    baseCls: 'uxToast',
+    userCls: 'uxToast',
     config: {
         /**
          * @cfg centered
@@ -97,8 +97,8 @@ Ext.define('Common.shared.ux.Toast', {
     /**
      * @private
      */
-    applyMessage: function(value) {
-        var config = {
+    applyMessage(value) {
+        let config = {
             html: value,
             cls: this.baseCls + '-text'
         };
@@ -109,7 +109,7 @@ Ext.define('Common.shared.ux.Toast', {
     /**
      * @private
      */
-    updateMessage: function(newMessage) {
+    updateMessage(newMessage) {
         if (newMessage) {
             this.add(newMessage);
         }
@@ -118,7 +118,7 @@ Ext.define('Common.shared.ux.Toast', {
     /**
      * @private
      */
-    startTimer: function() {
+    startTimer() {
         var timeout = this.getTimeout();
  
         if (this._timeoutID) {
@@ -133,7 +133,7 @@ Ext.define('Common.shared.ux.Toast', {
         }
     },
  
-    stopTimer: function() {
+    stopTimer() {
         Ext.undefer(this._timeoutID);
         this._timeoutID = null;
     },
@@ -144,19 +144,19 @@ Ext.define('Common.shared.ux.Toast', {
      */
     next: Ext.emptyFn,
  
-    getIsAnimating: function() {
+    getIsAnimating() {
         var messageContainer = this.getMessage();
  
         return (messageContainer && Ext.Animator.hasRunningAnimations(
             messageContainer)) || Ext.Animator.hasRunningAnimations(this);
     },
 
-    beforeShow:function(){
+    beforeShow(){
         this.setLeft(-10000);
         return true;
     },
 
-    afterShow: function(){
+    afterShow(){
         var me = this,
             el = me.el,
             activeToasts = me.getToasts(),
@@ -177,7 +177,7 @@ Ext.define('Common.shared.ux.Toast', {
     /**
      * @private
      */
-    showToast: function(config) {
+    showToast(config) {
         var me = this,
             message = config.message,
             timeout = config.timeout || me.timeout;
@@ -210,7 +210,7 @@ Ext.define('Common.shared.ux.Toast', {
     /**
      * @private
      */
-    beforeHide: function(animation) {
+    beforeHide(animation) {
         this.callParent(arguments);
         // If the message is animating cancel this hide
         // if (this.getIsAnimating()) {
@@ -227,7 +227,7 @@ Ext.define('Common.shared.ux.Toast', {
     /**
      * @private
      */
-    onTimeout: function() {
+    onTimeout() {
         var me = this;
         if (me._timeoutID !== null) {
             let activeToasts = me.getToasts();
@@ -237,20 +237,20 @@ Ext.define('Common.shared.ux.Toast', {
         }
     },
  
-    doDestroy: function() {
+    doDestroy() {
         this.stopTimer();
         this.callParent();
     },
 
-    getToasts: function() {
+    getToasts() {
         var anchor = this.anchor,
             alignment = this.anchorAlign,
             activeToasts = anchor.activeToasts || (anchor.activeToasts = {});
         return activeToasts[alignment] || (activeToasts[alignment] = new Set());
     },
 
-    setAnchor: function(anchor) {
-        var me = this;
+    setAnchor(anchor) {
+        let me = this;
 
         me.anchor = anchor = ((typeof anchor === 'string') ? Ext.getCmp(anchor) : anchor);
 
@@ -259,7 +259,7 @@ Ext.define('Common.shared.ux.Toast', {
 }, function(Toast) {
  
     window.Toast = function(message, el, alignment, timeout,fn, scope , args) {
-        var toast = null;
+        let toast = null;
             config = {
                 message: message,
                 timeout: timeout || 3000,

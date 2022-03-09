@@ -1,15 +1,15 @@
 Ext.define('Common.shared.service.Storage', {
-    alternateClassName: 'StorageService',
+    alternateClassName: 'AppStorage',
     singleton: true,
 
     get(key){
-        const me = this;
+        let me = this;
             store = me.store;
         return store.getItem(key) || Ext.util.Cookies.get(key);
     },
 
     set(key, value){
-        const me = this,
+        let me = this,
             store = me.store;
         if(store){
             store.setItem(key,value);
@@ -19,7 +19,7 @@ Ext.define('Common.shared.service.Storage', {
     },
 
     remove(key){
-        const me = this,
+        let me = this,
             store = me.store;
         if(store){
             store.removeItem(key);
