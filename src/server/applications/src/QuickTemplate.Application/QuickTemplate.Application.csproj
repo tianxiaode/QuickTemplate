@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>QuickTemplate</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QuickTemplate.Domain\QuickTemplate.Domain.csproj" />
+    <ProjectReference Include="..\QuickTemplate.Application.Contracts\QuickTemplate.Application.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.Account.Application" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.Identity.Application" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.TenantManagement.Application" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="$(AbpVersion)" />
+  </ItemGroup>
+
+</Project>

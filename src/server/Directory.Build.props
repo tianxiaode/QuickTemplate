@@ -1,10 +1,10 @@
 ﻿<Project>
   <PropertyGroup>
 
-    <AbpVersion>4.2.1</AbpVersion>
+    <AbpVersion>5.1.4</AbpVersion>
     <GenericAbpVersion>0.0.6</GenericAbpVersion>
-    <WoEasyVersion>0.0.1</WoEasyVersion>
-    <JetBrainsAnnotationsVersion>2020.3.0</JetBrainsAnnotationsVersion>
+    <QuickTemplateVersion>0.0.1</QuickTemplateVersion>
+    <JetBrainsAnnotationsVersion>2021.3</JetBrainsAnnotationsVersion>
     <IdentityServer4Version>4.1.1</IdentityServer4Version>
     <FileProvidersEmbeddedVersion>5.0.2</FileProvidersEmbeddedVersion>
 
