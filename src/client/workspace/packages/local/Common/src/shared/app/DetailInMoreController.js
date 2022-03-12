@@ -1,4 +1,4 @@
-Ext.define('Common.shared.app.DetailInMoreController', {
+Ext.define('Common.app.DetailInMoreController', {
     extend: 'Ext.app.ViewController',
 
     currentId: null,

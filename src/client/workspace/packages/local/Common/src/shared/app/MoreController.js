@@ -1,4 +1,4 @@
-Ext.define('Common.shared.app.MoreController', {
+Ext.define('Common.app.MoreController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.shared-morecontroller',
 

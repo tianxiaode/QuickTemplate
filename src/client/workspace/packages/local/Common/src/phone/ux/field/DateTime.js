@@ -3,8 +3,8 @@ Ext.define('Common.phone.ux.field.DateTime', {
     xtype: 'commonphone-datetimefield',
 
     requires: [
-        //'Common.shared.ux.panel.DateTime',
-        //'Common.shared.ux.field.trigger.DateTime',
+        //'Common.ux.panel.DateTime',
+        //'Common.ux.field.trigger.DateTime',
         'Ext.field.trigger.Date',
         'Common.phone.ux.panel.DateTime',
     ],

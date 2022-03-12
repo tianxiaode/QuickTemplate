@@ -1,11 +1,11 @@
-Ext.define('Common.shared.app.CrudController',{
+Ext.define('Common.app.CrudController',{
     extend: 'Ext.app.ViewController',
     alias: 'controller.shared-crudcontroller',
 
     mixins:[
-        'Common.shared.mixin.Searchable',
-        'Common.shared.mixin.Menuable',
-        //'Common.shared.mixin.FormView',
+        'Common.mixin.Searchable',
+        'Common.mixin.Menuable',
+        //'Common.mixin.FormView',
     ],
 
     messageTemplate: null , //信息模板

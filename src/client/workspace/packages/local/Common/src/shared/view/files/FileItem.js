@@ -1,4 +1,4 @@
-Ext.define('Common.shared.view.files.FileItem',{
+Ext.define('Common.view.files.FileItem',{
     extend: 'Ext.Component',
     xtype: 'shared-uxfileitem',
 

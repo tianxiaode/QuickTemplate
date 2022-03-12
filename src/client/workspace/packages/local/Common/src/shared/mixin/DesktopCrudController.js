@@ -1,4 +1,4 @@
-Ext.define('Common.shared.mixin.DesktopCrudController',{
+Ext.define('Common.mixin.DesktopCrudController',{
     mixinId: 'uxdesktopcrudcontroller',
 
 

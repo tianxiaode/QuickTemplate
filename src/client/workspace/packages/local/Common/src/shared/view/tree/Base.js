@@ -1,4 +1,4 @@
-Ext.define('Common.shared.view.tree.Base',{
+Ext.define('Common.view.tree.Base',{
     extend: 'Ext.Panel',
     xtype: 'commonshared-treebase',
 
@@ -6,10 +6,10 @@ Ext.define('Common.shared.view.tree.Base',{
         'Ext.layout.Card',
         'Ext.grid.Tree',
         'Ext.dataview.List',
-        'Common.shared.ux.grid.Tree',
+        'Common.ux.grid.Tree',
         'Ext.panel.Resizer',
-        'Common.shared.ux.grid.CrudToolbar',
-        'Common.shared.ux.dataview.List'
+        'Common.ux.grid.CrudToolbar',
+        'Common.ux.dataview.List'
     ],
 
     layout: 'vbox',

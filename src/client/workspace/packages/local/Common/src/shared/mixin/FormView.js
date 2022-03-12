@@ -1,4 +1,4 @@
-Ext.define('Common.shared.mixin.FormView', {
+Ext.define('Common.mixin.FormView', {
     extend: 'Ext.Mixin',
 
     formViewEventBind:{},

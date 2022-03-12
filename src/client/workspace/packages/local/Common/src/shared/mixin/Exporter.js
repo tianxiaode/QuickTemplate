@@ -1,4 +1,4 @@
-Ext.define('Common.shared.mixin.Exporter',{
+Ext.define('Common.mixin.Exporter',{
     mixinId: 'uxexporter',
 
     doExport(title,filename){

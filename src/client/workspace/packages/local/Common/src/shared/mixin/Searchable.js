@@ -1,4 +1,4 @@
-Ext.define('Common.shared.mixin.Searchable', {
+Ext.define('Common.mixin.Searchable', {
     extend: 'Ext.Mixin',
 
     searchFields: null, //所有查询字段

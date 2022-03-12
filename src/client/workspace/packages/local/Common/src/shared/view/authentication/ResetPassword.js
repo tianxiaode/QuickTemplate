@@ -1,5 +1,5 @@
-Ext.define('Common.shared.view.authentication.ResetPassword',{
-    extend: 'Common.shared.view.authentication.LockingWindow',
+Ext.define('Common.view.authentication.ResetPassword',{
+    extend: 'Common.view.authentication.LockingWindow',
     xtype: 'shared-resetpassword',
 
     requires:[
@@ -7,7 +7,7 @@ Ext.define('Common.shared.view.authentication.ResetPassword',{
         'Ext.field.Text',
         'Ext.field.Hidden',
         'Ext.field.Password',
-        'Common.shared.ux.data.validator.Password', 
+        'Common.ux.data.validator.Password', 
     ],
 
     langTitle: 'ResetPassword',

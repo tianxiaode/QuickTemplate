@@ -1,5 +1,5 @@
-Ext.define('Common.shared.view.authentication.ForgotPassword',{
-    extend: 'Common.shared.view.authentication.LockingWindow',
+Ext.define('Common.view.authentication.ForgotPassword',{
+    extend: 'Common.view.authentication.LockingWindow',
     xtype: 'shared-forgotpassword',
 
     requires:[
@@ -7,7 +7,7 @@ Ext.define('Common.shared.view.authentication.ForgotPassword',{
         'Ext.field.Text',
         'Ext.field.Password',
         'Ext.tab.Bar',
-        'Common.shared.ux.data.validator.Mobile'
+        'Common.ux.data.validator.Mobile'
     ],
 
     langTitle: 'ForgotPassword',

@@ -1,4 +1,4 @@
-Ext.define('Common.shared.mixin.SubmitAction', {
+Ext.define('Common.mixin.SubmitAction', {
     extend: 'Ext.Mixin',
 
     getButton(xtype){

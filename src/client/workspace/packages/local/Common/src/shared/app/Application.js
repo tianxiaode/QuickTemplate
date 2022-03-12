@@ -1,16 +1,16 @@
-Ext.define('Common.shared.app.Application', {
+Ext.define('Common.app.Application', {
     extend: 'Ext.app.Application',
 
     name: 'CommonShared',
 
     requires:[
-        'Common.shared.service.Storage',
-        'Common.shared.util.TemplateFn',
-        'Common.shared.util.Url',
-        'Common.shared.service.HttpClient',
-        'Common.shared.service.Localized',
-        'Common.shared.service.Config',
-        'Common.shared.service.OAuth',
+        'Common.service.Storage',
+        'Common.util.TemplateFn',
+        'Common.util.Url',
+        'Common.service.HttpClient',
+        'Common.service.Localized',
+        'Common.service.Config',
+        'Common.service.OAuth',
     ],
 
     responsiveConfig:{

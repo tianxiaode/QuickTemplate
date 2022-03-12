@@ -1,15 +1,15 @@
-Ext.define('Common.shared.view.home.HomeController',{
+Ext.define('Common.view.home.HomeController',{
     extend: 'Ext.app.ViewController',
 
     requires:[
-        'Common.shared.service.Template',
-        'Common.shared.view.authentication.Login',
-        'Common.shared.view.pages.Page404',
-        'Common.shared.service.AccessControl',
-        'Common.shared.util.Enums',
-        'Common.shared.util.ViewManager',
-        'Common.shared.view.authentication.SelectOrganization',
-        'Common.shared.service.SignalR',
+        'Common.service.Template',
+        'Common.view.authentication.Login',
+        'Common.view.pages.Page404',
+        'Common.service.AccessControl',
+        'Common.util.Enums',
+        'Common.util.ViewManager',
+        'Common.view.authentication.SelectOrganization',
+        'Common.service.SignalR',
     ],
 
     currentToken: null,

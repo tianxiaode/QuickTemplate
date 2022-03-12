@@ -1,4 +1,4 @@
-Ext.define('Common.shared.view.home.HomeModel',{
+Ext.define('Common.view.home.HomeModel',{
     extend: 'Ext.app.ViewModel',
     alias: 'viewmodel.shared-homemodel',
 

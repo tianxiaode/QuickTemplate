@@ -12,12 +12,12 @@ Ext.application({
     requires:[
         'Common.overrides.shared.*',
         'Common.overrides.desktop.*',
-        'Common.shared.util.Url',
-        'Common.shared.util.TemplateFn',
-        'Common.shared.service.OAuth',
-        'Common.shared.service.Config',
-        'Common.shared.view.authentication.Login',
-        'Common.shared.view.authentication.SelectOrganizationUnit',
+        'Common.util.Url',
+        'Common.util.TemplateFn',
+        'Common.service.OAuth',
+        'Common.service.Config',
+        'Common.view.authentication.Login',
+        'Common.view.authentication.SelectOrganizationUnit',
         'Desktop.view.home.HomeView', 
     ],
 

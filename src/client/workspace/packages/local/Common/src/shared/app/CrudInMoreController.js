@@ -1,5 +1,5 @@
-Ext.define('Common.shared.app.CrudInMoreController', {
-    extend: 'Common.shared.app.CrudController',
+Ext.define('Common.app.CrudInMoreController', {
+    extend: 'Common.app.CrudController',
 
     currentId: null,
     currentEntity: null,

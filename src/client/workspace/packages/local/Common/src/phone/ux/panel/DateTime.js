@@ -5,9 +5,9 @@ Ext.define('Common.phone.ux.panel.DateTime',{
     requires:[
         'Ext.layout.Center',
         'Ext.field.Select',
-        'Common.shared.ux.panel.Date',
-        'Common.shared.ux.panel.DateTime',
-        'Common.shared.ux.button.Back'
+        'Common.ux.panel.Date',
+        'Common.ux.panel.DateTime',
+        'Common.ux.button.Back'
     ],
 
     config:{

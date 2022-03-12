@@ -1,5 +1,5 @@
-Ext.define('Common.shared.app.TreeCrudController',{
-    extend: 'Common.shared.app.CrudController',
+Ext.define('Common.app.TreeCrudController',{
+    extend: 'Common.app.CrudController',
 
     searchList: null, //搜索列表
 

@@ -1,9 +1,9 @@
 Ext.define('Common.phone.app.CrudController',{
-    extend: 'Common.shared.app.CrudController',
+    extend: 'Common.app.CrudController',
     alias: 'controller.commonphone-basecrud',
 
     requires:[
-        'Common.shared.ux.menu.PopMenu',
+        'Common.ux.menu.PopMenu',
     ],
 
     popMenuXtype: 'uxpopmenu',

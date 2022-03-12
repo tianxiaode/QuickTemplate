@@ -1,5 +1,5 @@
-Ext.define('Common.shared.view.tree.BaseEdit', {
-    extend: 'Common.shared.ux.form.Crud',
+Ext.define('Common.view.tree.BaseEdit', {
+    extend: 'Common.ux.form.Crud',
 
     config:{
         idField:{

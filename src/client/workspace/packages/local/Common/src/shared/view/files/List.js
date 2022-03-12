@@ -1,10 +1,10 @@
-Ext.define('Common.shared.view.files.List',{
-    extend: 'Common.shared.ux.dataview.List',
+Ext.define('Common.view.files.List',{
+    extend: 'Common.ux.dataview.List',
     xtype: 'uxfilelist',
 
     requires:[
-        'Common.shared.ux.dataview.plugin.LabelEditor',
-        'Common.shared.view.files.FileItem',
+        'Common.ux.dataview.plugin.LabelEditor',
+        'Common.view.files.FileItem',
     ],
 
     hasPaging: true,

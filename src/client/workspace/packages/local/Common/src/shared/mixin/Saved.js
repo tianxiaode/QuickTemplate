@@ -1,4 +1,4 @@
-Ext.define('Common.shared.mixin.Saved', {
+Ext.define('Common.mixin.Saved', {
     extend: 'Ext.Mixin',
 
     mixinConfig: {

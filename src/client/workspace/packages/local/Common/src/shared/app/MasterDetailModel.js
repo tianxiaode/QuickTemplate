@@ -1,4 +1,4 @@
-Ext.define('Common.shared.app.MasterDetailModel', {
+Ext.define('Common.app.MasterDetailModel', {
     extend: 'Ext.app.ViewModel',
     //alias: 'viewmodel.commonshared-master',
 

@@ -28,7 +28,7 @@
     
     
     js.forEach(item=>{
-            document.write(`<script src="${defaultUrl}/Common.Shared/js/${item}?_dc=${(new Date()).getTime()}" type="text/javascript"><\/script>`);
+            document.write(`<script src="${defaultUrl}/Common/js/${item}?_dc=${(new Date()).getTime()}" type="text/javascript"><\/script>`);
         });    
 })();
 

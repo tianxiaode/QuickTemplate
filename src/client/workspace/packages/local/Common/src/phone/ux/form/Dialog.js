@@ -4,12 +4,12 @@ Ext.define('Common.phone.ux.form.Dialog',{
 
     requires:[
         'Ext.field.TextArea',
-        'Common.shared.ux.panel.NumberInput',
-        'Common.shared.ux.panel.DateTime'
+        'Common.ux.panel.NumberInput',
+        'Common.ux.panel.DateTime'
     ],
 
     mixins:[
-        'Common.shared.mixin.Messageable',
+        'Common.mixin.Messageable',
     ],
 
     classCls: Ext.baseCSSPrefix + 'dialog', 

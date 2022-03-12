@@ -1,4 +1,4 @@
-Ext.define('Common.shared.mixin.Menuable', {
+Ext.define('Common.mixin.Menuable', {
     extend: 'Ext.Mixin',
 
     onShowInfoMenu(xtype, location, cfg, fn){

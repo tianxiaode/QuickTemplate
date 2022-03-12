@@ -1,5 +1,5 @@
-Ext.define('Common.shared.view.authentication.SelectOrganization',{
-    extend: 'Common.shared.view.authentication.LockingWindow',
+Ext.define('Common.view.authentication.SelectOrganization',{
+    extend: 'Common.view.authentication.LockingWindow',
     xtype: 'shared-selectorganization',
 
     requires:[

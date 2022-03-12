@@ -1,5 +1,5 @@
-Ext.define('Common.shared.view.authentication.LockingWindow',{
-    extend: 'Common.shared.view.BasePage',
+Ext.define('Common.view.authentication.LockingWindow',{
+    extend: 'Common.view.BasePage',
     xtype: 'shared-lockingwindow',
 
     bodyCls: 'bg-lock-screen',

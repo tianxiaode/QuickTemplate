@@ -1,13 +1,13 @@
-Ext.define('Common.shared.view.authentication.Login',{
-    extend: 'Common.shared.view.authentication.LockingWindow',
+Ext.define('Common.view.authentication.Login',{
+    extend: 'Common.view.authentication.LockingWindow',
     xtype: 'shared-login',
 
     requires:[
         'Ext.Button',
         'Ext.field.Text',
         'Ext.field.Password',
-        'Common.shared.view.authentication.ForgotPassword',
-        'Common.shared.view.authentication.ResetPassword',
+        'Common.view.authentication.ForgotPassword',
+        'Common.view.authentication.ResetPassword',
     ],
 
     langTitle: 'Login',

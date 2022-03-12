@@ -2,7 +2,7 @@ Ext.define('Common.overrides.shared.Panel',{
     override: 'Ext.Panel',
 
     requires:[
-        'Common.shared.ux.button.Message',
+        'Common.ux.button.Message',
     ],
 
     config:{

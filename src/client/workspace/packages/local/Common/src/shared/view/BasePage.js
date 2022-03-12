@@ -1,4 +1,4 @@
-Ext.define('Common.shared.view.BasePage', {
+Ext.define('Common.view.BasePage', {
     extend: 'Ext.Panel',
     xtype: 'basepage',
     

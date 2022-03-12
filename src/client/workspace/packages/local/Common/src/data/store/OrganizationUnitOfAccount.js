@@ -4,7 +4,7 @@ Ext.define('Common.data.store.OrganizationUnitOfAccount',{
 
     requires:[
         'Common.data.model.OrganizationUnit',
-        'Common.shared.ux.data.proxy.Format',
+        'Common.ux.data.proxy.Format',
     ],
 
     model: 'Common.data.model.OrganizationUnit',

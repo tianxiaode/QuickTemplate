@@ -1,4 +1,4 @@
-Ext.define('Common.shared.mixin.PhoneCrudController',{
+Ext.define('Common.mixin.PhoneCrudController',{
     mixinId: 'uxphonecrudcontroller',
 
 
@@ -9,7 +9,7 @@ Ext.define('Common.shared.mixin.PhoneCrudController',{
     },
 
     requires:[
-        'Common.shared.ux.menu.PopMenu',
+        'Common.ux.menu.PopMenu',
     ],
 
     popMenuXtype: 'uxpopmenu',

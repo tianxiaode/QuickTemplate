@@ -1,4 +1,4 @@
-Ext.define('Common.shared.mixin.Paging', {
+Ext.define('Common.mixin.Paging', {
     extend: 'Ext.Mixin',
     //mixinId: 'pagingGridMixin',
 

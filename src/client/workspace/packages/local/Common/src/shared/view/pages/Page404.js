@@ -1,5 +1,5 @@
-Ext.define('Common.shared.view.pages.Page404',{
-    extend: 'Common.shared.view.BasePage',
+Ext.define('Common.view.pages.Page404',{
+    extend: 'Common.view.BasePage',
     xtype: 'shared-page404',
 
     langTitle: 'CompanyShortName',

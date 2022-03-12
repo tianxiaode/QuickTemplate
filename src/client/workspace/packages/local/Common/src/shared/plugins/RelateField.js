@@ -1,4 +1,4 @@
-Ext.define('Common.shared.plugins.RelateField',{
+Ext.define('Common.plugins.RelateField',{
     extend: 'Ext.plugin.Abstract',
     alias: 'plugin.relatefield',
 

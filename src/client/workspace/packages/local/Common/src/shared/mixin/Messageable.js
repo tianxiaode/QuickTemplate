@@ -1,4 +1,4 @@
-Ext.define('Common.shared.mixin.Messageable', {
+Ext.define('Common.mixin.Messageable', {
     extend: 'Ext.Mixin',
 
     getMessageButton(){

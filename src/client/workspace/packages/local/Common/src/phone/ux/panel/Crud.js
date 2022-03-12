@@ -2,11 +2,11 @@ Ext.define('Common.phone.ux.panel.Crud',{
     extend: 'Ext.Panel',
 
     requires:[
-        'Common.shared.ux.panel.Header',
-        'Common.shared.ux.button.Update',
-        'Common.shared.ux.button.Trash',
-        'Common.shared.ux.button.Swap',
-        'Common.shared.ux.dataview.ListToolbar',
+        'Common.ux.panel.Header',
+        'Common.ux.button.Update',
+        'Common.ux.button.Trash',
+        'Common.ux.button.Swap',
+        'Common.ux.dataview.ListToolbar',
     ],
 
     ui: 'dark',

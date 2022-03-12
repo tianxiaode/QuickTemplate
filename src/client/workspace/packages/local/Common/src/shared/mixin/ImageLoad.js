@@ -1,4 +1,4 @@
-Ext.define('Common.shared.mixin.ImageLoad', {
+Ext.define('Common.mixin.ImageLoad', {
     extend: 'Ext.Mixin',
 
     mixinConfig: {
