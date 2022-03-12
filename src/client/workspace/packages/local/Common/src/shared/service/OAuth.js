@@ -17,6 +17,9 @@ Ext.define('Common.shared.service.OAuth', {
     constructor(config){
         let me = this;
         me.mixins.observable.constructor.call(me, config);
+        Ext.apply(me, AppConfig.oAuthConfig);
+        me.loginUrl = `${AppConfig.apiUrl}connect/authorize`;
+        me.logoutUrl = `${AppConfig.apiUrl}connect/endsession`
     },
 
 
@@ -29,13 +32,15 @@ Ext.define('Common.shared.service.OAuth', {
             storage = AppStorage,
             keys = me.storageKeys,
             token = storage.get(keys.accessToken);
-        if(!token) return false;
-        let expireInSeconds = storage.get(keys.expireInSeconds),
-            now = new Date(),
-            isAuthenticated = expireInSeconds && parseInt(expireInSeconds, 10) > now.getTime();
-        //如果token已过期，清除全部数据
-        if(!isAuthenticated) me.removeAllStorageItem();
-        return isAuthenticated;
+        if(token){
+            let expiresAt = storage.get(keys.expiresAt),
+                now = new Date(),
+                isAuthenticated = expiresAt && parseInt(expiresAt, 10) > now.getTime();
+            //如果token已过期，清除全部数据
+            if(!isAuthenticated) me.removeAllStorageItem();
+            return isAuthenticated;
+        }
+        return false;
     },
 
     /**
@@ -44,15 +49,61 @@ Ext.define('Common.shared.service.OAuth', {
      * @param {用户名} username 
      * @param {密码} password 
      */
-    login(username, password){
-        let me = this,
-            data = {
-                'userNameOrEmailAddress': username,
-                'password': password,
-            };
-        let promise = me.send(data, 'TokenAuth/Authenticate');
-        promise.then(me.loginSuccess, null,null, me)
-        return promise;
+    login(){
+        let me = this;
+        if(!me.tryLogin())
+        {
+            let url = this.createLoginUrl('', '', null, false, {});
+            window.location.href = url;    
+        }
+        // let me = this,
+        //     data = {
+        //         'grant_type': 'password',
+        //         'scope': me.scopes,
+        //         'username': username,
+        //         'password': password,
+        //     };
+        // let promise = me.send(data, me.endpoints.token);
+        // promise.then(me.loginSuccess, null,null, me)
+        // return promise;
+    },
+
+    tryLogin() {
+        const me = this; 
+            options = AppConfig.oAuthConfig;
+        const querySource = window.location.search;
+        const parts = me.getCodePartsFromUrl(querySource);
+        const code = parts['code'];
+        const state = parts['state'];
+        const sessionState = parts['session_state'];
+        if (!options.preventClearHashAfterLogin) {
+            const href = location.href
+                .replace(/[&\?]code=[^&\$]*/, '')
+                .replace(/[&\?]scope=[^&\$]*/, '')
+                .replace(/[&\?]state=[^&\$]*/, '')
+                .replace(/[&\?]session_state=[^&\$]*/, '');
+            history.replaceState(null, window.name, href);
+        }
+        let [nonceInState, userState] = me.parseState(state);
+        me.state = userState;
+        if (parts['error']) {
+            return false;
+        }
+        if (!nonceInState) {
+            return false;
+        }
+        const success = me.validateNonce(nonceInState);
+        if (!success) {
+            return false;
+        }
+        AppStorage.set('session_state', sessionState);
+        if (code) {
+            me.getTokenFromCode(code, options);
+            return true;
+        }
+        else {
+            return false;
+        }
     },
 
 
@@ -63,7 +114,28 @@ Ext.define('Common.shared.service.OAuth', {
      * 需要注销access_token和refresh_token并移除存储数�?
      */
     logout(){
-        this.removeAllStorageItem();
+        let me = this,
+            storage = AppStorage,
+            keys = me.storageKeys,
+            tokenKey = keys.accessToken,
+            refreshTokenKey = keys.refreshToken,
+            token = storage.get(tokenKey),
+            refreshToken = storage.get(refreshTokenKey);
+        if(token){
+            let data = {
+                'token' : token,
+                'token_type_hint': tokenKey
+                };
+            me.send(data, me.endpoints.revocation);
+        }
+        if(refreshToken){
+            let data ={
+                'token' : refreshToken,
+                'token_type_hint': refreshTokenKey
+            };
+            me.send(data, me.endpoints.revocation);
+        }
+        me.removeAllStorageItem();
     },
 
 
@@ -84,34 +156,14 @@ Ext.define('Common.shared.service.OAuth', {
         return headers;
     },
 
-    /**
-     * 刷新令牌
-     * @param {组织编号} organizationUnitId 
-     */
-        refreshToken(id, name){
-        Ext.Viewport.setMasked(Ext.String.format(I18N.get('RefreshToken'), name));
-        let me = this,
-            data = {
-                'organizationUnitId': id
-            };
-        let promise = me.send(data, 'TokenAuth/AuthenticateOrganizationUnit')
-        promise.then(me.refreshTokenSuccess, me.getTokenFailure, null, me);
-        return promise;
-    },
-
-    getEncToken(){
-        let me = this,
-            storage = AppStorage;
-        return storage.get(me.storageKeys.encryptedAccessToken);
-    },
-
 
     privates:{
 
         storageKeys:{
             accessToken: 'access_token',
-            encryptedAccessToken: 'encryptedAccessToken',
-            expireInSeconds: 'expireInSeconds',
+            idToken: 'id_token',
+            expiresAt: 'expires_at',
+            refreshToken: 'refresh_token',
         },
     
         remoteController: 'connect',
@@ -134,7 +186,24 @@ Ext.define('Common.shared.service.OAuth', {
             me.fireEvent('loginsuccess', obj);
         },
 
-   
+        /**
+         * 刷新令牌
+         * @param {组织编号} organizationUnitId 
+         */
+        refreshToken(id, name){
+            Ext.Viewport.setMasked(Ext.String.format(I18N.get('RefreshToken'), name));
+            let me = this,
+                data = {
+                    'grant_type': 'refresh_token',
+                    'refresh_token': AppStorage.get(me.storageKeys.refreshToken),
+                    'scope': me.scopes,
+                    'organizationUnitId': id
+                };
+            let promise = me.send(data, me.endpoints.token)
+            promise.then(me.refreshTokenSuccess, me.getTokenFailure, null, me);
+            return promise;
+        },
+    
         /**
          * 
          * @param {获取令牌的结果} response 
@@ -157,15 +226,14 @@ Ext.define('Common.shared.service.OAuth', {
                 MsgBox(null, I18N.getUnknownError());
                 return;
             }
-            let data = obj.result;
             let me = this,
                 storage = AppStorage,
                 keys = me.storageKeys,
                 now = new Date(),
-                expireInSeconds = now.getTime() + (data.expireInSeconds || 0) * 1000;
-            storage.set(keys.accessToken, data.accessToken);
-            storage.set(keys.expireInSeconds, expireInSeconds, true);
-            storage.set(keys.encryptedAccessToken, data.encryptedAccessToken);
+                expiresAt = now.getTime() + (obj.expires_in || 0) * 1000;
+            storage.set(keys.accessToken, obj[keys.accessToken]);
+            storage.set(keys.expiresAt, expiresAt, true);
+            storage.set(keys.refreshToken, obj[keys.refreshToken]);
             return obj;
         },
     
@@ -174,7 +242,7 @@ Ext.define('Common.shared.service.OAuth', {
          * @param {获取令牌结果} response 
          */
         getTokenFailure(response){
-            return Failure.ajax.apply(this, [response, null, true]);
+            return Failure.ajax.apply(this, [response]);
         },
 
         /**
@@ -183,11 +251,23 @@ Ext.define('Common.shared.service.OAuth', {
          * @param {端点} endpoint 
          */
         send(data, endpoint){
-            let me = this;
+            let me = this,
+                clientId = AppConfig.oAuthConfig.clientId,
+                clientSecret = AppConfig.oAuthConfig.dummyClientSecret,
+                headers = {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    "accept-language": AppStorage.get('lang')
+                };
+            if(endpoint === me.endpoints.revocation){
+                headers['Authorization'] = `Basic ${btoa(`${clientId}:${clientSecret}`)}`
+            }else{
+                data['client_id'] = clientId;
+                data['client_secret'] = clientSecret;    
+            }
             return Http.post(
-                URI.get(endpoint),
-                data
-                //headers
+                URI.get(me.remoteController, endpoint, true),
+                data, 
+                headers
             );
         }
     },
@@ -201,5 +281,192 @@ Ext.define('Common.shared.service.OAuth', {
         })
     },
 
+    calcHash(valueToHash, algorithm) {
+        const hashArray = sha256.array(valueToHash);
+        const hashString = this.toHashString2(hashArray);
+        return hashString;
+    },
+    
+    toHashString2(byteArray) {
+        let result = '';
+        for (let e of byteArray) {
+            result += String.fromCharCode(e);
+        }
+        return result;
+    },
 
+    toHashString(buffer) {
+        const byteArray = new Uint8Array(buffer);
+        let result = '';
+        for (let e of byteArray) {
+            result += String.fromCharCode(e);
+        }
+        return result;
+    },
+
+    getCodePartsFromUrl(queryString) {
+        if (!queryString || queryString.length === 0) {
+            return this.getHashFragmentParams();
+        }
+        // normalize query string
+        if (queryString.charAt(0) === '?') {
+            queryString = queryString.substr(1);
+        }
+        return Ext.Object.fromQueryString(queryString);
+    },
+
+    getHashFragmentParams(customHashFragment) {
+        let hash = customHashFragment || window.location.hash;
+        hash = decodeURIComponent(hash);
+        if (hash.indexOf('#') !== 0) {
+            return {};
+        }
+        const questionMarkPosition = hash.indexOf('?');
+        if (questionMarkPosition > -1) {
+            hash = hash.substr(questionMarkPosition + 1);
+        }
+        else {
+            hash = hash.substr(1);
+        }
+        return Ext.Object.fromQueryString(hash);
+    },
+
+    parseState(state) {
+        let nonce = state;
+        let userState = '';
+        if (state) {
+            const idx = state.indexOf(this.config.nonceStateSeparator);
+            if (idx > -1) {
+                nonce = state.substr(0, idx);
+                userState = state.substr(idx + this.config.nonceStateSeparator.length);
+            }
+        }
+        return [nonce, userState];
+    },
+
+    validateNonce(nonceInState) {
+        let savedNonce;
+        savedNonce = AppStorage.get('nonce');
+        if (savedNonce !== nonceInState) {
+            const err = 'Validating access_token failed, wrong state/nonce.';
+            console.error(err, savedNonce, nonceInState);
+            return false;
+        }
+        return true;
+    },
+
+    getTokenFromCode(code, options) {
+        let me = this,
+            verifier = AppStorage.get('PKCE_verifier'),
+        data = {
+            'grant_type': 'authorization_code',
+            'code': code,
+            'redirect_uri': me.redirectUri,
+            'code_verifier': verifier
+        };
+        let promise = me.send(data, me.endpoints.token);
+        promise.then(me.getTokenFromCodeSuccess, me.getTokenFromCodeFailure, null, me);
+        return promise;
+
+    },
+
+    getTokenFromCodeSuccess(response){
+        let me = this;
+        me.processToken(response);
+        me.fireEvent('loginsuccess');
+    },
+
+    getTokenFromCodeFailure(response){
+        let me = this,
+            current = I18N.getCurrentLanguage() || 'zh-CN',
+            msg = AppConfig.loginFailure[current];
+        MsgBox.alert('' , msg);
+        me.fireEvent('loginfailtre');
+    },
+
+    createLoginUrl() {
+        let me = this,
+            redirectUri = me.redirectUri,
+            nonce = me.createAndSaveNonce(),
+            state = nonce,
+            seperationChar = me.loginUrl.indexOf('?') > -1 ? '&' : '?';
+        let scope = AppConfig.oAuthConfig.scope;
+        if (me.oidc && !scope.match(/(^|\s)openid($|\s)/)) {
+            scope = 'openid ' + scope;
+        }
+        let url = me.loginUrl +
+            seperationChar +
+            'response_type=' +
+            encodeURIComponent(me.responseType) +
+            '&client_id=' +
+            encodeURIComponent(me.clientId) +
+            '&state=' +
+            encodeURIComponent(state) +
+            '&redirect_uri=' +
+            encodeURIComponent(redirectUri) +
+            '&scope=' +
+            encodeURIComponent(scope);
+        if (me.responseType.includes('code') && !me.disablePKCE) {
+            const [challenge, verifier] = me.createChallangeVerifierPairForPKCE();
+            AppStorage.set('PKCE_verifier', verifier);
+            url += '&code_challenge=' + challenge;
+            url += '&code_challenge_method=S256';
+        }
+        // if (loginHint) {
+        //     url += '&login_hint=' + encodeURIComponent(loginHint);
+        // }
+        if (me.resource) {
+            url += '&resource=' + encodeURIComponent(me.resource);
+        }
+        if (me.oidc) {
+            url += '&nonce=' + encodeURIComponent(nonce);
+        }
+        return url;
+    },
+
+    createAndSaveNonce() {
+        let me = this,
+            nonce = me.createNonce();
+            AppStorage.set('nonce', nonce);
+        return nonce;
+    },
+
+    createNonce() {
+        /*
+            * This alphabet is from:
+            * https://tools.ietf.org/html/rfc7636#section-4.1
+            *
+            * [A-Z] / [a-z] / [0-9] / "-" / "." / "_" / "~"
+            */
+        let unreserved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~',
+            size = 45,
+            id = '',
+            crypto = typeof self === 'undefined' ? null : self.crypto || self['msCrypto'];
+        if (crypto) {
+            let bytes = new Uint8Array(size);
+            crypto.getRandomValues(bytes);
+            // Needed for IE
+            if (!bytes.map) {
+                bytes.map = Array.prototype.map;
+            }
+            bytes = bytes.map(x => unreserved.charCodeAt(x % unreserved.length));
+            id = String.fromCharCode.apply(null, bytes);
+        }
+        else {
+            while (0 < size--) {
+                id += unreserved[(Math.random() * unreserved.length) | 0];
+            }
+        }
+        return Ext.util.Format.base64UrlEncode(id);
+    },
+
+    createChallangeVerifierPairForPKCE() {
+        let me = this, 
+            verifier = me.createNonce(),
+            challengeRaw = me.calcHash(verifier, 'sha-256'),
+            challenge = Ext.util.Format.base64UrlEncode(challengeRaw);
+        return [challenge, verifier];
+    },
+
+    
 });

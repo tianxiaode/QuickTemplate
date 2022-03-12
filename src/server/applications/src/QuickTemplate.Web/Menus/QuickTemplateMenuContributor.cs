@@ -3,7 +3,6 @@ using QuickTemplate.Localization;
 using QuickTemplate.MultiTenancy;
 using Volo.Abp.Identity.Web.Navigation;
 using Volo.Abp.SettingManagement.Web.Navigation;
-using Volo.Abp.TenantManagement.Web.Navigation;
 using Volo.Abp.UI.Navigation;
 
 namespace QuickTemplate.Web.Menus;
@@ -18,7 +17,7 @@ public class QuickTemplateMenuContributor : IMenuContributor
         }
     }
 
-    private async Task ConfigureMainMenuAsync(MenuConfigurationContext context)
+    private Task ConfigureMainMenuAsync(MenuConfigurationContext context)
     {
         var administration = context.Menu.GetAdministration();
         var l = context.GetLocalizer<QuickTemplateResource>();
@@ -34,16 +33,16 @@ public class QuickTemplateMenuContributor : IMenuContributor
             )
         );
 
-        if (MultiTenancyConsts.IsEnabled)
-        {
-            administration.SetSubItemOrder(TenantManagementMenuNames.GroupName, 1);
-        }
-        else
-        {
-            administration.TryRemoveMenuItem(TenantManagementMenuNames.GroupName);
-        }
+        context.Menu.Items.Add(new ApplicationMenuItem(
+            QuickTemplateMenus.About,
+            l["Menu:About"],
+            "~/About"
+            ));
+
 
         administration.SetSubItemOrder(IdentityMenuNames.GroupName, 2);
         administration.SetSubItemOrder(SettingManagementMenuNames.GroupName, 3);
+
+        return Task.CompletedTask;
     }
 }

@@ -12,7 +12,6 @@ using Volo.Abp.MultiTenancy;
 using Volo.Abp.PermissionManagement.Identity;
 using Volo.Abp.PermissionManagement.IdentityServer;
 using Volo.Abp.SettingManagement;
-using Volo.Abp.TenantManagement;
 
 namespace QuickTemplate;
 
@@ -26,7 +25,6 @@ namespace QuickTemplate;
     typeof(AbpIdentityServerDomainModule),
     typeof(AbpPermissionManagementDomainIdentityServerModule),
     typeof(AbpSettingManagementDomainModule),
-    typeof(AbpTenantManagementDomainModule),
     typeof(AbpEmailingModule)
 )]
 public class QuickTemplateDomainModule : AbpModule

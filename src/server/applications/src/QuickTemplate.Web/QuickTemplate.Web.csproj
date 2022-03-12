@@ -46,7 +46,6 @@
     <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.Identity.Web" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.Account.Web.IdentityServer" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.TenantManagement.Web" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.SettingManagement.Web" Version="$(AbpVersion)" />
   </ItemGroup>
 
