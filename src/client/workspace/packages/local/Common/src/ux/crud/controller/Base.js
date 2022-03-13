@@ -1,11 +1,10 @@
-Ext.define('Common.app.CrudController',{
+Ext.define('Common.ux.crud.controller.Base',{
     extend: 'Ext.app.ViewController',
-    alias: 'controller.shared-crudcontroller',
+    alias: 'controller.uxcrudbasecontroller',
 
     mixins:[
         'Common.mixin.Searchable',
         'Common.mixin.Menuable',
-        //'Common.mixin.FormView',
     ],
 
     messageTemplate: null , //信息模板
@@ -25,59 +24,55 @@ Ext.define('Common.app.CrudController',{
     },
     isInitialSearchItemEvent: false,
     crudButtons: null,  //所有crud按钮
-    phoneSelections: new Set(), //移动设备选择
     searchFields: null, //所有查询字段
     updateViewXtype: null,
     createViewXtype: null,
+    selections:[],
 
     init(){
         let me = this;
         me.isPhone = Ext.platformTags.phone;
         me.initList(me);
-        me.getInitValueByName(me, 'entityName');
-        me.getInitValueByName(me, 'resourceName');
-        me.getInitValueByName(me, 'permissionGroup');
-        me.getInitValueByName(me, 'permissionName' , me.entityName);
-    },
-
-    getInitValueByName(me, name, defaultValue){
-        let value = me[name];
-        if(!Ext.isEmpty(value))return value;
-        let view = me.getView();
-        value = me.getViewModelValue(name)
-                || me.list[name]
-                || view[name];
-        if(Ext.isEmpty(value) && defaultValue) value = defaultValue;
-        me[name] = Format.capitalize(value);
-
+        me.initBaseProperties(me);
     },
 
     /**
      * 获取Crud的操作对象
      */
-    initList(me){
+     initList(me){
         let view = me.getView(),
-            list = view.isElementDataView || view.isList  
-            ? view 
-            : view.down('[isCrudList]');
+            list = (view.isCrudList && view) || view.down('[isCrudList]');
         if(!list) Ext.raise('List is not defined.')
         list.on('storechange', me.onStoreChange, me);
-        if(list.doubleTapToEdit){
-            list.on('childdoubletap', me.onChildDoubleTap, me);
-        }    
-        if(list.childTap){
-            list.on('childtap', me.onListChildTap, me);
-        }    
-        if(list.childLongPress){
-            list.on('childlongpress', me.onListChildLongPress, me);
-        }
+
+        list.on('select', me.onViewSelect, me);
+        list.on('deselect', me.onViewDeselect, me);
+
+        list.doubleTapToEdit && list.on('childdoubletap', me.onChildDoubleTap, me);
+        list.childTap && list.on('childtap', me.onListChildTap, me);
+        list.childLongPress && list.on('childlongpress', me.onListChildLongPress, me);
 
         me.list = list;
         me.currentList = list;
     },
 
+    initBaseProperties(me){
+        let names = ['entityName', 'resourceName', 'permissionGroup', 'permissionName'],
+            view = me.getView();
+        names.forEach(n=>{
+            let value = me[n];
+            if(!Ext.isEmpty(value)) return;
+            value = me.getViewModelValue(n)  || me.list[n]  || view[n];
+            if(Ext.isEmpty(value) && n === 'permissionName') value = me.entityName;
+            if(Ext.isEmpty(value)) Ext.raise(`No ${n}`);
+            me[n] = Format.capitalize(value);    
+        })
+    },
+
+
     onListChildTap:Ext.emptyFn,
     onListChildLongPress:Ext.emptyFn,
+    
     /**
      * 获取视图模型指定键的值
      * @param {键} key 
@@ -119,28 +114,26 @@ Ext.define('Common.app.CrudController',{
         let me = this,
             list = me.list,
             autoLoad = me.getView().autoLoad || list.autoLoad ;
-        me.bindListAndStoreEvent(store, list);
-        me.initialSearchItemEvent(me);
-        if(me.isPhone && !list.isGrid) me.setSortMenu(store, list);
-        me.initCrudButtonHiddenState();
-        if(autoLoad === 'search') me.doSearch();
-        if(autoLoad === true) me.onRefreshStore();
-        me.onAfterStoreChange && me.onAfterStoreChange(store, list);
-    },
 
-    bindListAndStoreEvent(store, list){
-        let me = this;
         store.on('beforeload', me.onStoreBeforeLoad, me);
         store.on( 'load', me.onStoreLoad, me);
-        list.on('select', me.onViewSelect, me);
-        list.on('deselect', me.onViewDeselect, me);
+
+        me.initialSearchItemEvent(me);
+
+        me.setSortMenu(store, list);
+
+        me.initCrudButtonHiddenState();
+
+        (autoLoad === 'search') && me.doSearch();
+        (autoLoad === true) &&  me.onRefreshStore();
+        me.onAfterStoreChange && me.onAfterStoreChange(store, list);
     },
 
 
     setSortMenu(store, list){
-        let header = list.up('[getHeader]');
-        if(!header) return;
-        header = header.getHeader && header.getHeader();
+        let me = this,            
+            view = me.getView(),
+            header = view.down('[isCrudHeader]') || list.down('[isCrudHeader]');
         if(!header) return;
         let moreButton = header.down('#moreButton');
         if(!moreButton) return;
@@ -181,6 +174,7 @@ Ext.define('Common.app.CrudController',{
      */
     onStoreBeforeLoad(){
         this.doDeselectAll();
+        this.selections = [];
         return true;
     },
 
@@ -192,26 +186,21 @@ Ext.define('Common.app.CrudController',{
      * @param {事件选项} eOpts 
      */    
     onViewSelect(sender, selected, eOpts ){
-        let me = this,
-            selections = me.getCurrentSelections(),
-            entityName = me.entityName;
-        //更Curd按钮状态
+        let me = this;
+        me.selections = me.currentList.getSelectable().getSelectedRecords();        
         me.updateCrudButtonState();
-        me.setViewModelValue(`${entityName}Selected`, selections[0]);
     },
 
-    /**
+        /**
      * 取消记录的选择     * 
      * @param {事件触发者} sender 
      * @param {选择的记录} records 
      * @param {事件选项} eOpts 
      */
     onViewDeselect(sender, records, eOpts){
-        let me = this,
-            selections = me.getCurrentSelections(),
-            entityName = me.entityName;
+        let me = this;
+        me.selections = me.currentList.getSelectable().getSelectedRecords();        
         me.updateCrudButtonState();
-        me.setViewModelValue(`${entityName}Selected`, selections[0]);
     },
 
     /**
@@ -219,35 +208,12 @@ Ext.define('Common.app.CrudController',{
      */
     doDeselectAll(){
         let me = this,
-            entityName = me.entityName,
             list = me.currentList,
             selectable = list.getSelectable();
         selectable.deselectAll();
-        me.setViewModelValue(`${entityName}Selected`, null);
+        me.selections = [];
     },
-
-    /**
-     * 获取当前列表的选择记录
-     */
-    getCurrentSelections(){
-        let me = this,
-            selectable = me.currentList.getSelectable();
-        if(!selectable.getDisabled()){
-            return selectable.getSelectedRecords();
-        }
-        return Array.from(me.phoneSelections);
-    },
-
-    /**
-     * 初始化CRUD按钮的显示
-     */
-    initCrudButtonHiddenState(){
-        let me = this,
-            permissions = me.permissions;
-        me.setButtonHidden('create', !me.isGranted(permissions.create));
-        me.setButtonHidden('update', !me.isGranted(permissions.update));
-        me.setButtonHidden('delete', !me.isGranted(permissions.delete));
-    },
+    
 
     /**
      * 获取Crud按钮
@@ -255,15 +221,12 @@ Ext.define('Common.app.CrudController',{
     getCrudButtons(){
         let me = this,
             view = me.getView(),
-            buttonContainer = view.down('uxcrudtoolbar') || view.down('uxpanelheader'),
             crudButtons = me.crudButtons;
         if(crudButtons) return crudButtons;
-        let buttons = buttonContainer.query('button[isCrud],field[isCrud],component[isCrud]');
-        if(buttonContainer.xtype === 'uxpanelheader'){
-            let moreButton = buttonContainer.down('#moreButton');
-            if(moreButton){
-                buttons = buttons.concat(moreButton.getMenu().query('[isCrud]'));
-            }
+        let buttons = view.query('[isCrud]'),
+            moreButton = view.down('#moreButton');
+        if(moreButton){
+            buttons = buttons.concat(moreButton.getMenu().query('[isCrud]'));
         }
         crudButtons = {};
         buttons.forEach(f=>{
@@ -287,21 +250,23 @@ Ext.define('Common.app.CrudController',{
      * @param {按钮的key}} key 
      * @param {是否禁用} disabled 
      */
-    setButtonDisabled(key,disabled){
+    setCrudButton(key,isDisabled, state){
         let button = this.getCrudButton(key) ;
-        if(button) button.setDisabled(disabled);
+        button && isDisabled && button.setDisabled(state);
+        button && !isDisabled && button.setHidden(state);
     },
 
-    /**
-     * 隐藏/显示按钮
-     * @param {按钮的key}} key 
-     * @param {是否隐藏} hidden 
-     */
-    setButtonHidden(key,hidden){
-        let button = this.getCrudButton(key);
-        if(button) button.setHidden(hidden);
+    buttonState:{
+        hidden:{
+            create(){ return !this.isGranted(this.permissions.create)},
+            update(){ return !this.isGranted(this.permissions.update)},
+            delete(){ return !this.isGranted(this.permissions.delete)},
+        },
+        disabled:{
+            update(){ return !this.selections.length>0},
+            delete(){ return !this.selections.length>0},
+        }
     },
-
 
     /**
      * 更新CRUD按钮状态
@@ -314,9 +279,20 @@ Ext.define('Common.app.CrudController',{
             allowDelete = hasSelected ;        
         if(me.allowUpdate) allowUpdate = allowUpdate && me.allowUpdate(selections);
         if(me.allowDelete) allowDelete = allowDelete && me.allowDelete(selections);
-        me.setButtonDisabled('update', !allowUpdate);
-        me.setButtonDisabled('delete', !allowDelete);
+        me.setCrudButton('update', true, !allowUpdate);
+        me.setCrudButton('delete', true, !allowDelete);
         me.customCrudButtonState(me, hasSelected, allowUpdate, allowDelete);
+    },
+
+    /**
+     * 初始化CRUD按钮的显示
+     */
+     initCrudButtonHiddenState(){
+        let me = this,
+            permissions = me.permissions;
+        me.setCrudButton('create', false, buttonState);
+        me.setCrudButton('update', false, !me.isGranted(permissions.update));
+        me.setCrudButton('delete', false, !me.isGranted(permissions.delete));
     },
 
     customCrudButtonState: Ext.emptyFn,
@@ -499,7 +475,7 @@ Ext.define('Common.app.CrudController',{
             id = record.getId(),
             data = me.getColumnCheckChangeData && me.getColumnCheckChangeData(),
             action = checked ? checkAction[field] || updateAction[field] : uncheckAction[field] || updateAction[field] ,
-            url = action ? URI.crud(entityName, id, action) : URI.crud(entityName, id, field.toLowerCase());
+            url = action ? URI.crud(entityName, id, action) : URI.crud(entityName, id, Format.pluralize(field));
         Http.patch(url,data).then(me.onColumnCheckChangeSuccess, me.onColumnCheckChangeFailure, null, me);
     },
 
@@ -516,24 +492,9 @@ Ext.define('Common.app.CrudController',{
      */
     onColumnCheckChangeFailure(response){
         this.currentList.getStore().rejectChanges();
-        Failure.ajax(response, this.resourceName, true);
+        this.onAjaxFailure(response);
     },
 
-    /**
-     * 在执行更新之前的操作，返回false可阻止对话框显示
-     * 默认会检测是否有当前记录
-     * @param {对话框} dialog 
-     * @param {要编辑的记录} selection 
-     */
-    beforeUpdate(dialog,selection){
-        if(selection) return true;
-        let entityName = this.entityName;
-        MsgBox.alert(null, Format.format(
-            I18N.get('NoSelection'), 
-            I18N.get(entityName, me.resourceName), 
-            I18N.get('Edit')));
-        return false;
-    },
 
 
     /**
@@ -546,7 +507,7 @@ Ext.define('Common.app.CrudController',{
 
     onCreate(){
         let me = this,
-        viewXtype= me.getCreateOrUpdateXtype();
+            viewXtype= me.getCreateOrUpdateXtype();
 
         if(!me.beforeCreate()) return;
 
@@ -559,7 +520,10 @@ Ext.define('Common.app.CrudController',{
 
     onUpdate(){
         let me = this,
-            selection = me.getCurrentSelections()[0];
+            selection = me.selections[0];
+        
+        if(!me.beforeUpdate(selection)) return;
+
         if(selection.parentNode){
             selection.set('parentName', selection.parentNode.get('displayName'));
             selection.commit();
@@ -567,10 +531,26 @@ Ext.define('Common.app.CrudController',{
         me.doUpdate(selection);
     },
 
+    /**
+     * 在执行更新之前的操作，返回false可阻止对话框显示
+     * 默认会检测是否有当前记录
+     * @param {对话框} dialog 
+     * @param {要编辑的记录} selection 
+     */
+     beforeUpdate(selection){
+        if(selection) return true;
+        let entityName = this.entityName;
+        MsgBox.alert(null, Format.format(
+            I18N.get('NoSelection'), 
+            I18N.get(entityName, me.resourceName), 
+            I18N.get('Edit')));
+        return false;
+    },
+
+
     doUpdate(selection){
         let me = this,
             viewXtype= me.getCreateOrUpdateXtype(true);
-        if(me.hidePopMenu) me.hidePopMenu();
         let params = me.getViewParams(null, me.getCreateOrUpdateViewEvents(), selection);
         ViewMgr.setParams(viewXtype, params);
         me.redirectTo(`${viewXtype}/edit`);
@@ -579,7 +559,7 @@ Ext.define('Common.app.CrudController',{
     getCreateOrUpdateXtype(isUpdate){
         let me = this,
             xtype = isUpdate ? me.updateViewXtype : me.createViewXtype;
-        return xtype || `${this.entityName}EditView`;
+        return xtype || `${me.entityName}EditView`;
     },
 
     getViewParams(config, events, record){
@@ -603,15 +583,6 @@ Ext.define('Common.app.CrudController',{
             config : config,
             defaultModelValue: me.getDefaultModelValue()
         }
-    },
-
-    showView(view, record){
-        let me = this;
-        if(me.isPhone) {
-            me.setViewModelValue('currentDialog', view.xtype);
-            Ext.History.add(`${view.xtype}/${record ? record.getId() : 'add' }`, true);
-        }
-        view.show(); 
     },
 
     getCreateOrUpdateViewEvents(){
@@ -656,7 +627,8 @@ Ext.define('Common.app.CrudController',{
     getDefaultModelValue: Ext.emptyFn,
 
     onAjaxFailure(response){    
-        Failure.ajax.apply(this, [response, this.resourceName, true]);
+        let error = Http.getError(response, this.resourceName);
+        MsgBox.alert(null,error);
     }
 
 })

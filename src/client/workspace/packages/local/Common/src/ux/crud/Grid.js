@@ -1,4 +1,4 @@
-Ext.define('Common.ux.grid.Crud',{
+Ext.define('Common.ux.crud.Grid',{
     extend: 'Common.ux.grid.Grid',
     xtype: 'uxcrudgrid',
 

@@ -1,4 +1,4 @@
-Ext.define('Common.ux.dataview.CrudList',{
+Ext.define('Common.ux.crud.List',{
     extend: 'Common.ux.dataview.List',
     xtype: 'uxcrudlist',
 

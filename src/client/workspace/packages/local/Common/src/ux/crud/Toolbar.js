@@ -1,25 +1,16 @@
-Ext.define('Common.ux.grid.CrudToolbar', {
+Ext.define('Common.ux.grid.Toolbar', {
     extend: 'Ext.Toolbar',
     xtype: 'uxcrudtoolbar',
 
     requires:[
-        // 'Common.ux.button.First',
-        // 'Common.ux.button.Previous',
-        // 'Common.ux.field.PageNumber',
-        // 'Common.ux.button.Next',
-        // 'Common.ux.button.Last',
         'Common.ux.button.Create',
         'Common.ux.button.Update',
         'Common.ux.button.Trash',
         'Common.ux.button.Refresh',
         'Common.ux.field.Search',
-        'Common.ux.field.PageNumber',
     ],
 
-    //shadow: false,
     ui: 'grid',
-    //style: 'background-color:var(--background-color);',
-    //classCls: Ext.baseCSSPrefix + 'pagingtoolbar',
 
     defaults:{
         margin: '0 5px 0 0'
@@ -86,10 +77,6 @@ Ext.define('Common.ux.grid.CrudToolbar', {
  
         me.callParent();
 
-        if(Ext.platformTags.phone){
-            me.setUi('dark');
-        }
-
         if(me.hasCrud){
             let buttons = [];
             if(me.hasCreate) buttons.push(me.getCreateButton());
@@ -118,7 +105,6 @@ Ext.define('Common.ux.grid.CrudToolbar', {
    
     createComponent(newCmp) {
         return Ext.apply({
-            //margin: '0 5px 0 0',
             ownerCmp: this
         }, newCmp);
     },
