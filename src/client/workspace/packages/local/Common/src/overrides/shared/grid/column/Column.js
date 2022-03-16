@@ -9,15 +9,14 @@ Ext.define('Common.overrides.shared.grid.column.Column',{
 
     onLocalized(){
         let me = this,
-            resourceName = me.resourceName || me.getContainerResourceName();
+            resourceName = me.getResourceName();
         if(me.getAutoText()){
             let name = Ext.util.Format.capitalize(me.getDataIndex());
             me.setLangText(name);
         }
-        let text = me.getLangText();
-        if(text){
-            me.setText(I18N.get(text, resourceName, me.getEntityName() ));
-        }
+
+        let text = me.me.getLocalizedText(me.getLangText(), resourceName);
+        text && me.setText(text);
     },
 
     applyTpl(config) {

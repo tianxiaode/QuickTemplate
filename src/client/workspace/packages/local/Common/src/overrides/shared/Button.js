@@ -9,22 +9,21 @@ Ext.define('Common.overrides.shared.Button',{
 
     onLocalized(){
         let me = this,
-            resourceName = me.resourceName || me.getContainerResourceName(),
+            resourceName = me.getResourceName(),
             langText = me.getLangText(),
-            tooltip = me.getLangTooltip(),
             text = me.getText();
-
+            
         if(text && !langText){
             me.setLangText(text);
         }
-        text = me.getLangText();
+
+        text = me.getLocalizedText(me.getLangText(), resourceName);
         
-        if(text){
-            me.setText(I18N.get(text, resourceName));
-        }
-        if(tooltip){
-            me.setTooltip(I18N.get(tooltip, resourceName));
-        }
+        text && me.setText(text);
+
+        text = me.getLocalizedText(me.getLangTooltip(), resourceName);
+        
+        text && me.setTooltip(text);
     },
 
     applyLangTooltip(value){
@@ -43,15 +42,6 @@ Ext.define('Common.overrides.shared.Button',{
         if(Ext.platformTags.phone && !Ext.isEmpty(me.phoneWeight)) return me.phoneWeight;
         return value;
     },
-
-    // applyIconCls(value){
-    //     let me = this;
-    //     if(Ext.platformTags.phone && !Ext.isEmpty(me.phoneIconCls)){
-    //         console.log(me.phoneIconCls);
-    //         return `${me.phoneIconCls} ${value}`;
-    //     }
-    //     return value;
-    // },
 
     updateIconCls(iconCls, oldIconCls) {
         let me = this;
@@ -77,10 +67,5 @@ Ext.define('Common.overrides.shared.Button',{
     },
 
 
-    // applyPhoneIconCls(value){
-    //     console.log(Ext.platformTags.phone, value);
-    //     if(Ext.platformTags.phone && Ext.isEmpty(value)) this.setIconCls(value);
-    //     return value
-    // }
 
 })

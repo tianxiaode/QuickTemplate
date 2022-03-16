@@ -48,11 +48,5 @@ Ext.define('Common.ux.field.Search', {
         return parent ? this.findSearchHandler(parent, name) : null;
     },
 
-    // onClearIconTap: function(sender,input, e) {
-    //     this.callParent(arguments);
-    //     this.getTriggers().search.el.doFireEvent('tap',[e]);
-    //     this.getTriggers().search.el.doFireEvent('click',[e]);
-    // }
-
 
 });

@@ -17,55 +17,44 @@ Ext.define('Common.overrides.shared.Component',{
 
     onLocalized(){
         let me = this,
-            resourceName = me.resourceName || me.getContainerResourceName(),
-            html = me.getLangHtml(),
-            langTooltip = me.getLangTooltip(),
-            text = '';
-        if(langTooltip){
-            if(Ext.isArray(langTooltip)){
-                langTooltip.forEach(t=>{
-                    text += I18N.get(t, resourceName)
-                })
-            }else{
-                text =  I18N.get(langTooltip, resourceName)
-            }
-            me.setTooltip(text);
-        }
-        if(!html) return;
-        text = '';
-        if(Ext.isArray(html)){
-            text = me.getArrayText(html, true, resourceName);
-            me.setHtml(text);
-            return;
-        }
-        text = I18N.get(html, resourceName);
-        if(Ext.isArray(text)) text = me.getArrayText(text , false);
-        me.setHtml(text);
-        
+            resourceName = me.getResourceName(),
+            text = me.getLocalizedText(me.getLangTooltip(), resourceName);
 
+        text && me.setTooltip(text);
+
+        text = me.getLocalizedText(me.getLangHtml(), resourceName);
+
+        text && me.setHtml(text);
     },
 
-    getContainerResourceName(){
-        let me = this;
-        let container = me.includeResource ? me : me.up('[includeResource]'),
-            vm = container && container.getViewModel();
-        
-        return (vm && vm.get('resourceName')) || (container && container.resourceName);
-
+    getResourceName(){
+        return this.resourceName || this.getContainerResource('resourceName');
     },
 
     getEntityName(){
-        let me = this;
-        if(me.entityName) return me.entityName;
-        let container = me.up && me.up('[includeResource]');
-            vm = container && container.getViewModel();
-        return (vm && vm.get('entityName')) || (container && container.entityName);
+        return this.entityName || this.getContainerResource('entityName');
     },
 
-    getArrayText(text, needLocalized,resourceName){
+    getContainerResource(name){
+        let me = this,
+            container = me.up && me.up('[includeResource]');
+            vm = container && container.getViewModel();
+        return (vm && vm.get(name)) || (container && container[name]);
+
+    },
+
+    getLocalizedText(text, resourceName, entityName){
+        if(!text) return null;
+        let isArray = Ext.isArray(text);
+        text = isArray ? this.getArrayText(text, true, resourceName, entityName)
+            : I18N.get(text, resourceName, entityName);
+        return text;
+    },
+
+    getArrayText(text, needLocalized,resourceName, entityName){
         let html = [];
         text.forEach(t=>{
-            html.push(needLocalized ? I18N.get(t, resourceName) : t);
+            html.push(needLocalized ? I18N.get(t, resourceName, entityName) : t);
         })
         return html.join('');
     },

@@ -28,9 +28,6 @@ Ext.define('Common.ux.field.Select',{
     picker: 'floated',
     clearable:true,
 
-    // plugins:{
-    //     fieldhistory: true,
-    // },
 
     initialize(){
         let me = this;
@@ -42,10 +39,6 @@ Ext.define('Common.ux.field.Select',{
         }
         me.callParent();
     },
-
-    // applyItemTpl(tpl){
-    //     return Template.getTplWithScope(tpl, this);
-    // },
 
     createFloatedPicker(){
         var me = this,

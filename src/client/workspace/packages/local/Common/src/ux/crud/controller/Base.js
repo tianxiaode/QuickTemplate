@@ -161,9 +161,8 @@ Ext.define('Common.ux.crud.controller.Base',{
      onStoreLoad(store, records, successful, operation, eOpts){
         let me = this,  
             countMessage = me.getCrudButton('countmessage');
-        if(countMessage){
-            countMessage.setHtml(I18N.get('CountMessage').replace('{0}', store.getTotalCount()));
-        }
+        countMessage && countMessage.setHtml(I18N.get('CountMessage').replace('{0}', store.getTotalCount()));
+
         me.afterStoreLoad(me, store, records);
     },
 
@@ -223,11 +222,7 @@ Ext.define('Common.ux.crud.controller.Base',{
             view = me.getView(),
             crudButtons = me.crudButtons;
         if(crudButtons) return crudButtons;
-        let buttons = view.query('[isCrud]'),
-            moreButton = view.down('#moreButton');
-        if(moreButton){
-            buttons = buttons.concat(moreButton.getMenu().query('[isCrud]'));
-        }
+        let buttons = view.query('[isCrud]');
         crudButtons = {};
         buttons.forEach(f=>{
             crudButtons[f.crudName] = f;
@@ -247,8 +242,9 @@ Ext.define('Common.ux.crud.controller.Base',{
 
     /**
      * 禁用/启用按钮
-     * @param {按钮的key}} key 
-     * @param {是否禁用} disabled 
+     * @param {按钮的key} key 
+     * @param {是否禁用} isDisabled
+     * @param {状态值} state 
      */
     setCrudButton(key,isDisabled, state){
         let button = this.getCrudButton(key) ;
@@ -256,24 +252,12 @@ Ext.define('Common.ux.crud.controller.Base',{
         button && !isDisabled && button.setHidden(state);
     },
 
-    buttonState:{
-        hidden:{
-            create(){ return !this.isGranted(this.permissions.create)},
-            update(){ return !this.isGranted(this.permissions.update)},
-            delete(){ return !this.isGranted(this.permissions.delete)},
-        },
-        disabled:{
-            update(){ return !this.selections.length>0},
-            delete(){ return !this.selections.length>0},
-        }
-    },
-
     /**
      * 更新CRUD按钮状态
      */
     updateCrudButtonState(){
         let me = this,            
-            selections = me.getCurrentSelections(),
+            selections = me.selections,
             hasSelected = selections.length > 0,
             allowUpdate = hasSelected ,
             allowDelete = hasSelected ;        
@@ -316,7 +300,6 @@ Ext.define('Common.ux.crud.controller.Base',{
     onDelete(){
         let me = this,
             data = me.getMultiEntityActionData(me.getDeleteData || me.defaultGetDataFn);
-        if(me.hidePopMenu) me.hidePopMenu();
         let action = me.deleteAction;
         me.doMultiEntityAction(I18N.get('DeleteConfirmMessageTitle'),
             I18N.get('DeleteConfirmMessage'),
@@ -338,7 +321,7 @@ Ext.define('Common.ux.crud.controller.Base',{
         let me = this,
             store = me.currentList.getStore(),
             msgFieldName = store.messageField,
-            selections = me.getCurrentSelections(),
+            selections = me.selections,
             data = { ids: [], contents: [] };
         getDataFn = getDataFn || me.defaultGetDataFn;
         //组织数据
@@ -360,11 +343,9 @@ Ext.define('Common.ux.crud.controller.Base',{
     },
 
     checkSelections(data){
-        if (data.length === 0) {
-            MsgBox.alert(null, I18N.get('NoSelection'));
-            return false;
-        }
-        return true;
+        let result = data.length === 0;
+        result && MsgBox.alert(null, I18N.get('NoSelection'));
+        return result;
     },
 
     /**
@@ -629,6 +610,17 @@ Ext.define('Common.ux.crud.controller.Base',{
     onAjaxFailure(response){    
         let error = Http.getError(response, this.resourceName);
         MsgBox.alert(null,error);
+    },
+
+    destroy(){
+        let me = this;
+        me.selections = null;
+        me.list = null;
+        me.currentList = null;
+        me.crudButtons = null;
+        me.searchFields = null;
+
+        me.callParent();
     }
 
 })

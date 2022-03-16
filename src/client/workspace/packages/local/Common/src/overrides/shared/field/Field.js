@@ -8,21 +8,20 @@ Ext.define('Common.overrides.shared.field.Field',{
 
     onLocalized(){
         let me = this,
-            resourceName = me.resourceName || me.getContainerResourceName();
+            resourceName = me.getResourceName();
         me.setRequiredMessage(I18N.get('RequiredMessage'));
         me.setValidationMessage(I18N.get('ValidationMessage'));
 
         if(me.getAutoLabel() && !me.isCheckbox){
-            let name = Ext.util.Format.capitalize(me.getName() || me.getItemId());
+            let name = Format.capitalize(me.getName() || me.getItemId());
             me.setLangLabel(name);
         }
 
-        let langLabel = me.getLangLabel();
+        let label = me.getLocalizedText(me.getLangLabel(), resourceName, me.getEntityName());
+        
+        label && me.setLabel(label);
 
-        if(langLabel) {
-            me.setLabel(I18N.get(langLabel, resourceName, me.getEntityName()));
-            if(Ext.platformTags.desktop)me.labelElement.set({title : me.getLabel()});
-        }
+        Ext.platformTags.desktop && me.labelElement.set({title : me.getLabel()});
 
         me.setError(null);
     },

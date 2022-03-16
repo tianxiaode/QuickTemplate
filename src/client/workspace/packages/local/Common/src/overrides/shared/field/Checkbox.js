@@ -10,19 +10,17 @@ Ext.define('Common.overrides.shared.field.Checkbox',{
 
     onLocalized(){
         let me = this,
-            resourceName = me.resourceName || me.getContainerResourceName();
+            resourceName = me.getResourceName();
 
         if(me.getAutoLabel()){
-            let name = Ext.util.Format.capitalize(me.getName() || me.getItemId());
+            let name = Format.capitalize(me.getName() || me.getItemId());
             me.setLangBoxLabel(name);
         }
 
-        let langBoxLabel = me.getLangBoxLabel();
+        let label = me.getLocalizedText(me.getLangBoxLabel(), resourceName, me.getEntityName());
+        
+        label && me.setBoxLabel(label);
 
-        if(langBoxLabel){
-            me.setBoxLabel(I18N.get(langBoxLabel,resourceName, me.getEntityName()));
-        } 
-    
         me.callParent();
     },
 

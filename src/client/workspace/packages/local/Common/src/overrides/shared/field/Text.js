@@ -9,11 +9,13 @@ Ext.define('Common.overrides.shared.field.Text',{
     onLocalized(){
         let me = this,
             badFormatMessage = me.getLangBadFormatMessage(),
-            placeholder = me.getLangPlaceholder(),
-            resourceName = me.resourceName || me.getContainerResourceName();
-        if(placeholder){
-            me.setPlaceholder(I18N.get(placeholder, resourceName));
-        }
+            text = me.getLangPlaceholder(),
+            resourceName = me.getResourceName(),
+            entityName = me.getEntityName();
+
+        text = me.getLocalizedText(text, resourceName, entityName);
+    
+        text && me.setPlaceholder(text);
 
         if(!badFormatMessage){
             me.setLangBadFormatMessage(me.badFormatMessage);

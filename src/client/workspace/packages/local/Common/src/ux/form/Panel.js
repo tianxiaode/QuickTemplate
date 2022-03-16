@@ -24,11 +24,6 @@ Ext.define('Common.ux.form.Panel',{
     layout: 'vbox',
     includeResource: true,  
 
-    // config:{
-    //     entityName: null,
-    //     resourceName: null,
-    // },
-
 
     setValues: function(values) {
         var fields = this.getFields(),

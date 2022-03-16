@@ -27,9 +27,7 @@ Ext.define('Common.overrides.shared.data.validator.Validator',{
             me.setLangMessage(me.getMessage());
         }
         let message = me.getLangMessage();
-        if(message){
-            me.setMessage(I18N.get(message));
-        }
+        message && me.setMessage(I18N.get(message));
     },
 
 
