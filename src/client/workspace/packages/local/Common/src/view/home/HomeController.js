@@ -3,12 +3,10 @@ Ext.define('Common.view.home.HomeController',{
 
     requires:[
         'Common.service.Template',
-        'Common.view.authentication.Login',
         'Common.view.pages.Page404',
         'Common.service.AccessControl',
-        'Common.util.Enums',
-        'Common.util.ViewManager',
-        'Common.view.authentication.SelectOrganization',
+        'Common.service.Enums',
+        'Common.service.ViewManager',
         'Common.service.SignalR',
     ],
 
@@ -76,15 +74,9 @@ Ext.define('Common.view.home.HomeController',{
 
         //未登录
         if(!isAuthenticated){
-            Ext.History.add('login', true);
+            Auth.login();
             return;
         };
-
-        //已登录未选择组织
-        if(!Config.isOrganizationAuthenticated()){
-            Ext.History.add('selectorganization', true);
-            return;
-        }
 
 
 
@@ -110,7 +102,6 @@ Ext.define('Common.view.home.HomeController',{
             if(btn === 'yes'){
                 Config.clearAll();
                 Auth.logout();
-                window.location.href = '.';
             }
         })
     },
@@ -142,8 +133,7 @@ Ext.define('Common.view.home.HomeController',{
     },
 
     onShowPages(){
-        let me = this;
-            xtype = Ext.History.getToken();
+        let xtype = Ext.History.getToken();
         ViewMgr.showPage(xtype);
     }
 })

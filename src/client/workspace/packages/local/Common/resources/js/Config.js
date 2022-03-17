@@ -1,8 +1,13 @@
 window.AppConfig = {
-    apiUrl: 'http://localhost:21021/',
+    apiUrl: 'https://localhost:44320/',
     localUrl: './',
     lang: '',
     oAuthConfig: {
+        issuer: 'https://localhost:44356',
+        redirectUri: "https://localhost:44300/desktop",
+        clientId: 'QuickTemplate_App',
+        scope: 'offline_access QuickTemplate',
+        dummyClientSecret: '1q2w3E*',
       },
     appName:{
         en: 'Quick Template',

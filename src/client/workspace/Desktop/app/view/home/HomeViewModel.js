@@ -1,5 +1,5 @@
 Ext.define('Desktop.view.home.HomeViewModel', {
-    extend: 'Ext.app.ViewModel',
+    extend: 'Common.view.home.HomeModel',
     alias: 'viewmodel.homeview',
 
     data: {

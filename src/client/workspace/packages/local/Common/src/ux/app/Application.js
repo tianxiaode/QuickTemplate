@@ -6,7 +6,7 @@ Ext.define('Common.ux.app.Application', {
     requires:[
         'Common.service.Storage',
         'Common.util.TemplateFn',
-        'Common.util.Url',
+        'Common.service.Url',
         'Common.service.HttpClient',
         'Common.service.Localized',
         'Common.service.Config',

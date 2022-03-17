@@ -4,8 +4,8 @@ Ext.define('Common.ux.crud.Grid',{
 
     requires:[
         'Ext.grid.column.RowNumberer',
-        'Common.ux.grid.CrudToolbar',
-        'Common.app.CrudController'
+        'Common.ux.crud.Toolbar',
+        'Common.ux.crud.controller.Base'
     ],
 
     hasCountMessage: true,

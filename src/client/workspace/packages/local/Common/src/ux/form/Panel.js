@@ -13,10 +13,6 @@ Ext.define('Common.ux.form.Panel',{
         'Ext.field.Email',
         'Ext.field.Number',
         'Ext.field.Container',
-        'Common.ux.form.BaseController',
-        'Common.ux.panel.Header',
-        'Common.ux.button.Success',
-        'Common.ux.button.Error',
     ],
 
     trackResetOnLoad: true,

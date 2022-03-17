@@ -2,10 +2,6 @@ Ext.define('Common.ux.Logo', {
     extend: 'Ext.Component',
     xtype: 'uxlogo',
 
-    requires:[
-        'Common.view.logos.LogoEdit',
-    ],
-
     userCls:'logo',
 
 

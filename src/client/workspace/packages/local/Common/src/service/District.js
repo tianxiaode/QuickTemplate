@@ -7,9 +7,9 @@ Ext.define('Common.service.District', {
     ],
 
     requires:[        
-        'Common.data.store.TreeSearch',
-        'Common.data.model.districts.District',
-        'Common.service.Config'
+        // 'Common.data.store.TreeSearch',
+        // 'Common.data.model.districts.District',
+        // 'Common.service.Config'
     ],
 
 

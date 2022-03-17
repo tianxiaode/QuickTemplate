@@ -1,5 +1,5 @@
 Ext.define('Common.ux.tree.Edit', {
-    extend: 'Common.ux.crud.form.Crud',
+    extend: 'Common.ux.crud.form.Form',
 
     config:{
         idField:{

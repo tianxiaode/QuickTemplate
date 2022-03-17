@@ -56,16 +56,6 @@ Ext.define('Common.service.OAuth', {
             let url = this.createLoginUrl('', '', null, false, {});
             window.location.href = url;    
         }
-        // let me = this,
-        //     data = {
-        //         'grant_type': 'password',
-        //         'scope': me.scopes,
-        //         'username': username,
-        //         'password': password,
-        //     };
-        // let promise = me.send(data, me.endpoints.token);
-        // promise.then(me.loginSuccess, null,null, me)
-        // return promise;
     },
 
     tryLogin() {
@@ -174,7 +164,7 @@ Ext.define('Common.service.OAuth', {
             endSession: 'endsession',
     
         },
-        scopes: "profile email phone role Service offline_access",
+        scopes: "profile email phone role QuickTemplate offline_access",
     
         /**
          * 登录成功

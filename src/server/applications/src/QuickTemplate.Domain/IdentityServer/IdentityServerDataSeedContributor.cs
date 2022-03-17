@@ -216,6 +216,7 @@ public class IdentityServerDataSeedContributor : IDataSeedContributor, ITransien
                     FrontChannelLogoutUri = frontChannelLogoutUri,
                     RequireClientSecret = requireClientSecret,
                     RequirePkce = requirePkce
+
                 },
                 autoSave: true
             );

@@ -96,7 +96,7 @@ Ext.define('Common.service.Localized', {
     loadResources(){
         let me= this;
         me.isReady = false;
-        let promise =Http.get(URI.getResource('zh-Hans'));
+        let promise =Http.get(URI.get('localization' ));
         promise.then(me.loadSuccess, me.loadFailure, null, me);
         return promise;
     },

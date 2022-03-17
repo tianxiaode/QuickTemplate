@@ -1,14 +1,7 @@
 Ext.define('Desktop.view.home.HomeViewController', {
-    extend: 'Ext.app.ViewController',
+    extend: 'Common.view.home.HomeController',
     alias: 'controller.homeview',
 
-
-    /**
-     * 主视图显示后，显示用户名称
-     */
-    onHomeViewPainted(){
-        //this.getViewModel().set('userName', (CFG.user && CFG.user.name) || I18N.None);
-    },
 
     /**
      * 切换子视图
@@ -16,14 +9,27 @@ Ext.define('Desktop.view.home.HomeViewController', {
      */
     setCurrentView(xtype) {
         let me = this,
-            refs = me.getReferences(),
-            mainCard = refs.mainCardPanel,
-            name = xtype.substring(xtype.indexOf('-')+1),
-            view = mainCard.down(xtype);
+            navigationTree = me.lookup('navigationTree');
+        me.currentSubXtype = xtype;
+
+        if(!navigationTree.isReady){
+            Ext.defer(me.setCurrentView, 50 , me , [xtype]);
+            return;
+        }
+
+
+        //如果导航菜单没有对应选项，显�?404页面
+        if(!navigationTree.hasNode(xtype)) {
+            me.redirectTo('page404');
+            return;
+        };
+
+        let mainCard = me.lookup('mainCardPanel');
+        let view = mainCard.down(xtype);
+
 
         if(view){
             mainCard.setActiveItem(view);
-            me.switchNavigation(name);
             return;
         }
 
@@ -33,20 +39,17 @@ Ext.define('Desktop.view.home.HomeViewController', {
             return;
         }
 
-
         view = mainCard.add({
             xtype: xtype,
             hideMode: 'display'
         });
 
         mainCard.setActiveItem(view);
-        me.switchNavigation(name);
+        //me.switchNavigation(name);
 
     },
 
-    // onNavigationTreesLoaded(){
-    //     this.switchNavigation(Ext.util.History.getToken());
-    // },
+
 
     switchNavigation(name){
         const me = this,

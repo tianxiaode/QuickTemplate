@@ -10,8 +10,15 @@ using QuickTemplate.MultiTenancy;
 using QuickTemplate.Web.Menus;
 using System;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
+using IdentityServer4.Services;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.Extensions.Logging;
 using QuickTemplate.Web.Components;
+using Serilog;
 using Volo.Abp;
+using Volo.Abp.Account;
 using Volo.Abp.Account.Web;
 using Volo.Abp.AspNetCore.Authentication.JwtBearer;
 using Volo.Abp.AspNetCore.Mvc;
@@ -50,6 +57,7 @@ namespace QuickTemplate.Web;
     )]
 public class QuickTemplateWebModule : AbpModule
 {
+
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
@@ -70,14 +78,15 @@ public class QuickTemplateWebModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
 
-        ConfigureUrls(configuration);
         ConfigureBundles();
+        ConfigureUrls(configuration);
         ConfigureAuthentication(context, configuration);
         ConfigureAutoMapper();
         ConfigureVirtualFileSystem(hostingEnvironment);
         ConfigureLocalizationServices();
         ConfigureNavigationServices();
         ConfigureAutoApiControllers();
+        ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context.Services);
     }
 
@@ -86,6 +95,10 @@ public class QuickTemplateWebModule : AbpModule
         Configure<AppUrlOptions>(options =>
         {
             options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
+            options.RedirectAllowedUrls.AddRange(configuration["App:RedirectAllowedUrls"].Split(','));
+
+            options.Applications["Angular"].RootUrl = configuration["App:ClientUrl"];
+            options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] = "account/reset-password";
         });
     }
 
@@ -103,6 +116,8 @@ public class QuickTemplateWebModule : AbpModule
         });
     }
 
+
+
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
         context.Services.AddAuthentication()
@@ -111,6 +126,11 @@ public class QuickTemplateWebModule : AbpModule
                 options.Authority = configuration["AuthServer:Authority"];
                 options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
                 options.Audience = "QuickTemplate";
+                options.BackchannelHttpHandler = new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback =
+                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                };
             });
     }
 
@@ -128,7 +148,7 @@ public class QuickTemplateWebModule : AbpModule
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                    options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}QuickTemplate.Domain.Shared"));
+                options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}QuickTemplate.Domain.Shared"));
                 options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}QuickTemplate.Domain"));
                 options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}QuickTemplate.Application.Contracts"));
                 options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}QuickTemplate.Application"));
@@ -199,6 +219,62 @@ public class QuickTemplateWebModule : AbpModule
         );
     }
 
+    private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
+    {
+
+        var cors = configuration["App:CorsOrigins"]
+            .Split(",", StringSplitOptions.RemoveEmptyEntries)
+            .Select(o => o.RemovePostFix("/"))
+            .ToArray();
+
+        context.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder
+                    .WithOrigins(cors)
+                    .WithAbpExposedHeaders()
+                    .SetIsOriginAllowedToAllowWildcardSubdomains()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
+
+        });
+    }
+
+    // private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
+    // {
+    //     context.Services.AddCors(options =>
+    //     {
+    //         options.AddPolicy(DefaultCorsPolicyName, builder =>
+    //         {
+    //             builder
+    //                 .WithOrigins(
+    //                     configuration["App:CorsOrigins"]
+    //                         .Split(",", StringSplitOptions.RemoveEmptyEntries)
+    //                         .Select(o => o.RemovePostFix("/"))
+    //                         .ToArray()
+    //                 )
+    //                 .WithExposedHeaders("FileDto")
+    //                 .WithAbpExposedHeaders()
+    //                 .SetIsOriginAllowedToAllowWildcardSubdomains()
+    //                 .AllowAnyHeader()
+    //                 .AllowAnyMethod()
+    //                 .AllowCredentials();
+    //         });
+    //     });
+    //
+    //     context.Services.AddSingleton<ICorsPolicyService>((container) => {
+    //         var logger = container.GetRequiredService<ILogger<DefaultCorsPolicyService>>();
+    //         return new DefaultCorsPolicyService(logger)
+    //         {
+    //             AllowAll = true
+    //         };
+    //     });
+    // }
+
+
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var app = context.GetApplicationBuilder();
@@ -219,6 +295,7 @@ public class QuickTemplateWebModule : AbpModule
         app.UseCorrelationId();
         app.UseStaticFiles();
         app.UseRouting();
+        app.UseCors();
         app.UseAuthentication();
         app.UseJwtTokenMiddleware();
 

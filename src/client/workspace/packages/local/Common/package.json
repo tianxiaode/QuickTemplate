@@ -169,7 +169,8 @@
              * block before any files associated with JavaScript classes.
              */
             "var": [
-                "${package.dir}/sass/var"
+                //"${package.dir}/sass/var"
+                "${package.dir}/sass/var/all.scss"
             ],
 
             /**
@@ -189,7 +190,7 @@
              *      +-----------------+
              */
             "src": [
-                "${package.dir}/sass/src"
+                "${package.dir}/sass/src/all.scss"
             ]
         },
 

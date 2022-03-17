@@ -8,7 +8,7 @@ Ext.define('Common.ux.tree.Panel',{
         'Ext.dataview.List',
         'Common.ux.grid.Tree',
         'Ext.panel.Resizer',
-        'Common.ux.grid.CrudToolbar',
+        'Common.ux.crud.Toolbar',
         'Common.ux.dataview.List'
     ],
 

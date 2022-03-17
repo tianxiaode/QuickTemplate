@@ -2,11 +2,6 @@ Ext.define('Common.service.Config', {
     alternateClassName: 'Config',
     singleton: true,
 
-    requires:[
-        'Common.util.Failure',
-        'Common.service.District'
-    ],
-
     mixins:[
         'Ext.mixin.Observable'
     ],
@@ -66,18 +61,16 @@ Ext.define('Common.service.Config', {
     loadConfiguration(){
         let me = this;
         me.isReady = false;
-        let promise = Http.get(URI.get('services/app/Session/GetCurrentLoginInformations'));
+        let promise = Http.get(URI.get('application-configuration'));
         promise.then(me.loadConfigurationSuccess,null, null ,me);
         return promise;
     },
 
     initEnv(){
         let me = this;
-        Enums.init();
-        District.init();
-        Signalr.connect();
-        //me.loadPasswordSetting();
-        me.checkClearingRule();
+        // Enums.init();
+        // District.init();
+        //Signalr.connect();
     },
 
     hasDescriptionFeature(){

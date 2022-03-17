@@ -9,14 +9,14 @@ Ext.define('Common.service.SignalR',{
     connect: undefined,
 
     constructor() {
-        let me = this,
-            token = Auth.getEncToken();
-        me.hubs = {};
-        me.qs = "enc_auth_token=" + (Ext.isEmpty(token) || token ==='null' ? "" : encodeURIComponent(token));
-        //me.qs = `deviceId=19000007&key=abc`
-        if(me.autoConnect){
-            me.connect();
-        }
+        // let me = this,
+        //     token = Auth.getEncToken();
+        // me.hubs = {};
+        // me.qs = "enc_auth_token=" + (Ext.isEmpty(token) || token ==='null' ? "" : encodeURIComponent(token));
+        // //me.qs = `deviceId=19000007&key=abc`
+        // if(me.autoConnect){
+        //     me.connect();
+        // }
     },    
 
     configureConnection: function(connection) {

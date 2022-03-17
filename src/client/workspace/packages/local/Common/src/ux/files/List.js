@@ -4,7 +4,7 @@ Ext.define('Common.ux.files.List',{
 
     requires:[
         'Common.ux.dataview.plugin.LabelEditor',
-        'Common.view.files.FileItem',
+        'Common.ux.files.FileItem',
     ],
 
     hasPaging: true,

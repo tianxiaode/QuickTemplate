@@ -1,0 +1,6 @@
+{
+  "port": 43860,
+  "path": "./workspace",
+  "clr": "v4.0",
+  "protocol": "http"
+}

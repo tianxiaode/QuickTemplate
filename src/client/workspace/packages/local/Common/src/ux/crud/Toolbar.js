@@ -1,4 +1,4 @@
-Ext.define('Common.ux.grid.Toolbar', {
+Ext.define('Common.ux.crud.Toolbar', {
     extend: 'Ext.Toolbar',
     xtype: 'uxcrudtoolbar',
 

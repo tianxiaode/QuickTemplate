@@ -3,7 +3,7 @@
  * and launch() the Application class.
  */
 Ext.application({
-    extend: 'Common.desktop.app.Application',
+    extend: 'Common.ux.app.Application',
 
     name: 'Desktop',
 
@@ -12,12 +12,10 @@ Ext.application({
     requires:[
         'Common.overrides.shared.*',
         'Common.overrides.desktop.*',
-        'Common.util.Url',
+        'Common.service.Url',
         'Common.util.TemplateFn',
         'Common.service.OAuth',
         'Common.service.Config',
-        'Common.view.authentication.Login',
-        'Common.view.authentication.SelectOrganizationUnit',
         'Desktop.view.home.HomeView', 
     ],
 
