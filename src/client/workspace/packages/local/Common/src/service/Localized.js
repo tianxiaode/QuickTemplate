@@ -28,7 +28,7 @@ Ext.define('Common.service.Localized', {
         }
         me.setCurrentLanguage(current);
         AppStorage.set('lang', current);
-        me.loadResources();
+        //me.loadResources();
     },
     
     get(key, resourceName, entityName){
@@ -115,14 +115,6 @@ Ext.define('Common.service.Localized', {
             'UnknownError':{
                 'en': 'Unknown error!',
                 'zh-Hans': '未知错误'
-            },
-            'LoginOrganizationUnit':{
-                'en': 'Signing in to the organization.!',
-                'zh-Hans': '正在登录组织'
-            },
-            'OrganizationUnitNotExist':{
-                'en': 'The organization does not exist.',
-                'zh-Hans': '组织不存在?'
             },
             'LoadingUserConfiguration':{
                 'en': 'Loading the configuration...',

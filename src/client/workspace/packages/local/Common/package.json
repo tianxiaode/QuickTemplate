@@ -79,6 +79,20 @@
          */
         "format": "1",
 
+        "js": [
+            {
+              "path": "${build.environment}/spark-md5.min.js",
+              "requiresSdk": false,
+              "compress": false
+            },
+            {
+                "path": "${build.environment}/sha256.min.js",
+                "requiresSdk": false,
+                "compress": false
+            }
+        ],
+
+
         /**
          * Additional resources used during theme slicing operations
          */

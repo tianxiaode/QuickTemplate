@@ -24,39 +24,34 @@ Ext.define('Common.ux.navigation.Tree',{
         selectionchange: 'onNavigationTreeSelectionChange'
     },
 
+    initialize(){
+        let me = this;
+        me.callParent();
+        Auth.isAuthenticated() &&  Http.get(URI.get('configuration','menus/desktop')).then(me.loadDataSuccess, me.loadDataFailure, null, me)
+    },
+
+
+    isReady: false,
+
+    loadDataSuccess(response){
+        let me = this;
+        let data = Http.parseResponse(response),
+            store = me.getStore(),
+            root = store.getRoot();
+        root.removeAll();
+        root.appendChild([].concat(data.items));
+        me.onLocalized();
+        me.isReady = true;
+    },
+
     onLocalized(){
         let me = this,
             store = me.getStore(),
             records = store.byIdMap;
-        Object.keys(records).forEach(id=>{
-            if(id<10000) return;
-            let record = records[id];
+        me.callParent();
+        Ext.iterate(records,(id, record)=>{
             record.set('text', I18N.get(record.get('langText')));
-        })
-    },
-
-    isReady: false,
-    init(){
-        let me = this;
-        me.loadData().then(me.loadDataSuccess, Ext.bind(Failure.ajax,me,[null, true],true), null,me);
-    },
-
-    loadData(){
-        return Http.get(URI.get('menus', 'desktop'));
-    },
-
-    loadDataSuccess(response){
-        let me = this;
-        if(!I18N.isReady){
-            Ext.defer(me.loadDataSuccess, 50, me, [response]);
-            return;
-        }
-        let data = Http.parseResponseText(response),
-            store = me.getStore(),
-            root = store.getRoot();
-        root.removeAll();
-        root.appendChild([].concat(data.result));
-        me.isReady = true;
+        });            
     },
 
     applyCurrentViewType(xtype){

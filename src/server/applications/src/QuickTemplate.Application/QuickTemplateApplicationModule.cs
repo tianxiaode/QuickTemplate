@@ -1,4 +1,6 @@
-﻿using Volo.Abp.Account;
+﻿using Generic.Abp.Enumeration;
+using Generic.Abp.ExtResource;
+using Volo.Abp.Account;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
@@ -15,7 +17,9 @@ namespace QuickTemplate;
     typeof(AbpIdentityApplicationModule),
     typeof(AbpPermissionManagementApplicationModule),
     typeof(AbpFeatureManagementApplicationModule),
-    typeof(AbpSettingManagementApplicationModule)
+    typeof(AbpSettingManagementApplicationModule),
+    typeof(GenericAbpEnumerationApplicationModule),
+    typeof(GenericAbpExtResourceApplicationModule)
     )]
 public class QuickTemplateApplicationModule : AbpModule
 {

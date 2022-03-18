@@ -54,18 +54,19 @@ Ext.define('Common.service.OAuth', {
         if(!me.tryLogin())
         {
             let url = this.createLoginUrl('', '', null, false, {});
+            console.log(url);
             window.location.href = url;    
         }
     },
 
     tryLogin() {
-        const me = this; 
-            options = AppConfig.oAuthConfig;
-        const querySource = window.location.search;
-        const parts = me.getCodePartsFromUrl(querySource);
-        const code = parts['code'];
-        const state = parts['state'];
-        const sessionState = parts['session_state'];
+        let me = this; 
+            options = AppConfig.oAuthConfig,
+            querySource = window.location.search,
+            parts = me.getCodePartsFromUrl(querySource),
+            code = parts['code'],
+            state = parts['state'],
+            sessionState = parts['session_state'];
         if (!options.preventClearHashAfterLogin) {
             const href = location.href
                 .replace(/[&\?]code=[^&\$]*/, '')

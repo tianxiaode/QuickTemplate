@@ -78,10 +78,6 @@ Ext.define('Common.service.Config', {
         return value && value.toLowerCase() === 'true';
     },
 
-    getCategoryRoot(){
-        return { id: -999, displayName: '全部', expanded: false, }
-    },
-
     // loadPasswordSetting(){
     //     let me = this;
     //     Http.get(URI.crud('setting', 'password')).
@@ -97,13 +93,6 @@ Ext.define('Common.service.Config', {
     setImage(hash, url){
         if(Ext.isEmpty(hash)) return;
         this.images[hash] = url;
-    },
-
-    checkClearingRule(){
-        let me = this;
-        if(!ACL.isGranted('Pages.ClearingRule.Create')) return;
-        Http.get(URI.crud('ClearingRule', 'check'))
-            .then(me.checkClearingRuleSuccess, me.onAjaxFailure, null, me);
     },
 
     clearAll(){

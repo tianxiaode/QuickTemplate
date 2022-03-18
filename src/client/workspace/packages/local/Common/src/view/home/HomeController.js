@@ -25,16 +25,18 @@ Ext.define('Common.view.home.HomeController',{
 
     init(){
         let me = this;
-        me.getView().setMasked(I18N.getLocalText('LoadingUserConfiguration'));
-        Config.on('ready', me.onConfigReady, me);
-        Config.loadConfiguration();
+        if(!Auth.isAuthenticated()){
+            Auth.login();
+            return;
+        }
+        me.loadConfiguration();
     },
 
 
     handleRoute(xtype){
         let me = this,
             view = me.getView(),
-            isAuthenticated = Config.isAuthenticated();
+            isAuthenticated = Auth.isAuthenticated();
         if(!ViewMgr.pages.hasOwnProperty(xtype)) {
             me.onHideLastView();
             me.currentToken = xtype;
@@ -62,7 +64,8 @@ Ext.define('Common.view.home.HomeController',{
     },
 
 
-    onConfigReady() {
+    loadConfiguration() {
+        
         let me = this,
             vm = me.getViewModel(),
             isAuthenticated = Config.isAuthenticated(),
@@ -70,23 +73,13 @@ Ext.define('Common.view.home.HomeController',{
         me.getView().setMasked(false);
         vm.set('isAuthenticated', isAuthenticated);
 
-        if(token.includes('forgot') || token.includes('resetpassword')) return;
+        Config.loadConfiguration();
+        I18N.loadResources();
+        Enums.init();
+        //Signalr.connect();
 
-        //未登录
-        if(!isAuthenticated){
-            Auth.login();
-            return;
-        };
-
-
-
-        token = me.currentToken;
-        if(Ext.isEmpty(token)) token = Ext.getApplication().getDefaultToken();
 
         me.initView();
-        Ext.History.add(token, true);
-        me.handleRoute(token);
-        Config.initEnv();
     },
 
     initView: Ext.emptyFn,

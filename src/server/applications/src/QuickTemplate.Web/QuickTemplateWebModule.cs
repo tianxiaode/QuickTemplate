@@ -243,37 +243,6 @@ public class QuickTemplateWebModule : AbpModule
         });
     }
 
-    // private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
-    // {
-    //     context.Services.AddCors(options =>
-    //     {
-    //         options.AddPolicy(DefaultCorsPolicyName, builder =>
-    //         {
-    //             builder
-    //                 .WithOrigins(
-    //                     configuration["App:CorsOrigins"]
-    //                         .Split(",", StringSplitOptions.RemoveEmptyEntries)
-    //                         .Select(o => o.RemovePostFix("/"))
-    //                         .ToArray()
-    //                 )
-    //                 .WithExposedHeaders("FileDto")
-    //                 .WithAbpExposedHeaders()
-    //                 .SetIsOriginAllowedToAllowWildcardSubdomains()
-    //                 .AllowAnyHeader()
-    //                 .AllowAnyMethod()
-    //                 .AllowCredentials();
-    //         });
-    //     });
-    //
-    //     context.Services.AddSingleton<ICorsPolicyService>((container) => {
-    //         var logger = container.GetRequiredService<ILogger<DefaultCorsPolicyService>>();
-    //         return new DefaultCorsPolicyService(logger)
-    //         {
-    //             AllowAll = true
-    //         };
-    //     });
-    // }
-
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {

@@ -28,9 +28,6 @@ Ext.define('Desktop.view.home.HomeView', {
         align: 'stretch'
     },
 
-    listeners:{
-        painted: 'onHomeViewPainted'
-    },
 
     items: [
         {

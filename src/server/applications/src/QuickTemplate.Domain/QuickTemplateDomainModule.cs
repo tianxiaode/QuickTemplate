@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Generic.Abp.BusinessException;
+using Generic.Abp.Enumeration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using QuickTemplate.MultiTenancy;
 using Volo.Abp.AuditLogging;
@@ -25,7 +27,9 @@ namespace QuickTemplate;
     typeof(AbpIdentityServerDomainModule),
     typeof(AbpPermissionManagementDomainIdentityServerModule),
     typeof(AbpSettingManagementDomainModule),
-    typeof(AbpEmailingModule)
+    typeof(AbpEmailingModule),
+    typeof(GenericAbpBusinessExceptionModule),
+    typeof(GenericAbpEnumerationDomainSharedModule)
 )]
 public class QuickTemplateDomainModule : AbpModule
 {
