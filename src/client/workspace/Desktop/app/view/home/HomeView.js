@@ -13,9 +13,10 @@ Ext.define('Desktop.view.home.HomeView', {
         'Ext.field.Container',
         'Ext.Spacer',
         'Common.ux.navigation.Tree',
-        'Common.ux.Logo',
+        'Desktop.view.home.HeaderBar',
         'Desktop.view.home.HomeViewController',
         'Desktop.view.home.HomeViewModel',
+        'Desktop.view.dashboard.Dashboard',
     ],
 
     controller: 'homeview',
@@ -31,54 +32,7 @@ Ext.define('Desktop.view.home.HomeView', {
 
     items: [
         {
-            xtype: 'toolbar',
-            padding: '0 0 0 0',
-            height: 64,
-            reference: 'HeaderBar',
-            itemId: 'headerBar',
-            items: [
-                {
-                    xtype: 'uxlogo',
-                },
-                {
-                    xtype: 'spacer',width: 5
-                },
-                {
-                    ui: 'header',
-                    iconCls: 'x-fa fa-bars',
-                    id: 'main-navigation-btn',
-                    handler: 'onToggleNavigationSize'
-                },
-                {
-                    xtype: 'spacer',width: 5
-                },
-                //{ xtype: 'title', bind: {html:  '{appTitle}'}, style: 'font-size:24px;line-height:32px;color:#424242;margin-top:-5px;' },
-                '->',
-                {
-                    xtype: 'languagebutton',
-                    ui: 'header',
-                },
-                {
-                    ui: 'header',
-                    iconCls: 'x-fa fa-sign-out-alt',
-                    handler: 'onLogout',
-                    langTooltip: 'Login'
-                },
-                {
-                    xtype: 'spacer',width: 5
-                },
-                // {
-                //     xtype: 'button',                    
-                //     reference: 'UserNameComponent',
-                //     ui: 'header',
-                //     bind: { html: '{userName}' },
-                //     //arrow: false,
-                //     //menuAlign: 'br',
-                //     // menu:{
-                //     //     xtype: 'usermenu'
-                //     // }
-                // }
-            ]
+            xtype: 'desktop-headerbar',
         },
         {
             xtype: 'container',
@@ -99,8 +53,7 @@ Ext.define('Desktop.view.home.HomeView', {
             items: [
                 {
                     xtype: 'uxnavigationtree',
-                    reference: 'navigationTreeList',
-                    itemId: 'navigationTreeList',
+                    reference: 'navigationTree',
                 },
                 {
                     xtype: 'container',

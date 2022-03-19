@@ -51,10 +51,10 @@ Ext.define('Common.service.OAuth', {
      */
     login(){
         let me = this;
+        console.log('login',window.location.href);
         if(!me.tryLogin())
         {
             let url = this.createLoginUrl('', '', null, false, {});
-            console.log(url);
             window.location.href = url;    
         }
     },
@@ -108,25 +108,11 @@ Ext.define('Common.service.OAuth', {
         let me = this,
             storage = AppStorage,
             keys = me.storageKeys,
-            tokenKey = keys.accessToken,
-            refreshTokenKey = keys.refreshToken,
-            token = storage.get(tokenKey),
-            refreshToken = storage.get(refreshTokenKey);
-        if(token){
-            let data = {
-                'token' : token,
-                'token_type_hint': tokenKey
-                };
-            me.send(data, me.endpoints.revocation);
-        }
-        if(refreshToken){
-            let data ={
-                'token' : refreshToken,
-                'token_type_hint': refreshTokenKey
-            };
-            me.send(data, me.endpoints.revocation);
-        }
+            idToken = storage.get(keys.idToken),
+            logoutUrl = me.logoutUrl;
         me.removeAllStorageItem();
+        logoutUrl = `${logoutUrl}?id_token_hint=${idToken}&post_logout_redirect_uri=${encodeURIComponent(me.redirectUri)}`;
+        window.location.href = logoutUrl;
     },
 
 
@@ -217,6 +203,7 @@ Ext.define('Common.service.OAuth', {
                 MsgBox(null, I18N.getUnknownError());
                 return;
             }
+            console.log('obj', obj)
             let me = this,
                 storage = AppStorage,
                 keys = me.storageKeys,
@@ -225,6 +212,7 @@ Ext.define('Common.service.OAuth', {
             storage.set(keys.accessToken, obj[keys.accessToken]);
             storage.set(keys.expiresAt, expiresAt, true);
             storage.set(keys.refreshToken, obj[keys.refreshToken]);
+            storage.set(keys.idToken, obj[keys.idToken])
             return obj;
         },
     
@@ -243,18 +231,12 @@ Ext.define('Common.service.OAuth', {
          */
         send(data, endpoint){
             let me = this,
-                clientId = AppConfig.oAuthConfig.clientId,
-                clientSecret = AppConfig.oAuthConfig.dummyClientSecret,
+                clientId = me.clientId,
                 headers = {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     "accept-language": AppStorage.get('lang')
                 };
-            if(endpoint === me.endpoints.revocation){
-                headers['Authorization'] = `Basic ${btoa(`${clientId}:${clientSecret}`)}`
-            }else{
-                data['client_id'] = clientId;
-                data['client_secret'] = clientSecret;    
-            }
+            data['client_id'] = clientId;
             return Http.post(
                 URI.get(me.remoteController, endpoint, true),
                 data, 

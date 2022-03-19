@@ -14,16 +14,13 @@ Ext.define('Common.ux.button.Logout',{
         }
     },
 
-    //handler: 'onLogout', 
-    //defaultListenerScope: true,
     bind: { hidden: '{!isAuthenticated}'},
 
     onLogout() {
         MsgBox.confirm(I18N.get('Logout'), I18N.get('LogoutMessage'),(btn)=>{
-            if(btn === 'yes'){
-                Auth.logout();
-                window.location.href = '.';
-            }
+            if(btn !== 'yes') return;
+            Config.clearAll();
+            Auth.logout();                
         })
     },
 

@@ -35,8 +35,8 @@ Ext.define('Common.service.AccessControl',{
             let me = this,
                 auth = data.auth;
             if(!auth) return;
-            me.setPolicies(Object.assign({}, auth.allPermissions) );
-            me.setGrantedPolicies(Object.assign({},auth.grantedPermissions));
+            me.setPolicies(Object.assign({}, auth.policies) );
+            me.setGrantedPolicies(Object.assign({},auth.grantedPolicies));
         }
     }
 

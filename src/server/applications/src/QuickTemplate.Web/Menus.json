@@ -5,7 +5,9 @@
         "Id": "3457533d-414e-4469-a99e-154ba3806ddb",
         "LangText": "MainMenu.Dashboard",
         "IconCls": "x-fa fa-home",
-        "ViewType": "admindashboard",
+        "ViewType": "dashboardView",
+        "Selectable": true,
+        "Order":  1, 
         "RequiredPermissionNames": []
       },
       {
@@ -13,6 +15,7 @@
         "LangText": "MainMenu.System",
         "IconCls": "x-fa fa-cogs",
         "ViewType": "",
+        "Order": 2,
         "RequiredPermissionNames": [
           "AbpIdentity.Roles.ManagePermissions"
         ]
@@ -23,6 +26,8 @@
         "LangText": "SubMenu.Role",
         "IconCls": "x-fa fa-users",
         "ViewType": "roleView",
+        "Order": 200, 
+        "Selectable": true,
         "RequiredPermissionNames": [ "AbpIdentity.Roles.ManagePermissions" ]
       },
       {
@@ -31,6 +36,7 @@
         "LangText": "SubMenu.Infrastructure",
         "IconCls": "x-fa fa-hdd",
         "ViewType": "infrastructureView",
+        "Order": 201,
         "RequiredPermissionNames": []
       },
       {
@@ -39,17 +45,20 @@
         "LangText": "SubMenu.SystemSetting",
         "IconCls": "x-fa fa-cog",
         "ViewType": "systemSettingView",
+        "Selectable": true,
+        "Order": 202,
         "RequiredPermissionNames": []
       }
     ],
     "Mobile": [
       {
-        "id": "60a45901-d74d-4441-8168-8d1b0a92b839",
+        "Id": "60a45901-d74d-4441-8168-8d1b0a92b839",
         "LangText": "MainMenu.Dashboard",
-        "iconCls": "fa-tachometer-alt",
+        "IconCls": "fa-tachometer-alt",
         "ViewType": "dashboardinfoview",
-        "category": "MobileMenuCategory.StatAnalysis",
-        "color": "red",
+        "Category": "MobileMenuCategory.StatAnalysis",
+        "Color": "red",
+        "Order":  1, 
         "RequiredPermissionNames": []
       }
 

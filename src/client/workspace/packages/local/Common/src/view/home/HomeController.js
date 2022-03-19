@@ -8,6 +8,8 @@ Ext.define('Common.view.home.HomeController',{
         'Common.service.Enums',
         'Common.service.ViewManager',
         'Common.service.SignalR',
+        'Common.ux.MessageBox',
+        'Common.ux.Toast'
     ],
 
     currentToken: null,
@@ -27,6 +29,7 @@ Ext.define('Common.view.home.HomeController',{
         let me = this;
         if(!Auth.isAuthenticated()){
             Auth.login();
+            Auth.on('loginsuccess', me.loadConfiguration, me);
             return;
         }
         me.loadConfiguration();
@@ -64,14 +67,11 @@ Ext.define('Common.view.home.HomeController',{
     },
 
 
-    loadConfiguration() {
-        
+    loadConfiguration() {        
         let me = this,
-            vm = me.getViewModel(),
-            isAuthenticated = Config.isAuthenticated(),
-            token = Ext.History.getToken();
+            vm = me.getViewModel();
         me.getView().setMasked(false);
-        vm.set('isAuthenticated', isAuthenticated);
+        vm.set('isAuthenticated', true);
 
         Config.loadConfiguration();
         I18N.loadResources();
@@ -90,14 +90,6 @@ Ext.define('Common.view.home.HomeController',{
         ViewMgr.showPage(ViewMgr.pages.page404);
     },
 
-    onLogout() {
-        Ext.Msg.confirm(I18N.get('Logout'), I18N.get('LogoutMessage'),(btn)=>{
-            if(btn === 'yes'){
-                Config.clearAll();
-                Auth.logout();
-            }
-        })
-    },
 
 
     onShowDialog(xtype, op){

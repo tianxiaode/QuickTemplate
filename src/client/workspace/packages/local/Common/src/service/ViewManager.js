@@ -179,42 +179,6 @@ Ext.define('Common.service.ViewManager', {
         return view;
     },
 
-    editorConfig:{
-        xtype: 'editor',
-        shadow: false,
-        completeOnEnter: true,
-        cancelOnEsc: true,
-        updateEl: true,
-        ignoreNoChange: true,
-        autoSize: {
-            width: 'field'
-        },
-        height: 'auto',
-        alignment: 'l-l',
-        filed:{
-            autoLabel: false,
-            allowBlank: false,
-            selectOnFocus: true,
-            maxLength: 128
-        }
-    },
-    editorField:{
-        text: 'textfield',
-        number: 'numberfield',
-        date: 'uxdatetimefield',
-    },
-    editors:{},
-    getEditor(cfg){
-        let me = ViewMgr,
-            xtype = cfg.field.xtype,
-            editor = me.editors[xtype];
-        if(editor) return editor;
-        let config = Ext.apply(cfg, me.editorConfig);
-        console.log(config)
-        editor = me.editors[xtype] = Ext.create(config);
-        return editor;
-    },
-
 
     destroy(){
         let me = ViewMgr;

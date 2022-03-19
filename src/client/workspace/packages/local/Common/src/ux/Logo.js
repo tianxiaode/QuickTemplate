@@ -10,56 +10,25 @@ Ext.define('Common.ux.Logo', {
         <span  class="company-name text-truncate" >{2}</span>
     `,
     
-    initialize(){
-        let me = this;
-        if(I18N.isReady || Config.isReady) me.initLogo();
-        Config.on('ready', me.initLogo, me);
-        Ext.on('i18nready', me.initLogo, me);
-        me.callParent();
+    // initialize(){
+    //     let me = this;
+    //     Config.isReady && me.switchLogo();
+    //     Config.on('ready', me.switchLogo, me);
+    //     me.callParent();
+    // },
+
+    onLocalized(){
+        this.callParent();
+        this.switchLogo();
     },
 
-    initLogo(){
-        let me= this,
-            allowEdit = me.isAllowEdit();
-        if(!I18N.isReady){
-            Ext.defer(me.initLogo, 50 , me);
-            return;
-        }
-        me.switchLogo();
-        if(!allowEdit) return;
-        Ext.on('logochange', me.switchLogo, me);
-        me.on('tap', me.onChangeLogo, me,{
-            element: 'element',
-            delegate: 'img.logo-img'
-        });
-    },
-
-    onChangeLogo(){
-        let me= this,
-            allowEdit = me.isAllowEdit();
-        if(!allowEdit) return;
-        let xtype = 'logoedit';
-        ViewMgr.setParams(xtype, {
-            type: me.isPhone ? ViewMgr.types.view : ViewMgr.types.dialog,
-            config : {
-                includeResource: true,
-                backView: Ext.History.getToken(),
-            },
-        });
-        Ext.History.add(`${xtype}/edit`);
-    },
-    
     switchLogo(){
         let me= this,
-            allowEdit = me.isAllowEdit(),
-            ou = Config.getCurrentOrganizationUnit(),
-            logo = ou && ou.logo,
-            shortName = ou && ou.shortName,
-            logoUrl = me.getLogoUrl(logo),
-            html = me.logoHtml;        
-        if(Ext.isEmpty(shortName) || shortName.toLowerCase() === 'default') shortName = I18N.get('CompanyShortName')
-        me.setHtml(Ext.String.format(html, logoUrl, 
-            allowEdit ? 'cursor-pointer' : '',  
+            shortName = I18N.get('CompanyShortName'),
+            logoUrl = URI.getResource('logo'),
+            html = me.logoHtml;
+        me.setHtml(Format.format(html, logoUrl, 
+            '',  
             shortName));
     },
 
@@ -68,8 +37,5 @@ Ext.define('Common.ux.Logo', {
         return URI.crud('File',logo);
     },
 
-    isAllowEdit(){
-        return ACL.isGranted('Pages.User.Create') || false;
-    }
 
 });

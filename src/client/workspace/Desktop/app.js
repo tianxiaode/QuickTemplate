@@ -7,7 +7,7 @@ Ext.application({
 
     name: 'Desktop',
 
-    defaultToken: 'admindashboard',
+    defaultToken: 'dashboardview',
 
     requires:[
         'Common.overrides.shared.*',

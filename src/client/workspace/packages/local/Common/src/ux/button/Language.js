@@ -3,7 +3,7 @@
  */
 Ext.define('Common.ux.button.Language',{
     extend: 'Ext.Button',
-    xtype: 'languagebutton',
+    xtype: 'uxlanguagebutton',
 
     requires:[
         'Ext.menu.RadioItem'
@@ -30,7 +30,7 @@ Ext.define('Common.ux.button.Language',{
         //菜单已存在，直接返回
         if(me.getMenu()) return;
         //创建下拉菜单
-        let menus = [];        
+        let menus = [];
         I18N.getLanguages().forEach(l=>{
             menus.push({ 
                 xtype: 'menuradioitem',

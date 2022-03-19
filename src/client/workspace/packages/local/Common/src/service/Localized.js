@@ -78,6 +78,7 @@ Ext.define('Common.service.Localized', {
     },
 
     getUnknownError(){
+        console.trace(1)
         return this.localText.UnknownError[this.getCurrentLanguage()];
     },
 
@@ -215,7 +216,6 @@ Ext.define('Common.service.Localized', {
                 if(!Ext.isEmpty(obj.error.code)) error += `[${obj.error.code}]`;
                 if(!Ext.isEmpty(obj.error.details)) 
                     error += `[${obj.error.code}]${service && service.getLabelSeparator() || ':'}${obj.error.details}`;
-                MsgBox.alert(title, error);
                 return error;    
             }
             

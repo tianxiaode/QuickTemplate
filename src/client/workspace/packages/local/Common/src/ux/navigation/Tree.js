@@ -24,10 +24,8 @@ Ext.define('Common.ux.navigation.Tree',{
         selectionchange: 'onNavigationTreeSelectionChange'
     },
 
-    initialize(){
-        let me = this;
-        me.callParent();
-        Auth.isAuthenticated() &&  Http.get(URI.get('configuration','menus/desktop')).then(me.loadDataSuccess, me.loadDataFailure, null, me)
+    loadMenus(){
+        Http.get(URI.get('configuration','menus/desktop')).then(me.loadDataSuccess, me.loadDataFailure, null, me);
     },
 
 
