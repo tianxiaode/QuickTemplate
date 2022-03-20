@@ -15,8 +15,8 @@ Ext.define('Common.service.AccessControl',{
     constructor(config) {
         let me = this;
         me.initConfig(config);
-        if(Config && Config.isReady) me.setData();
-        Config.on('ready', me.setData, me)
+        // Config.isReady && me.setData();
+        // Config.on('ready', me.setData, me)
     },
 
     isGranted(permissionName){
@@ -32,6 +32,7 @@ Ext.define('Common.service.AccessControl',{
 
     privates:{
         setData(data){
+            console.log(data)
             let me = this,
                 auth = data.auth;
             if(!auth) return;

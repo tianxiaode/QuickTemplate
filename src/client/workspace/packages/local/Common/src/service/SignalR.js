@@ -48,7 +48,8 @@ Ext.define('Common.service.SignalR',{
         });
     },
 
-    connect :function () {
+    connect() {
+        return;
         let me = this,
             //url = `${ROOTPATH}device`;
             url = `${AppConfig.apiUrl}signalr`;

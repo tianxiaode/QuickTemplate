@@ -16,8 +16,6 @@ Ext.define('Common.service.Enums', {
     constructor(config){
         let me = this;
         me.mixins.observable.constructor.call(me, config);
-        if(Config && Config.isReady) me.init();
-        Config.on('ready', me.init, me);
     },
   
     init(){

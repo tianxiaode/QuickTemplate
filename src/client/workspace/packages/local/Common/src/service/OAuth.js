@@ -51,7 +51,6 @@ Ext.define('Common.service.OAuth', {
      */
     login(){
         let me = this;
-        console.log('login',window.location.href);
         if(!me.tryLogin())
         {
             let url = this.createLoginUrl('', '', null, false, {});
@@ -346,7 +345,7 @@ Ext.define('Common.service.OAuth', {
     getTokenFromCodeSuccess(response){
         let me = this;
         me.processToken(response);
-        me.fireEvent('loginsuccess');
+        me.fireEvent('loggedin');
     },
 
     getTokenFromCodeFailure(response){

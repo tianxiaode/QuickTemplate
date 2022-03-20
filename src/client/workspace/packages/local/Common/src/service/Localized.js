@@ -3,7 +3,7 @@ Ext.define('Common.service.Localized', {
     singleton: true,
 
     mixins:[
-        'Ext.mixin.Observable'
+        'Ext.mixin.Observable',
     ],
 
     config:{

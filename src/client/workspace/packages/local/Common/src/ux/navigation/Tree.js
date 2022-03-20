@@ -2,6 +2,10 @@ Ext.define('Common.ux.navigation.Tree',{
     extend: 'Ext.list.Tree',
     xtype: 'uxnavigationtree',
     
+    mixins:[
+        'Common.mixin.LoggedIn'
+    ],
+
     requires:[
         'Common.data.store.NavigationTrees',
     ],
@@ -24,12 +28,14 @@ Ext.define('Common.ux.navigation.Tree',{
         selectionchange: 'onNavigationTreeSelectionChange'
     },
 
-    loadMenus(){
+    onLoggedIn(){
+        let me = this;
         Http.get(URI.get('configuration','menus/desktop')).then(me.loadDataSuccess, me.loadDataFailure, null, me);
     },
 
 
     isReady: false,
+
 
     loadDataSuccess(response){
         let me = this;

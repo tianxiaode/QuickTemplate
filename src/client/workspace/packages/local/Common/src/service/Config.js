@@ -42,9 +42,8 @@ Ext.define('Common.service.Config', {
     loadConfiguration(){
         let me = this;
         me.isReady = false;
-        let promise = Http.get(URI.get('application-configuration'));
-        promise.then(me.loadConfigurationSuccess,null, null ,me);
-        return promise;
+        Http.get(URI.get('application-configuration'))
+            .then(me.loadConfigurationSuccess, me.loadConfigurationFailure, null ,me);
     },
 
     getImage(hash){
@@ -67,19 +66,18 @@ Ext.define('Common.service.Config', {
         data: {},
 
         loadConfigurationSuccess(response){
-            let me = this;
-            let obj = Ext.decode(response.responseText, true);
-            me.data = Object.assign({}, obj);
+            let me = this,
+                data = Http.parseResponse(response);
+            me.data = Object.assign({}, data);
             //me.setFileOptions(result.fileOption);
             me.isReady = true;
-            me.fireEvent('ready', result);
+            me.fireEvent('ready', data);
         },
 
-        // onLoadPasswordSettingSuccess(response){
-        //     let me = this,
-        //         data = Http.parseResponseText(response);
-        //     me.passwordSetting = data.result;
-        // },
+        loadConfigurationFailure(response){
+            let error = Http.getError(response);
+            MsgBox.alert(null, error);
+        }
 
     
     },

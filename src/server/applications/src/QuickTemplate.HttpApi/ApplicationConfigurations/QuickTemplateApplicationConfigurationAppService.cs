@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.AspNetCore.Mvc.ApplicationConfigurations;
 using Volo.Abp.AspNetCore.Mvc.ApplicationConfigurations.ObjectExtending;
 using Volo.Abp.Authorization;
 using Volo.Abp.Authorization.Permissions;
-using Volo.Abp.DependencyInjection;
 using Volo.Abp.Features;
-using Volo.Abp.Identity;
 using Volo.Abp.Localization;
 using Volo.Abp.Settings;
 using Volo.Abp.Timing;
@@ -25,7 +23,7 @@ using TimeZone = Volo.Abp.AspNetCore.Mvc.ApplicationConfigurations.TimeZone;
 namespace QuickTemplate.ApplicationConfigurations;
 
 // [Dependency(ReplaceServices = true)]
-// [ExposeServices(typeof(IAbpApplicationConfigurationAppService))]
+// [ExposeServices(typeof(IAbpApplicationConfigurationAppService), typeof(IQuickTemplateApplicationConfigurationAppService))]
 [RemoteService(IsEnabled = false)]
 public class QuickTemplateApplicationConfigurationAppService: ApplicationService, IQuickTemplateApplicationConfigurationAppService
 {

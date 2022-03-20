@@ -17,8 +17,8 @@ Ext.define('Common.service.District', {
     constructor(config){
         let me = this;
         me.mixins.observable.constructor.call(me, config);
-        if(Config && Config.isReady) me.loadRoot();
-        Config.on('ready', me.loadRoot, me);
+        // if(Config && Config.isReady) me.loadRoot();
+        // Config.on('ready', me.loadRoot, me);
     },
   
     getRoot(){

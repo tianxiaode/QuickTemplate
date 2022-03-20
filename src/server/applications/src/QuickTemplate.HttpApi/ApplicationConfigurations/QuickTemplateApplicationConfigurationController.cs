@@ -11,9 +11,8 @@ namespace QuickTemplate.ApplicationConfigurations;
 
 [Dependency(ReplaceServices = true)]
 [ExposeServices(typeof(AbpApplicationConfigurationController), IncludeSelf = true)]
-//[DisableAuditing]
-[Area("QuickTemplate")]
-[RemoteService(Name = "QuickTemplate")]
+[DisableAuditing]
+[ControllerName("Configuration")]
 [Route("api")]
 
 public class QuickTemplateApplicationConfigurationController: AbpApplicationConfigurationController
@@ -27,6 +26,8 @@ public class QuickTemplateApplicationConfigurationController: AbpApplicationConf
         _quickTemplateApplicationConfigurationAppService = quickTemplateApplicationConfigurationAppService;
     }
 
+    [Area("QuickTemplate")]
+    [RemoteService(Name = "QuickTemplate")]
     [HttpGet]
     [Route("application-configuration")]
     public override Task<ApplicationConfigurationDto> GetAsync()

@@ -29,7 +29,7 @@ Ext.define('Common.view.home.HomeController',{
         let me = this;
         if(!Auth.isAuthenticated()){
             Auth.login();
-            Auth.on('loginsuccess', me.loadConfiguration, me);
+            Auth.on('loggedin', me.loadConfiguration, me);
             return;
         }
         me.loadConfiguration();
