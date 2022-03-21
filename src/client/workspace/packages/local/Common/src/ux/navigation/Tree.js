@@ -43,7 +43,7 @@ Ext.define('Common.ux.navigation.Tree',{
             store = me.getStore(),
             root = store.getRoot();
         root.removeAll();
-        root.appendChild([].concat(data.items));
+        root.appendChild([].concat(data.items));        
         me.onLocalized();
         me.isReady = true;
     },

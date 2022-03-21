@@ -17,6 +17,7 @@ Ext.define('Desktop.view.home.HomeView', {
         'Desktop.view.home.HomeViewController',
         'Desktop.view.home.HomeViewModel',
         'Desktop.view.dashboard.Dashboard',
+        'Desktop.view.identity.roles.Role',
     ],
 
     controller: 'homeview',
@@ -59,10 +60,10 @@ Ext.define('Desktop.view.home.HomeView', {
                     xtype: 'container',
                     flex: 1,
                     reference: 'mainCardPanel',
-                    cls: 'sencha-dash-right-main-container',
+                    cls: 'sencha-dash-right-main-container p-2',
                     itemId: 'contentPanel',
                     layout: 'card',                    
-                    style: 'background-color:#f5f5f5;padding:20px;',
+                    style: 'background-color:#f5f5f5;',
                     
                 }
             ]

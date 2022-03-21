@@ -11,6 +11,7 @@ Ext.define('Common.data.model.Base', {
     idProperty: 'id',
 
     identifier: 'uuid',
+    
     schema: {
         namespace: 'Common.data.model'
     }

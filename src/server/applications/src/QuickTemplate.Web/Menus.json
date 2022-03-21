@@ -7,7 +7,7 @@
         "IconCls": "x-fa fa-home",
         "ViewType": "dashboardView",
         "Selectable": true,
-        "Order":  1, 
+        "Order": 1,
         "RequiredPermissionNames": []
       },
       {
@@ -17,16 +17,27 @@
         "ViewType": "",
         "Order": 2,
         "RequiredPermissionNames": [
-          "AbpIdentity.Roles.ManagePermissions"
+          "AbpIdentity.Roles.ManagePermissions",
+          "SettingManagement.Emailing"
         ]
+      },
+      {
+        "Id": "0a2cb2bd-3810-4a5d-9382-111a36bc3fe9",
+        "ParentId": "0a2cb2bd-3810-4a5d-9382-111a36bc3ff8",
+        "LangText": "SubMenu.User",
+        "IconCls": "x-fa fa-users",
+        "ViewType": "userView",
+        "Order": 200,
+        "Selectable": true,
+        "RequiredPermissionNames": [ "AbpIdentity.Users.ManagePermissions" ]
       },
       {
         "Id": "0a2cb2bd-3810-4a5d-9382-111a36bc3ff9",
         "ParentId": "0a2cb2bd-3810-4a5d-9382-111a36bc3ff8",
         "LangText": "SubMenu.Role",
-        "IconCls": "x-fa fa-users",
+        "IconCls": "x-fa fa-user-shield",
         "ViewType": "roleView",
-        "Order": 200, 
+        "Order": 210,
         "Selectable": true,
         "RequiredPermissionNames": [ "AbpIdentity.Roles.ManagePermissions" ]
       },
@@ -36,7 +47,7 @@
         "LangText": "SubMenu.Infrastructure",
         "IconCls": "x-fa fa-hdd",
         "ViewType": "infrastructureView",
-        "Order": 201,
+        "Order": 220,
         "RequiredPermissionNames": []
       },
       {
@@ -46,8 +57,10 @@
         "IconCls": "x-fa fa-cog",
         "ViewType": "systemSettingView",
         "Selectable": true,
-        "Order": 202,
-        "RequiredPermissionNames": []
+        "Order": 230,
+        "RequiredPermissionNames": [
+          "SettingManagement.Emailing"
+        ]
       }
     ],
     "Mobile": [

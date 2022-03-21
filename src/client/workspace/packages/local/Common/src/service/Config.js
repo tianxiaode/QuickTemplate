@@ -29,6 +29,10 @@ Ext.define('Common.service.Config', {
         return this.data.currentUser;
     },
 
+    getAuthData(){
+        return this.data.auth;
+    },
+
     getPasswordSetting(){
         return this.data.passwordSetting;
     },

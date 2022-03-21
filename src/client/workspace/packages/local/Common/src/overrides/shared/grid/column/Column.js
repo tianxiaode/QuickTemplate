@@ -15,7 +15,7 @@ Ext.define('Common.overrides.shared.grid.column.Column',{
             me.setLangText(name);
         }
 
-        let text = me.me.getLocalizedText(me.getLangText(), resourceName);
+        let text = me.getLocalizedText(me.getLangText(), resourceName);
         text && me.setText(text);
     },
 

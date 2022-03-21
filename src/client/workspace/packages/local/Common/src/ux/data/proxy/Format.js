@@ -51,9 +51,9 @@
 
     reader: {
         type: 'json',
-        rootProperty: "result.items",
+        rootProperty: "items",
         messageProperty: "msg",
-        totalProperty: 'result.totalCount'
+        totalProperty: 'totalCount'
     },
 
     writer: {

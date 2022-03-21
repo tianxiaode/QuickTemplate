@@ -15,13 +15,13 @@ Ext.define('Common.service.AccessControl',{
     constructor(config) {
         let me = this;
         me.initConfig(config);
-        // Config.isReady && me.setData();
-        // Config.on('ready', me.setData, me)
+        Config.isReady && me.setData();
+        Config.on('ready', me.setData, me)
     },
 
     isGranted(permissionName){
         let policies = this.getGrantedPolicies(),
-            v = policies && policies[permissionName];
+            v = policies && policies[permissionName];            
         return  v === "true" || v === true  || false;
     },
 
@@ -31,10 +31,9 @@ Ext.define('Common.service.AccessControl',{
 
 
     privates:{
-        setData(data){
-            console.log(data)
+        setData(){
             let me = this,
-                auth = data.auth;
+                auth = Config.getAuthData();
             if(!auth) return;
             me.setPolicies(Object.assign({}, auth.policies) );
             me.setGrantedPolicies(Object.assign({},auth.grantedPolicies));

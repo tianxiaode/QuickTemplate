@@ -19,7 +19,7 @@ Ext.define('Common.ux.crud.controller.Base',{
     msgFieldName: null, //提示信息字段名称
     permissions:{
         create: 'Create',
-        update: 'Edit',
+        update: 'Update',
         delete: 'Delete'
     },
     isInitialSearchItemEvent: false,
@@ -63,7 +63,7 @@ Ext.define('Common.ux.crud.controller.Base',{
             let value = me[n];
             if(!Ext.isEmpty(value)) return;
             value = me.getViewModelValue(n)  || me.list[n]  || view[n];
-            if(Ext.isEmpty(value) && n === 'permissionName') value = me.entityName;
+            if(Ext.isEmpty(value) && n === 'permissionName') value = Format.pluralize(me.entityName);
             if(Ext.isEmpty(value)) Ext.raise(`No ${n}`);
             me[n] = Format.capitalize(value);    
         })
@@ -161,7 +161,7 @@ Ext.define('Common.ux.crud.controller.Base',{
      onStoreLoad(store, records, successful, operation, eOpts){
         let me = this,  
             countMessage = me.getCrudButton('countmessage');
-        countMessage && countMessage.setHtml(I18N.get('CountMessage').replace('{0}', store.getTotalCount()));
+        countMessage && countMessage.setCount(store.getTotalCount());
 
         me.afterStoreLoad(me, store, records);
     },
@@ -274,7 +274,7 @@ Ext.define('Common.ux.crud.controller.Base',{
      initCrudButtonHiddenState(){
         let me = this,
             permissions = me.permissions;
-        me.setCrudButton('create', false, buttonState);
+        me.setCrudButton('create', false, !me.isGranted(permissions.create));
         me.setCrudButton('update', false, !me.isGranted(permissions.update));
         me.setCrudButton('delete', false, !me.isGranted(permissions.delete));
     },

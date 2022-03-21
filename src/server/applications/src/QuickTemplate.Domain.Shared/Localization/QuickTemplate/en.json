@@ -21,7 +21,8 @@
     "DemoList:8": "SignalR integration",
     "MainMenu.Dashboard": "Dashboard",
     "MainMenu.System": "System Management",
-    "SubMenu.Role": "Roles",
+    "SubMenu.User": "Users",
+        "SubMenu.Role": "Roles",
     "SubMenu.Infrastructure": "Infrastructures",
     "SubMenu.SystemSetting": "System Setting"
   }

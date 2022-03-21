@@ -1,12 +1,8 @@
 Ext.define('Common.data.model.TreeBase', {
-    extend: 'Ext.data.TreeModel',
+    extend: 'Common.data.model.Base',
 
-    requires: [
-        'Ext.data.identifier.Negative'
-    ],
 
     fields: [
-        { name: 'id', type: 'string' },
         { name: 'displayName',type: 'string', defaultValue: '' , messageField: true},
         { name: 'code',type: 'string', defaultValue: ''},
         { name: 'parentId', type: 'string', defaultValue: null },
@@ -14,10 +10,5 @@ Ext.define('Common.data.model.TreeBase', {
         { name: 'isStatic', type: 'boolean', defaultValue: false},
         { name: 'isMunicipality', type: 'boolean', defaultValue: false},
     ],
-    idProperty: 'id',
 
-    identifier: {
-        type: 'negative',
-        seed: -1000
-    }
 });

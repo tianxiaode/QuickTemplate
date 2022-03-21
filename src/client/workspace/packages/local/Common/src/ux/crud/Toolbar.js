@@ -8,6 +8,7 @@ Ext.define('Common.ux.crud.Toolbar', {
         'Common.ux.button.Trash',
         'Common.ux.button.Refresh',
         'Common.ux.field.Search',
+        'Common.ux.crud.CountMessage',
     ],
 
     ui: 'grid',
@@ -58,7 +59,7 @@ Ext.define('Common.ux.crud.Toolbar', {
             weight: 490,
         },
         countMessage:{            
-            xtype: 'component',
+            xtype: 'uxcountmessage',
             isCrud: true,
             crudName: 'countmessage',
             weight: 500

@@ -17,7 +17,7 @@ Ext.define('Common.overrides.shared.LoadMask',{
     
         message = me.getLocalizedText(me.getLangMessage(), resourceName);
         
-        message && me.setText(message);
+        message && me.setMessage(message);
 
     }
 
