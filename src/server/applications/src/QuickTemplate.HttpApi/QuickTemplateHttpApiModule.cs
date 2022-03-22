@@ -1,6 +1,7 @@
 ﻿using Generic.Abp.Enumeration;
 using Generic.Abp.ExtResource;
 using Localization.Resources.AbpUi;
+using Microsoft.Extensions.DependencyInjection;
 using QuickTemplate.Localization;
 using Volo.Abp.Account;
 using Volo.Abp.FeatureManagement;

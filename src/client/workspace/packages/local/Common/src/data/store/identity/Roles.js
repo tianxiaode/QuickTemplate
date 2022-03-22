@@ -9,5 +9,4 @@ Ext.define('Common.data.store.identity.Roles',{
     model: 'Common.data.model.identity.Role',
     pageSize: 0,
     sorters:'name',
-    entity: ['identity/roles']
 })
