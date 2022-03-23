@@ -1,6 +1,7 @@
 {
   "culture": "en",
   "texts": {
+    "Icp": "粤ICP备2022031812号",
     "Menu:Home": "Home",
     "Menu:About": "About",
     "Welcome": "Welcome",
@@ -22,7 +23,7 @@
     "MainMenu.Dashboard": "Dashboard",
     "MainMenu.System": "System Management",
     "SubMenu.User": "Users",
-        "SubMenu.Role": "Roles",
+    "SubMenu.Role": "Roles",
     "SubMenu.Infrastructure": "Infrastructures",
     "SubMenu.SystemSetting": "System Setting"
   }

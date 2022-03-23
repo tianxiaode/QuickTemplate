@@ -14,6 +14,7 @@ using System.Linq;
 using System.Net.Http;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Logging;
 using QuickTemplate.Web.Components;
 using Serilog;
@@ -265,6 +266,12 @@ public class QuickTemplateWebModule : AbpModule
         app.UseStaticFiles();
         app.UseRouting();
         app.UseCors();
+
+        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        });
+
         app.UseAuthentication();
         app.UseJwtTokenMiddleware();
 

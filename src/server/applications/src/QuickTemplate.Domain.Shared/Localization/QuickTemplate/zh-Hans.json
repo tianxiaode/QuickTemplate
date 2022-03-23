@@ -1,6 +1,7 @@
 {
     "culture": "zh-Hans",
   "texts": {
+    "Icp": "粤ICP备2022031812号",
     "Menu:Home": "首页",
     "Menu:About": "关于我",
     "Welcome": "欢迎",
@@ -22,7 +23,7 @@
     "MainMenu.Dashboard": "综合看板",
     "MainMenu.System": "系统管理",
     "SubMenu.User": "用户管理",
-        "SubMenu.Role": "角色管理",
+    "SubMenu.Role": "角色管理",
     "SubMenu.Infrastructure": "基础设施",
     "SubMenu.SystemSetting": "设置设置"
   }

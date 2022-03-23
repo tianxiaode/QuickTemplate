@@ -13,30 +13,29 @@ Ext.define('Common.data.model.identity.Role', {
             name: 'displayPermissions', 
             calculate(data){
                 let permissions = data.permissions ;
-                console.log(data.permissions);
-                if(Ext.isArray(permissions)){
-                    let resourceName = 'Permissions',
-                         result = [],
-                        temp = {};
-                    permissions.forEach(p=>{
-                        let start = p.indexOf('.'),
-                            last = p.lastIndexOf('.');
-                        if(start === last) {
-                            temp[p] = [];
-                        }else{
-                            let text = `Permission:${p.substr(last+1)}`;  
-                            if(!p.includes('ManagePermissions')) temp[p.substr(0,last)].push(I18N.get(text,resourceName))
-                        };                        
-                    });
-                    Object.keys(temp).forEach(k=>{
-                        let main = I18N.get(k,resourceName);
-                        if(temp[k].length>0){
-                            main = `${main}(${temp[k].join(',')})`;
-                        }
-                        result.push(main)
-                    })
-                    return result;
-                }
+                if(!Ext.isArray(permissions)) return;
+                let resourceName = 'Permissions',
+                    result = [],
+                    temp = {};
+                permissions.forEach(p=>{
+                    let start = p.indexOf('.'),
+                        last = p.lastIndexOf('.');
+                    if(start === last) {
+                        temp[p] = [];
+                    }else{
+                        let text = `Permission:${p.substr(last+1)}`;  
+                        if(!p.includes('ManagePermissions')) temp[p.substr(0,last)].push(I18N.get(text,resourceName))
+                    };                        
+                });
+                Ext.iterate(temp, (key, value)=>{
+                    let main = I18N.get(key,resourceName);
+                    if(!Ext.isEmpty(value)){
+                        main = `${main}(${value.join(',')})`;
+                    }
+                    result.push(main)
+
+                })
+                return result;
             }
         },
         {

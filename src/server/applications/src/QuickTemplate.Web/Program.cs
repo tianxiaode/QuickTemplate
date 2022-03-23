@@ -6,6 +6,7 @@ using Serilog.Events;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace QuickTemplate.Web;
 
@@ -33,12 +34,14 @@ public class Program
         try
         {
             Log.Information("Starting web host.");
+            Log.Information($"当前路径：{Directory.GetCurrentDirectory()}");
             var builder = WebApplication.CreateBuilder(args);
             builder.Host
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.AddJsonFile("Menus.json", optional: true, reloadOnChange: true);
                 })
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .AddAppSettingsSecretsJson()
                 .UseAutofac()
                 .UseSerilog();
