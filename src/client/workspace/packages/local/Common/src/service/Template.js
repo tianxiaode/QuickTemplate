@@ -15,7 +15,7 @@ Ext.define('Common.service.Template', {
 
     checkBoxItem: `
         <div class="x-checkcell {2} " data-value="{0}">
-            <div class="x-checkbox-el x-font-icon " ></div>{1}
+            <span class="x-checkbox-el x-font-icon " ></span><span>{1}<span>
         </div>
     `,
     
