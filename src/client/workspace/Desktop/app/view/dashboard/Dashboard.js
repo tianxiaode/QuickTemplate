@@ -15,7 +15,8 @@ Ext.define('Desktop.view.dashboard.Dashboard',{
         },
         {
             xtype: 'uxpermissionsfield',
-            value:  [`AbpIdentity.Roles.Create`, `SettingManagement.Emailing`]
+            //height: 100,
+            //value:  [`AbpIdentity.Roles.Create`, `SettingManagement.Emailing`]
         },
         {
             xtype: 'button',
@@ -24,6 +25,24 @@ Ext.define('Desktop.view.dashboard.Dashboard',{
                 let c = this.up().down('uxpermissionsfield');
                 c.setValue( [`AbpIdentity.Roles.Update`, `AbpIdentity.Users.Update`])
             }
+        },
+        {
+            xtype: 'button',
+            text: 'reset',
+            handler(){
+                let c = this.up().down('uxpermissionsfield');
+                c.reset();
+            }
+
+        },
+        {
+            xtype: 'button',
+            text: 'get',
+            handler(){
+                let c = this.up().down('uxpermissionsfield');
+                console.log(c.getValue());
+            }
+
         }
     ]
 });
