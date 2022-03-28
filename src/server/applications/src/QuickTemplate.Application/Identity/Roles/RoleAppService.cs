@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Generic.Abp.BusinessException.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Volo.Abp;
@@ -50,7 +51,7 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
 
     public virtual async Task<PagedResultDto<RoleDto>> GetListAsync(GetIdentityRolesInput input)
     {
-        var list = await RoleRepository.GetListAsync(input.Sorting, input.MaxResultCount, input.SkipCount);
+        var list = await RoleRepository.GetListAsync(input.Sorting, input.MaxResultCount, input.SkipCount, input.Filter);
         var totalCount = await RoleRepository.GetCountAsync();
 
         var dtos = ObjectMapper.Map<List<IdentityRole>, List<RoleDto>>(list);
@@ -82,7 +83,9 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
 
         (await RoleManager.CreateAsync(role)).CheckErrors();
 
-        foreach (var permission in input.Permissions)
+        var permissions =await NormalizedPermissionsAsync(input);
+
+        foreach (var permission in permissions)
         {
             await PermissionManager.SetAsync(permission, RolePermissionValueProvider.ProviderName, input.Name,
                 true);
@@ -112,18 +115,20 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
 
         await CurrentUnitOfWork.SaveChangesAsync();
 
+        var permissions = await NormalizedPermissionsAsync(input);
+
         var rolePermissions =
             (await PermissionManager.GetAllAsync(RolePermissionValueProvider.ProviderName, oldName))
             .Where(m => m.IsGranted).Select(m => m.Name).ToList();
 
         //删除已取消的权限
-        foreach (var permission in rolePermissions.Except(input.Permissions))
+        foreach (var permission in rolePermissions.Except(permissions))
         {
             await PermissionManager.SetAsync(permission, RolePermissionValueProvider.ProviderName, oldName, false);
         }
 
         //添加新权限
-        foreach (var permission in input.Permissions.Except(rolePermissions))
+        foreach (var permission in permissions.Except(rolePermissions))
         {
             await PermissionManager.SetAsync(permission, RolePermissionValueProvider.ProviderName, oldName, true);
         }
@@ -135,6 +140,20 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
         return dto;
     }
 
+    protected virtual Task<List<string>> NormalizedPermissionsAsync(RoleCreateOrUpdateDtoBase input)
+    {
+        var result = new List<string>();
+        result.AddRange(input.Permissions);
+        var adds = from permission in input.Permissions
+            select permission.Split(".", StringSplitOptions.RemoveEmptyEntries)
+            into split
+            where split.Length >= 3
+            select $"{split[0]}.{split[1]}.ManagePermissions";
+        result.AddRange(adds);
+        return Task.FromResult(result);
+    }
+
+
     [Authorize(IdentityPermissions.Roles.Delete)]
     public virtual async Task<ListResultDto<RoleDto>> DeleteAsync(List<Guid> ids)
     {
@@ -142,6 +161,7 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
         foreach (var id in ids)
         {
             var role = await RoleManager.GetByIdAsync(id);
+            if (role.IsStatic) throw new EntityNotBeDeletedBusinessException(L["Role"], role.Name);
 
             (await RoleManager.DeleteAsync(role)).CheckErrors();
             result.Add(ObjectMapper.Map<IdentityRole, RoleDto>(role));
@@ -162,6 +182,22 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
         }
 
         return new ListResultDto<RoleDto>(result);
+    }
+
+    [Authorize(IdentityPermissions.Roles.Update)]
+    public virtual async Task SetDefaultAsync(Guid id, bool value)
+    {
+        var entity = await RoleRepository.GetAsync(id);
+        entity.IsDefault = value;
+        await RoleRepository.UpdateAsync(entity);
+    }
+
+    [Authorize(IdentityPermissions.Roles.Update)]
+    public virtual async Task SetPublicAsync(Guid id, bool value)
+    {
+        var entity = await RoleRepository.GetAsync(id);
+        entity.IsPublic = value;
+        await RoleRepository.UpdateAsync(entity);
     }
 
 }

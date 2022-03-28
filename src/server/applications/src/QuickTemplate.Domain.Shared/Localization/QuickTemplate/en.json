@@ -25,6 +25,8 @@
     "SubMenu.User": "Users",
     "SubMenu.Role": "Roles",
     "SubMenu.Infrastructure": "Infrastructures",
-    "SubMenu.SystemSetting": "System Setting"
+    "SubMenu.SystemSetting": "System Setting",
+    "Role": "Role",
+    "User": "User" 
   }
 }

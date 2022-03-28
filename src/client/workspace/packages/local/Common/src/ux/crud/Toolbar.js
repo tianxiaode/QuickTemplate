@@ -51,7 +51,7 @@ Ext.define('Common.ux.crud.Toolbar', {
             searchHandler: 'onSearch',
             width: 140,
             isSearch: true,
-            searchName: 'query',
+            searchName: 'filter',
         },
         fill:{
             xtype: 'component',

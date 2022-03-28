@@ -149,10 +149,10 @@ Ext.define('Common.view.identity.roles.Permissions',{
 
     onLocalized(){
         let me = this, 
-            resourceName = me.resourceName,
-            els = me.langElements;
+            resourceName = me.resourceName;
         me.callParent();
         if(!me.isReady) return;
+        let  els = me.langElements;
         Ext.each(els, el=>{
             let lang = el.getAttribute('data-lang');
             el.innerHTML = I18N.get(lang, resourceName);

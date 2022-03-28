@@ -52,10 +52,10 @@ Ext.define('Common.util.TemplateFn',{
             if(remoteFilter){
                 let proxy = store.getProxy(),
                 params = proxy.extraParams,
-                query = params && params.query;
-                if(!query) return msg;
+                filter = params && params.filter;
+                if(!filter) return msg;
                 if(!Ext.isString(msg)) msg = msg.toString();                
-                return msg.replace(new RegExp('(' + query + ')', "gi"), '<span class="text-danger">$1</span>');
+                return msg.replace(new RegExp('(' + filter + ')', "gi"), '<span class="text-danger">$1</span>');
             }else{
                 let filter = store.filterValue;
                 if(Ext.isEmpty(filter)) return msg;

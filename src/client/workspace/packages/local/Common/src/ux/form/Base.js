@@ -7,8 +7,11 @@ Ext.define('Common.ux.form.Base',{
     ],
 
     controller: 'shared-formbasecontroller',
-    hasSaveAndNewButton: true,
-    hasResetButton: true,
+    hasSaveAndNewButton: false,
+    hasResetButton: false,
+    hasMessageButton: false,
+    hasCreate: false,
+    hasDelete: false,
 
     title: '\xA0',
     config:{
@@ -23,9 +26,6 @@ Ext.define('Common.ux.form.Base',{
         ui: 'desktop',
     },
 
-    hasMessageButton: false,
-    hasCreate: false,
-    hasDelete: false,
 
     applyAutoTabIndex(){
         return Ext.platformTags.desktop;

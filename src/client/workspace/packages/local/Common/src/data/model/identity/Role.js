@@ -3,12 +3,12 @@ Ext.define('Common.data.model.identity.Role', {
     alias: 'entity.role',
    
     fields: [
-        { name: 'name', defaultValue: ''},
+        { name: 'name', defaultValue: '', messageField: true},
         { name: 'concurrencyStamp', defaultValue: null},
         { name: 'permissions' , defaultValue: []},
         { name: 'isStatic', type: 'bool', defaultValue: false},
-        { name: 'isDefault', type: 'bool', defaultValue: false},
-        { name: 'isPublic', type: 'bool', defaultValue: true},
+        { name: 'isDefault', type: 'bool', defaultValue: false, updateAction: 'default'},
+        { name: 'isPublic', type: 'bool', defaultValue: true, updateAction: 'public'},
         { 
             name: 'displayPermissions', 
             calculate(data){
@@ -38,13 +38,6 @@ Ext.define('Common.data.model.identity.Role', {
                 return result;
             }
         },
-        {
-            name: 'displayName',
-            localFilter: true, messageField: true,
-            calculate(data){
-                return data.name;
-            }
-        }
     ],
 
 })

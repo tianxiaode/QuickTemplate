@@ -2,10 +2,6 @@ Ext.define('Common.service.Localized', {
     alternateClassName: 'I18N',
     singleton: true,
 
-    mixins:[
-        'Ext.mixin.Observable',
-    ],
-
     config:{
         currentLanguage: null,
         labelSeparator: '',
@@ -15,7 +11,7 @@ Ext.define('Common.service.Localized', {
 
     constructor(config){
         let me = this;        
-        me.initConfig(config)
+        me.initConfig(config);
         me.initLanguages();
     },
 

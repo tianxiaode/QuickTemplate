@@ -16,8 +16,8 @@ Ext.define('Common.service.Config', {
     isReady: false,
     constructor(config){
         let me = this;
+        me.initConfig(config)
         me.mixins.observable.constructor.call(me, config);
-        //me.loadConfiguration();
     },
 
     isAuthenticated(){

@@ -79,7 +79,7 @@ Ext.define('Common.ux.crud.form.FormController',{
      */
     onSubmitSuccess(response, eOpts) {
         let me = this,
-            result = Http.parseResponseText(response),
+            result = Http.parseResponse(response),
             view = me.getView(),
             record = view.getRecord();            
         view.unmask();
@@ -111,7 +111,7 @@ Ext.define('Common.ux.crud.form.FormController',{
     showSuccessMessage() {
         let me = this,
             action = me.afterSavedAction;
-        let msg = I18N.get(action === 'addRecord' ? 'SavedAndNew' : 'SavedAndClose');
+        let msg = I18N.get(action === 'addRecord' ? 'SavedAndNew' : 'SavedAndExit');
         me.showMessage(msg, false);
         let fn = me[action] || me.onHide;
         if(!fn) return;

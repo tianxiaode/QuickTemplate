@@ -3,7 +3,9 @@ Ext.define('Common.view.identity.roles.Model',{
     alias:'viewmodel.rolemodel',
 
     requires:[
-        'Common.data.store.identity.Roles'
+        'Common.data.store.identity.Roles',
+        'Common.view.identity.roles.Edit',
+        'Common.view.identity.roles.Multilingual',
     ],
 
     stores: {

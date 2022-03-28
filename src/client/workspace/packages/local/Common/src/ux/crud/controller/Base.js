@@ -298,13 +298,12 @@ Ext.define('Common.ux.crud.controller.Base',{
      * 删除实体
      */
     onDelete(){
-        let me = this,
-            data = me.getMultiEntityActionData(me.getDeleteData || me.defaultGetDataFn);
-        let action = me.deleteAction;
-        me.doMultiEntityAction(I18N.get('DeleteConfirmMessageTitle'),
+        let me = this;
+        me.doMultiEntityAction(
+            I18N.get('DeleteConfirmMessageTitle'),
             I18N.get('DeleteConfirmMessage'),
-            action,
-            data);
+            me.deleteAction,
+            me.getDeleteData || me.defaultGetDataFn);
 
     },
 
@@ -320,21 +319,21 @@ Ext.define('Common.ux.crud.controller.Base',{
     getMultiEntityActionData(getDataFn){
         let me = this,
             store = me.currentList.getStore(),
-            msgFieldName = store.messageField,
+            messageField = store.messageField,
             selections = me.selections,
             data = { ids: [], contents: [] };
         getDataFn = getDataFn || me.defaultGetDataFn;
         //组织数据
         selections.forEach(r=>{
-            me.getMultiEntityActionContent(data, r, msgFieldName);
+            me.getMultiEntityActionContent(data, r, messageField);
             getDataFn.apply(me, [data, r]);
 
         });
         return data;
     },
 
-    getMultiEntityActionContent(data, record,msgFieldName){
-        let msg = Format.getTranslationText(record.get(msgFieldName), record.get('translation'), msgFieldName) ;
+    getMultiEntityActionContent(data, record,messageField){
+        let msg = Format.getTranslationText(record.get(messageField), record.get('translation'), msgFieldName) ;
         data.contents.push(msg);
     },
 
@@ -342,9 +341,9 @@ Ext.define('Common.ux.crud.controller.Base',{
         data.ids.push(record.getId());
     },
 
-    checkSelections(data){
-        let result = data.length === 0;
-        result && MsgBox.alert(null, I18N.get('NoSelection'));
+    hasSelections(){
+        let result = this.selections.length >0;
+        !result && MsgBox.alert(null, I18N.get('NoSelection'));
         return result;
     },
 
@@ -355,23 +354,26 @@ Ext.define('Common.ux.crud.controller.Base',{
      * @param {要执行的操作} action 
      * @param {信息内容} contents 
      */
-    doMultiEntityAction(confirmTitle, confirmMessage, action, data, successFn, failureFn){
+    doMultiEntityAction(confirmTitle, confirmMessage, action, getDataFn, successFn, failureFn){
         let me = this;
+
         //如果没有选择，显示提示
-        if(!me.checkSelections(data.contents)) return;
+        if(!me.hasSelections()) return;
+
+        let data = me.getMultiEntityActionData(getDataFn);
+
 
         //确认后执行操作
         MsgBox.confirm(
             confirmTitle,
-        	Ext.String.format(confirmMessage, me.getMessageTpl().apply(data.contents)),
+        	Format.format(confirmMessage, me.getMessageTpl().apply(data.contents)),
             function (btn) {
-                if (btn === "yes") {
-                    action.apply(me,[data])
-                    .then(
-                        successFn || me.doMultiEntityActionSuccess, 
-                        failureFn || me.onAjaxFailure, 
-                        null, me);
-                }
+                if (btn !== "yes") return;
+                action.apply(me,[data])
+                .then(
+                    successFn || me.doMultiEntityActionSuccess, 
+                    failureFn || me.onAjaxFailure, 
+                    null, me);
             },
             me
         );
@@ -400,15 +402,16 @@ Ext.define('Common.ux.crud.controller.Base',{
             msgFieldName = store.messageField,
             isDelete = response.request.method === 'DELETE',
             resultMsg = isDelete ? I18N.get("DeleteSuccess") : I18N.get('UpdateSuccess'),
-            obj = Http.parseResponseText(response), 
-            msg = ['<ul class="message-tips">'];
+            obj = Http.parseResponse(response), 
+            msg = ['<ul class="message-tips">'],
+            items = obj && obj.items;
         Ext.Viewport.unmask();
-        if(!(obj && obj.result && obj.result.items)){
+        if(!items){
             me.onRefreshStore();
             Toast(resultMsg,null,null, 3000);
             return;
         }
-        obj.result.items.forEach(m=>{
+        items.forEach(m=>{
             let text = Ext.isObject(m) ? m[msgFieldName] || m.name || m.displayName : m;
             text = Format.getTranslationText(text, m.translation, msgFieldName);
             msg.push(`<li class="success">${text}:  ${resultMsg}</li>`);
@@ -455,8 +458,13 @@ Ext.define('Common.ux.crud.controller.Base',{
             entityName = me.entityName,
             id = record.getId(),
             data = me.getColumnCheckChangeData && me.getColumnCheckChangeData(),
-            action = checked ? checkAction[field] || updateAction[field] : uncheckAction[field] || updateAction[field] ,
-            url = action ? URI.crud(entityName, id, action) : URI.crud(entityName, id, Format.pluralize(field));
+            url;
+        if(updateAction){
+            url = URI.crud(entityName,id, updateAction[field], checked);
+        }else{
+            action = checked ? checkAction[field] : uncheckAction[field];
+            url = URI.crud(entityName,id, action);
+        }
         Http.patch(url,data).then(me.onColumnCheckChangeSuccess, me.onColumnCheckChangeFailure, null, me);
     },
 

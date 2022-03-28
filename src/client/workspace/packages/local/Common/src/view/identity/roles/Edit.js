@@ -3,11 +3,9 @@ Ext.define('Common.view.identity.roles.Edit', {
     xtype : 'desktop-roleeditview', 
     
     requires:[
-        'Common.view.identity.roles.EditController',
         'Common.view.identity.roles.Permissions'
     ],
 
-    controller: 'roleeditcontroller',
 
     items: [
         { xtype: 'hiddenfield', name: 'id'},
@@ -35,6 +33,11 @@ Ext.define('Common.view.identity.roles.Edit', {
                 { name: 'isDefault'},
                 { name: 'isPublic'},
             ]
+        },
+        {
+            xtype: 'uxpermissionsfield',
+            name: 'permissions',
+            flex: 1
         },
     ]
 });

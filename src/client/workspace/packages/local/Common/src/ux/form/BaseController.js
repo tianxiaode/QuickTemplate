@@ -81,7 +81,6 @@ Ext.define('Common.ux.form.BaseController',{
          me.getView().clearErrors();
          Ext.platformTags.desktop && me.initFocus(view);
          me.initParams(view);
-         //me.getView().setTitle('abc')
     },
 
     initParams: Ext.emptyFn,
@@ -146,16 +145,16 @@ Ext.define('Common.ux.form.BaseController',{
             error;
         view.unmask();
         if(status === 400){
-            me.setErrors(me, view, response.responseJson || Http.parseResponseText(response));
+            me.setErrors(me, view, response.responseJson || Http.parseResponse(response));
             return;
         }
-        error = Failure.getError(response, me.resourceName);
+        error = Http.getError(response, me.resourceName);
         me.showMessage(error, true);
     },
 
     setErrors(me,view, data){
         let resourceName = me.resourceName,
-            errors = Failure.getValidationErrors(data, resourceName);
+            errors = Http.getValidationErrors(data, resourceName);
         for(let fieldName in errors){
             let f = view.down(`field[name=${fieldName}]`);
             if(Ext.isArray(f) || Ext.isEmpty(f) || (f && f.isCheckbox) ) continue;
@@ -167,7 +166,7 @@ Ext.define('Common.ux.form.BaseController',{
                 f.setError(message);
             }
         }
-        errors = Failure.buildValidationErrors(errors, resourceName);
+        errors = Http.buildValidationErrors(errors, resourceName);
         me.showMessage(errors, true);
     },
 
@@ -175,7 +174,7 @@ Ext.define('Common.ux.form.BaseController',{
         let me = this,
             view = me.getView();
         view.unmask();
-        me.showMessage(I18N.get('SavedAndClose'), false);
+        me.showMessage(I18N.get('SavedAndExit'), false);
         if(me.fireSavedEvent) view.fireEvent('saved');
         me.lazyClose();
     },
