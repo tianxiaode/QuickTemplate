@@ -1,0 +1,20 @@
+{
+  "culture": "zh-Hans",
+  "texts": {
+    "District": "地区",
+    "Districts": "地区",
+    "NewDistrict": "新地区",
+    "EditDistrict": "编辑地区",
+    "District:Postcode": "邮政编码",
+    "District:DisplayName": "名称",
+    "District:ParentId": "父编号",
+    "District:ParentName": "父名称",
+    "District:Country": "国家",
+    "District:Province": "省份",
+    "District:City": "城市",
+    "District:District": "地区",
+    "District:IsMunicipality": "直辖市",
+    "Infrastructures": "基础设施",
+    "Infrastructures.Districts.ManagePermissions": "地区管理"
+  }
+}

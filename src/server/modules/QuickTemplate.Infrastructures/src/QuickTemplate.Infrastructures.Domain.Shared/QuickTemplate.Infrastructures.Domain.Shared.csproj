@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\..\..\common.props" />
+  <Import Project="..\..\..\..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+     <RootNamespace />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Generic.Abp.BusinessException" Version="$(GenericAbpVersion)" />
+  	<PackageReference Include="Generic.Abp.DDD.Domain.Shared" Version="$(GenericAbpVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="QuickTemplate\Infrastructures\Localization\Infrastructures\*.json" />
+    <Content Remove="QuickTemplate\Infrastructures\Localization\Infrastructures\*.json" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\..\..\common.props" />
+  <Import Project="..\..\..\..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace />
+  </PropertyGroup>
+
+  <ItemGroup>
+  	<PackageReference Include="Generic.Abp.DDD.Domain" Version="$(GenericAbpVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QuickTemplate.Infrastructures.Domain.Shared\QuickTemplate.Infrastructures.Domain.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="QuickTemplate\Infrastructures\Districts\" />
+    <Folder Include="QuickTemplate\Infrastructures\Schedules\" />
+  </ItemGroup>
+
+</Project>

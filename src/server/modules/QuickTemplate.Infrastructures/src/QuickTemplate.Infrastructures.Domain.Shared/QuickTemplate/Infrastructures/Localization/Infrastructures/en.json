@@ -1,0 +1,20 @@
+{
+  "culture": "en",
+  "texts": {
+    "District": "District",
+    "Districts": "Districts",
+    "NewDistrict": "New district",
+    "EditDistrict": "Edit district",
+    "District:Postcode": "Postcode",
+    "District:DisplayName": "Display name",
+    "District:ParentId": "Parent id",
+    "District:ParentName": "Parent name",
+    "District:Country": "Country",
+    "District:Province": "Province",
+    "District:City": "City",
+    "District:District": "District",
+    "District:IsMunicipality": "Municipality",
+    "Infrastructures": "Infrastructures",
+    "Infrastructures.Districts.ManagePermissions": "Districts management"
+  }
+}

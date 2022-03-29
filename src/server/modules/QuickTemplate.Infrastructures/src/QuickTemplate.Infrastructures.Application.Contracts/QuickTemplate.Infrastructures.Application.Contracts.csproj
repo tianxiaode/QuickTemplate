@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+     <RootNamespace />
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Volo.Abp.Authorization" Version="$(AbpVersion)" />
+		<PackageReference Include="Volo.Abp.Ddd.Application.Contracts" Version="$(AbpVersion)" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QuickTemplate.Infrastructures.Domain.Shared\QuickTemplate.Infrastructures.Domain.Shared.csproj" />
+    <ProjectReference Include="..\QuickTemplate.Infrastructures.Domain\QuickTemplate.Infrastructures.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
