@@ -6,7 +6,8 @@ Ext.define('Common.data.model.Base', {
     ],
 
     fields: [
-        { name: 'id', type: 'string' }
+        { name: 'id', type: 'string' },
+        { name: 'concurrencyStamp', type: 'string', defaultValue: null},
     ],
     idProperty: 'id',
 

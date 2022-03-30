@@ -20,6 +20,7 @@
     <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="$(AbpVersion)" />
     <PackageReference Include="Generic.Abp.Enumeration.Application" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.ExtResource.Application" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="QuickTemplate.Infrastructures.Application" Version="$(QuickTemplateVersion)" />
   </ItemGroup>
 
 </Project>

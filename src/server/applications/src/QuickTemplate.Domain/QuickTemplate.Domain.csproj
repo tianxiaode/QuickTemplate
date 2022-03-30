@@ -21,6 +21,7 @@
     <PackageReference Include="Volo.Abp.AuditLogging.Domain" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.FeatureManagement.Domain" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.SettingManagement.Domain" Version="$(AbpVersion)" />
+    <PackageReference Include="QuickTemplate.Infrastructures.Domain" Version="$(QuickTemplateVersion)" />
   </ItemGroup>
 
 </Project>

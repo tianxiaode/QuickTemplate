@@ -15,8 +15,10 @@ public class QuickTemplateDbContextFactory : IDesignTimeDbContextFactory<QuickTe
 
         var configuration = BuildConfiguration();
 
-        var builder = new DbContextOptionsBuilder<QuickTemplateDbContext>()
-            .UseMySql(configuration.GetConnectionString("Default"), MySqlServerVersion.LatestSupportedServerVersion);
+        var builder =
+            new DbContextOptionsBuilder<QuickTemplateDbContext>(new DbContextOptions<QuickTemplateDbContext>())
+                .UseMySql(configuration.GetConnectionString("Default"), MySqlServerVersion.LatestSupportedServerVersion,
+                    options => options.EnableStringComparisonTranslations());
 
         return new QuickTemplateDbContext(builder.Options);
     }

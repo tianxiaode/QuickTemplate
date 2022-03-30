@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Generic.Abp.Domain.Entities;
+using Microsoft.Extensions.Logging;
 using QuickTemplate.Infrastructures.Districts;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
@@ -15,14 +17,20 @@ public class InfrastructuresDataSeed: ITransientDependency, IInfrastructuresData
 {
     public InfrastructuresDataSeed(
         IGuidGenerator guidGenerator, 
-        DistrictManager districtManager)
+        DistrictManager districtManager, 
+        IUnitOfWork currentUnitOfWork, 
+        ILogger<InfrastructuresDataSeed> logger)
     {
         GuidGenerator = guidGenerator;
         DistrictManager = districtManager;
+        CurrentUnitOfWork = currentUnitOfWork;
+        Logger = logger;
     }
 
     protected IGuidGenerator GuidGenerator { get; }
     protected DistrictManager DistrictManager { get; }
+    protected IUnitOfWork CurrentUnitOfWork { get; }
+    protected ILogger<InfrastructuresDataSeed> Logger { get; }
 
     [UnitOfWork(true)]
     public virtual async Task SeedAsync()
@@ -34,17 +42,20 @@ public class InfrastructuresDataSeed: ITransientDependency, IInfrastructuresData
                 rootDistrict.AddTranslation(key, DistrictConsts.RootTranslation[key]);
             }
             await DistrictManager.CreateAsync(rootDistrict);
+            Logger.LogInformation($"根节点:{rootDistrict.DisplayName},{rootDistrict.Postcode},{rootDistrict.Code},{rootDistrict.ParentId}");
 
 
 
             //增加中国节点
-            var chinaDistrict = new District(GuidGenerator.Create(),DistrictConsts.ChinaCode, DistrictConsts.China, rootDistrict.Id);
+            var chinaDistrict = new District(GuidGenerator.Create(),DistrictConsts.China, DistrictConsts.ChinaCode, rootDistrict.Id);
             foreach (var key in DistrictConsts.ChinaTranslation.Keys)
             {
                 chinaDistrict.AddTranslation(key, DistrictConsts.ChinaTranslation[key]); }
             
             await DistrictManager.CreateAsync(chinaDistrict);
-            
+            Logger.LogInformation($"中国节点:{chinaDistrict.DisplayName},{chinaDistrict.Postcode},{chinaDistrict.Code},{chinaDistrict.ParentId}");
+
+
             //增加中国省份
             var dir = Path.Combine(Directory.GetCurrentDirectory(), "data");
             var postCodesLines = await File.ReadAllLinesAsync(Path.Combine(dir, "postcode.csv"));
@@ -52,8 +63,9 @@ public class InfrastructuresDataSeed: ITransientDependency, IInfrastructuresData
             var postCodeList = new List<District>();
             foreach (var postCodesLine in postCodesLines)
             {
-                var postCodeArray = postCodesLine.Split(",");
+                var postCodeArray = postCodesLine.Replace("\"","").Split(",");
                 var postCode = postCodeArray[0];
+                Logger.LogInformation($"正在处理：{postCode}");
                 Guid parentId;
                 var displayName = "";
                 var isMunicipalities = false;
@@ -85,7 +97,7 @@ public class InfrastructuresDataSeed: ITransientDependency, IInfrastructuresData
                         else
                         {
                             //地区
-                            var parent = postCodeList.FirstOrDefault(m => m.Postcode.StartsWith(postCode.Substring(0, 4)));
+                            var parent = postCodeList.FirstOrDefault(m => m.Postcode.StartsWith(postCode[..4]));
                             if(parent == null) continue;
                             parentId = parent.Id;
                             displayName = postCodeArray[3];
@@ -95,9 +107,11 @@ public class InfrastructuresDataSeed: ITransientDependency, IInfrastructuresData
                     }
             
                 }
-                var entity = new District(GuidGenerator.Create(),postCode,displayName, parentId, isMunicipalities);
+                var entity = new District(GuidGenerator.Create(),displayName, postCode,parentId, isMunicipalities);
+                
                 postCodeList.Add(entity);
                 await DistrictManager.CreateAsync(entity);
+                Logger.LogInformation($"地区节点:{entity.DisplayName},{entity.Postcode},{entity.Code},{entity.ParentId}");
             }
             
     }

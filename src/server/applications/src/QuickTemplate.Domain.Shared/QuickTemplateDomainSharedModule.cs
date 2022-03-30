@@ -1,4 +1,5 @@
-﻿using QuickTemplate.Localization;
+﻿using QuickTemplate.Infrastructures;
+using QuickTemplate.Localization;
 using Volo.Abp.AuditLogging;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.FeatureManagement;
@@ -21,7 +22,8 @@ namespace QuickTemplate;
     typeof(AbpIdentityDomainSharedModule),
     typeof(AbpIdentityServerDomainSharedModule),
     typeof(AbpPermissionManagementDomainSharedModule),
-    typeof(AbpSettingManagementDomainSharedModule)
+    typeof(AbpSettingManagementDomainSharedModule),
+    typeof(QuickTemplateInfrastructuresDomainSharedModule)
     )]
 public class QuickTemplateDomainSharedModule : AbpModule
 {

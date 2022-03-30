@@ -34,25 +34,25 @@ Ext.define('Common.ux.tree.Panel',{
         ]
     },
 
-    responsiveConfig:{
-        desktop:{
-            padding:5,
-        },
-        phone:{
-            ui: 'dark',
-            header:{
-                xtype: 'uxpanelheader',
-                buttons:{
-                    //swap: { xtype: 'uxswapbutton'},
-                    crate: true,
-                    update: { xtype: 'uxupdatebutton', isCrud: true, crudName: 'update'},
-                    trash: { xtype: 'uxtrashbutton', isCrud: true, crudName: 'delete'},
-                    refresh: { xtype: 'uxrefreshbutton'}
-                },
-                hasSelectMenu: false,
-            },
-        }
-    },
+    // responsiveConfig:{
+    //     desktop:{
+    //         padding:5,
+    //     },
+    //     phone:{
+    //         ui: 'dark',
+    //         header:{
+    //             xtype: 'uxpanelheader',
+    //             buttons:{
+    //                 //swap: { xtype: 'uxswapbutton'},
+    //                 crate: true,
+    //                 update: { xtype: 'uxupdatebutton', isCrud: true, crudName: 'update'},
+    //                 trash: { xtype: 'uxtrashbutton', isCrud: true, crudName: 'delete'},
+    //                 refresh: { xtype: 'uxrefreshbutton'}
+    //             },
+    //             hasSelectMenu: false,
+    //         },
+    //     }
+    // },
 
     applyCrudToolbar(newCmp, old) {
         return Ext.updateWidget(old, newCmp,

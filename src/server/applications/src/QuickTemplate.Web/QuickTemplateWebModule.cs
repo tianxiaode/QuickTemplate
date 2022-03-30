@@ -37,6 +37,7 @@ using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.SettingManagement.Web;
 using Volo.Abp.Swashbuckle;
+using Volo.Abp.Timing;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
@@ -89,6 +90,11 @@ public class QuickTemplateWebModule : AbpModule
         ConfigureAutoApiControllers();
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context.Services);
+
+        Configure<AbpClockOptions>(options =>
+        {
+            options.Kind = DateTimeKind.Utc;
+        });
     }
 
     private void ConfigureUrls(IConfiguration configuration)

@@ -1,34 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Generic.Abp.BusinessException.Exceptions;
+﻿using Generic.Abp.BusinessException.Exceptions;
 using Generic.Abp.Domain.Trees;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Localization;
 using QuickTemplate.Infrastructures.Localization;
-using Volo.Abp;
-using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Settings;
+using System.Linq;
+using System.Threading.Tasks;
 using Volo.Abp.Threading;
-using Volo.Abp.Validation;
+using Volo.Abp.Uow;
 
 namespace QuickTemplate.Infrastructures.Districts;
 
 public class DistrictManager: TreeManager<District,IDistrictRepository>
 {
-    protected readonly IStringLocalizer<InfrastructuresResource> Localizer;
-    protected readonly ISettingProvider SettingProvider;
+    protected IStringLocalizer<InfrastructuresResource> Localizer { get; }
 
     public DistrictManager(
         IDistrictRepository repository, 
-        [NotNull] [ItemNotNull] ITreeCodeGenerator<District> treeCodeGenerator, 
+        [NotNull] ITreeCodeGenerator<District> treeCodeGenerator, 
         [NotNull] ICancellationTokenProvider cancellationTokenProvider, 
-        IStringLocalizer<InfrastructuresResource> localizer, 
-        ISettingProvider settingProvider) : base(repository, treeCodeGenerator, cancellationTokenProvider)
+        IStringLocalizer<InfrastructuresResource> localizer) : base(repository, treeCodeGenerator, cancellationTokenProvider)
     {
         Localizer = localizer;
-        SettingProvider = settingProvider;
     }
 
     public override async Task ValidateAsync(District entity)
@@ -37,19 +29,17 @@ public class DistrictManager: TreeManager<District,IDistrictRepository>
             .Where(m => m.Id != entity.Id)
             .ToList();
 
-        if (siblings.Any(ou => ou.DisplayName == entity.DisplayName))
+        if (siblings.Any(m => m.DisplayName == entity.DisplayName))
         {
             throw new DuplicateWarningBusinessException(Localizer[nameof(District)], entity.DisplayName);
         }
 
-        await CheckDuplicateAsync(entity);
+        if (siblings.Any(m => m.Postcode == entity.Postcode))
+        {
+            throw new DuplicateWarningBusinessException(Localizer["District:Postcode"], entity.Postcode);
+        }
+
     }
 
-    public virtual async Task CheckDuplicateAsync(District entity)
-    {
-        if (await Repository.AnyAsync(m =>
-                m.Postcode.Equals(entity.Postcode, StringComparison.InvariantCultureIgnoreCase) && m.Id != entity.Id))
-            throw new DuplicateWarningBusinessException(Localizer[nameof(District)], entity.Postcode);
-    }
 
 }

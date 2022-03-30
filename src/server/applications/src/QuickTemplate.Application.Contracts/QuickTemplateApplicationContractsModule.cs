@@ -1,5 +1,6 @@
 ﻿using Generic.Abp.Enumeration;
 using Generic.Abp.ExtResource;
+using QuickTemplate.Infrastructures;
 using Volo.Abp.Account;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
@@ -19,7 +20,8 @@ namespace QuickTemplate;
     typeof(AbpSettingManagementApplicationContractsModule),
     typeof(AbpObjectExtendingModule),
     typeof(GenericAbpEnumerationDomainSharedModule),
-    typeof(GenericAbpExtResourceApplicationContractsModule)
+    typeof(GenericAbpExtResourceApplicationContractsModule),
+    typeof(QuickTemplateInfrastructuresApplicationContractsModule)
 )]
 public class QuickTemplateApplicationContractsModule : AbpModule
 {

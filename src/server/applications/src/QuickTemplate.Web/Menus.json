@@ -48,7 +48,9 @@
         "IconCls": "x-fa fa-hdd",
         "ViewType": "infrastructureView",
         "Order": 220,
-        "RequiredPermissionNames": []
+        "RequiredPermissionNames": [
+          "Infrastructures.Districts.ManagePermissions"
+        ]
       },
       {
         "Id": "0a2cb2bd-3810-4a5d-9382-111a36bc3ffb",

@@ -4,7 +4,6 @@ Ext.define('Common.data.model.identity.Role', {
    
     fields: [
         { name: 'name', defaultValue: '', messageField: true},
-        { name: 'concurrencyStamp', defaultValue: null},
         { name: 'permissions' , defaultValue: []},
         { name: 'isStatic', type: 'bool', defaultValue: false},
         { name: 'isDefault', type: 'bool', defaultValue: false, updateAction: 'default'},

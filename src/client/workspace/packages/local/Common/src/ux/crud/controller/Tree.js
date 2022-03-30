@@ -89,37 +89,6 @@ Ext.define('Common.ux.crud.controller.Tree',{
         if(record) this.searchList.getSelectable().select(record);
     },
 
-
-    /**
-     * 选择记录
-     * @param {事件触发者} sender 
-     * @param {选择的记录} selected 
-     * @param {事件选项} eOpts 
-     */    
-    onViewSelect(sender, selected, eOpts ){
-        let me = this,
-            selections = me.getCurrentSelections();
-        me.callParent(arguments);        
-        me.setViewModelValue('masterSelected', selections[0]);
-    },
-
-    /**
-     * 取消记录的选择     * 
-     * @param {事件触发者} sender 
-     * @param {选择的记录} records 
-     * @param {事件选项} eOpts 
-     */
-    onViewDeselect(sender, records, eOpts){
-        let me = this;
-        me.callParent(arguments);
-        me.setViewModelValue('masterSelected', null);
-    },
-
-    /**
-     * 取消全部选择
-     */
-    doDeselectAll(){},
-
     /**
      * 刷新列表
      */
@@ -135,7 +104,7 @@ Ext.define('Common.ux.crud.controller.Tree',{
             return;
 
         }
-        let selection = me.getCurrentSelections()[0];
+        let selection = me.selections[0];
         //未有选择
         if(!selection){
             let root = store.getRoot();
@@ -171,7 +140,7 @@ Ext.define('Common.ux.crud.controller.Tree',{
     switchList(isSearch){
         let me = this;
         me.currentList = isSearch ? me.searchList : me.list;
-        let selections = me.getCurrentSelections(),
+        let selections = me.selections,
             selection = selections[0];
         if(!selection){
             selection =me.currentList.getStore().getAt(0);
@@ -245,7 +214,7 @@ Ext.define('Common.ux.crud.controller.Tree',{
     searchTreeNode(code, node){
         let me = this,
             nodeCode = node.get('code'),
-            searchCode = code.replace(nodeCode,'').substr(1,5);
+            searchCode = code.replace(nodeCode,'').substr(1,7);
         if(Ext.isEmpty(searchCode)) return;
         let child = node.findChild('code', `${nodeCode}.${searchCode}`);
         //子节点存在，继续查询

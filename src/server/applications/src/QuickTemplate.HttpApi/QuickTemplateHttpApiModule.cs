@@ -2,6 +2,7 @@
 using Generic.Abp.ExtResource;
 using Localization.Resources.AbpUi;
 using Microsoft.Extensions.DependencyInjection;
+using QuickTemplate.Infrastructures;
 using QuickTemplate.Localization;
 using Volo.Abp.Account;
 using Volo.Abp.FeatureManagement;
@@ -21,7 +22,8 @@ namespace QuickTemplate;
     typeof(AbpFeatureManagementHttpApiModule),
     typeof(AbpSettingManagementHttpApiModule),
     typeof(GenericAbpEnumerationHttpApiModule),
-    typeof(GenericAbpExtResourceHttpApiModule)
+    typeof(GenericAbpExtResourceHttpApiModule),
+    typeof(QuickTemplateInfrastructuresHttpApiModule)
     )]
 public class QuickTemplateHttpApiModule : AbpModule
 {

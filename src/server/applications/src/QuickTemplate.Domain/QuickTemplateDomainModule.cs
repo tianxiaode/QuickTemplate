@@ -2,6 +2,7 @@
 using Generic.Abp.Enumeration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using QuickTemplate.Infrastructures;
 using QuickTemplate.MultiTenancy;
 using Volo.Abp.AuditLogging;
 using Volo.Abp.BackgroundJobs;
@@ -29,7 +30,8 @@ namespace QuickTemplate;
     typeof(AbpSettingManagementDomainModule),
     typeof(AbpEmailingModule),
     typeof(GenericAbpBusinessExceptionModule),
-    typeof(GenericAbpEnumerationDomainSharedModule)
+    typeof(GenericAbpEnumerationDomainSharedModule),
+    typeof(QuickTemplateInfrastructuresDomainModule)
 )]
 public class QuickTemplateDomainModule : AbpModule
 {

@@ -7,7 +7,7 @@ using Volo.Abp;
 
 namespace QuickTemplate.Infrastructures.Districts;
 
-public class District: GenericFullAuditedAggregateRootWithTranslation<DistrictTranslation>,IDistrict,ITree<District>
+public class District: GenericAuditedAggregateRootWithTranslation<DistrictTranslation>,IDistrict,ITree<District>
 {
     public string Code { get; set; }
     public Guid? ParentId { get; set; }

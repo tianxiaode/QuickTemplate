@@ -19,7 +19,10 @@
     <PackageReference Include="Generic.Abp.BusinessException" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.Enumeration.Domain.Shared" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="$(FileProvidersEmbeddedVersion)" />
+    <PackageReference Include="QuickTemplate.Infrastructures.Domain.Shared" Version="$(QuickTemplateVersion)" />
   </ItemGroup>
+  
+
 
   <ItemGroup>
     <EmbeddedResource Include="Localization\QuickTemplate\*.json" />
