@@ -53,8 +53,8 @@ Ext.define('Common.ux.crud.form.FormController',{
             remoteController = view.getRemoteController() || URI.crud(entityName, me.isNew ? null :  values.id);                
         if (!(view.validate() && me.beforeFormSave(view, values))) {
             let errors = view.getErrors(),
-                msg = Failure.buildValidationErrors(errors, me.resourceName);
-                me.showMessage(msg, true);
+                msg = Http.buildValidationErrors(errors, me.resourceName);
+                view.showMessage(msg, true);
             return;
         };
         view.mask(I18N.get('Saving'));
@@ -112,7 +112,7 @@ Ext.define('Common.ux.crud.form.FormController',{
         let me = this,
             action = me.afterSavedAction;
         let msg = I18N.get(action === 'addRecord' ? 'SavedAndNew' : 'SavedAndExit');
-        me.showMessage(msg, false);
+        me.getView().showMessage(msg, false);
         let fn = me[action] || me.onHide;
         if(!fn) return;
         Ext.defer(fn, 2000, me);

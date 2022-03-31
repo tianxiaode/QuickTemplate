@@ -23,7 +23,8 @@ public class Program
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
-            .MinimumLevel.Override("IdentityServer4", LogEventLevel.Information)
+            //.MinimumLevel.Override("IdentityServer4", LogEventLevel.Information)
+            .MinimumLevel.Override("QuickTemplate", LogEventLevel.Information)
             .Enrich.FromLogContext()
             .WriteTo.Async(c => c.File("Logs/logs.txt"))
 #if DEBUG

@@ -2,10 +2,6 @@ Ext.define('Common.ux.form.BaseController',{
     extend: 'Ext.app.ViewController',
     alias: 'controller.shared-formbasecontroller',
 
-    mixins:[
-        'Common.mixin.Messageable',
-    ],
-
     init(){
         let me = this,
             view = me.getView();
@@ -77,8 +73,8 @@ Ext.define('Common.ux.form.BaseController',{
             view = me.getView();
          me.hasNew = false;
          me.saved = false;
-         me.getMessageButton().setHidden(true);
-         me.getView().clearErrors();
+         view.hideMessageButton();
+         view.clearErrors();
          Ext.platformTags.desktop && me.initFocus(view);
          me.initParams(view);
     },
@@ -129,10 +125,6 @@ Ext.define('Common.ux.form.BaseController',{
        this.onCancel();
    },
 
-   onErrorOrSuccessTap(sender){
-       if(Ext.platformTags.phone) sender.getTooltip().show();
-   },
-
     /**
      * 提交失败后的操作
      * @param {响应} response 
@@ -149,7 +141,7 @@ Ext.define('Common.ux.form.BaseController',{
             return;
         }
         error = Http.getError(response, me.resourceName);
-        me.showMessage(error, true);
+        view.showMessage(error, true);
     },
 
     setErrors(me,view, data){
@@ -167,14 +159,14 @@ Ext.define('Common.ux.form.BaseController',{
             }
         }
         errors = Http.buildValidationErrors(errors, resourceName);
-        me.showMessage(errors, true);
+        view.showMessage(errors, true);
     },
 
     onSubmitSuccess(response){
         let me = this,
             view = me.getView();
         view.unmask();
-        me.showMessage(I18N.get('SavedAndExit'), false);
+        view.showMessage(I18N.get('SavedAndExit'), false);
         if(me.fireSavedEvent) view.fireEvent('saved');
         me.lazyClose();
     },

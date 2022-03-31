@@ -1,5 +1,5 @@
 Ext.define('Common.ux.tree.Panel',{
-    extend: 'Ext.Panel',
+    extend: 'Ext.Container',
     xtype: 'uxtreepanel',
 
     requires: [
@@ -13,25 +13,11 @@ Ext.define('Common.ux.tree.Panel',{
     ],
 
     layout: 'vbox',
-    isSingleView: false,
 
     config:{
-        crudToolbar:{},
-        searchField:{
-            xtype: 'uxsearchfield',
-            searchHandler: 'onSearch',
-            isSearch: true,
-            searchName: 'query',
-        },
-        treeHideHeaders: true,
-        columns:[
-            { 
-                xtype: 'treecolumn',
-                autoText: false,
-                dataIndex: 'displayName', 
-                flex: 1
-             },
-        ]
+        crudButton:{
+
+        }
     },
 
     // responsiveConfig:{

@@ -26,45 +26,45 @@ Ext.define('Common.overrides.shared.Button',{
         text && me.setTooltip(text);
     },
 
-    applyLangTooltip(value){
-        if(Ext.platformTags.phone) return '';
-        return value;
-    },
+    // applyLangTooltip(value){
+    //     if(Ext.platformTags.phone) return '';
+    //     return value;
+    // },
 
-    applyUi(value){
-        let me = this;
-        if(Ext.platformTags.phone && !Ext.isEmpty(me.phoneUi)) return me.phoneUi;
-        return value;
-    },
+    // applyUi(value){
+    //     let me = this;
+    //     if(Ext.platformTags.phone && !Ext.isEmpty(me.phoneUi)) return me.phoneUi;
+    //     return value;
+    // },
 
-    applyWeight(value){
-        let me = this;
-        if(Ext.platformTags.phone && !Ext.isEmpty(me.phoneWeight)) return me.phoneWeight;
-        return value;
-    },
+    // applyWeight(value){
+    //     let me = this;
+    //     if(Ext.platformTags.phone && !Ext.isEmpty(me.phoneWeight)) return me.phoneWeight;
+    //     return value;
+    // },
 
-    updateIconCls(iconCls, oldIconCls) {
-        let me = this;
-        if(iconCls === 'desktop') iconCls = '';
-        if(Ext.platformTags.phone && !Ext.isEmpty(me.phoneIconCls)){
-            iconCls = me.phoneIconCls;
-        }
+    // updateIconCls(iconCls, oldIconCls) {
+    //     let me = this;
+    //     if(iconCls === 'desktop') iconCls = '';
+    //     if(Ext.platformTags.phone && !Ext.isEmpty(me.phoneIconCls)){
+    //         iconCls = me.phoneIconCls;
+    //     }
             
-        let element = me.iconElement,
-            hasIconCls = me.hasIconCls;
+    //     let element = me.iconElement,
+    //         hasIconCls = me.hasIconCls;
 
-        if (iconCls) {
-            me.addCls(hasIconCls);
-            element.replaceCls(oldIconCls, iconCls);
-        }
-        else {
-            element.removeCls(oldIconCls);
+    //     if (iconCls) {
+    //         me.addCls(hasIconCls);
+    //         element.replaceCls(oldIconCls, iconCls);
+    //     }
+    //     else {
+    //         element.removeCls(oldIconCls);
 
-            if (!me.getIcon()) {
-                me.removeCls(hasIconCls);
-            }
-        }
-    },
+    //         if (!me.getIcon()) {
+    //             me.removeCls(hasIconCls);
+    //         }
+    //     }
+    // },
 
 
 

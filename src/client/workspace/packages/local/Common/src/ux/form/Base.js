@@ -1,29 +1,38 @@
 Ext.define('Common.ux.form.Base',{
     extend: 'Common.ux.form.Panel',
 
+    mixins:[
+        'Common.mixin.component.Form',
+        'Common.mixin.component.Message'
+    ],
+
     requires:[
-        'Common.ux.panel.Header',
         'Common.ux.form.BaseController',
     ],
 
     controller: 'shared-formbasecontroller',
-    hasSaveAndNewButton: false,
-    hasResetButton: false,
-    hasMessageButton: false,
-    hasCreate: false,
-    hasDelete: false,
 
     title: '\xA0',
+    closeAction: 'hide',
     config:{
         defaultTitle: null,
         defaultModelValue: null,
         remoteController: null,
         autoTabIndex: true,
-        userButtons: null,
         defaults:{
             labelWidth: 150
         },
+        buttonDefaults:{
+            margin: '0 5px 0 0'
+        },
         ui: 'desktop',
+        buttons:[
+            {
+                xtype: 'component',
+                flex: 1,
+                weight: 5
+            }
+        ]
     },
 
 
@@ -38,116 +47,14 @@ Ext.define('Common.ux.form.Base',{
     },
 
 
-    getPhoneDefaultButtons(){
-        return {
-            message: {
-                xtype: 'uxmessagebutton',
-            },
-            done: {
-                handler: 'onSave',                    
-            },
-        }
-    },
-
-    getDesktopDefaultButtons(){
-        return {
-            message: true,
-            fill: true,
-            ok: {
-                handler: 'onSave'
-            },
-            cancel: {
-                handler: 'onCancel',
-                weight: 100
-            }
-        }
-    },
-
-    createHeader(config) {
-        var me = this,
-            isPhone = Ext.platformTags.phone,
-            xtype = isPhone ? 'uxpanelheader' : 'panelheader',
-            ret = {
-                xtype: xtype,
-                instanceCls: me.headerCls,
-                docked: 'top',            
-            },
-            icon, title;
-
-        if(isPhone){
-            ret.buttons = me.getPhoneDefaultButtons();
-        }
-
-        me._isCreatingHeader = true;
-
-        if (config && config !== true) {
-            Ext.merge(ret, config);
-        }
-
-        if (me.initialized) {
-            // Only attempt to configure title if we are not currently initializing.
-            // During initialization the updater for title will run if present and apply
-            // it to the header so there is no work to be done here.
-            title = me.getTitle();
-
-            if (title != null) {
-                if (typeof title === 'string') {
-                    title = {
-                        text: title
-                    };
-                }
-
-                Ext.merge(ret, {
-                    title: title
-                });
-            }
-
-            icon = me.getIconCls();
-
-            if (icon != null) {
-                ret.iconCls = icon;
-            }
-            else {
-                icon = me.getIcon();
-
-                if (icon != null) {
-                    ret.icon = icon;
-                }
-            }
-        }
-
-        me._isCreatingHeader = false;
-
-        return ret;
-    },
-
-
-    initialize(){
-        let me = this;
-        me.callParent(arguments);
-        me.initDefaultButtons();
-        me.initUserButtons();
-    },
-
-
-
-    initDefaultButtons(){
-        let me = this;
-        if(Ext.platformTags.desktop){
-            me.setButtons(me.getDesktopDefaultButtons());
-        }
-    },
-
-    initUserButtons(){
-        let me = this,
-            container = Ext.platformTags.desktop ? me.down('toolbar[ui=footer]') : me.getHeader(),
-            buttons = me.getUserButtons() || [];
-        if(buttons.length === 0) return;
-        container.add(buttons);
+    getButtonContainer(){
+        return Ext.platformTags.phone ? this.getHeader() : this.down('#buttonToolbar');
     },
 
     onHide(){
-        this.getController().onHide();
+        this.getController().onCancel();
     }
+
+
 
 })

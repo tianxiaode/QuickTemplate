@@ -16,7 +16,7 @@ Ext.define('Common.ux.crud.Toolbar', {
     defaults:{
         margin: '0 5px 0 0'
     },
-    //hasPaging: true,
+
     hasCountMessage: true,
     hasSearch: true,
     hasCrud: true,

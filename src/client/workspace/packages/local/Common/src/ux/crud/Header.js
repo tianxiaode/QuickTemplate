@@ -1,6 +1,6 @@
-Ext.define('Common.ux.panel.Header',{
+Ext.define('Common.ux.crud.Header',{
     extend: 'Ext.panel.Header',
-    xtype: 'uxpanelheader',
+    xtype: 'uxcrudheader',
 
     requires:[
         'Ext.menu.Menu',
@@ -21,31 +21,28 @@ Ext.define('Common.ux.panel.Header',{
     //hasUpdateMenu: false,
     //hasDeleteMenu: false,
     config:{
-        buttons: null,
-        sortMenus: null,
+        createButton:{
+            xtype: 'uxcreatebutton',
+            isCrud: true,
+            crudName: 'create'
+        },
+        deleteButton:{
+            xtype: 'uxtrashbutton',
+            isCrud: true,
+            crudName: 'delete'
+        },
+        searchButton:  { xtype: 'uxsearchbutton' },
+        doneButton:    { xtype: 'uxdonebutton'},
 
-        standardButtons:{
-            crate:   { xtype: 'uxcreatebutton', isCrud: true, crudName: 'create' },
-            trash:   { xtype: 'uxtrashbutton', isCrud: true, crudName: 'delete' },
-            search:  { xtype: 'uxsearchbutton' },
-            done:    { xtype: 'uxdonebutton'},
-            reset:   { xtype: 'uxresetbutton'},
-            saveAndNew:   { xtype: 'uxsaveandnewbutton'},
-            save:   { xtype: 'uxsavebutton'},             
-            // error: { xtype: 'uxerrorbutton' },
-            // success:{ xtype: 'uxsuccessbutton'},
-            message: { xtype: 'uxmessagebutton'},
-        },
+        createButt:   { xtype: 'uxcreatebutton', isCrud: true, crudName: 'create' },
+        trash:   { xtype: 'uxtrashbutton', isCrud: true, crudName: 'delete' },
+        reset:   { xtype: 'uxresetbutton'},
+        saveAndNew:   { xtype: 'uxsaveandnewbutton'},
+        save:   { xtype: 'uxsavebutton'},             
+        message: { xtype: 'uxmessagebutton'},
         buttonDefaults:{
-            //margin: '0 0 0 16px',
+            ui: 'plain',
             arrow: false,
-        },
-        standardMenus: {
-            // update:   { iconCls: 'md-icon-edit', langText: 'Edit', disabled: true, handler: 'onUpdate', permission: 'Update', isCrud: true, crudName: 'update' },
-            // delete: { iconCls: 'md-icon-clear', langText: 'Delete', handler: 'onDelete', permission: 'Delete' , isCrud: true, crudName: 'delete'},
-            // selectAll: {iconCls: 'md-icon-check-circle', langText: 'SelectAll', handler: 'onSelectAll'},
-            // singleSelect : { iconCls: 'md-icon-radio-button-checked', langText: 'SingleSelect', handler: 'onSwitchSelectMode' ,value: 'single', group: 'selectMode', xtype: 'menuradioitem', checked: true },
-            // multiSelect : { iconCls: 'md-icon-check-box', langText: 'MultiSelect', handler: 'onSwitchSelectMode' ,value: 'multi', group: 'selectMode', xtype: 'menuradioitem' }
         },
         menus: null,
 

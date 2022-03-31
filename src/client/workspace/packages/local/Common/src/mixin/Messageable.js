@@ -4,16 +4,8 @@ Ext.define('Common.mixin.Messageable', {
     getMessageButton(){
         let me = this,
             view  = me.isViewController ? me.getView() : me,
-            button = view.down('uxmessagebutton');
-        if(!me.hasBindMessageButtonEvent) {
-            button.on('tap', me.onMessageButtonTap, me);
-            me.hasBindMessageButtonEvent = true;
-        }
+            button = view.getMessageButton();
         return button;
-    },
-
-    onMessageButtonTap(sender){
-        sender.getTooltip().show();
     },
 
     showMessage(msg, isError){
