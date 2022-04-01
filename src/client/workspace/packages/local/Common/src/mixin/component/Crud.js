@@ -25,7 +25,9 @@ Ext.define('Common.mixin.component.Crud', {
         deleteButton:{
             xtype: 'button',
             isCrud: true,
-            crudName: 'delete'
+            crudName: 'delete',
+            disabled: true,
+            hidden: true,
         },
     },
 
@@ -83,11 +85,13 @@ Ext.define('Common.mixin.component.Crud', {
             this, 'createDeleteButton');
     },
 
-    initMixinComponent(me, container){
-        me.hasCreate && container.add(me.getSaveButton());
-        me.hasUpdate && container.add(me.getSaveAndNewButton());
-        me.hasDelete && container.add(me.getResetButton());
-    },
+    initialize(){
+        let me = this,
+            container = me.getMixinContainer();
+        me.hasCreate && container.add(me.getCreateButton());
+        me.hasUpdate && container.add(me.getUpdateButton());
+        me.hasDelete && container.add(me.getDeleteButton());
+    }
 
 
 })

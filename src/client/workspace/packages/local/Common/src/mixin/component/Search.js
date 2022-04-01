@@ -9,6 +9,8 @@ Ext.define('Common.mixin.component.Search', {
         },
     },
 
+    hasSearchButton: false,
+
     createSearchButton(newCmp) {
         return Ext.apply({
             ownerCmp: this,
@@ -22,7 +24,7 @@ Ext.define('Common.mixin.component.Search', {
     },
 
     initMixinComponent(me, container){
-        container.add(me.getSearchButton());
+        me.hasSearchButton && container.add(me.getSearchButton());
     },
 
     onSwitchSearchPanel(){

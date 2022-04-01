@@ -23,8 +23,9 @@ Ext.define('Common.mixin.component.Back', {
     },
 
     initialize(){
-        let header = this.getHeader && this.getHeader();
-        header && header.add(ths.getBackButton());
+        let me = this,
+            header = me.getHeader && me.getHeader();
+        header && header.add(me.getBackButton());
     },
 
 })

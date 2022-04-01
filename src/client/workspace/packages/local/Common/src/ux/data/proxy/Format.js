@@ -44,7 +44,7 @@
             actions.forEach(m=>{
                 action+=`/${m}`;
             })
-            me.setUrl(URI.get(controller, action));
+            me.setUrl(URI.get(controller, action.substr(1)));
         }
         return value;
     },

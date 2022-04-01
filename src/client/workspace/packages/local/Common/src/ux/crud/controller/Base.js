@@ -133,9 +133,7 @@ Ext.define('Common.ux.crud.controller.Base',{
     setSortMenu(store, list){
         let me = this,            
             view = me.getView(),
-            header = view.down('[isCrudHeader]') || list.down('[isCrudHeader]');
-        if(!header) return;
-        let moreButton = header.down('#moreButton');
+            moreButton = view.getMoreButton();
         if(!moreButton) return;
         let menu = moreButton.getMenu(),
             sorter = store.getSorters().items[0];

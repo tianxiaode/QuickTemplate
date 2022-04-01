@@ -5,11 +5,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10, user-scalable=yes">
 
-    <title>Phone</title>
+    <title></title>
+    <style>
+        .loading-circle {
+            box-sizing: border-box;
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+            border: 10px solid rgba(20, 10, 10, 0.2);
+            border-top-color: #2196f3;
+            animation: spin 1s infinite linear;
+        }
 
+
+        @keyframes spin { 
+            100% { 
+                transform: rotate(360deg); 
+            } 
+        } 
+
+    </style>
+    <script type="text/javascript" src="../build/development/Desktop/resources/Common/js/Config.js"></script>
     <!-- The line below must be kept intact for Sencha Cmd to build your application -->
     <script id="microloader" data-app="781abe0d-3fc9-4155-8bbd-064c8a60b253" type="text/javascript" src="bootstrap.js"></script>
 
 </head>
-<body></body>
+<body>
+    <div id="splash" style="width: 100%;height: calc(100vh - 20px);display:table;">
+        <div style="display: table-cell;vertical-align:middle;text-align: center;">
+            <div style="display:inline-block;height:100px;width:100px;">
+                <div class="loading-circle"></div>
+                <div style="font-weight:bold;color:#2196f3;line-height:20px;margin-top:-60px;" id="loadingText"> Loading...
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
 </html>

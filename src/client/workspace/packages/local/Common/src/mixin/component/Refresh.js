@@ -25,9 +25,11 @@ Ext.define('Common.mixin.component.Refresh', {
             this, 'createRefreshButton');
     },
 
-    initMixinComponent(me, container){
+    initialize(){
+        let me = this,
+            container = me.getMixinContainer();
         container.add(me.getRefreshButton());
-    },
+    }
 
 
 

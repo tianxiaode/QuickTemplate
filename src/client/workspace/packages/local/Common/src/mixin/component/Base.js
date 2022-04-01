@@ -8,14 +8,16 @@ Ext.define('Common.mixin.component.Base',{
         }
     },
 
-    getMixinContainer(){},
+    mixinContainer: '[isCrudToolbar]',
 
-    initMixinComponent(){},
-
-    initialize(){
+    getMixinContainer(){
         let me = this,
-            container = me.getMixinContainer();
-        if(!container) Ext.raise('No mixin container');
-        me.initMixinComponent(me , container);
-    }
+            isPhone = Ext.platformTags.phone;
+        if(isPhone){
+            return me.getHeader && me.getHeader();
+        }
+        return me.down(me.mixinContainer);
+    },
+
+    initialize(){}
 })

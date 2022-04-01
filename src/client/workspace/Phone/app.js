@@ -3,16 +3,16 @@
  * and launch() the Application class.
  */
 Ext.application({
-    extend: 'Phone.Application',
+    extend: 'Common.ux.app.Application',
 
     name: 'Phone',
 
-    requires: [
-        // This will automatically load all classes in the Phone namespace
-        // so that application classes do not need to require each other.
-        'Phone.*'
+    defaultToken: 'phonedashboard',
+
+    requires:[
+        'Common.overrides.shared.*',
+        'Common.overrides.phone.*',
+        'Phone.view.home.Home'
     ],
 
-    // The name of the initial view to create.
-    mainView: 'Phone.view.main.Main'
 });

@@ -37,10 +37,14 @@ Ext.define('Common.mixin.component.CountMessage',{
             this, 'createFill');
     },
 
-    initMixinComponent(me, container){
+    initialize(){
+        let me = this,
+            container = me.getMixinContainer();
         if(!me.hasCountMessage) return;
         container.add(me.getFill());
         container.add(me.getCountMessage());
-    },
+    }
+
+
 
 })

@@ -1,5 +1,5 @@
 Ext.define('Desktop.view.identity.roles.Role', {
-    extend: 'Common.ux.panel.Content',
+    extend: 'Common.ux.crud.Container',
     xtype : 'desktop-roleview', 
 
     requires:[
@@ -8,13 +8,14 @@ Ext.define('Desktop.view.identity.roles.Role', {
     ],
 
 
+    controller: 'desktop-rolecontroller',
+    viewModel: 'rolemodel',
+
     items: [
         {
             xtype: 'uxcrudgrid',
-            viewModel: 'rolemodel',
-            hasPaging: false,
-            controller: 'desktop-rolecontroller',
             doubleTapToEdit: true,
+            hasPaging: false,
             flex:1,
             columns:[
                 { 

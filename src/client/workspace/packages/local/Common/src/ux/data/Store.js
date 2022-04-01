@@ -14,6 +14,7 @@ Ext.define('Common.ux.data.Store', {
     remoteSort: true,
     remoteFilter: true,
     localFilterFields:[],
+    sortFields:[],
     filterValue: null,
     pageSize: 25,
     proxy: {
@@ -31,6 +32,7 @@ Ext.define('Common.ux.data.Store', {
             if(field.checkAction) me.checkAction[field.name] = field.checkAction;
             if(field.uncheckAction) me.uncheckAction[field.name] = field.uncheckAction;
             if(field.localFilter) me.localFilterFields.push(field.name);
+            if(field.allowSort) me.sortFields.push(field.name);
         });
         return model;
     },    

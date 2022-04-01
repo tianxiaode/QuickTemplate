@@ -10,6 +10,8 @@ Ext.define('Common.mixin.component.SearchField',{
         }
     },
 
+    hasSearchField: true,
+
     createSearchField(newCmp){
         let isPhone = Ext.platformTags.phone;
         return Ext.apply({
@@ -25,12 +27,15 @@ Ext.define('Common.mixin.component.SearchField',{
             this, 'createSearchField');
     },
 
-    initMixinComponent(me, container){
-        let isPhone = Ext.platformTags.phone,
+    initialize(){
+        let me = this,
+            container = me.getMixinContainer(),
+            isPhone = Ext.platformTags.phone,
             field = me.getSearchField();
+        if(!me.hasSearchField) return;
         !isPhone && container.add(field);
         isPhone && me.add(field);
-    },
+    }
 
 
 })

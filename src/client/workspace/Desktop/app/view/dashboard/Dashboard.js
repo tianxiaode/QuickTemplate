@@ -3,6 +3,7 @@ Ext.define('Desktop.view.dashboard.Dashboard',{
     xtype: 'dashboardview',
     
     requires:[
+        'Common.ux.crud.Container',
     ],
 
     layout: 'vbox',

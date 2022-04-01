@@ -14,6 +14,7 @@ Ext.define('Common.ux.form.Base',{
 
     title: '\xA0',
     closeAction: 'hide',
+    mixinContainer: '#buttonToolbar',
     config:{
         defaultTitle: null,
         defaultModelValue: null,
@@ -21,9 +22,6 @@ Ext.define('Common.ux.form.Base',{
         autoTabIndex: true,
         defaults:{
             labelWidth: 150
-        },
-        buttonDefaults:{
-            margin: '0 5px 0 0'
         },
         ui: 'desktop',
         buttons:[
@@ -46,10 +44,6 @@ Ext.define('Common.ux.form.Base',{
         return ui;
     },
 
-
-    getButtonContainer(){
-        return Ext.platformTags.phone ? this.getHeader() : this.down('#buttonToolbar');
-    },
 
     onHide(){
         this.getController().onCancel();

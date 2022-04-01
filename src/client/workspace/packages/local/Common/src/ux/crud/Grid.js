@@ -7,7 +7,6 @@ Ext.define('Common.ux.crud.Grid',{
     ],
 
     autoLoad: true,
-    includeResource: true,
     rowNumbers: true,
     doubleTapToEdit: false,
     childTap: false,

@@ -102,7 +102,9 @@ Ext.define('Common.mixin.component.Form', {
             this, 'createCancelButton');
     },
 
-    initMixinComponent(me, container){
+    initialize(){
+        let me = this,
+            container = me.getMixinContainer();
         me.hasSave && container.add(me.getSaveButton());
         me.hasSaveAndNew && container.add(me.getSaveAndNewButton());
         me.hasReset && container.add(me.getResetButton());

@@ -1,5 +1,11 @@
 Ext.define('Common.ux.crud.Container',{
     extend: 'Ext.Container',
+    xtype: 'uxcrudcontainer',
+
+    requires:[
+        'Common.ux.field.Search',
+        'Common.ux.crud.CountMessage'
+    ],
 
     mixins:[
         'Common.mixin.component.Crud',
@@ -12,18 +18,29 @@ Ext.define('Common.ux.crud.Container',{
         toolbar:{
             xtype: 'toolbar',
             ui: 'grid',
+            isCrudToolbar: true,
+            weighted: true,
+            shadow: false,
         }
     },
 
 
     layout: 'vbox',
-    cls: 'bg-white',
+    includeResource: true,
 
-    applyToolbar(){
-
+    createToolBar(newCmp) {
+        return Ext.apply({
+            ownerCmp: this,
+        }, newCmp);
     },
 
-    getButtonContainer(){
-        return this.getToolBar();
+    applyToolBar(newCmp, old) {
+        return Ext.updateWidget(old, newCmp,
+            this, 'createToolBar');
+    },
+
+    updateToolbar(config){
+        if(config) this.insert(0,config);
     }
+
 })

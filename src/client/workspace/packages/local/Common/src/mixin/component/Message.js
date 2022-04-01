@@ -42,7 +42,9 @@ Ext.define('Common.mixin.component.Message', {
         this.getMessageButton().setHidden(true);
     },
 
-    initMixinComponent(me, container){
+    initialize(){
+        let me = this,
+            container = me.getMixinContainer();
         container.add(me.getMessageButton());
     },
 
