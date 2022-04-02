@@ -1,6 +1,11 @@
 Ext.define('Common.mixin.component.Form', {
     extend: 'Common.mixin.component.Base',
 
+    requires:[
+        'Common.ux.button.Save',
+        'Common.ux.button.SaveAndNew',
+        'Common.ux.button.Reset',
+    ],
 
     hasSave: true,
     hasSaveAndNew: false,
@@ -9,33 +14,33 @@ Ext.define('Common.mixin.component.Form', {
 
     config: {
         saveButton:{
-            xtype: 'button',
+            xtype: 'uxsavebutton',
             handler: 'onSave'
         },
         saveAndNewButton:{
-            xtype: 'button',
+            xtype: 'uxsaveandnewbutton',
             handler: 'onSaveAndNew'
         },
         resetButton:{
-            xtype: 'button',
+            xtype: 'uxresetbutton',
             handler: 'onReset'
         },
         cancelButton:{
             xtype: 'button',
-            handler: 'onCancel'
+            handler: 'onCancel',
+            ui : 'soft-grey',
+            weight: 300,
+            langText: 'Cancel',
+            userCls: 'lh-24',
         },
     },
 
     createSaveButton(newCmp) {
-        let isPhone = Ext.platformTags.phone;
-        
+        let isPhone = this.isPhone();
         return Ext.apply({
             ownerCmp: this,
-            ui : (isPhone && 'plain') || 'action',
-            weight: (isPhone && 80) || 80,
-            iconCls: isPhone && 'md-icon-done',
             langText: !isPhone && 'Save',
-            margin: '0 5px 0 0',
+            margin: !isPhone && '0 5px 0 0',
             userCls: !isPhone && 'lh-24',
         }, newCmp);
     },
@@ -46,13 +51,9 @@ Ext.define('Common.mixin.component.Form', {
     },
 
     createSaveAndNewButton(newCmp) {
-        let isPhone = Ext.platformTags.phone;
-        
+        let isPhone = this.isPhone();        
         return Ext.apply({
             ownerCmp: this,
-            ui : (isPhone && 'plain') || 'action',
-            weight: (isPhone && 70) || 70,
-            iconCls: isPhone && 'md-icon-add',
             langText: !isPhone && 'SaveAndNew',
             margin: '0 5px 0 0',
             userCls: !isPhone && 'lh-24',
@@ -66,13 +67,10 @@ Ext.define('Common.mixin.component.Form', {
 
 
     createResetButton(newCmp) {
-        let isPhone = Ext.platformTags.phone;
+        let isPhone = this.isPhone();
         
         return Ext.apply({
             ownerCmp: this,
-            ui : (isPhone && 'plain') || 'soft-purple',
-            weight: (isPhone && 60) || 90,
-            iconCls: isPhone && 'md-icon-undo',
             langText: !isPhone && 'Reset',
             margin: '0 5px 0 0',
             userCls: !isPhone && 'lh-24',
@@ -85,15 +83,8 @@ Ext.define('Common.mixin.component.Form', {
     },
 
     createCancelButton(newCmp) {
-        let isPhone = Ext.platformTags.phone;
-        
         return Ext.apply({
             ownerCmp: this,
-            ui : (isPhone && 'plain') || 'soft-grey',
-            weight: (isPhone && 60) || 300,
-            iconCls: isPhone && 'md-icon-undo',
-            langText: !isPhone && 'Cancel',
-            userCls: !isPhone && 'lh-24',
         }, newCmp);
     },
 
@@ -108,7 +99,7 @@ Ext.define('Common.mixin.component.Form', {
         me.hasSave && container.add(me.getSaveButton());
         me.hasSaveAndNew && container.add(me.getSaveAndNewButton());
         me.hasReset && container.add(me.getResetButton());
-        me.hasCancel && container.add(me.getCancelButton());        
+        !me.isPhone() && me.hasCancel && container.add(me.getCancelButton());        
     },
 
 })

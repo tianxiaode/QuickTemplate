@@ -2,14 +2,13 @@ Ext.define('Common.ux.button.Save',{
     extend: 'Ext.Button',
     xtype: 'uxsavebutton',
 
-    langText: 'Save',
-    langTooltip: 'Save',
     ui: 'action',
+    weight: 80,
+    iconCls: 'desktop',
     
     phoneUi: 'plain',
-    phoneWeight: 80,
+    phoneWeight: 300,
     phoneIconCls: 'md-icon-done',
 
 
-    handler: 'onSave'
 })

@@ -8,7 +8,16 @@ Ext.define('Common.ux.button.Export',{
     ui: 'defaults',
     iconCls: 'x-fa fa-file-export',
     
-    phoneUi: 'plain',
-    phoneIconCls: 'md-icon-publish'
+    applyUi(ui){
+        return Ext.platformTags.phone 
+            ? 'plain'
+            : ui;        
+    },
+
+    applyIconCls(cls){
+        return Ext.platformTags.phone 
+            ? 'md-icon-publish'
+            : cls;        
+    }
 
 })

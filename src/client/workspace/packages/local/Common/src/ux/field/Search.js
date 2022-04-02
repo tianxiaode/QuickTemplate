@@ -14,11 +14,6 @@ Ext.define('Common.ux.field.Search', {
         let me = this;
         me.callParent();
         me.on('change', me.doTypeAhead, me);
-        if(Ext.platformTags.phone){
-            let ui = 'faded';
-            if(me.up().xtype === 'uxcrudtoolbar') ui = 'solo';
-            me.setUi(ui);
-        }
     },
 
     doTypeAhead(){

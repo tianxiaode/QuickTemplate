@@ -72,7 +72,7 @@
         "IconCls": "x-fa fa-user-shield",
         "ViewType": "roleView",
         "Category": "MobileMenuCategory.Identity",
-        "Color": "primary",
+        "Color": "text-primary",
         "Order": 210,
         "RequiredPermissionNames": [ "AbpIdentity.Roles.ManagePermissions" ]
       }

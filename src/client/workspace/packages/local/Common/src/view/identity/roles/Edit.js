@@ -1,6 +1,6 @@
 Ext.define('Common.view.identity.roles.Edit', {
     extend: 'Common.ux.crud.form.Form',
-    xtype : 'desktop-roleeditview', 
+    xtype : 'roleeditview', 
     
     requires:[
         'Common.view.identity.roles.Permissions'

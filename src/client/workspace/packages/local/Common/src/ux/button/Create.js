@@ -2,14 +2,12 @@ Ext.define('Common.ux.button.Create',{
     extend: 'Ext.Button',
     xtype: 'uxcreatebutton',
 
-    hidden: true,
-    handler: 'onCreate', 
 
     langTooltip: 'Add',
 
-    ui: 'desktop',
+    ui: 'success',
     weight: 70,
-    iconCls: 'x-fa fa-file text-success',
+    iconCls: 'x-fa fa-file',
     
     phoneUi: 'plain',
     phoneWeight: 50,

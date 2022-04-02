@@ -1,5 +1,10 @@
-Ext.define('Common.view.identity.roles.mixins.Controller',{
-    extend: 'Ext.Mixin',
+Ext.define('Common.view.identity.roles.Controller',{
+    extend: 'Common.ux.crud.controller.Base',
+    alias: 'controller.rolecontroller',
+
+    requires:[
+        'Common.view.identity.roles.Edit'
+    ],
 
     onMultilingual(grid, info){
         let me = this,
@@ -9,5 +14,4 @@ Ext.define('Common.view.identity.roles.mixins.Controller',{
         me.redirectTo(`${viewXtype}/multilingual`);
     },
 
-});
-
+})

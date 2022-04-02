@@ -1,0 +1,22 @@
+@include textfield-ui(
+    $ui: 'search',
+    $input-background-color: rgba(0, 0, 0, .1),
+    $focused-input-background-color: rgba(0, 0, 0, .15),
+    $input-color: rgba(0, 0, 0, .4),
+    $focused-input-color: rgba(0, 0, 0, .4),
+    $input-padding: 7px 7px 7px 0,
+    $input-padding-big: 7px 7px 7px 0,
+    $input-border-width: 0,
+    $placeholder-color: rgba(0, 0, 0, .4),
+    $focused-placeholder-color: #333,
+    $input-underline-width: 0,
+    $focused-input-underline-width: 0,
+    $invalid-input-underline-width: 0,
+);
+
+.x-field-search{
+    padding: 0 5px;
+}
+.x-field-search .x-input-wrap-el{
+    border-radius: 5px;
+}

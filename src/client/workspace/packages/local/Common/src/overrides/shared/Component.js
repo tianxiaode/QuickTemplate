@@ -37,7 +37,7 @@ Ext.define('Common.overrides.shared.Component',{
 
     getContainerResource(name){
         let me = this,
-            container = me.up && me.up('[includeResource]');
+            container = (me.includeResource && me) || (me.up && me.up('[includeResource]'));
             vm = container && container.getViewModel();
         return (vm && vm.get(name)) || (container && container[name]);
 
@@ -57,6 +57,10 @@ Ext.define('Common.overrides.shared.Component',{
             html.push(needLocalized ? I18N.get(t, resourceName, entityName) : t);
         })
         return html.join('');
+    },
+
+    isPhone(){
+        return Ext.platformTags.phone;
     },
 
 

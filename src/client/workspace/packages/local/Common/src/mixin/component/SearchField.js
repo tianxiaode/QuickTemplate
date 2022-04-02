@@ -1,6 +1,11 @@
 Ext.define('Common.mixin.component.SearchField',{
     extend: 'Common.mixin.component.Base',
 
+    requires:[
+        'Common.ux.field.Search'
+    ],
+
+    searchFieldUi: null,
     config:{
         searchField:{
             xtype: 'uxsearchfield',
@@ -13,12 +18,14 @@ Ext.define('Common.mixin.component.SearchField',{
     hasSearchField: true,
 
     createSearchField(newCmp){
-        let isPhone = Ext.platformTags.phone;
+        let isPhone = Ext.platformTags.phone,
+            ui = this.searchFieldUi;
         return Ext.apply({
             ownerCmp: this,
-            width: !isPhone && 140,
-            flex: isPhone && 1,
-            weight: !isPhone && 300,
+            ui: ui,
+            width: !isPhone && 140 ,
+            weight: 300,
+            padding: ui === 'faded' && '0 5px'
         }, newCmp);
     },
 

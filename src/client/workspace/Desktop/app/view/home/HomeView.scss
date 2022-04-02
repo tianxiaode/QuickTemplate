@@ -1,31 +1,6 @@
 //Logo
 
-.logo {
-  background-color: $base-color;
-  height: 65px;
-  font-size: 16px;
-  color: $lightest-color;
-  //padding-left: 17px;
 
-  .logo-img {
-      width: 40px;
-      height: 40px;
-      display: inline-block;
-      border-radius: 50%;
-      margin-left: 14px;
-      margin-right: 10px;
-      //background-color: white;
-      position: relative;
-      top: 12px;
-  }
-
-  .company-name{
-      font-size: 24px;
-      line-height: 65px;
-  }
-
-
-}
 
 .headerMenu {
   &.x-pressed {

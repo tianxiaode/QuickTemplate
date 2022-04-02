@@ -1,6 +1,9 @@
 Ext.define('Common.mixin.component.Message', {
     extend: 'Common.mixin.component.Base',
 
+    requires:[
+        'Common.ux.button.Message'
+    ],
 
     config: {
         messageButton: {

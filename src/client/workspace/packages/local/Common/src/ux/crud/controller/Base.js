@@ -133,7 +133,7 @@ Ext.define('Common.ux.crud.controller.Base',{
     setSortMenu(store, list){
         let me = this,            
             view = me.getView(),
-            moreButton = view.getMoreButton();
+            moreButton = view.getMoreButton && view.getMoreButton();
         if(!moreButton) return;
         let menu = moreButton.getMenu(),
             sorter = store.getSorters().items[0];
@@ -157,8 +157,9 @@ Ext.define('Common.ux.crud.controller.Base',{
      * @param {操作参数} eOpts 
      */
      onStoreLoad(store, records, successful, operation, eOpts){
-        let me = this,  
-            countMessage = me.getCrudButton('countmessage');
+        let me = this,
+            view = me.getView(),  
+            countMessage = view.getCountMessage && view.getCountMessage();
         countMessage && countMessage.setCount(store.getTotalCount());
 
         me.afterStoreLoad(me, store, records);
@@ -331,7 +332,7 @@ Ext.define('Common.ux.crud.controller.Base',{
     },
 
     getMultiEntityActionContent(data, record,messageField){
-        let msg = Format.getTranslationText(record.get(messageField), record.get('translation'), msgFieldName) ;
+        let msg = Format.getTranslationText(record.get(messageField), record.get('translation'), messageField) ;
         data.contents.push(msg);
     },
 
@@ -497,8 +498,8 @@ Ext.define('Common.ux.crud.controller.Base',{
             viewXtype= me.getCreateOrUpdateXtype();
 
         if(!me.beforeCreate()) return;
-
         let params = me.getViewParams(null, me.getCreateOrUpdateViewEvents());
+        console.log(params)
         ViewMgr.setParams(viewXtype, params);
         me.redirectTo(`${viewXtype}/add`);
     },
@@ -616,6 +617,12 @@ Ext.define('Common.ux.crud.controller.Base',{
     onAjaxFailure(response){    
         let error = Http.getError(response, this.resourceName);
         MsgBox.alert(null,error);
+    },
+
+    onBack(){
+        let me = this,
+            backView = me.backView || Ext.route.Router.application.getDefaultToken();
+        me.redirectTo(backView);
     },
 
     destroy(){

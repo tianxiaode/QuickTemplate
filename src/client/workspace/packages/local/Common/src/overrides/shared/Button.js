@@ -26,46 +26,45 @@ Ext.define('Common.overrides.shared.Button',{
         text && me.setTooltip(text);
     },
 
-    // applyLangTooltip(value){
-    //     if(Ext.platformTags.phone) return '';
-    //     return value;
-    // },
+    applyLangTooltip(value){
+        return this.isPhone() ? '' : value;
 
-    // applyUi(value){
-    //     let me = this;
-    //     if(Ext.platformTags.phone && !Ext.isEmpty(me.phoneUi)) return me.phoneUi;
-    //     return value;
-    // },
+    },
 
-    // applyWeight(value){
-    //     let me = this;
-    //     if(Ext.platformTags.phone && !Ext.isEmpty(me.phoneWeight)) return me.phoneWeight;
-    //     return value;
-    // },
+    applyUi(value){
+        let me = this;
+        return me.getPhoneValue(me.phoneUi) || value;
+    },
 
-    // updateIconCls(iconCls, oldIconCls) {
-    //     let me = this;
-    //     if(iconCls === 'desktop') iconCls = '';
-    //     if(Ext.platformTags.phone && !Ext.isEmpty(me.phoneIconCls)){
-    //         iconCls = me.phoneIconCls;
-    //     }
-            
-    //     let element = me.iconElement,
-    //         hasIconCls = me.hasIconCls;
+    applyWeight(value){
+        let me = this;
+        return me.getPhoneValue(me.phoneWeight) || value;
+    },
 
-    //     if (iconCls) {
-    //         me.addCls(hasIconCls);
-    //         element.replaceCls(oldIconCls, iconCls);
-    //     }
-    //     else {
-    //         element.removeCls(oldIconCls);
+    updateIconCls(iconCls, oldIconCls) {
+        let me = this;
+        if(iconCls === 'desktop') iconCls = '';
+        iconCls = me.getPhoneValue(me.phoneIconCls) || iconCls;
 
-    //         if (!me.getIcon()) {
-    //             me.removeCls(hasIconCls);
-    //         }
-    //     }
-    // },
+        let element = me.iconElement,
+            hasIconCls = me.hasIconCls;
 
+        if (iconCls) {
+            me.addCls(hasIconCls);
+            element.replaceCls(oldIconCls, iconCls);
+        }
+        else {
+            element.removeCls(oldIconCls);
+
+            if (!me.getIcon()) {
+                me.removeCls(hasIconCls);
+            }
+        }
+    },
+
+    getPhoneValue(value){
+        return this.isPhone() && value;
+    }
 
 
 })

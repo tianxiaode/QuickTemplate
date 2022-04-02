@@ -1,6 +1,11 @@
 Ext.define('Common.mixin.component.Crud', {
     extend: 'Common.mixin.component.Base',
 
+    requires:[
+        'Common.ux.button.Create',
+        'Common.ux.button.Update',
+        'Common.ux.button.Trash',
+    ],
 
     hasCreate: true,
     hasUpdate: true,
@@ -8,39 +13,34 @@ Ext.define('Common.mixin.component.Crud', {
 
     config:{
         createButton:{
-            xtype: 'button',
+            xtype: 'uxcreatebutton',
             isCrud: true,
             crudName: 'create',
             hidden: true,
-            handler: 'onCreate',         
+            handler: 'onCreate', 
         },
         updateButton:{
-            xtype: 'button',
+            xtype: 'uxupdatebutton',
             isCrud: true,            
             crudName: 'update',
-            disabled: true,
             hidden: true,
-            handler: 'onUpdate',         
+            disabled:true,
+            handler: 'onUpdate', 
         },
         deleteButton:{
-            xtype: 'button',
+            xtype: 'uxtrashbutton',
             isCrud: true,
             crudName: 'delete',
-            disabled: true,
             hidden: true,
+            disabled:true,
+            handler: 'onDelete',
         },
     },
 
 
     createCreateButton(newCmp) {
-        let isPhone = Ext.platformTags.phone;
-        
         return Ext.apply({
             ownerCmp: this,
-            ui : isPhone && 'plain',
-            weight: (isPhone && 50) || 70,
-            iconCls: (isPhone && 'md-icon-add') || 'x-fa fa-file text-success',
-            langToolTip: !isPhone && 'Add',
         }, newCmp);
     },
 
@@ -51,14 +51,8 @@ Ext.define('Common.mixin.component.Crud', {
 
 
     createUpdateButton(newCmp) {
-        let isPhone = Ext.platformTags.phone;
-        
         return Ext.apply({
             ownerCmp: this,
-            ui : (isPhone && 'plain') || 'defaults' ,
-            weight: (isPhone && 60) || 80,
-            iconCls: (isPhone && 'md-icon-edit') || 'x-fa fa-edit',
-            langToolTip: !isPhone && 'Update',
         }, newCmp);
     },
 
@@ -69,14 +63,9 @@ Ext.define('Common.mixin.component.Crud', {
 
 
     createDeleteButton(newCmp) {
-        let isPhone = Ext.platformTags.phone;
         
         return Ext.apply({
             ownerCmp: this,
-            ui : (isPhone && 'plain') || 'soft-red' ,
-            weight: (isPhone && 70) || 90,
-            iconCls: (isPhone && 'md-icon-delete') || 'x-fa fa-trash',
-            langToolTip: !isPhone && 'Delete',
         }, newCmp);
     },
 

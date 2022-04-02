@@ -6,9 +6,7 @@ Ext.define('Common.ux.tree.Panel',{
         'Ext.layout.Card',
         'Ext.grid.Tree',
         'Ext.dataview.List',
-        'Common.ux.grid.Tree',
         'Ext.panel.Resizer',
-        'Common.ux.crud.Toolbar',
         'Common.ux.dataview.List'
     ],
 

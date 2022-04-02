@@ -13,7 +13,6 @@ Ext.define('Common.ux.form.Base',{
     controller: 'shared-formbasecontroller',
 
     title: '\xA0',
-    closeAction: 'hide',
     mixinContainer: '#buttonToolbar',
     config:{
         defaultTitle: null,

@@ -10,29 +10,26 @@ Ext.define('Common.ux.button.Language',{
     ],
 
     ui: 'action',
+    iconCls: 'desktop',
+    arrow: false,
 
-    responsiveConfig:{
-        phone:{
-            iconCls: 'md-icon-language',
-            arrow: false,
-            ui: 'plain'
-        }
-    },
+    phoneUi: 'plain',
+    phoneIconCls: 'md-icon-language',
 
 
     onLocalized(){
         let me = this,
-            isDesktop  = Ext.platformTags.desktop,
+            isPhone  = me.isPhone(),
             current = I18N.getCurrentCulture(),
             displayName = current.cultureName.includes('zh') ? current.displayName: current.englishName;
-        if(isDesktop) me.setLangText(displayName);
+        !isPhone && me.setLangText(displayName);
         me.callParent();
         //菜单已存在，直接返回
         if(me.getMenu()) return;
         //创建下拉菜单
-        let menus = [];
+        let menu = { ui: isPhone && 'dark', items:[], anchor: true, };
         I18N.getLanguages().forEach(l=>{
-            menus.push({ 
+            menu.items.push({ 
                 xtype: 'menuradioitem',
                 //ui: isDesktop ? '' : 'dark',
                 group: 'language',
@@ -43,14 +40,7 @@ Ext.define('Common.ux.button.Language',{
                 hideOnClick: true
             });
         });
-        if(isDesktop) {
-            me.setMenu(menus);
-        }else{
-            me.setMenu({
-                ui: 'dark',
-                items: menus
-            })
-        }
+        me.setMenu(menu);
         
     },
 

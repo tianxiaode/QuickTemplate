@@ -6,6 +6,7 @@ Ext.define('Phone.view.dashboard.Dashboard', {
         'Ext.Toolbar',
         'Common.ux.dataview.List',
         'Common.ux.Logo', 
+        'Common.ux.button.Language',
         'Common.ux.button.Logout',
         'Phone.view.dashboard.DashboardController',
         'Phone.view.dashboard.MenuItem',
@@ -13,25 +14,37 @@ Ext.define('Phone.view.dashboard.Dashboard', {
 
     controller: 'phone-dashboardcontroller',
     layout: 'vbox',
+
+    ui: 'dark',
+
+    header:{
+        items:[
+            // {
+            //     xtype: 'shared-notificationbutton',
+            //     margin: '0 16 0 0',
+            // },
+        ],
+        tools:[
+        ]
+
+    },
     
     items: [
         {
             xtype: 'toolbar',
             ui: 'dark',
-            padding: '0 0 0 5',
             items:[
                 {
                     xtype: 'uxlogo',
                     reference: 'logo',
                     flex: 1
                 },
-                // {
-                //     xtype: 'shared-notificationbutton',
-                //     margin: '0 16 0 0',
-                // },
+                {
+                    xtype: 'uxlanguagebutton',
+                },        
                 {
                     xtype: 'uxlogoutbutton',                
-                }
+                }        
             ]
         },
         {
@@ -43,10 +56,6 @@ Ext.define('Phone.view.dashboard.Dashboard', {
             itemConfig:{
                 xtype: 'dashboardmenuitem'
             },
-            itemTpl: `
-                <p><span class="icon x-fa {iconCls}" style="color:{color};"></span></p>
-                <p class="caption">{text}</p>
-            `,
             listeners:{
                 childtap: 'onMenuItemTap'
             }

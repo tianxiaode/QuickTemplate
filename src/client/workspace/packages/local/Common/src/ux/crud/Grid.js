@@ -11,6 +11,7 @@ Ext.define('Common.ux.crud.Grid',{
     doubleTapToEdit: false,
     childTap: false,
     isCrudList: true,
+    weight: 500,
     
     selectable:{
         checkbox: true

@@ -1,22 +1,22 @@
 Ext.define('Common.mixin.component.Refresh', {
     extend: 'Common.mixin.component.Base',
 
+    requires:[
+        'Common.ux.button.Refresh'
+    ],
+
+    hasRefresh: true,
+
     config: {
         refreshButton: {
-            xtype: 'button',
+            xtype: 'uxrefreshbutton',
             handler: 'onRefreshStore', 
         },
     },
 
     createRefreshButton(newCmp) {
-        let isPhone = Ext.platformTags.phone;
-
         return Ext.apply({
             ownerCmp: this,
-            ui : (isPhone && 'plain') || 'soft-cyan' ,
-            weight: (isPhone && 80) || 200,
-            iconCls: (isPhone && 'md-icon-refresh') || 'x-fa fa-undo',
-            langToolTip: !isPhone && 'Refresh',
         }, newCmp);
     },
 
@@ -28,7 +28,7 @@ Ext.define('Common.mixin.component.Refresh', {
     initialize(){
         let me = this,
             container = me.getMixinContainer();
-        container.add(me.getRefreshButton());
+        me.hasRefresh && container.add(me.getRefreshButton());
     }
 
 

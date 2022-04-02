@@ -2,9 +2,6 @@ Ext.define('Common.ux.button.Update',{
     extend: 'Ext.Button',
     xtype: 'uxupdatebutton',
 
-    hidden: true,
-    disabled:true,
-    handler: 'onUpdate', 
 
     langTooltip: 'Edit',
 

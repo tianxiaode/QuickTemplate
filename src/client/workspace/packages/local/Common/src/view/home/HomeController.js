@@ -96,12 +96,14 @@ Ext.define('Common.view.home.HomeController',{
         let me = this,
             params = ViewMgr.getParams(xtype),
             container = Ext.platformTags.phone ? me.getView() : null;
+        console.log(params)
         if(Ext.Object.isEmpty(params)) {
             Ext.History.back();
             return;
         }
         me.currentToken = Ext.History.getToken();
         let view = ViewMgr.showView(xtype,params.type, params.config, true, container);
+        console.log(view);
         if(op === 'detail' && params.record) view.setRecord(params.record);
     },
 

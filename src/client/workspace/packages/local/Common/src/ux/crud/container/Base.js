@@ -1,11 +1,6 @@
-Ext.define('Common.ux.crud.Container',{
+Ext.define('Common.ux.crud.container.Base',{
     extend: 'Ext.Container',
     xtype: 'uxcrudcontainer',
-
-    requires:[
-        'Common.ux.field.Search',
-        'Common.ux.crud.CountMessage'
-    ],
 
     mixins:[
         'Common.mixin.component.Crud',
@@ -17,30 +12,39 @@ Ext.define('Common.ux.crud.Container',{
     config:{
         toolbar:{
             xtype: 'toolbar',
-            ui: 'grid',
             isCrudToolbar: true,
             weighted: true,
             shadow: false,
-        }
+            weight: 10,
+            layout: {
+                type: 'box',
+                align: 'start',
+            }
+        },
     },
 
-
+    toolbarUi: 'grid',
     layout: 'vbox',
     includeResource: true,
+    weighted: true,
 
-    createToolBar(newCmp) {
+    createToolbar(newCmp) {
         return Ext.apply({
             ownerCmp: this,
+            ui: this.toolbarUi
         }, newCmp);
     },
 
-    applyToolBar(newCmp, old) {
+    applyToolbar(newCmp, old) {
         return Ext.updateWidget(old, newCmp,
-            this, 'createToolBar');
+            this, 'createToolbar');
     },
 
     updateToolbar(config){
-        if(config) this.insert(0,config);
-    }
+        if(config) this.add(config);
+        this.onLocalized();
+    },
+
+
 
 })

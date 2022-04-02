@@ -1,6 +1,10 @@
 Ext.define('Common.mixin.component.CountMessage',{
     extend: 'Common.mixin.component.Base',
 
+    requires:[
+        'Common.ux.crud.CountMessage'
+    ],
+
     config:{
         fill:{
             xtype: 'component',

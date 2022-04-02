@@ -11,11 +11,7 @@ Ext.define('Common.mixin.component.Base',{
     mixinContainer: '[isCrudToolbar]',
 
     getMixinContainer(){
-        let me = this,
-            isPhone = Ext.platformTags.phone;
-        if(isPhone){
-            return me.getHeader && me.getHeader();
-        }
+        let me = this;
         return me.down(me.mixinContainer);
     },
 
