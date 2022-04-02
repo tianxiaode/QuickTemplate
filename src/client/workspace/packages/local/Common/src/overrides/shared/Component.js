@@ -37,7 +37,7 @@ Ext.define('Common.overrides.shared.Component',{
 
     getContainerResource(name){
         let me = this,
-            container = (me.includeResource && me) || (me.up && me.up('[includeResource]'));
+            container = (me.includeResource && me) || (me.up && me.up('[includeResource]')),
             vm = container && container.getViewModel();
         return (vm && vm.get(name)) || (container && container[name]);
 

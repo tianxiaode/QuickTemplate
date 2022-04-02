@@ -143,7 +143,7 @@ Ext.define('Common.ux.crud.form.FormController',{
             Object.assign({}, view.getDefaultModelValue())
         );
         me.beforeAddRecord(view,record);
-        let title = view.getDefaultTitle() || `${I18N.get(`Add`,resourceName)}${I18N.get(entityName,resourceName)}`;
+        let title = view.getDefaultTitle() || `${I18N.get(`New${entityName}`,resourceName)}`;
         view.setTitle(title);
         view.setRecord(record);
         me.isNew = true;
@@ -169,7 +169,7 @@ Ext.define('Common.ux.crud.form.FormController',{
         if (Ext.isEmpty(entityName)) Ext.raise('entityName not define');
         me.beforeEditRecord(view,record);
         view.setRecord(record);
-        let title = view.getDefaultTitle() || `${I18N.get(`Edit`,resourceName)}${I18N.get(entityName,resourceName)}`;
+        let title = view.getDefaultTitle() || `${I18N.get(`Edit${entityName}`,resourceName)}`;
         view.setTitle(title);
         //view.setSubmitUrl(URI.get(entityName, 'update'));
         me.isNew = false;

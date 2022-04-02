@@ -499,7 +499,6 @@ Ext.define('Common.ux.crud.controller.Base',{
 
         if(!me.beforeCreate()) return;
         let params = me.getViewParams(null, me.getCreateOrUpdateViewEvents());
-        console.log(params)
         ViewMgr.setParams(viewXtype, params);
         me.redirectTo(`${viewXtype}/add`);
     },

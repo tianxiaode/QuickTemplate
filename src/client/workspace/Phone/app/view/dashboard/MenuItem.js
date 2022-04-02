@@ -2,22 +2,21 @@ Ext.define('Phone.view.dashboard.MenuItem', {
     extend: 'Common.ux.dataview.ListItem',
     xtype: 'dashboardmenuitem',
     
-    baseCls: Ext.baseCSSPrefix + 'menu-item',
+    baseCls: 'main-menu-item',
     userCls: null,
     template: [
         {
-            tag: 'p',
+            cls: 'icon-wrap',
             children:[
                 {
                     reference: 'iconElement',
-                    tag: 'span',
+                    cls: 'icon'
                 }
             ]
         },
         {
             reference: 'textElement',
             tag: 'p',
-            cls: 'caption',
         }
     ],
 
@@ -25,19 +24,8 @@ Ext.define('Phone.view.dashboard.MenuItem', {
         let me = this,
             data = record.data;
         me.iconElement.dom.className = `icon x-fa ${data.iconCls} ${data.color}`;
-        me.textElement.set({
-            'lang-text': data.langText
-        });
-        me.onLocalized();
+        me.textElement.setHtml(I18N.get(data.langText));
     },
 
-    onLocalized(){
-        let me = this,
-            el = me.textElement,
-            langText = el.getAttribute('lang-text');
-        me.callParent();
-        el.dom.innerHTML = I18N.get(langText);
-
-    }
 
 });

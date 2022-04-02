@@ -2,6 +2,7 @@ Ext.define('Common.ux.form.Base',{
     extend: 'Common.ux.form.Panel',
 
     mixins:[
+        'Common.mixin.component.Back',
         'Common.mixin.component.Form',
         'Common.mixin.component.Message'
     ],
@@ -14,6 +15,7 @@ Ext.define('Common.ux.form.Base',{
 
     title: '\xA0',
     mixinContainer: '#buttonToolbar',
+    includeResource: true,
     config:{
         defaultTitle: null,
         defaultModelValue: null,

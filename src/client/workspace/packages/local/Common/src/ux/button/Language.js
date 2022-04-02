@@ -27,7 +27,7 @@ Ext.define('Common.ux.button.Language',{
         //菜单已存在，直接返回
         if(me.getMenu()) return;
         //创建下拉菜单
-        let menu = { ui: isPhone && 'dark', items:[], anchor: true, };
+        let menu = { ui: isPhone && 'dark', items:[], anchor: true, includeResource: true };
         I18N.getLanguages().forEach(l=>{
             menu.items.push({ 
                 xtype: 'menuradioitem',

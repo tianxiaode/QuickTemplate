@@ -3,6 +3,8 @@ Ext.define('Common.ux.dataview.ListItem', {
     xtype: 'uxlistitem',
  
     userCls: 'p-1 border-bottom',
+    inheritUi: true,
+    classCls: Ext.baseCSSPrefix + 'listitem',
     template: [
         {
             reference: 'itemElement',

@@ -12,7 +12,7 @@ Ext.define('Common.mixin.component.Base',{
 
     getMixinContainer(){
         let me = this;
-        return me.down(me.mixinContainer);
+        return (me.isFormPanel && me.isPhone() && me.getHeader()) || me.down(me.mixinContainer);
     },
 
     initialize(){}
