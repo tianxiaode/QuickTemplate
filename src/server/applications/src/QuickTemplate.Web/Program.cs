@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.Text;
 
 namespace QuickTemplate.Web;
 
@@ -24,9 +25,11 @@ public class Program
             .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
             //.MinimumLevel.Override("IdentityServer4", LogEventLevel.Information)
-            .MinimumLevel.Override("QuickTemplate", LogEventLevel.Information)
+            .MinimumLevel.Override("QuickTemplate", LogEventLevel.Debug)
             .Enrich.FromLogContext()
-            .WriteTo.Async(c => c.File("Logs/logs.txt"))
+            .WriteTo.Async(c => c.File("Logs/logs.txt", retainedFileCountLimit: 100, fileSizeLimitBytes: 10485760,
+                encoding: Encoding.UTF8,
+                rollOnFileSizeLimit: true))
 #if DEBUG
             .WriteTo.Async(c => c.Console())
 #endif

@@ -5,14 +5,17 @@ Ext.define('Common.ux.grid.Tree',{
     autoLoad: false,
     scrollable: 'y',    
     hideHeaders: true,
-    columns:[
-        { 
-            xtype: 'treecolumn',
-            autoText: false,
-            dataIndex: 'displayName', 
-            flex: 1
-         },
-    ],
-    bind:{ store: '{treeMainStore}'},
+    config:{
+        columns:[
+            { 
+                xtype: 'treecolumn',
+                autoText: false,
+                dataIndex: 'displayName', 
+                flex: 1
+             },
+        ],    
+    },
+    
+    bind:{ store: '{mainStore}'},
 
 });

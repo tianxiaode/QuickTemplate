@@ -8,6 +8,7 @@ Ext.define('Common.data.model.identity.Role', {
         { name: 'isStatic', type: 'bool', defaultValue: false},
         { name: 'isDefault', type: 'bool', defaultValue: false, updateAction: 'default', allowSort: true},
         { name: 'isPublic', type: 'bool', defaultValue: true, updateAction: 'public', allowSort: true},
+        { name: 'translations'},
         { 
             name: 'displayPermissions', 
             calculate(data){

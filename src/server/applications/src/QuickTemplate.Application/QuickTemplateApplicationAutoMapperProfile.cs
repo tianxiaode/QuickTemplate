@@ -14,6 +14,9 @@ public class QuickTemplateApplicationAutoMapperProfile : Profile
 
         CreateMap<IdentityRole, RoleDto>()
             .ForMember(m=>m.Permissions, opts=>opts.Ignore())
+            .ForMember(m=>m.Translations,opts=>opts.MapFrom(m=>m.GetTranslations()))
             .MapExtraProperties();
+
+        CreateMap<RoleTranslation, RoleTranslationDto>();
     }
 }

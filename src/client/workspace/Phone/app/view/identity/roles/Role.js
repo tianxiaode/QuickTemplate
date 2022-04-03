@@ -14,12 +14,12 @@ Ext.define('Phone.view.identity.roles.Role', {
 
     controller: 'rolecontroller',
     viewModel: 'rolemodel',
+    childTap: true,
 
     items:[
         {
             xtype: 'uxcrudlist',            
             autoLoad: true,
-            hasPaging: false,
             hasCheckbox: true,
             itemConfig:{
                 xtype: 'phone-roleitem'

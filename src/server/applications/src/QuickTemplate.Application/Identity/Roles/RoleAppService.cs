@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Generic.Abp.BusinessException;
 using Generic.Abp.BusinessException.Exceptions;
+using Generic.Abp.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Authorization.Permissions;
+using Volo.Abp.Data;
 using Volo.Abp.Identity;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.PermissionManagement;
+using Volo.Abp.Uow;
 using IdentityRole = Volo.Abp.Identity.IdentityRole;
 
 namespace QuickTemplate.Identity.Roles;
@@ -32,6 +37,7 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
     protected IPermissionManager PermissionManager { get; }
     protected IPermissionDefinitionManager PermissionDefinitionManager { get; }
 
+    [UnitOfWork]
     public virtual async Task<RoleDto> GetAsync(Guid id)
     {
         var role = await RoleManager.GetByIdAsync(id);
@@ -41,6 +47,8 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
             .Select(m => m.Name).OrderBy(m => m).ToList();
         return dto;
     }
+
+    [UnitOfWork]
     public virtual async Task<ListResultDto<RoleDto>> GetAllListAsync()
     {
         var list = await RoleRepository.GetListAsync();
@@ -49,10 +57,11 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
         );
     }
 
+    [UnitOfWork]
     public virtual async Task<PagedResultDto<RoleDto>> GetListAsync(GetIdentityRolesInput input)
     {
         var list = await RoleRepository.GetListAsync(input.Sorting, input.MaxResultCount, input.SkipCount, input.Filter);
-        var totalCount = await RoleRepository.GetCountAsync();
+        var totalCount = await RoleRepository.GetCountAsync(input.Filter);
 
         var dtos = ObjectMapper.Map<List<IdentityRole>, List<RoleDto>>(list);
         foreach (var dto in dtos)
@@ -67,6 +76,7 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
     }
 
     [Authorize(IdentityPermissions.Roles.Create)]
+    [UnitOfWork]
     public virtual async Task<RoleDto> CreateAsync(RoleCreateDto input)
     {
         var role = new IdentityRole(
@@ -99,6 +109,7 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
     }
 
     [Authorize(IdentityPermissions.Roles.Update)]
+    [UnitOfWork]
     public virtual async Task<RoleDto> UpdateAsync(Guid id, RoleUpdateDto input)
     {
         var role = await RoleManager.GetByIdAsync(id);
@@ -140,6 +151,7 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
         return dto;
     }
 
+    [UnitOfWork]
     protected virtual Task<List<string>> NormalizedPermissionsAsync(RoleCreateOrUpdateDtoBase input)
     {
         var result = new List<string>();
@@ -155,6 +167,7 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
 
 
     [Authorize(IdentityPermissions.Roles.Delete)]
+    [UnitOfWork]
     public virtual async Task<ListResultDto<RoleDto>> DeleteAsync(List<Guid> ids)
     {
         var result = new List<RoleDto>();
@@ -185,6 +198,7 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
     }
 
     [Authorize(IdentityPermissions.Roles.Update)]
+    [UnitOfWork]
     public virtual async Task SetDefaultAsync(Guid id, bool value)
     {
         var entity = await RoleRepository.GetAsync(id);
@@ -193,11 +207,55 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
     }
 
     [Authorize(IdentityPermissions.Roles.Update)]
+    [UnitOfWork]
     public virtual async Task SetPublicAsync(Guid id, bool value)
     {
         var entity = await RoleRepository.GetAsync(id);
         entity.IsPublic = value;
         await RoleRepository.UpdateAsync(entity);
+    }
+
+    [UnitOfWork]
+    public virtual async Task<ListResultDto<RoleTranslationDto>> GetTranslationAsync(Guid id)
+    {
+        var entity = await RoleRepository.GetAsync(id);
+        var translations = entity.GetTranslations();
+        if (translations == null)
+        {
+            return new ListResultDto<RoleTranslationDto>();
+        }
+
+        return new ListResultDto<RoleTranslationDto>(translations.Select(m =>
+            new RoleTranslationDto(m.Language, m.Name)).ToList());
+    }
+
+    [Authorize(IdentityPermissions.Roles.Update)]
+    [UnitOfWork]
+    public virtual async Task UpdateTranslationAsync(Guid id, List<RoleTranslationDto> translations)
+    {
+        translations = translations.Where(m => !string.IsNullOrEmpty(m.Name)).ToList();
+        await CheckTranslationInputAsync(translations);
+        var entity = await RoleRepository.GetAsync(id);
+        entity.SetTranslations(translations.Select(m=>new RoleTranslation(m.Language,m.Name)));
+
+        await CurrentUnitOfWork.SaveChangesAsync();
+
+    }
+
+
+    protected virtual Task CheckTranslationInputAsync(List<RoleTranslationDto> translations)
+    {
+        var errors = translations.Where(m => m.Name.Length > IdentityRoleConsts.MaxNameLength).Select(m =>
+            L[BusinessExceptionErrorCodes.ValueExceedsFieldLength].Value
+                .Replace(BusinessExceptionErrorCodes.ValueExceedsFieldLengthParamValue, m.Name).Replace(
+                    BusinessExceptionErrorCodes.ValueExceedsFieldLengthParamLength,
+                    DistrictConsts.DisplayNameMaxLength.ToString())).ToList();
+
+        if (errors.Any())
+        {
+            throw new UserFriendlyException(string.Join("<br>", errors));
+        }
+        return Task.CompletedTask;
     }
 
 }

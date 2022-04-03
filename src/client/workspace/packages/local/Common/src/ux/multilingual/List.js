@@ -4,7 +4,8 @@ Ext.define('Common.ux.multilingual.List',{
 
     requires:[
         'Common.data.store.Multilingual',
-        'Common.ux.dataview.plugin.TextEditor'
+        'Common.ux.dataview.plugin.TextEditor',
+        'Common.ux.multilingual.ListItem',
     ],
 
     config:{
@@ -19,13 +20,9 @@ Ext.define('Common.ux.multilingual.List',{
         tpl: '{name}'
     },
 
-    itemTpl:`
-        <div class="row  px-2 py-3">                
-            <div class="col-4 pl-0 h6 m-0 text-dark" >{label}</div>
-            <div class="col-8 pr-0 pl-0 h6 m-0 black-54 text-right x-editable-text {value:nullValueColor}" data-id="{id}" >{value:nullValueAndEditMessage}</div>
-        </div>
-
-    `,
+    itemConfig:{
+        xtype: 'uxmultilinguallistitem'
+    },
 
     responsiveConfig:{
         desktop:{
@@ -37,9 +34,6 @@ Ext.define('Common.ux.multilingual.List',{
         
         },
     },
-
-
-    userCls: 'listing', 
 
     onLocalized(){
         this.callParent();

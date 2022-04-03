@@ -74,4 +74,18 @@ public class RoleController: QuickTemplateController, IRoleAppService
     {
         return _roleAppService.SetPublicAsync(id, value);
     }
+
+    [HttpGet]
+    [Route("{id:guid}/translations")]
+    public Task<ListResultDto<RoleTranslationDto>> GetTranslationAsync(Guid id)
+    {
+        return _roleAppService.GetTranslationAsync(id);
+    }
+
+    [HttpPut]
+    [Route("{id:guid}/translations")]
+    public Task UpdateTranslationAsync(Guid id, [FromBody] List<RoleTranslationDto> translations)
+    {
+        return _roleAppService.UpdateTranslationAsync(id, translations);
+    }
 }

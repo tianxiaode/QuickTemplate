@@ -16,7 +16,6 @@ Ext.define('Desktop.view.identity.roles.Role', {
         {
             xtype: 'uxcrudgrid',
             doubleTapToEdit: true,
-            hasPaging: false,
             flex:1,
             columns:[
                 { 
@@ -24,11 +23,12 @@ Ext.define('Desktop.view.identity.roles.Role', {
                     autoText: false, langText: 'DisplayName:RoleName',
                     renderer: Format.girdHighlight,
                     cell:{  encodeHtml: false,},
-                    //tpl: `{name} - {displayName:this.listHighlight(values, 'DisplayName')}`
+                    tpl: `{name} {name:translations(values,'name')}`
                  },
                  {
                     dataIndex: 'displayPermissions', flex: 1,
-                    autoText: false, langText: 'Permissions'
+                    autoText: false, langText: 'Permissions',
+                    sortable: false,
                  },
                  //{ xtype: 'checkcolumn', dataIndex: 'isStatic', width: 80 },
                 { xtype: 'checkcolumn', dataIndex: 'isDefault', width: 80, listeners: { checkchange: 'onColumnCheckChange' } } ,

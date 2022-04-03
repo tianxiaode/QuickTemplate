@@ -397,6 +397,11 @@ Ext.define('Common.util.TemplateFn',{
             })
             return includes;
         },
+        translations(v, values, field){
+            let current = I18N.getCurrentLanguage(),
+                find = (values.translations || []).find(t=>t.language === current);
+            return find && `- ${find[field]}` || '';
+        }
     },
 
 });

@@ -30,14 +30,17 @@ Ext.define('Common.view.identity.roles.Permissions',{
         Ext.iterate(policies,p=>{
             if(p === 'AbpIdentity.UserLookup') return;
             let split = me.splitPermission(p),
+                isPhone = me.isPhone(),
                 group = split.group,
                 permission = split.permission,
+                flexCls = (isPhone && 'flex-column') || 'flex-row',
+                firstWidth = (isPhone && '100%') || '140px',
                 row = rows[group];
             if(!row) {
                 row = rows[group] = 
                     [
-                        `<div class='py-1 row'>` ,
-                        `<div class='col-auto text-truncate lang-el' style='width:140px;' data-group='${group}' data-lang='${group}'>${group}</div>`,
+                        `<div class='d-flex ${flexCls}'>` ,
+                        `<div class=' text-truncate lang-el py-1' style='width:${firstWidth};' data-group='${group}' data-lang='${group}'>${group}</div>`,
                     ];
                 let isSpecial = ['FeatureManagement','SettingManagement'].includes(split.first);
                 isSpecial && row.push(me.getCheckBoxHtml(group, p));
@@ -62,9 +65,9 @@ Ext.define('Common.view.identity.roles.Permissions',{
     },
 
 
-    getCheckBoxHtml(group, value,){
+    getCheckBoxHtml(group, value, flexCls){
         let cb = Format.format(this.checkBoxItem,group,value)
-        return `<div class='col-auto px-2'>${cb}</div>`;
+        return `<div class='px-2 py-1'>${cb}</div>`;
     },
 
     applyValue(value, oldValue){

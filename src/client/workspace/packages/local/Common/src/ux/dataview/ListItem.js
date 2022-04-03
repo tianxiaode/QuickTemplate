@@ -37,14 +37,21 @@ Ext.define('Common.ux.dataview.ListItem', {
             resourceName = this.getResourceName();
         text = I18N.get(text, resourceName);
         return `<div class="flex-fill text-left ">
-            <div class="x-checkcell ${color} ${checkCls}" data-field='${field}' >
-                <div class="x-checkbox-el x-font-icon" ></div>${text}
+            <div class="x-checkcell ${color} ${checkCls}"  >
+                <span class="x-checkbox-el x-font-icon" data-field='${field}'></span><span class="">${text}</span>
             </div>                        
         </div>`;
     },
 
+    getIconActionHtml(id, iconCls){
+        return `<div class="flex-fill text-center">
+                <span class="${iconCls}" data-id="${id}"></span>
+            </div>
+        `
+    },
+
     getItemActionTpl(){
-        let html = [`<div class="d-flex">`];
+        let html = [`<div class="d-flex py-1">`];
         for (let i = 0; i < 5; i++) {
             html.push(`<div class=flex-fill text-left></div>`);
         }

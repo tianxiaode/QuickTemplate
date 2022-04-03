@@ -14,7 +14,7 @@ Ext.define('Phone.view.identity.roles.RoleItem', {
                     </div>
                 </div>
                 <div class="col">
-                    <div class="text-truncate fw-bolder">${me.getHighlightValue(data.name)}</div>
+                    <div class="text-truncate fw-bolder">${me.getHighlightValue(data.name)} ${Format.translations(data.name, data, 'name')}</div>
                 </div>
             <div>
             <div class="row py-1">
@@ -33,6 +33,8 @@ Ext.define('Phone.view.identity.roles.RoleItem', {
         
         html[1] = me.getCheckActionHtml(data.isDefault, '', 'isDefault', 'isDefault');
         html[2] = me.getCheckActionHtml(data.isPublic, '', 'isPublic', 'isPublic');
+        html[4] = me.getIconActionHtml(data.id, 'x-fa fa-edit text-primary');
+        html[5] = me.getIconActionHtml(data.id, 'x-fa fa-globe text-primary');
             
         me.actionElement.setHtml(html.join(''));
 
