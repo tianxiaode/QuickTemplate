@@ -7,7 +7,7 @@ Ext.define('Common.ux.crud.controller.More', {
 
     init(){
         let me = this;
-        me.callParent(arguments);
+        me.callParent();
         me.getView().on('hiddenchange', me.onViewHiddenChange, me);
     },
 
@@ -31,13 +31,13 @@ Ext.define('Common.ux.crud.controller.More', {
         let me = this,
             record = me.getRecord(),
             id =  record && record.getId();
-        me.initCrudButtonHiddenState();
-        me.updateCrudButtonState();
+        me.initButtons();
+        me.updateButtons();
         if(id === me.currentId) return;
         me.currentId = id;
         me.onRefreshStore();
-        me.initCrudButtonHiddenState();
-        me.updateCrudButtonState();
+        me.initButtons();
+        me.updateButtons();
     },
 
     onRefreshStore(){

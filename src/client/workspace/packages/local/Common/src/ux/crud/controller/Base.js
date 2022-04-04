@@ -7,8 +7,11 @@ Ext.define('Common.ux.crud.controller.Base',{
         'Common.ux.crud.controller.mixin.ViewModel',
         'Common.ux.crud.controller.mixin.Button',
         'Common.ux.crud.controller.mixin.Column',
-        'Common.ux.crud.controller.mixin.MultiEntityAction',
+        'Common.ux.crud.controller.mixin.Batch',
         'Common.ux.crud.controller.mixin.Crud',
+        'Common.ux.crud.controller.mixin.View',
+        'Common.ux.crud.controller.mixin.CountMessage',
+        'Common.ux.crud.controller.mixin.Multilingual',
         'Common.mixin.Searchable',
         'Common.mixin.Menuable',        
         'Common.ux.crud.controller.mixin.Selectable',
@@ -23,17 +26,11 @@ Ext.define('Common.ux.crud.controller.Base',{
     isPhone: false, //是否手机平台
     permissionGroup: null, //权限组
     permissionName: null, //权限名
-    searchTask : null,   //查询延迟任务
-    msgFieldName: null, //提示信息字段名称
     permissions:{
         create: 'Create',
         update: 'Update',
         delete: 'Delete'
     },
-    isInitialSearchItemEvent: false,
-    searchFields: null, //所有查询字段
-    updateViewXtype: null,
-    createViewXtype: null,
 
     init(){
         let me = this;
@@ -68,6 +65,8 @@ Ext.define('Common.ux.crud.controller.Base',{
         })
     },
 
+    initButtons(){},
+    updateButtons(){},
 
     /**
      * 列表组件的存储发生改变是执行的操作
@@ -76,7 +75,7 @@ Ext.define('Common.ux.crud.controller.Base',{
      * @param {旧存储} oldStore 
      * @param {配置参数} eOpts 
      */
-    onStoreChange(sender, store, oldStore, eOpts){
+    onStoreChange(sender, store){
         let me = this,
             list = me.list,
             autoLoad = me.getView().autoLoad || list.autoLoad ;
@@ -84,34 +83,18 @@ Ext.define('Common.ux.crud.controller.Base',{
         store.on('beforeload', me.onStoreBeforeLoad, me);
         store.on( 'load', me.onStoreLoad, me);
 
-        me.initialSearchItemEvent(me);
-
-        me.setSortMenu(store, list);
-
-        me.initCrudButtonHiddenState();
-
         (autoLoad === 'search') && me.doSearch();
         (autoLoad === true) &&  me.onRefreshStore();
         me.onAfterStoreChange && me.onAfterStoreChange(store, list);
     },
 
 
-    setSortMenu(store, list){
-        let me = this,            
-            view = me.getView(),
-            moreButton = view.getMoreButton && view.getMoreButton();
-        if(!moreButton) return;
-        let menu = moreButton.getMenu(),
-            sorter = store.getSorters().items[0];
-        if(!sorter) return;
-        let value = `${sorter._property}-${sorter._direction}`;
-        this.currentSortField = value;
-        let menuItem = menu.down(`menuitem[value=${value}]`);
-        if(menuItem) menuItem.setChecked(true, true);
-    },
 
-    getStore(){
-        return this.list.getStore();
+    getStore(name) {
+        let vm = this.getViewModel();
+
+        return (name && vm && vm.getStore('name')) 
+            || this.list.getStore();
     },
 
     /**
@@ -122,23 +105,14 @@ Ext.define('Common.ux.crud.controller.Base',{
      * @param {操作} operation 
      * @param {操作参数} eOpts 
      */
-     onStoreLoad(store, records, successful, operation, eOpts){
-        let me = this,
-            view = me.getView(),  
-            countMessage = view.getCountMessage && view.getCountMessage();
-        countMessage && countMessage.setCount(store.getTotalCount());
+     onStoreLoad(store, records, successful, operation, eOpts){},
 
-        me.afterStoreLoad(me, store, records);
-    },
-
-    afterStoreLoad: Ext.emptyFn,
 
     /**
      * 存储加载前的操作
      */
     onStoreBeforeLoad(){
         this.doDeselectAll();
-        this.selections = [];
         return true;
     },
 
@@ -160,15 +134,5 @@ Ext.define('Common.ux.crud.controller.Base',{
             backView = me.backView || Ext.route.Router.application.getDefaultToken();
         me.redirectTo(backView);
     },
-
-    destroy(){
-        let me = this;
-        me.selections = null;
-        me.list = null;
-        me.crudButtons = null;
-        me.searchFields = null;
-
-        me.callParent();
-    }
 
 })

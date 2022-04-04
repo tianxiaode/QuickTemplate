@@ -1,4 +1,4 @@
-Ext.define('Common.ux.crud.controller.mixin.MultiEntityAction',{
+Ext.define('Common.ux.crud.controller.mixin.Batch',{
     extend: 'Ext.Mixin',
 
     messageTemplate: null , //信息模板
@@ -7,30 +7,25 @@ Ext.define('Common.ux.crud.controller.mixin.MultiEntityAction',{
      * 获取多实体远程操作数据
      * @param {获取提交数据的函数} getDataFn
      */
-    getActionData(getActionSubmitDataFn){
+    getBatchData(getPostDataFn){
         let me = this,
             store = me.getStore(),
             messageField = store.messageField,
             selections = me.getSelections(),
             data = { ids: [], contents: [] };
-        getActionSubmitDataFn = getActionSubmitDataFn || me.getActionSubmitData;
+        getPostDataFn = getPostDataFn || me.getPostDataFn;
         //组织数据
         selections.forEach(r=>{
-            me.getContent(data, r, messageField);
-            getIdValueFn.apply(me, [data, r]);
+            let value = r.get(messageField);
+            data.contents.push(value);
+            getPostDataFn.apply(me, [data.ids, r]);
 
         });
         return data;
     },
 
-    getContent(data, record,messageField){
-        let value = record.get(messageField);
-            msg = Format.translations(value, record.data, messageField) || value;
-        data.contents.push(msg);
-    },
-
-    getActionSubmitData(data, record){
-        data.ids.push(record.getId());
+    getPostDataFn(data, record){
+        data.push(record.getId());
     },
 
     /**
@@ -40,14 +35,13 @@ Ext.define('Common.ux.crud.controller.mixin.MultiEntityAction',{
      * @param {要执行的操作} action 
      * @param {信息内容} contents 
      */
-    doMultiEntityAction(confirmTitle, confirmMessage, action, getActionSubmitDataFn, successFn, failureFn){
+    doBatch(confirmTitle, confirmMessage, action, getPostDataFn, successFn, failureFn){
         let me = this;
 
         //如果没有选择，显示提示
-        if(!me.hasSelections()) return;
+        if(!me.hasSelections(true)) return;
 
-        let data = me.getActionData(getActionSubmitDataFn);
-
+        let data = me.getBatchData(getPostDataFn);
 
         //确认后执行操作
         MsgBox.confirm(
@@ -57,7 +51,7 @@ Ext.define('Common.ux.crud.controller.mixin.MultiEntityAction',{
                 if (btn !== "yes") return;
                 action.apply(me,[data])
                 .then(
-                    successFn || me.doMultiEntityActionSuccess, 
+                    successFn || me.doBatchSuccess, 
                     failureFn || me.onAjaxFailure, 
                     null, me);
             },
@@ -82,7 +76,7 @@ Ext.define('Common.ux.crud.controller.mixin.MultiEntityAction',{
      * @param {响应} response 
      * @param {远程调用参数}} opts 
      */
-    doMultiEntityActionSuccess(response, opts){
+    doBatchSuccess(response){
         let me = this,
             store = me.getStore(),
             messageField = store.messageField,
@@ -99,16 +93,17 @@ Ext.define('Common.ux.crud.controller.mixin.MultiEntityAction',{
         }
         items.forEach(m=>{
             let text = Ext.isObject(m) ? m[messageField] || m.name || m.displayName : m;
-                text = Format.transactions(text, m, messageField);
             msg.push(`<li class="success">${text}:  ${resultMsg}</li>`);
         })
         msg.push('</ul>');
+
         if(isDelete && store.isTreeStore){
             let selection = me.getSelections()[0];
             if(selection){
                 me.getSelectable().select(selection.parentNode);
             }
         }
+
         me.onRefreshStore();
         Toast(msg.join(''),null,null, 3000);
 

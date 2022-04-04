@@ -9,7 +9,6 @@ Ext.define('Common.mixin.component.SearchField',{
     config:{
         searchField:{
             xtype: 'uxsearchfield',
-            searchHandler: 'onSearch',
             isSearch: true,
             searchName: 'filter',
         }

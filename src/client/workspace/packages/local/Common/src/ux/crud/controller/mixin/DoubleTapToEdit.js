@@ -7,11 +7,8 @@ Ext.define('Common.ux.crud.controller.mixin.DoubleTapToEdit',{
         list.doubleTapToEdit && list.on('childdoubletap', me.onChildDoubleTap, me);
     },
 
-    onChildDoubleTap(){
-        let me = this,
-            updateButton = me.getCrudButton('update');
-        if(updateButton.getDisabled()) return;
-        me.onUpdate();
+    onChildDoubleTap(sender, location, eOpts){
+        this.doUpdate(location.record);
     },
 
 })

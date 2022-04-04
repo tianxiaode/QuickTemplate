@@ -3,16 +3,18 @@ Ext.define('Common.ux.crud.controller.Tree',{
 
     searchList: null, //搜索列表
 
-    initList(me){
-        me.callParent(arguments);
-        me.initSearchList(me);
+    initList(){
+        let me = this;
+        me.callParent();
+        me.initSearchList();
     },
 
     /**
      * 获取查询时的对象
      */
-    initSearchList(me){
-        let view = me.getView(),
+    initSearchList(){
+        let me = this,
+            view = me.getView(),
             searchList = view.down('#searchList');
         if(!searchList) return;
         searchList.on('storechange', me.onSearchStoreChange ,me);
@@ -20,7 +22,7 @@ Ext.define('Common.ux.crud.controller.Tree',{
     },
 
     /**
-     * 列表组件的存储发生改变是执行的操作
+     * 列表组件的存储发生改变执行的操作
      * @param {列表组件} sender 
      * @param {存储} store 
      * @param {旧存储} oldStore 
@@ -48,11 +50,11 @@ Ext.define('Common.ux.crud.controller.Tree',{
         let me = this;
         if(!successful) return;
         //数据加载后，选择第一个记录
-        let selection = me.selections;
+        let selection = me.getSelections();
         //如果当前列表是树，且已存在选择，直接返回
         if(selection.length>0) return;
         let record = store.getAt(0);
-        record && me.list.getSelectable().select(record);
+        record && me.getSelectable().select(record);
     },
 
     /**
@@ -66,10 +68,10 @@ Ext.define('Common.ux.crud.controller.Tree',{
         if(!list) return;
         store.on('beforeload', me.onSearchStoreBeforeLoad, me);
         store.on('load', me.onSearchStoreLoad, me)
-        list.on('select', me.onViewSelect, me);
-        list.on('deselect', me.onViewDeselect, me);
+        list.on('select', me.onSearchViewSelect, me);
+        list.on('deselect', me.onSearchViewDeselect, me);
     },
-  
+
     /**
      * 查询存储加载前的操作
      */
@@ -89,6 +91,14 @@ Ext.define('Common.ux.crud.controller.Tree',{
         if(record) this.searchList.getSelectable().select(record);
     },
 
+    onSearchViewSelect(sender, selected, eOpts){
+        this.searchCode(selected.get('code'), selected);
+    },
+
+    onSearchViewDeselect(sender, selected, eOpts){
+        this.getSelectable().deselect(selected);
+    },
+
     /**
      * 刷新列表
      */
@@ -98,13 +108,13 @@ Ext.define('Common.ux.crud.controller.Tree',{
             Enums.on('ready', me.onRefreshStore, me, {single: true});
             return;
         };
-        let store = me.currentList.getStore();
+        let store = me.list.getStore();
         if(!store.isTreeStore){
             store.loadPage(1);
             return;
 
         }
-        let selection = me.selections[0];
+        let selection = me.getSelections()[0];
         //未有选择
         if(!selection){
             let root = store.getRoot();
@@ -159,7 +169,7 @@ Ext.define('Common.ux.crud.controller.Tree',{
         let me = this,        
             values = me.getSearchValues();
         me.switchList(!Ext.isEmpty(values.query));
-        let store = me.currentList.getStore();
+        let store = me.searchList.getStore();
         let proxy = store.getProxy(),
             params = proxy.extraParams;
         if(!me.beforeSearch(values, params)) return;
@@ -239,7 +249,7 @@ Ext.define('Common.ux.crud.controller.Tree',{
 
     getDefaultModelValue(isEdit){
         let me = this,
-            selections = me.getCurrentSelections(),
+            selections = me.getSelections(),
             record = selections[0],
             parentId = record.getId(),
             parentName = record.get('displayName');
@@ -256,7 +266,8 @@ Ext.define('Common.ux.crud.controller.Tree',{
             } 
         }
         return { parentId : parentId, parentName: parentName };
-    }
+    },
+
 
 
 })

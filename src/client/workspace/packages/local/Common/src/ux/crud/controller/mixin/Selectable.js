@@ -18,7 +18,7 @@ Ext.define('Common.ux.crud.controller.mixin.Selectable',{
      */    
     onViewSelect(sender, selected, eOpts ){
         let me = this;
-        me.updateCrudButtonState();
+        me.updateButtons();
     },
 
         /**
@@ -29,7 +29,7 @@ Ext.define('Common.ux.crud.controller.mixin.Selectable',{
      */
     onViewDeselect(sender, records, eOpts){
         let me = this;
-        me.updateCrudButtonState();
+        me.updateButtons();
     },
 
     getSelectable(){
@@ -47,9 +47,9 @@ Ext.define('Common.ux.crud.controller.mixin.Selectable',{
         this.getSelectable().deselectAll();
     },
     
-    hasSelections(){
+    hasSelections(alert){
         let result = (this.getSelections() || []).length > 0;
-        !result && MsgBox.alert(null, I18N.get('NoSelection'));
+        !result && alert && MsgBox.alert(null, I18N.get('NoSelection'));
         return result;
     },
 

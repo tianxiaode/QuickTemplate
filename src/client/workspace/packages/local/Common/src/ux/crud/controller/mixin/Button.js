@@ -4,12 +4,21 @@ Ext.define('Common.ux.crud.controller.mixin.Button',{
     mixinConfig: {
         configs: true,
         before:{
-            updateCrudButtonState: 'updateCrudButtonState',
-            initCrudButtonHiddenState: 'initCrudButtonHiddenState'
+            destroy: 'destroy',
+            initButtons: 'initButtons',
+            updateButtons: 'updateButtons'
+        },
+        after:{
+            onStoreChange: 'onStoreChange'
         }
+
     },
 
-    crudButtons: null,  //所有crud按钮
+    buttons: null,  //所有crud按钮
+
+    onStoreChange(){
+        this.initButtons();
+    },
 
     /**
      * 验证权限
@@ -19,13 +28,13 @@ Ext.define('Common.ux.crud.controller.mixin.Button',{
         let me = this,
             entityName = me.entityName,
             group = `${me.permissionGroup || entityName}.${ me.permissionName || Format.pluralize(entityName) }`;
-        return ACL.isGranted(`${group}.${Ext.String.capitalize(permission)}`);
+        return ACL.isGranted(`${group}.${Format.capitalize(permission)}`);
     },
 
     /**
      * 获取Crud按钮
      */
-    getCrudButtons(){
+    getButtons(){
         let me = this,
             view = me.getView(),
             crudButtons = me.crudButtons;
@@ -43,48 +52,54 @@ Ext.define('Common.ux.crud.controller.mixin.Button',{
      * 获取按钮
      * @param {按钮的key} key 
      */
-    getCrudButton(key){
-        let buttons  = this.getCrudButtons();
+    getButton(key){
+        let buttons  = this.getButtons();
         return buttons[key];
-    },
-
-    /**
-     * 禁用/启用按钮
-     * @param {按钮的key} key 
-     * @param {是否禁用} isDisabled
-     * @param {状态值} state 
-     */
-    setCrudButton(key,isDisabled, state){
-        let button = this.getCrudButton(key) ;
-        button && isDisabled && button.setDisabled(state);
-        button && !isDisabled && button.setHidden(state);
     },
 
     /**
      * 更新CRUD按钮状态
      */
-    updateCrudButtonState(){
+    updateButtons(){
         let me = this,            
-            selections = me.selections,
-            hasSelected = selections.length > 0,
-            allowUpdate = hasSelected ,
-            allowDelete = hasSelected ;        
-        if(me.allowUpdate) allowUpdate = allowUpdate && me.allowUpdate(selections);
-        if(me.allowDelete) allowDelete = allowDelete && me.allowDelete(selections);
-        me.setCrudButton('update', true, !allowUpdate);
-        me.setCrudButton('delete', true, !allowDelete);
-        me.customCrudButtonState(me, hasSelected, allowUpdate, allowDelete);
+            hasSelected = me.hasSelections(false),
+            allowUpdate = me.allowUpdate(hasSelected) ,
+            allowDelete = me.allowDelete(hasSelected) ;
+        me.setButtonDisabled('update', !allowUpdate);
+        me.setButtonDisabled('delete', !allowDelete);
+    },
+
+    allowUpdate(hasSelected){
+        return hasSelected;
+    },
+
+    allowDelete(hasSelected){
+        return hasSelected;
     },
 
     /**
      * 初始化CRUD按钮的显示
      */
-    initCrudButtonHiddenState(){
+    initButtons(){
         let me = this,
             permissions = me.permissions;
-        me.setCrudButton('create', false, !me.isGranted(permissions.create));
-        me.setCrudButton('update', false, !me.isGranted(permissions.update));
-        me.setCrudButton('delete', false, !me.isGranted(permissions.delete));
+        me.setButtonHidden('create', !me.isGranted(permissions.create));
+        me.setButtonHidden('update', !me.isGranted(permissions.update));
+        me.setButtonHidden('delete', !me.isGranted(permissions.delete));
     },
+
+    setButtonHidden(key, hidden){
+        let button = this.getButton(key) ;
+        button && button.setHidden(hidden);
+    },
+
+    setButtonDisabled(key, disabled){
+        let button = this.getButton(key) ;
+        button && button.setDisabled(disabled);
+    },
+
+    destroy(){
+        this.buttons = null;
+    }
     
 })

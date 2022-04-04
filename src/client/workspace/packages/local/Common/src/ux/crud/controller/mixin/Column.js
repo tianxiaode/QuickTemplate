@@ -24,7 +24,7 @@ Ext.define('Common.ux.crud.controller.mixin.Column',{
      */
     doColumnCheckChange(record, field, checked) {
         let me = this,
-            store = me.currentList.getStore(),
+            store = me.getStore(),
             updateAction = store.updateAction,
             checkAction = store.checkAction,
             uncheckAction = store.uncheckAction,
@@ -45,7 +45,7 @@ Ext.define('Common.ux.crud.controller.mixin.Column',{
      * 更新成功
      */
     onColumnCheckChangeSuccess(){
-        this.currentList.getStore().commitChanges();
+        this.getStore().commitChanges();
         Toast(I18N.get('UpdateSuccess'));
     },
 
@@ -53,7 +53,7 @@ Ext.define('Common.ux.crud.controller.mixin.Column',{
      * 更新失败
      */
     onColumnCheckChangeFailure(response){
-        this.currentList.getStore().rejectChanges();
+        this.getStore().rejectChanges();
         this.onAjaxFailure(response);
     },
     

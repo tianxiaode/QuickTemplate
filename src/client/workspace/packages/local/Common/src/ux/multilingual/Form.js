@@ -19,9 +19,10 @@ Ext.define('Common.ux.multilingual.Form',{
     hasMessageButton: true,
 
     createList(newCmp) {
+        let me = this;
         return Ext.apply({
-            fields: this.fields,
-            ownerCmp: this
+            fields: me.fields,
+            ownerCmp: me
         }, newCmp);
     },
 
@@ -32,8 +33,7 @@ Ext.define('Common.ux.multilingual.Form',{
     },
 
     updateList(config){
-        if(!config) return;
-        this.add(config);
+        if(config) this.add(config);
     }
 
 })

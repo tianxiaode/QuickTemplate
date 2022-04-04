@@ -63,7 +63,6 @@ Ext.define('Desktop.view.home.HomeView', {
                     cls: 'sencha-dash-right-main-container p-2 bg-grey-200',
                     itemId: 'contentPanel',
                     layout: 'card',                    
-                    //style: 'background-color:#f5f5f5;',
                     
                 }
             ]

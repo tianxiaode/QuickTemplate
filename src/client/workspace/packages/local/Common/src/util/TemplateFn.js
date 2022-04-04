@@ -36,13 +36,9 @@ Ext.define('Common.util.TemplateFn',{
             if(!Ext.isNumeric(value)) return '';
             return Format.girdHighlight(value, record, dataIndex, cell ,column);
         },
-        getTranslationText(origin, translation , fieldName, onlyTranslationValue){
-            if(!translation || !fieldName) return origin;
-            let  translationText = translation[fieldName],
-                text = translationText ? 
-                onlyTranslationValue ? translationText : `${translationText}(${origin})`
-                : origin;
-            return text;
+        translation(translation, field, prefix){
+            let text = translation && translation[field] || '';
+            return text && (prefix+text) || '';
         },
         girdHighlight(value, record, dataIndex, cell ,column){
             if(Ext.isEmpty(value)) return value;
@@ -67,7 +63,7 @@ Ext.define('Common.util.TemplateFn',{
             let check = v ? Format.checkCls : '';
             return `<div class="x-checkcell ${check}"><div class="x-checkbox-el x-font-icon"></div></div>`;
         },
-        listHighlight(v, values, fieldName, defaultValue){
+        listHighlight(v, values, field, defaultValue){
             if(Ext.isEmpty(v)) return Format.defaultValue2(v, defaultValue);
             let me = this,
                 store = me.getStore && me.getStore() || me.up('grid').getStore() ,
@@ -83,13 +79,12 @@ Ext.define('Common.util.TemplateFn',{
                 }else{
                     let proxy = store.getProxy(),
                     params = proxy.extraParams;
-                    filter = params && params.query;
+                    filter = params && params.filter;
                 }
             }
             if(!Ext.isString(v)) v = v.toString();
-            let text =Format.getTranslationText(v, values && values.translation, fieldName);   
-            if(!filter) return text;    
-            return text.replace(new RegExp('(' + filter + ')', "gi"), '<span style="color:red;">$1</span>');
+            if(!filter) return v;    
+            return v.replace(new RegExp('(' + filter + ')', "gi"), '<span style="color:red;">$1</span>');
         },
         langText(v){
             return I18N.get(v);
@@ -248,14 +243,6 @@ Ext.define('Common.util.TemplateFn',{
             }
             return values && field ? Format.translationItem(v,values, field) : v;
         },
-        translationItem(v,values,field){
-            if(values.translation && values.translation[field]) v = values.translation[field];
-            return v;
-        },
-        getTranslationObjectText(v){
-            if(!v) return '';
-            return Format.getTranslationText(v.displayName, v.translation, 'displayName');
-        },
         separator(v){
             return v ? ' > ' : '';
         },
@@ -397,11 +384,6 @@ Ext.define('Common.util.TemplateFn',{
             })
             return includes;
         },
-        translations(v, values, field){
-            let current = I18N.getCurrentLanguage(),
-                find = (values.translations || []).find(t=>t.language === current);
-            return find && `- ${find[field]}` || '';
-        }
     },
 
 });

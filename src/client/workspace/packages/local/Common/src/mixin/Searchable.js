@@ -1,23 +1,35 @@
 Ext.define('Common.mixin.Searchable', {
     extend: 'Ext.Mixin',
 
-    searchFields: null, //所有查询字段
+    mixinConfig: {
+        configs: true,
+        after:{
+            onStoreChange: 'onStoreChange'
+        },
+        before:{
+            destroy: 'destroy',
+        }
+    },
 
+    searchFields: null, //所有查询字段
+    searchTask: null,
+    hasInitSearchItemEvent: false,
     
-    initialSearchItemEvent(me){
-        let fields = me.getSearchFields();
+    onStoreChange(){
+        let me = this,
+            fields = me.getSearchFields();
         fields.forEach(field=>{
             field.on('change', 'onSearch');
         });
-        me.isInitialSearchItemEvent = true;
+        me.hasInitSearchItemEvent = true;
     },
 
     /**
      * 获取查询字段
      */
-     getSearchFields(){
+    getSearchFields(){
         let me = this,
-            view = me.isViewController ? me.getView() : me,
+            view = me.getView(),
             fields = me.searchFields;
         if(fields) return fields;
         fields = me.searchFields = view.query('field[isSearch]');
@@ -30,17 +42,17 @@ Ext.define('Common.mixin.Searchable', {
     getSearchValues(){
         let me = this,
             fields = me.getSearchFields(),
-            values = {},
-            ln = fields.length;
-        for(let i =0 ;i<ln;i++){
-            let field = fields[i];
-            if(!field.isValid()) return;
-            if(field.isCheckbox && !field.isChecked()) continue;
-            let fieldName = field.searchName,
+            values = {};
+        Ext.each(fields,field=>{
+            if(!field.isValid()) return false;
+            if(field.isCheckbox && !field.isChecked()) return;
+
+            let name = field.searchName,
                 value = field.getValue();
-            if(Ext.isEmpty(value)) continue;
-            values[fieldName] = value;
-        }
+            if(Ext.isEmpty(value)) return;
+            values[name] = value;
+
+        })
         if(me.validateSearchValue && !me.validateSearchValue(values)){
             return false;
         }
@@ -53,7 +65,7 @@ Ext.define('Common.mixin.Searchable', {
      */
     onSearch(){
         let me = this;
-        if(!me.isInitialSearchItemEvent) return;
+        if(!me.hasInitSearchItemEvent) return;
         let store  = me.getStore(),
             searchTask = me.searchTask;
         if(!store) return;
@@ -61,7 +73,7 @@ Ext.define('Common.mixin.Searchable', {
             searchTask = me.searchTask = new Ext.util.DelayedTask(me.doSearch, me);
         }
 
-        searchTask.delay(500)
+        searchTask.delay(500);
     },
 
     /**
@@ -96,19 +108,21 @@ Ext.define('Common.mixin.Searchable', {
         let me = this,
             store = me.getStore(),
             fields =store.localFilterFields,
-            length = fields.length;
-        store.filterValue = values.query;
+            length = fields.length,
+            filter = values.filter;
+        store.filterValue = filter;
         store.clearFilter();
-        if(Ext.isEmpty(values.query)) return;
+        if(Ext.isEmpty(filter)) return;
         if(length === 0) return;
         let fn = function(record){
             let find = false;
-            for (let i = 0; i < length; i++) {
-                let value  = record.get(fields[i]);
-                if(Ext.isEmpty(value)) continue;
-                find = value.toString().toLowerCase().includes(values.query.toLowerCase());
-                if(find) break;                
-            }
+            Ext.each(fields, field=>{
+                let value = record.get(field);
+                if(Ext.isEmpty(value)) return;
+                find = value.toString().toLowerCase().includes(filter.toLowerCase());
+                if(find) return false;
+
+            })
             return find;
         }
         store.filterBy(fn, me);
@@ -134,6 +148,11 @@ Ext.define('Common.mixin.Searchable', {
         });
     },
 
+    destroy(){
+        this.searchFields = null;
+        this.searchTask = null;
+
+    }
 
 
 });

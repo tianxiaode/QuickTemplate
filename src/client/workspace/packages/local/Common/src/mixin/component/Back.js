@@ -11,6 +11,8 @@ Ext.define('Common.mixin.component.Back', {
         },
     },
 
+    hasBack: true,
+
     createBackButton(newCmp) {
         return Ext.apply({
             ownerCmp: this,
@@ -25,7 +27,8 @@ Ext.define('Common.mixin.component.Back', {
     initialize(){
         let me = this,
             container = (me.isFormPanel && me.getHeader()) ||  me.getMixinContainer();
-        me.isPhone() && container && container.add(me.getBackButton());
+        if(!me.hasBack || !me.isPhone() || !container) return;
+        container.add(me.getBackButton());
     },
 
 })

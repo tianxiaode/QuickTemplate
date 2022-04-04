@@ -7,6 +7,6 @@ Ext.define('Common.overrides.shared.field.Number',{
         me.minValueText = I18N.get('MinValueText');
         me.maxValueText = I18N.get('MaxValueText');
         me.callParent();
-}
+    }
 
 })

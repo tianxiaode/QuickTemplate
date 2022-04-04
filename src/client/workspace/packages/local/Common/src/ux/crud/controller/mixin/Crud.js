@@ -8,30 +8,17 @@ Ext.define('Common.ux.crud.controller.mixin.Crud',{
     beforeCreate(){return true;},
 
     onCreate(){
-        let me = this,
-            viewXtype= me.getCreateOrUpdateXtype();
-
+        let me = this;
         if(!me.beforeCreate()) return;
-        let params = me.getViewParams(null, me.getCreateOrUpdateViewEvents());
-        ViewMgr.setParams(viewXtype, params);
-        me.redirectTo(`${viewXtype}/add`);
+        me.onShowView('create', null, me.getCreateOrUpdateViewEvents());
     },
 
     onUpdate(){
         let me = this,
-            store = me.getStore(),
-            messageField = store.messageField,
             selection = me.getSelections()[0];
         
         if(!me.beforeUpdate(selection)) return;
 
-
-        if(store.isTreeStore){
-            let parent = selection.parentNode,
-                value = parent.get(messageField);
-            selection.set('parentName', Format.translations(value, parent.data, messageField ) || value);
-            selection.commit();
-        }
         me.doUpdate(selection);
     },
 
@@ -53,44 +40,8 @@ Ext.define('Common.ux.crud.controller.mixin.Crud',{
 
 
     doUpdate(selection){
-        let me = this,
-            viewXtype= me.getCreateOrUpdateXtype(true);
-        let params = me.getViewParams(null, me.getCreateOrUpdateViewEvents(), selection);
-        ViewMgr.setParams(viewXtype, params);
-        me.redirectTo(`${viewXtype}/edit`);
+        this.onShowView('update', selection,this.getCreateOrUpdateViewEvents());
     },
-
-
-    getCreateOrUpdateXtype(isUpdate){
-        let me = this,
-            xtype = isUpdate ? me.updateViewXtype : me.createViewXtype;
-        return xtype || `${me.entityName}EditView`;
-    },
-
-    getViewParams(config, events, record){
-        let me = this,
-            defaultConfig = {            
-                entityName:  me.entityName, 
-                resourceName: me.resourceName,
-                includeResource: true,
-                permissionGroup: me.permissionGroup,
-                permissionName: me.permissionName,
-                backView: Ext.History.getToken(),
-                listeners:{scope: me},                
-            };
-        Ext.iterate(events,(event,fn)=>{
-            defaultConfig.listeners[event] = fn;
-        })
-        config =  Ext.apply(defaultConfig, config);
-        return {
-            record : record,
-            type: me.isPhone ? ViewMgr.types.view : ViewMgr.types.dialog,
-            config : config,
-            defaultModelValue: me.getDefaultModelValue()
-        }
-    },
-
-    getDefaultModelValue: Ext.emptyFn,
 
     getCreateOrUpdateViewEvents(){
         return {
@@ -127,7 +78,7 @@ Ext.define('Common.ux.crud.controller.mixin.Crud',{
      */
     onDelete(){
         let me = this;
-        me.doMultiEntityAction(
+        me.doBatch(
             I18N.get('DeleteConfirmMessageTitle'),
             I18N.get('DeleteConfirmMessage'),
             me.deleteAction,

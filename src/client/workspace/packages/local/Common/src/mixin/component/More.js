@@ -2,7 +2,8 @@ Ext.define('Common.mixin.component.More', {
     extend: 'Common.mixin.component.Base',
 
     requires:[
-        'Ext.menu.Separator'
+        'Ext.menu.Separator',
+        'Ext.menu.RadioItem'
     ],
 
     config: {
@@ -65,16 +66,21 @@ Ext.define('Common.mixin.component.More', {
             button = me.getMoreButton(),
             menu = button.getMenu(),
             sortFields = me.getSortFields(),
+            defaultSorter = me.getDefaultSorter(),            
             menus = [];
         sortFields.forEach(m=>{
             if(!Ext.isString(m)) return;
-            menus.push(me.getSortMenuItem(m,'ASC'));
-            menus.push(me.getSortMenuItem(m,'DESC'));
+            menus.push(me.getSortMenuItem(m,'ASC' ,defaultSorter));
+            menus.push(me.getSortMenuItem(m,'DESC', defaultSorter));
         });
 
         if(menu.getItems().items.length>0) menu.add({xtype: 'menuseparator'})
 
-        button.getMenu().add(menus);
+
+        menu.add(menus);
+
+        let defaultMenu = menu.down(`[value='${defaultSorter}']`);
+        defaultMenu && defaultMenu.setChecked(true);
 
     },
 
@@ -90,27 +96,41 @@ Ext.define('Common.mixin.component.More', {
             value = `${field}-${dir}`,
             iconCls = dir === 'ASC' ? 'up': 'down';
         return { 
+            xtype: 'menuradioitem',
             langText: field, 
             value: value, 
             ui: 'dark',
             iconCls: `x-fa fa-sort-alpha-${iconCls}`,
-            //checked: defaultValue === value,
             hideOnClick: true,
             handler: me.onSort,
             scope: me,
             group: 'sortGroup' 
         };
     },
+    
 
     getSortStore(){
         let me = this,
-            vm = me.getViewModel();
-        return (me.getStore && me.getStore()) || ( vm && vm.getStore('mainStore'));
+            vm = me.getViewModel(),
+            list = me.down('[isCrudList]');
+        return ( vm && vm.getStore('mainStore'))
+            || (list && list.getStore())
+            || (me.getStore && me.getStore());
     },
 
     getSortFields(){
         return this.getSortStore().sortFields;
     },
+
+    getDefaultSorter(){
+        let store = this.getSortStore(),
+            sorter = store.getSorters().items[0];
+        if(!sorter) return;
+        let value = `${sorter._property}-${sorter._direction}`;
+        this.currentSortField = value;
+        return value;
+    },
+
 
     onSort(sender){
         let me = this,

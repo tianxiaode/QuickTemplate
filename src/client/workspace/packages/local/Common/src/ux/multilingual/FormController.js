@@ -2,6 +2,12 @@ Ext.define('Common.ux.multilingual.FormController', {
     extend: 'Common.ux.form.BaseController',
     alias:'controller.multilingualformcontroller',
 
+    init(){
+        let  me = this;
+        me.callParent();
+        Ext.platformTags.phone && me.lookup('multilingualList').on('childtap', me.onListChildTap, me);
+    },
+
     initParams(){
         let me = this,
             view = me.getView(),
@@ -23,9 +29,13 @@ Ext.define('Common.ux.multilingual.FormController', {
             .then(me.loadDataSuccess, me.onSubmitFailure, null, me);
     },
 
+    getStore(){
+        return this.lookup('multilingualList').getStore().source;
+    },
+
     loadDataSuccess(response){
         let me = this,
-            store  = me.lookup('multilingualList').getStore().source,
+            store  = me.getStore(),
             data = Http.parseResponse(response),
             items = data && data.items;
         me.getView().unmask();
@@ -48,8 +58,7 @@ Ext.define('Common.ux.multilingual.FormController', {
             view = me.getView(),
             record = me.record,
             entityName = view.getEntityName(),
-            list = me.lookup('multilingualList'),
-            store = list.getStore(),
+            store = me.getStore(),
             data = {};
         store.each(r=>{
             let value = r.get('value'),
@@ -62,9 +71,43 @@ Ext.define('Common.ux.multilingual.FormController', {
             d[field] = value;
         });
         view.mask(I18N.get('Saving'));
-        console.log(data, Object.values(data))
         Http.put(URI.crud(entityName, record.getId(), 'translations'), Object.values(data))
             .then(me.onSubmitSuccess, me.onSubmitFailure, null, me);
     },
+
+    onListChildTap(sender, location, eOpts){
+        console.log(location)
+        let record = location.record;
+        if(Format.checkTargetCls(location, 'x-editable-text')){
+            let dlg = this.getEditDialog();
+            dlg.setField({ 
+                field: record.getId(), 
+                type: record.get('isMultiline') ? 'textarea': 'text',
+                value: record.get('value'),
+                title: record.get('languageText') + ':' + record.get('label')
+            })
+            dlg.show();
+        }
+    },
+
+    getEditDialog(){
+        let me = this,
+            dlg = me.editDialog;
+        if(!dlg){
+            dlg = me.editDialog = Ext.create({
+                xtype: me.getView().editDialog, 
+                resourceName: me.resourceName,
+                listeners:{ saved: me.updateFieldSuccess, scope: me }});
+        }
+        return dlg;
+    },
+
+    updateFieldSuccess(sender, id, value){
+        let me = this,
+            store = me.getStore(),
+            record = store.getById(id);
+        if(!record) return;
+        record.set('value', value);
+    }
 
 });

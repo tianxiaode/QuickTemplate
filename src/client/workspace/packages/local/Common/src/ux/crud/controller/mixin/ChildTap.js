@@ -1,8 +1,6 @@
 Ext.define('Common.ux.crud.controller.mixin.ChildTap',{
     extend: 'Common.ux.crud.controller.mixin.Base',
 
-    detailViewXtype: null,
-
     initList(){
         let me = this,
             list = me.list;
@@ -23,9 +21,15 @@ Ext.define('Common.ux.crud.controller.mixin.ChildTap',{
         }
 
         if(classList.includes('fa-ellipsis-h')){
-            me.onShowDetail(record);
+            me.onShowView('detail', record);
             return;
         }
+
+        if(classList.includes('fa-globe')){
+            me.onShowView('multilingual', record);
+            return;
+        }
+
 
         if(classList.includes('x-checkbox-el')){
             let field = target.getAttribute('data-field');
@@ -47,14 +51,5 @@ Ext.define('Common.ux.crud.controller.mixin.ChildTap',{
         me.doListChildTap && me.doListChildTap(me, record, target, classList);
     },
 
-    onShowDetail(record){
-        let me = this,
-            viewXtype= me.detailViewXtype;
-        if(Ext.isEmpty(viewXtype)) Ext.raise('No detail view type');
-        
-        let params = me.getViewParams({}, null ,record);
-        ViewMgr.setParams(viewXtype, params);
-        me.redirectTo(`${viewXtype}/detail`);
-    },
 
 })

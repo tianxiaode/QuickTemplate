@@ -23,7 +23,7 @@ Ext.define('Desktop.view.identity.roles.Role', {
                     autoText: false, langText: 'DisplayName:RoleName',
                     renderer: Format.girdHighlight,
                     cell:{  encodeHtml: false,},
-                    tpl: `{name} {name:translations(values,'name')}`
+                    tpl: `{name:this.listHighlight(values,'name')} {translation:translation('name','- ')}`
                  },
                  {
                     dataIndex: 'displayPermissions', flex: 1,

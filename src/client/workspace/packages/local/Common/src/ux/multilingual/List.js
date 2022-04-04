@@ -30,8 +30,7 @@ Ext.define('Common.ux.multilingual.List',{
                 dataviewtexteditor:{
                     dataIndex: 'value',
                 },
-            },         
-        
+            },
         },
     },
 
@@ -55,7 +54,7 @@ Ext.define('Common.ux.multilingual.List',{
                 isMultiline = false;
             if(!Ext.isString(f)){
                 field = f.name;
-                isMultiline = true;
+                isMultiline = f.isMultiline;
                 label = f.label || f.name;
             }
             langs.forEach(l=>{

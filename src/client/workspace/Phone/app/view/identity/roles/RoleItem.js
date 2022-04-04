@@ -14,7 +14,7 @@ Ext.define('Phone.view.identity.roles.RoleItem', {
                     </div>
                 </div>
                 <div class="col">
-                    <div class="text-truncate fw-bolder">${me.getHighlightValue(data.name)} ${Format.translations(data.name, data, 'name')}</div>
+                    <div class="text-truncate fw-bolder">${me.getHighlightValue(data.name)} ${Format.translation(data.translation,'name', '- ')}</div>
                 </div>
             <div>
             <div class="row py-1">

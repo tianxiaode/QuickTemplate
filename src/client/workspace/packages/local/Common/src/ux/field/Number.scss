@@ -1,0 +1,9 @@
+.x-number-input{
+
+    .number-item.selected {
+        background-color: var(--base-color) !important;
+    }
+    .number-item:hover{
+        background-color: var(--hovered-background-color);
+    }
+}
