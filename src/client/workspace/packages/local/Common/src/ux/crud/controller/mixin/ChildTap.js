@@ -30,26 +30,29 @@ Ext.define('Common.ux.crud.controller.mixin.ChildTap',{
             return;
         }
 
-
         if(classList.includes('x-checkbox-el')){
-            let field = target.getAttribute('data-field');
-            if(field){
-                let value = record.get(field),
-                    old = Ext.isBoolean(value) ? value :  !Ext.isEmpty(value),
-                    checked = !old;
-                value = Ext.isBoolean(value) 
-                    ? checked 
-                    : Ext.isDate(value) 
-                        ? new Date()
-                        : null;
-                record.set(field, value );
-                me.doColumnCheckChange(record, field, checked);
-                return;                
-            }
+            me.onCheckBoxTap(target, record);
+            return;
         }
 
         me.doListChildTap && me.doListChildTap(me, record, target, classList);
     },
+
+    onCheckBoxTap(target, record){
+        let me = this,
+            field = target.getAttribute('data-field');
+        if(!field) return;
+        let value = record.get(field),
+            old = Ext.isBoolean(value) ? value :  !Ext.isEmpty(value),
+            checked = !old;
+        value = Ext.isBoolean(value) 
+            ? checked 
+            : Ext.isDate(value) 
+                ? new Date()
+                : null;
+        record.set(field, value );
+        me.doColumnCheckChange(record, field, checked);
+    }
 
 
 })

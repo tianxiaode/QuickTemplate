@@ -3,9 +3,11 @@ Ext.define('Common.ux.multilingual.FormController', {
     alias:'controller.multilingualformcontroller',
 
     init(){
-        let  me = this;
+        let  me = this,
+            list = me.lookup('multilingualList'),
+            isPhone = Ext.platformTags.phone;
         me.callParent();
-        Ext.platformTags.phone && me.lookup('multilingualList').on('childtap', me.onListChildTap, me);
+        isPhone && list.on('childtap', me.onListChildTap, me);
     },
 
     initParams(){
@@ -82,7 +84,7 @@ Ext.define('Common.ux.multilingual.FormController', {
             let dlg = this.getEditDialog();
             dlg.setField({ 
                 field: record.getId(), 
-                type: record.get('isMultiline') ? 'textarea': 'text',
+                type: 'textarea',
                 value: record.get('value'),
                 title: record.get('languageText') + ':' + record.get('label')
             })

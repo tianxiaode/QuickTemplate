@@ -65,5 +65,6 @@ Ext.define('Common.ux.dataview.plugin.LabelEditor',{
             view = this.view,
             store = view.getStore();
         return store.getById(id);
-    }
+    },
+
 })

@@ -7,7 +7,4 @@ Ext.define('Common.ux.field.trigger.History',{
 
 
     weight: -1000,
-    //hidden: true,
-    handler: 'onHistoryIconTap',
-    scope: 'this'    
 })

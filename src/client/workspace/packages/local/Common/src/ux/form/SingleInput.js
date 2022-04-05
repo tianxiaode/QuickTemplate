@@ -15,6 +15,7 @@ Ext.define('Common.ux.form.SingleInput',{
 
     hasBack: false,
     hasCancel:false,
+    useTextInFormButton: false,
 
     ui: 'dark',
     controller: null,
@@ -50,7 +51,6 @@ Ext.define('Common.ux.form.SingleInput',{
             value = config.value,
             f = me.down(`[inputType=${config.type}]`),
             title = config.title || field;
-        console.log(config)
         me.hideMessageButton();
         if(me.currentInput) me.currentInput.setHidden(true);
         if(!f)  {

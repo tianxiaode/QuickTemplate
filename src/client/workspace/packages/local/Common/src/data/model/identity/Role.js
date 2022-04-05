@@ -1,5 +1,5 @@
 Ext.define('Common.data.model.identity.Role', {
-    extend: 'Common.data.model.Base',
+    extend: 'Common.data.model.TranslationBase',
     alias: 'entity.role',
    
     fields: [

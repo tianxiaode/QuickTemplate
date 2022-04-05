@@ -8,7 +8,6 @@ Ext.define('Common.data.model.Multilingual', {
         { name: 'language', type : 'string'},
         { name: 'languageText', type : 'string'},
         { name: 'value', type : 'string'},
-        { name: 'isMultiline', type: 'bool'},
         { name: 'order', type: 'int'}
     ],
 

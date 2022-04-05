@@ -1,17 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using QuickTemplate.Controllers;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using QuickTemplate.Controllers;
-using Volo.Abp;
 using Volo.Abp.Application.Dtos;
-using Volo.Abp.DependencyInjection;
 using Volo.Abp.Identity;
 
 namespace QuickTemplate.Identity.Roles;
 
 [Area("identity")]
-[ControllerName("Role")]
+[ControllerName("Roles")]
 [Route("api/roles")]
 public class RoleController: QuickTemplateController, IRoleAppService
 {

@@ -17,6 +17,8 @@ Ext.define('Common.ux.multilingual.Form',{
 
     controller: 'multilingualformcontroller',
     hasMessageButton: true,
+    minWidth:500,
+    maxWidth: 500,
 
     createList(newCmp) {
         let me = this;

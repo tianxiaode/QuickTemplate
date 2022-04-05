@@ -23,4 +23,8 @@
     <PackageReference Include="QuickTemplate.Infrastructures.Application" Version="$(QuickTemplateVersion)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Identity\Users\" />
+  </ItemGroup>
+
 </Project>

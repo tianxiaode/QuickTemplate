@@ -185,6 +185,15 @@ Ext.define('Common.service.ViewManager', {
         for(let key in me.views){
             Ext.clear(me.views[key]);
         }
+    },
+
+    getMoreEditor(){
+        let me = ViewMgr,
+            dlg = me.moreEditor;
+        if(!dlg){
+            dlg = me.moreEditor = Ext.create({xtype :'common-moreeditor'});
+        }
+        return dlg;
     }
 
 

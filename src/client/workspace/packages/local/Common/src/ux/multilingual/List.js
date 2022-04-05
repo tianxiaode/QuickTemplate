@@ -16,6 +16,8 @@ Ext.define('Common.ux.multilingual.List',{
         type: 'multilingual'
     },
 
+    selectable: false,
+
     groupHeader: {
         tpl: '{name}'
     },
@@ -29,6 +31,7 @@ Ext.define('Common.ux.multilingual.List',{
             plugins:{
                 dataviewtexteditor:{
                     dataIndex: 'value',
+                    hasMore: true
                 },
             },
         },
@@ -50,11 +53,9 @@ Ext.define('Common.ux.multilingual.List',{
         if(!Ext.isArray(fields)) return;
         fields.forEach(f=>{
             let field = f,
-                label = f,
-                isMultiline = false;
+                label = f;
             if(!Ext.isString(f)){
                 field = f.name;
-                isMultiline = f.isMultiline;
                 label = f.label || f.name;
             }
             langs.forEach(l=>{
@@ -62,7 +63,6 @@ Ext.define('Common.ux.multilingual.List',{
                     id: `${field}_${l.cultureName}`,
                     field: field,
                     language: l.cultureName,
-                    isMultiline: isMultiline,
                     label: I18N.get(label, resourceName),
                     languageText: l.displayName,
                     order: order
