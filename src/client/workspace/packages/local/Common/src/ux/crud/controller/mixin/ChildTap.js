@@ -45,12 +45,7 @@ Ext.define('Common.ux.crud.controller.mixin.ChildTap',{
         let value = record.get(field),
             old = Ext.isBoolean(value) ? value :  !Ext.isEmpty(value),
             checked = !old;
-        value = Ext.isBoolean(value) 
-            ? checked 
-            : Ext.isDate(value) 
-                ? new Date()
-                : null;
-        record.set(field, value );
+        Ext.isBoolean(value) && record.set(field, value );
         me.doColumnCheckChange(record, field, checked);
     }
 

@@ -8,8 +8,6 @@ Ext.define('Common.view.identity.roles.Edit', {
 
 
     items: [
-        { xtype: 'hiddenfield', name: 'id'},
-        { xtype: 'hiddenfield', name: 'concurrencyStamp'},
         { 
             xtype: 'textfield', name: 'name', maxLength: 256,
             reference: 'roleNameField',

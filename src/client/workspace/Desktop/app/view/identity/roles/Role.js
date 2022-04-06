@@ -21,7 +21,6 @@ Ext.define('Desktop.view.identity.roles.Role', {
                 { 
                     dataIndex: 'name', width: 200,
                     autoText: false, langText: 'DisplayName:RoleName',
-                    renderer: Format.girdHighlight,
                     cell:{  encodeHtml: false,},
                     tpl: `{name:this.listHighlight(values,'name')} {translation:translation('name','- ')}`
                  },

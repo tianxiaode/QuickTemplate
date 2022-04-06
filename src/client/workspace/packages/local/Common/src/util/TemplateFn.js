@@ -44,18 +44,18 @@ Ext.define('Common.util.TemplateFn',{
             if(Ext.isEmpty(value)) return value;
             let store = column.up('grid').getStore(), 
                 remoteFilter = store.getRemoteFilter();
-                msg = Format.getTranslationText(value, record.get('translation'), dataIndex);
+                text = value;
             if(remoteFilter){
                 let proxy = store.getProxy(),
                 params = proxy.extraParams,
                 filter = params && params.filter;
-                if(!filter) return msg;
-                if(!Ext.isString(msg)) msg = msg.toString();                
-                return msg.replace(new RegExp('(' + filter + ')', "gi"), '<span class="text-danger">$1</span>');
+                if(!filter) return text;
+                if(!Ext.isString(text)) text = text.toString();                
+                return text.replace(new RegExp('(' + filter + ')', "gi"), '<span class="text-danger">$1</span>');
             }else{
                 let filter = store.filterValue;
-                if(Ext.isEmpty(filter)) return msg;
-                return msg.replace(new RegExp('(' + filter + ')', "gi"), '<span class="text-danger">$1</span>');
+                if(Ext.isEmpty(filter)) return text;
+                return text.replace(new RegExp('(' + filter + ')', "gi"), '<span class="text-danger">$1</span>');
             }
         },
         tristateCheckBox(v){
@@ -208,29 +208,11 @@ Ext.define('Common.util.TemplateFn',{
                 ? emptyText
                 : Ext.isDate(v) ? Format.date(v, Format.defaultDateTimeFormat) : v;
         },
-        nullValueColor(v){
-            return Ext.isEmpty(v) ? 'text-black-50': '';
-        },
         nullValueRedColor(v){
             return Ext.isEmpty(v) ? 'text-danger': '';
         },
         price(v, values){
             return Format.currency(v/100);
-        },
-        detailRow(v, name, format, values){
-            let entityName = Format.getEntityName(this),
-                resourceName = Format.getResourceName(this);                
-                label = I18N.get(Format.capitalize(name), resourceName, entityName);
-            if(Ext.isObject(v)){
-                let fileName = format;
-                return Ext.String.format(Template.row, label, Format.translationItem(v[fileName],v,fileName), 4, 8 );
-            }
-            if(Ext.isString(format) && Format[format]) {
-                v = format === 'translationItem'
-                    ? Format.translationItem(v, values, name)
-                    : Format[format].apply(null, [v,values]);
-            };
-            return Ext.String.format(Template.row, label, v, 4, 8 );
         },
         unDefine(v, values, field, hasDanger){
             if(Ext.isEmpty(v)){
@@ -259,17 +241,6 @@ Ext.define('Common.util.TemplateFn',{
             return me.entityName
                 || (me.getViewModel && me.getViewModel() && me.getViewModel().get('entityName'));
         },
-        signalStrength(value,values){
-            let online = values.isOnline,
-                 width = '100%';
-            return online 
-                ? `<div class="signal"><div class="inner" style="width:${width}"><span class="fi md-icon-signal-cellular-4-bar text-success"></span></div></div>`
-                : '<span style="font-size: 1.5em;" class="fi md-icon-signal-cellular-connected-no-internet-4-bar text-danger"></span>';
-        },
-        bindTime(v){
-            return Ext.isEmpty(v) ? `[${Format.getDeviceLocaleText('WoEasy.DeviceManagement:001004')}]`
-                : Format.dateTime(v);
-        },
         district(v){     
             if(!v || Ext.isEmpty(v.displayName)) return `[${I18N.get('District', "Districts")}]`;
             let text = `${v.displayName}`;
@@ -296,17 +267,10 @@ Ext.define('Common.util.TemplateFn',{
         boolValue(v){
             return `<span class="x-fa fa-${v ? 'check' : 'times'} ${v ? 'text-success' : 'text-danger'}"></span>`        
         },
-        iotExtraProperties(v){
-            return `${I18N.get('ExtraProperties', 'IotService', 'IotMessage')}: ${Ext.encode(v)}`;
-        },
         plaintext2Html(v){
             if(Ext.isEmpty(v)) return I18N.get('None');
             v = Ext.String.htmlEncode(v).replace(/\n+/g, '\n');
             return '<p class="text-indent m-0 p-0 lh-20">' + v.replace(/\n/g, '</p><p class="text-indent m-0 p-0 lh-20">') + '</p>';
-        },
-        textWithLabel(text, label){
-            let labelSeparator = I18N.get('LabelSeparator');
-            return `<span>${label}${labelSeparator}</span>${text}`;
         },
         timeLimit(v,values){
             let start = values.cardPeriodBegin || values.startTime,
@@ -384,6 +348,12 @@ Ext.define('Common.util.TemplateFn',{
             })
             return includes;
         },
+        dateTimeToCheckbox(v, field){
+            let checked = !!v,
+                checkedCls = checked ?  Format.checkCls : '',
+                text = v ? Format.dateTime(v) : '';
+            return Format.format(Template.checkBoxItem, v, text, checkedCls, field);
+        }
     },
 
 });

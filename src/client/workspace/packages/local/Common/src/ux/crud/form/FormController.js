@@ -121,12 +121,12 @@ Ext.define('Common.ux.crud.form.FormController',{
     /**
      * 新建记录之前执行的操作
      */
-    beforeAddRecord: Ext.emptyFn,
+    beforeAddRecord(){},
 
     /**
      * 新建记录之后执行的操作
      */
-    afterAddRecord: Ext.emptyFn,
+    afterAddRecord(){},
 
     /**
      * 新建记录
@@ -154,12 +154,12 @@ Ext.define('Common.ux.crud.form.FormController',{
     /**
      * 编辑记录前的操作
      */
-    beforeEditRecord: Ext.emptyFn,
+    beforeEditRecord(){},
 
     /**
      * 编辑记录后的操作
      */
-    afterEditRecord: Ext.emptyFn,
+    afterEditRecord(){},
     
     editRecord(record) {
         let me = this,

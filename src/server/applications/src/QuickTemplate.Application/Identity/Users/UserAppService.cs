@@ -75,7 +75,7 @@ public class UserAppService: QuickTemplateAppService, IUserAppService
     }
 
     [Authorize(IdentityPermissions.Users.Create)]
-    public virtual async Task<IdentityUserDto> CreateAsync(IdentityUserCreateDto input)
+    public virtual async Task<IdentityUserDto> CreateAsync(UserCreateDto input)
     {
         var user = new IdentityUser(
             GuidGenerator.Create(),
@@ -95,7 +95,7 @@ public class UserAppService: QuickTemplateAppService, IUserAppService
     }
 
     [Authorize(IdentityPermissions.Users.Update)]
-    public virtual async Task<IdentityUserDto> UpdateAsync(Guid id, IdentityUserUpdateDto input)
+    public virtual async Task<IdentityUserDto> UpdateAsync(Guid id, UserUpdateDto input)
     {
         var user = await UserManager.GetByIdAsync(id);
         user.ConcurrencyStamp = input.ConcurrencyStamp;

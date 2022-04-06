@@ -4,20 +4,16 @@ Ext.define('Common.ux.dataview.DetailList',{
 
     requires:[
         'Common.data.store.Details',
+        'Common.ux.dataview.DetailListItem',
     ],
 
     flex: 1,
-    rowLines: true,
+    rowLines: false,
     striped: false,
-    userCls: 'listing', 
 
-    itemTpl:`
-        <div class="row  px-2 py-3">                
-            <div class="col-4 pl-0 h6 m-0 text-dark" >{label}</div>
-            <div class="col-8 pr-0 pl-0 h6 m-0 black-54 text-right x-editable {cls}" data-id="{id}" >{text}</div>
-        </div>
-
-    `,
+    itemConfig:{
+        xtype: 'uxmdetailistitem'
+    },
 
     store:{
         type: 'details'

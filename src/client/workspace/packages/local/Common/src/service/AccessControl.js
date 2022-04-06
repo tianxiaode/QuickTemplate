@@ -15,8 +15,6 @@ Ext.define('Common.service.AccessControl',{
     constructor(config) {
         let me = this;
         me.initConfig(config);
-        Config.isReady && me.setData();
-        Config.on('ready', me.setData, me)
     },
 
     isGranted(permissionName){
@@ -29,15 +27,13 @@ Ext.define('Common.service.AccessControl',{
         return this.getPolicies()[permission];
     },
 
-
-    privates:{
-        setData(){
-            let me = this,
-                auth = Config.getAuthData();
-            if(!auth) return;
-            me.setPolicies(Object.assign({}, auth.policies) );
-            me.setGrantedPolicies(Object.assign({},auth.grantedPolicies));
-        }
+    init(){
+        let me = this,
+            auth = Config.getAuthData();
+        if(!auth) return;
+        me.setPolicies(Object.assign({}, auth.policies) );
+        me.setGrantedPolicies(Object.assign({},auth.grantedPolicies));
     }
+
 
 });

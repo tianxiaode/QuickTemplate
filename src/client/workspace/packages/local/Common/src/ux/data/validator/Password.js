@@ -12,24 +12,14 @@ Ext.define('Common.ux.data.validator.Password', {
     validate(value){
         let me = this,
             setting = Config.getPasswordSetting(),
-            len = parseInt(setting.requiredLength),
-            message = me.getErrorMessage(setting);
-        if(value.length < len)  return message;
-        if(setting.requireDigit === 'true' && !me.isDigit(value) ) return message;
-        if(setting.requireLowercase === 'true' && !me.isLower(value) ) return message;
-        if(setting.requireUppercase === 'true' && !me.isUpper(value) ) return message;
-        if(setting.requireNonAlphanumeric === 'true' && !me.isNonAlphanumeric(value) ) return message;
-        return true;
-    },
-
-    getErrorMessage(setting){
-        let msg = []
-        if(setting.requireDigit) msg.push(I18N.get('PasswordRequireDigit'));
-        if(setting.requireLowercase) msg.push(I18N.get('PasswordRequireLowercase'));
-        if(setting.requireUppercase) msg.push(I18N.get('PasswordRequireUppercase'));
-        if(setting.requireNonAlphanumeric) msg.push(I18N.get('PasswordRequireNonAlphanumeric'));
-        msg.push(Format.format(I18N.get('PasswordRequireLength'), setting.requiredLength));
-        return msg.join(',') ;
+            len = parseInt(setting.requiredLength)
+            msg = [];
+        (value.length < len) && msg.push(Format.format(I18N.get('PasswordRequireLength'), setting.requiredLength));
+        (setting.requireDigit === 'True' && !me.isDigit(value) ) && msg.push(I18N.get('PasswordRequireDigit'));
+        (setting.requireLowercase === 'True' && !me.isLower(value)) &&  msg.push(I18N.get('PasswordRequireLowercase'));
+        (setting.requireUppercase === 'True' && !me.isUpper(value)) &&  msg.push(I18N.get('PasswordRequireUppercase'));
+        (setting.requireNonAlphanumeric === 'True' && !me.isNonAlphanumeric(value)) && msg.push(I18N.get('PasswordRequireNonAlphanumeric'));        
+        return msg.length>0 ? msg.join(',') : true;
     },
 
     isDigit: function(value){
@@ -37,11 +27,11 @@ Ext.define('Common.ux.data.validator.Password', {
     },
 
     isLower: function(value){
-        return (/[a-z]/gi).test(value);
+        return (/[a-z]/g).test(value);
     },
 
     isUpper: function(value){
-        return (/[A-Z]/gi).test(value);
+        return (/[A-Z]/g).test(value);
     },
 
     isNonAlphanumeric(value){

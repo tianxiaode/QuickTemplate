@@ -1,0 +1,52 @@
+Ext.define('Desktop.view.identity.users.Crud', {
+    extend: 'Common.ux.crud.container.Base',
+    xtype : 'desktop-usercrudview', 
+
+    requires:[
+        'Common.view.identity.users.Controller',
+    ],
+    
+    controller: 'common-usercontroller',
+    includeResource: false,
+
+    items: [
+        {
+            xtype: 'uxcrudgrid',
+            doubleTapToEdit: true,
+            childTap: true,
+            flex:1,
+            columns:[
+                {
+                    dataIndex: 'creationTime', renderer: Format.dateTime,width: 180,
+                },
+                { 
+                    dataIndex: 'userName', flex:1,
+                    cell:{  encodeHtml: false,},
+                    tpl: `{userName} ({fullName})`
+                },
+                { 
+                    dataIndex: 'email', flex:1,
+                    renderer: Format.girdHighlight,
+                    cell:{  encodeHtml: false,},
+                },
+                { 
+                    dataIndex: 'phoneNumber', flex:1,
+                    renderer: Format.girdHighlight,
+                    cell:{  encodeHtml: false,},
+                },
+                { xtype: 'checkcolumn', dataIndex: 'isActive', width: 80, listeners: { checkchange: 'onColumnCheckChange' } } ,
+                {  
+                    xtype: 'checkcolumn', dataIndex: 'lockoutEnabled', width: 80, listeners: { checkchange: 'onColumnCheckChange' },
+                    autoText: false, langText: 'Lockable'
+                },
+                {
+                    dataIndex: 'lockoutEnd',autoText: false, langText: 'UserLocked',
+                    flex:1,
+                    cell:{  encodeHtml: false,},
+                    tpl: `{lockoutEnd:dateTimeToCheckbox('lockoutEnd')}`
+
+                }
+            ]
+        }
+    ]
+});

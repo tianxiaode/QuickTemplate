@@ -25,7 +25,7 @@ Ext.define('Common.ux.button.user.Button',{
                 itemId: 'detailList',
                 scrollable: true,
                 flex: 1,
-                fields: ['userName','name', 'email', 'phoneNumber'],
+                fields: ['userName','name','surname', 'email', 'phoneNumber'],
             },        
         ],
     },

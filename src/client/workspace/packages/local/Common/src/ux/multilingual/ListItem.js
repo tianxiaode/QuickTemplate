@@ -9,7 +9,7 @@ Ext.define('Common.ux.multilingual.ListItem',{
         html = `
             <div class="d-flex px-2 py-2">
                 <div class="h6 text-dark m-0 lh-32" style="width:150px">${data.label}</div>
-                <div class="flex-fill h6 m-0 lh-32 text-black-50 text-right x-editable-text ${Format.nullValueColor(data.value)}" data-id="${data.id}">
+                <div class="flex-fill h6 m-0 lh-32 text-black-50 text-right x-editable-text " data-id="${data.id}">
                     ${Format.nullValueAndEditMessage(data.value)}
                 </div>
             </div>
@@ -17,4 +17,4 @@ Ext.define('Common.ux.multilingual.ListItem',{
         me.itemElement.setHtml(html);
     }
 })
-//<div class="mx-1 x-fa fa-ellipsis-h lh-32"></div>
+

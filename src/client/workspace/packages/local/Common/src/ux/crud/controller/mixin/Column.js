@@ -30,22 +30,33 @@ Ext.define('Common.ux.crud.controller.mixin.Column',{
             uncheckAction = store.uncheckAction,
             entityName = me.entityName,
             id = record.getId(),
-            data = me.getColumnCheckChangeData && me.getColumnCheckChangeData(),
             url;
         if(updateAction){
-            url = URI.crud(entityName,id, updateAction[field], checked);
+            url = URI.crud(entityName,id,updateAction[field], checked);
         }else{
             action = checked ? checkAction[field] : uncheckAction[field];
             url = URI.crud(entityName,id, action);
         }
-        Http.patch(url,data).then(me.onColumnCheckChangeSuccess, me.onColumnCheckChangeFailure, null, me);
+        Http.patch(url,{id: id, field: field}).then(me.onColumnCheckChangeSuccess, me.onColumnCheckChangeFailure, null, me);
     },
 
     /**
      * 更新成功
      */
-    onColumnCheckChangeSuccess(){
-        this.getStore().commitChanges();
+    onColumnCheckChangeSuccess(response){
+        let me = this;
+            request = response.request,
+            data = request && request.jsonData,
+            store = me.getStore();
+        if(data){
+            let record = store.getById(data.id),
+                value = record && record.get(data.field);
+            if(!Ext.isBoolean(value)){
+                let returnValue = Http.parseResponse(response);
+                record.set(data.field, returnValue);
+            }
+        }
+        store.commitChanges();
         Toast(I18N.get('UpdateSuccess'));
     },
 

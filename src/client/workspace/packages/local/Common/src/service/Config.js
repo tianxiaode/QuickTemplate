@@ -34,7 +34,15 @@ Ext.define('Common.service.Config', {
     },
 
     getPasswordSetting(){
-        return this.data.passwordSetting;
+        let setting = Config.data.setting.values;
+        return {
+            requiredLength: setting['Abp.Identity.Password.RequiredLength'],
+            requireDigit: setting['Abp.Identity.Password.RequireDigit'],
+            requireLowercase: setting['Abp.Identity.Password.RequireLowercase'],
+            requireUppercase: setting['Abp.Identity.Password.RequireUppercase'],
+            requireNonAlphanumeric: setting['Abp.Identity.Password.RequireNonAlphanumeric'],
+            requiredUniqueChars: setting['Abp.Identity.Password.RequiredUniqueChars']
+        };
     },
 
     getFileOption(key){
@@ -73,6 +81,7 @@ Ext.define('Common.service.Config', {
             let me = this,
                 data = Http.parseResponse(response);
             me.data = Object.assign({}, data);
+            ACL.init();
             //me.setFileOptions(result.fileOption);
             me.isReady = true;
             me.fireEvent('ready', data);
