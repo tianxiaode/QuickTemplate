@@ -6,7 +6,7 @@ Ext.define('Common.ux.crud.controller.Base',{
         'Common.ux.crud.controller.mixin.Ajax',
         'Common.ux.crud.controller.mixin.ViewModel',
         'Common.ux.crud.controller.mixin.Button',
-        'Common.ux.crud.controller.mixin.Column',
+        'Common.ux.crud.controller.mixin.CheckChange',
         'Common.ux.crud.controller.mixin.Batch',
         'Common.ux.crud.controller.mixin.Crud',
         'Common.ux.crud.controller.mixin.View',

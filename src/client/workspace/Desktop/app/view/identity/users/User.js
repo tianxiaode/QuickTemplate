@@ -4,11 +4,14 @@ Ext.define('Desktop.view.identity.users.User', {
 
     requires:[
         'Desktop.view.identity.users.Crud',
-        'Common.view.identity.users.Model'
+        'Common.view.identity.users.Model',
+        'Common.view.identity.users.More',
+        'Desktop.view.identity.users.UserController',
     ],
 
     layout: 'hbox',
     viewModel: 'usermodel',
+    controller: 'desktop-usercontroller',
     includeResource: true,
     
     items: [
@@ -17,7 +20,7 @@ Ext.define('Desktop.view.identity.users.User', {
             flex: 1
         },
         {
-
+            xtype: 'usermoreview'
         }
     ]
 });

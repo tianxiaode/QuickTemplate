@@ -7,5 +7,7 @@ Ext.define('Common.data.store.identity.Users',{
     ],
 
     model: 'Common.data.model.identity.User',
-    sorters:'creationTime',
+    sorters: {
+        property: 'creationTime', direction: 'DESC'
+    }
 })

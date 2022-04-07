@@ -83,6 +83,7 @@ Ext.define('Common.ux.crud.controller.mixin.Button',{
     initButtons(){
         let me = this,
             permissions = me.permissions;
+        console.log('initButtons',me.isGranted(permissions.create))
         me.setButtonHidden('create', !me.isGranted(permissions.create));
         me.setButtonHidden('update', !me.isGranted(permissions.update));
         me.setButtonHidden('delete', !me.isGranted(permissions.delete));

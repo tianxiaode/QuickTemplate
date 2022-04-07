@@ -27,4 +27,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="EntityFrameworkCore\Identity\Roles\" />
+  </ItemGroup>
+
 </Project>

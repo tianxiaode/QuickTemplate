@@ -1,0 +1,24 @@
+Ext.define('Common.view.identity.users.More',{
+    extend: 'Common.ux.panel.More',
+    xtype: 'usermoreview',
+
+    requires:[
+        'Common.view.identity.users.roles.Role',
+    ],
+
+    viewModel: 'usermoremodel',
+
+    defaultTabs:[
+        {
+            langText: 'Roles',
+            pageType: 'userroleview',
+            pageItemId: 'roles',
+        }
+    ],
+
+    switchTitle(me, record){
+        let text = record ? record.get('userName') : I18N.get('None');
+        me.setTitle(I18N.get('CurrentUser', me.resourceName) + ": " + text);
+    }
+
+})

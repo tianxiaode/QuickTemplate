@@ -25,8 +25,6 @@
     "SubMenu.User": "用户管理",
     "SubMenu.Role": "角色管理",
     "SubMenu.Infrastructure": "基础设施",
-    "SubMenu.SystemSetting": "设置设置",
-    "Role": "角色",
-    "User": "用户"
+    "SubMenu.SystemSetting": "设置设置"
   }
 }

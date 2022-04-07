@@ -37,17 +37,11 @@ public class UserController: QuickTemplateController,IUserAppService
 
     [HttpGet]
     [Route("{id:guid}/roles")]
-    public Task<ListResultDto<IdentityRoleDto>> GetRolesAsync(Guid id)
+    public Task<ListResultDto<IdentityRoleDto>> GetRolesAsync(Guid id, UserGetRolesInput input)
     {
-        return UserAppService.GetRolesAsync(id);
+        return UserAppService.GetRolesAsync(id, input);
     }
 
-    [HttpGet]
-    [Route("assignable-roles")]
-    public Task<ListResultDto<RoleDto>> GetAssignableRolesAsync()
-    {
-        return UserAppService.GetAssignableRolesAsync();
-    }
 
     [HttpPost]
     public Task<IdentityUserDto> CreateAsync([FromBody]UserCreateDto input)

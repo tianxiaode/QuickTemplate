@@ -1,4 +1,4 @@
-Ext.define('Common.ux.crud.controller.mixin.Column',{
+Ext.define('Common.ux.crud.controller.mixin.CheckChange',{
     extend: 'Ext.Mixin',
 
         /**

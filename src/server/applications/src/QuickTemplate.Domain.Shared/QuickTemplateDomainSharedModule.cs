@@ -1,4 +1,6 @@
-﻿using QuickTemplate.Infrastructures;
+﻿using Generic.Abp.Enumeration;
+using QuickTemplate.Enumerations;
+using QuickTemplate.Infrastructures;
 using QuickTemplate.Localization;
 using Volo.Abp.AuditLogging;
 using Volo.Abp.BackgroundJobs;
@@ -49,6 +51,15 @@ public class QuickTemplateDomainSharedModule : AbpModule
 
             options.DefaultResourceType = typeof(QuickTemplateResource);
         });
+
+        Configure<EnumerationOptions>(options =>
+        {
+            options
+                .Resources
+                .Add(typeof(SelectedOrNot));
+
+        });
+
 
         Configure<AbpExceptionLocalizationOptions>(options =>
         {

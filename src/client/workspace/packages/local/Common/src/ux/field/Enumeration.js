@@ -13,6 +13,10 @@ Ext.define('Common.ux.field.Enumeration',{
 
     picker: 'floated',
 
+    store:{
+        sorters: 'order'
+    },
+
     initialize(){
         let me = this;
         me.callParent();
@@ -28,19 +32,19 @@ Ext.define('Common.ux.field.Enumeration',{
             name = Format.uncapitalize(me.getEnumName()),
             resourceName =null,
             isIntValue = me.getIsIntValue(),            
-            valueField = isIntValue ? 'value' : 'textValue',
+            valueField = isIntValue ? 'value' : 'text',
             defaultOption;
         if(Ext.isEmpty(name)) return;
         let values = Enums[name],
             options = [];
         if(Ext.isEmpty(values)) return;
-        Object.keys(values).forEach(key=>{
-            let item = values[key];
-            resourceName = item.resourceName ;
-            let option = {value: item[valueField], text: I18N.get(item.text, resourceName) , id: item.id};
-            if(item.isDefault) defaultOption = option;
+        Ext.iterate(values,(k,v)=>{
+            resourceName = v.resourceName;
+            let option = {value: v[valueField], langText: v.text , id: v.id, order: v.order};
+            if(v.isDefault) defaultOption = option;
             options.push(option);
-        });
+        })
+        me.resourceName = resourceName;
         if(me.getHasAllValue()) {
             let text = I18N.get(me.getAllValueText(), resourceName) || `${I18N.get('All')}${I18N.get(Format.capitalize(name), resourceName)}`;
             options = [{value: isIntValue ? -1 : 'all', text: text}]
@@ -55,8 +59,19 @@ Ext.define('Common.ux.field.Enumeration',{
             defaultOption && me.setValue(defaultOption.value);
             me.resumeEvent('change');
         }
+        me.onLocalized();
         me.getPicker().setZIndex(1000);
     },
 
+    onLocalized(){
+        let me = this,
+            store = me.getStore();
+        me.callParent();
+        store.each(r=>{
+            let lang = r.get('langText')
+            r.set('text', I18N.get(lang, me.resourceName));
+
+        })
+    }
 
 })

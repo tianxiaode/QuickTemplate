@@ -62,7 +62,7 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
     {
         var list = await RoleRepository.GetListAsync(input.Sorting, input.MaxResultCount, input.SkipCount, input.Filter);
         var totalCount = await RoleRepository.GetCountAsync(input.Filter);
-
+        
         var dtos = ObjectMapper.Map<List<IdentityRole>, List<RoleDto>>(list);
         foreach (var dto in dtos)
         {

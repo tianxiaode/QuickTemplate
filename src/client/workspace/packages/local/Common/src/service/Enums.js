@@ -45,8 +45,8 @@ Ext.define('Common.service.Enums', {
         }
         let data = this[name];
         let item ;
-        Ext.Object.each(data, (k,m)=>{
-            if(m.textValue !== v) return;
+        Ext.iterate(data, (k,m)=>{
+            if(m.text !== v) return;
             item = m;
             return false;
         });
@@ -71,14 +71,14 @@ Ext.define('Common.service.Enums', {
             let me = this;
             if(!successful) return;
             records.forEach(record => {
-                let type = Format.uncapitalize(record.get('type')),
-                    data = me[type];
+                let name = Format.uncapitalize(record.get('name')),
+                    data = me[name];
                 if(!data){
-                    data = me[type] = {};
+                    data = me[name] = {};
                 }
                 let d = Ext.clone(record.data);
-                data[record.get('key')] = d;
-                if(record.get('isDefault')) me.defaultValue[type] = d;
+                data[Format.uncapitalize(record.get('text'))] = d;
+                if(record.get('isDefault')) me.defaultValue[name] = d;
             });
             me.updateModelFieldDefaultValue();
             me.isReady = true;
@@ -86,31 +86,6 @@ Ext.define('Common.service.Enums', {
         },
 
         updateModelList:{
-            'merchantCategoryCode': {
-                'clearingaccountbase' : 'mcc'
-            },
-            'merchantType':{
-                'clearingaccountbase' : 'merchantType'
-            },
-            'bankAccountUsageType':{
-                'clearingaccountbank': 'accountUsageType'
-            },
-            'bankAccountType':{
-                'clearingaccountbank': 'accountType'
-            },
-            'certType':{
-                'clearingaccountbase': 'certType'
-            },
-            'clearingRulePattern':{
-                'clearingrule': 'pattern',
-                'marketingclearing': 'pattern'
-            },
-            'marketingType':{
-                'marketing': 'type'
-            },
-            'marketingDiscountType':{
-                'marketing': 'discountType'
-            }
         },
     
         updateModelFieldDefaultValue(){

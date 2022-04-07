@@ -3,7 +3,6 @@ Ext.define('Common.ux.crud.controller.More', {
 
     currentId: null,
     currentEntity: null,
-    morePanelType: 'uxmorepanel',
 
     init(){
         let me = this;
@@ -17,9 +16,7 @@ Ext.define('Common.ux.crud.controller.More', {
     },
 
     getRecord(){
-        let me = this;
-        if(Ext.isEmpty(me.morePanelType)) return null;
-        return this.getView().up(me.morePanelType).getRecord();
+        return this.getView().up('[isMorePanel]').getRecord();
     },
 
     isEditable(){
@@ -55,10 +52,9 @@ Ext.define('Common.ux.crud.controller.More', {
             store.commitChanges();
             return;
         }
-        store.getProxy().setUrl(URI.crud(me.entityName, id, me.currentEntity));
+        store.getProxy().setUrl(URI.crud(me.entityName, id, Format.pluralize(me.currentEntity)));
         store.loadPage(1);
     },
 
 
-});
- 
+}); 

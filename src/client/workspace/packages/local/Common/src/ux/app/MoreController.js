@@ -2,33 +2,29 @@ Ext.define('Common.ux.app.MoreController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.uxmorecontroller',
 
-    mainReferenceName: 'mainPanel',
-    moreReferenceName: 'morePanel',
-
     init(){
-        let me = this;
-        me.list = me.lookup(me.mainReferenceName);
-        me.more = me.lookup(me.moreReferenceName);
-        me.list.on('select', me.onGridSelected, me);
-        me.list.on('deselect', me.onGridDeselected, me);
+        let me = this
+            view = me.getView();
+        me.list = view.down('[isCrudPanel]').down('[isCrudList]');
+        me.more = view.down('[isMorePanel]');
+        me.list.on('select', me.onListSelected, me);
+        me.list.on('deselect', me.onListDeselected, me);
         me.more.updateRecord(null);
     },
 
-    onGridSelected(sender,  selected, eOpts){
+    onListSelected(sender,  selected, eOpts){
         let me = this,
-            selection = me.getCurrentSelected();
+            selection = me.getCurrentSelection();
         me.more.setRecord(selection);
-        //me.getViewModel().set('selection', selection)
     },
 
-    onGridDeselected(sender, records, eOpts){
+    onListDeselected(sender, records, eOpts){
         let me = this,
-            selection = me.getCurrentSelected();
+            selection = me.getCurrentSelection();
         me.more.setRecord(selection);
-        //me.getViewModel().set('selection', selection)
     },
 
-    getCurrentSelected(){
+    getCurrentSelection(){
         let me = this;
         return me.list.getSelectable().getSelections()[0];
     },

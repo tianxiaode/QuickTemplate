@@ -2,6 +2,8 @@ Ext.define('Common.ux.crud.container.Base',{
     extend: 'Ext.Container',
     xtype: 'uxcrudcontainer',
 
+    isCrudPanel: true,
+
     mixins:[
         'Common.mixin.component.Crud',
         'Common.mixin.component.Refresh',
