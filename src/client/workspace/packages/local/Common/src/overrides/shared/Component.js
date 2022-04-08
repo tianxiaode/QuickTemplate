@@ -35,11 +35,16 @@ Ext.define('Common.overrides.shared.Component',{
         return this.entityName || this.getContainerResource('entityName');
     },
 
+    getPermissions(){
+        return this.permissions || this.getContainerResource('permissions');        
+    },
+
     getContainerResource(name){
         let me = this,
             container = (me.includeResource && me) || (me.up && me.up('[includeResource]')),
-            vm = container && container.getViewModel();
-        return (vm && vm.get(name)) || (container && container[name]);
+            vm = container && container.getViewModel(),
+            controller = container && container.getController && container.getController();
+        return (vm && vm.get(name)) || (controller && controller[name]) || (container && container[name]);
 
     },
 

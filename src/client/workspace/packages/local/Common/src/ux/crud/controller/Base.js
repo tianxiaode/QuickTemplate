@@ -5,6 +5,7 @@ Ext.define('Common.ux.crud.controller.Base',{
     mixins:[
         'Common.ux.crud.controller.mixin.Ajax',
         'Common.ux.crud.controller.mixin.ViewModel',
+        'Common.ux.crud.controller.mixin.ResourceAndPermission',
         'Common.ux.crud.controller.mixin.Button',
         'Common.ux.crud.controller.mixin.CheckChange',
         'Common.ux.crud.controller.mixin.Batch',
@@ -20,23 +21,12 @@ Ext.define('Common.ux.crud.controller.Base',{
         'Common.ux.crud.controller.mixin.DoubleTapToEdit',
     ],
 
-    entityName: null, //实体
-    resourceName: null, //资源
     list: null , //列表对象
-    isPhone: false, //是否手机平台
-    permissionGroup: null, //权限组
-    permissionName: null, //权限名
-    permissions:{
-        create: 'Create',
-        update: 'Update',
-        delete: 'Delete'
-    },
 
     init(){
         let me = this;
         me.isPhone = Ext.platformTags.phone;
         me.initList();
-        me.initBaseProperties(me);
     },
 
     /**
@@ -52,18 +42,6 @@ Ext.define('Common.ux.crud.controller.Base',{
         list.on('storechange', me.onStoreChange, me);
     },
 
-    initBaseProperties(me){
-        let names = ['entityName', 'resourceName', 'permissionGroup', 'permissionName'],
-            view = me.getView();
-        names.forEach(n=>{
-            let value = me[n];
-            if(!Ext.isEmpty(value)) return;
-            value = me.getViewModelValue(n)  || me.list[n]  || view[n];
-            if(Ext.isEmpty(value) && n === 'permissionName') value = Format.pluralize(me.entityName);
-            if(Ext.isEmpty(value)) Ext.raise(`No ${n}`);
-            me[n] = Format.capitalize(value);    
-        })
-    },
 
     initButtons(){},
     updateButtons(){},
@@ -111,7 +89,8 @@ Ext.define('Common.ux.crud.controller.Base',{
     /**
      * 存储加载前的操作
      */
-    onStoreBeforeLoad(){
+    onStoreBeforeLoad(store){
+        if(Ext.isEmpty(store.getProxy().getUrl())) return false;
         this.doDeselectAll();
         return true;
     },
@@ -129,10 +108,5 @@ Ext.define('Common.ux.crud.controller.Base',{
         store.loadPage(1);
     },
 
-    onBack(){
-        let me = this,
-            backView = me.backView || Ext.route.Router.application.getDefaultToken();
-        me.redirectTo(backView);
-    },
 
 })

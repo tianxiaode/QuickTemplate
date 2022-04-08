@@ -11,7 +11,7 @@ public interface IUserAppService
 {
     Task<IdentityUserDto> GetAsync(Guid id);
     Task<PagedResultDto<IdentityUserDto>> GetListAsync(GetIdentityUsersInput input);
-    Task<ListResultDto<IdentityRoleDto>> GetRolesAsync(Guid id, UserGetRolesInput input);
+    Task<PagedResultDto<UserGetRoleDto>> GetRolesAsync(Guid id, UserGetRolesInput input);
     Task<IdentityUserDto> CreateAsync(UserCreateDto input);
     Task<IdentityUserDto> UpdateAsync(Guid id, UserUpdateDto input);
     Task<ListResultDto<IdentityUserDto>> DeleteAsync(List<Guid> ids);

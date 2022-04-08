@@ -7,4 +7,6 @@ public class RoleDto: IdentityRoleDto
 {
     public List<string> Permissions { get; set; }
     public List<RoleTranslationDto> Translations { get; set; }
+
+
 }

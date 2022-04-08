@@ -2,8 +2,6 @@ Ext.define('Phone.view.identity.roles.Role', {
     extend: 'Common.ux.crud.container.Phone',
     xtype : 'roleview', 
 
-    hasCountMessage: false,
-    
     requires:[
         'Common.ux.crud.List',
         'Common.view.identity.roles.Model',

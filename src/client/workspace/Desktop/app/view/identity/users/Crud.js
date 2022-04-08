@@ -6,7 +6,7 @@ Ext.define('Desktop.view.identity.users.Crud', {
         'Common.view.identity.users.Controller',
     ],
     
-    controller: 'common-usercontroller',
+    controller: 'usercontroller',
     includeResource: false,
 
     items: [
@@ -34,9 +34,9 @@ Ext.define('Desktop.view.identity.users.Crud', {
                     renderer: Format.girdHighlight,
                     cell:{  encodeHtml: false,},
                 },
-                { xtype: 'checkcolumn', dataIndex: 'isActive', width: 80, listeners: { checkchange: 'onColumnCheckChange' } } ,
+                { xtype: 'uxcheckchangecolumn', dataIndex: 'isActive' } ,
                 {  
-                    xtype: 'checkcolumn', dataIndex: 'lockoutEnabled', width: 80, listeners: { checkchange: 'onColumnCheckChange' },
+                    xtype: 'uxcheckchangecolumn', dataIndex: 'lockoutEnabled',
                     autoText: false, langText: 'Lockable'
                 },
                 {

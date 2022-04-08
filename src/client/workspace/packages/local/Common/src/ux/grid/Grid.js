@@ -2,6 +2,10 @@ Ext.define('Common.ux.grid.Grid',{
     extend: 'Ext.grid.Grid',
     xtype: 'uxgrid',
 
+    requires:[
+        'Common.ux.grid.column.CheckChange',
+    ],
+
     config:{
         grouped: false,
     },

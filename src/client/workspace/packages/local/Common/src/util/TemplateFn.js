@@ -215,15 +215,13 @@ Ext.define('Common.util.TemplateFn',{
             return Format.currency(v/100);
         },
         unDefine(v, values, field, hasDanger){
+            let me = this;
             if(Ext.isEmpty(v)){
-                let text = `[${I18N.get(Format.capitalize(field), Format.getResourceName(this), Format.getEntityName(this))}]`;
+                let text = `[${I18N.get(Format.capitalize(field), me.getResourceName(), me.getEntityName())}]`;
                 if(hasDanger) text = Format.getColorText(text, 'text-danger');
                 return text;
             }
-            if(Ext.isObject(v) && (field.toLowerCase() === 'Industry'.toLowerCase() || field.toLowerCase() === 'CargoType'.toLowerCase())){
-                return Format.translationItem(v.displayName,v, 'displayName');
-            }
-            return values && field ? Format.translationItem(v,values, field) : v;
+            return v;
         },
         separator(v){
             return v ? ' > ' : '';

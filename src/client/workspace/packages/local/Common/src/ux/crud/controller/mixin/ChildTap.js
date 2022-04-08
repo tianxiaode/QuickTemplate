@@ -21,7 +21,7 @@ Ext.define('Common.ux.crud.controller.mixin.ChildTap',{
         }
 
         if(classList.includes('fa-ellipsis-h')){
-            me.onShowView('detail', record);
+            me.onShowView('more', record);
             return;
         }
 
@@ -46,7 +46,7 @@ Ext.define('Common.ux.crud.controller.mixin.ChildTap',{
             old = Ext.isBoolean(value) ? value :  !Ext.isEmpty(value),
             checked = !old;
         Ext.isBoolean(value) && record.set(field, value );
-        me.doColumnCheckChange(record, field, checked);
+        me.doCheckChange(record, field, checked);
     }
 
 

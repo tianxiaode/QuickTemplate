@@ -78,33 +78,13 @@
       },
       {
         "Id": "0a2cb2bd-3810-4a5d-9382-111a36bc3ffa",
-        "LangText": "SubMenu.Role",
-        "IconCls": "x-fa fa-user-shield",
-        "ViewType": "roleView",
+        "LangText": "SubMenu.User",
+        "IconCls": "x-fa fa-users",
+        "ViewType": "userView",
         "Category": "MobileMenuCategory.Identity",
         "Color": "text-primary",
-        "Order": 210,
-        "RequiredPermissionNames": [ "AbpIdentity.Roles.ManagePermissions" ]
-      },
-      {
-        "Id": "0a2cb2bd-3810-4a5d-9382-111a36bc3ffb",
-        "LangText": "SubMenu.Role",
-        "IconCls": "x-fa fa-user-shield",
-        "ViewType": "roleView",
-        "Category": "MobileMenuCategory.Identity",
-        "Color": "text-primary",
-        "Order": 210,
-        "RequiredPermissionNames": [ "AbpIdentity.Roles.ManagePermissions" ]
-      },
-      {
-        "Id": "0a2cb2bd-3810-4a5d-9382-111a36bc3ffc",
-        "LangText": "SubMenu.Role",
-        "IconCls": "x-fa fa-user-shield",
-        "ViewType": "roleView",
-        "Category": "MobileMenuCategory.Identity",
-        "Color": "text-primary",
-        "Order": 210,
-        "RequiredPermissionNames": [ "AbpIdentity.Roles.ManagePermissions" ]
+        "Order": 211,
+        "RequiredPermissionNames": [ "AbpIdentity.Users.ManagePermissions" ]
       }
 
     ]

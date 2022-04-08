@@ -6,15 +6,15 @@ Ext.define('Common.ux.data.Store', {
         'Common.ux.data.proxy.Format'
     ],
 
-    updateAction:{},
-    checkAction:{},
-    uncheckAction:{},
+    updateAction:null,
+    checkAction:null,
+    uncheckAction:null,
     entity: null,
     controller: null,
     remoteSort: true,
     remoteFilter: true,
-    localFilterFields:[],
-    sortFields:[],
+    localFilterFields:null,
+    sortFields: null,
     filterValue: null,
     pageSize: 25,
     proxy: {
@@ -26,13 +26,20 @@ Ext.define('Common.ux.data.Store', {
         model = me.callParent(arguments);
         if(Ext.isEmpty(model)) return model;
         let fields = model.getFields();
+        me.updateAction = {};
+        me.checkAction = {}
+        me.uncheckAction = {};
+        me.localFilterFields =[];
+        me.sortFields = {};
+        me.langText = {};
         fields.forEach(field => {
             if(field.messageField) me.messageField = field.name;
             if(field.updateAction) me.updateAction[field.name] = field.updateAction;
             if(field.checkAction) me.checkAction[field.name] = field.checkAction;
             if(field.uncheckAction) me.uncheckAction[field.name] = field.uncheckAction;
             if(field.localFilter) me.localFilterFields.push(field.name);
-            if(field.allowSort) me.sortFields.push(field.name);
+            if(field.allowSort) me.sortFields[field.name] = true;
+            if(field.langText) me.langText[field.name] = field.langText;
         });
         return model;
     },    

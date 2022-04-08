@@ -4,7 +4,7 @@ Ext.define('Common.ux.crud.controller.mixin.View',{
     defaultViewXTypes:{
         create: '{entity}EditView',
         update: '{entity}EditView',
-        detail: '{entity}DetailView',
+        more: '{entity}MoreView',
         multilingual: '{entity}MultilingualView',
     },
 
@@ -25,6 +25,7 @@ Ext.define('Common.ux.crud.controller.mixin.View',{
                 includeResource: true,
                 permissionGroup: me.permissionGroup,
                 permissionName: me.permissionName,
+                permissions: Ext.clone(me.permissions),
                 backView: Ext.History.getToken(),
                 listeners:{scope: me},
             };

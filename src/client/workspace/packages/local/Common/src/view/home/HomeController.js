@@ -102,7 +102,9 @@ Ext.define('Common.view.home.HomeController',{
         }
         me.currentToken = Ext.History.getToken();
         let view = ViewMgr.showView(xtype,params.type, params.config, true, container);
-        if(op === 'detail' && params.record) view.setRecord(params.record);
+        if(op === 'more' && params.record) {
+            view.setRecord(params.record);
+        };
     },
 
     onHideLastView(){

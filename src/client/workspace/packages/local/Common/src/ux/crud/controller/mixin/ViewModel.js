@@ -7,7 +7,7 @@ Ext.define('Common.ux.crud.controller.mixin.ViewModel',{
      */
     getViewModelValue(key){
         let vm = this.getViewModel();
-        return vm.get && vm.get(key);
+        return vm && vm.get(key);
     },
 
     /**

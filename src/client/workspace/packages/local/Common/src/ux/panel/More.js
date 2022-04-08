@@ -5,7 +5,8 @@ Ext.define('Common.ux.panel.More',{
     isMorePanel: true,
 
     mixins:[
-        'Common.mixin.component.TabBar'
+        'Common.mixin.component.TabBar',
+        'Common.mixin.component.Back',
     ],
 
     width: 480,
@@ -15,7 +16,7 @@ Ext.define('Common.ux.panel.More',{
         edges: 'west'
     },
     layout: 'vbox',
-
+    collapsible: 'right',
 
     updateRecord(record){
         let me = this;

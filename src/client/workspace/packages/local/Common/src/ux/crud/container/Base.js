@@ -12,28 +12,29 @@ Ext.define('Common.ux.crud.container.Base',{
     ],
 
     config:{
+        toolbarUi: 'grid',
         toolbar:{
             xtype: 'toolbar',
             isCrudToolbar: true,
             weighted: true,
             shadow: false,
             weight: 10,
-            layout: {
-                type: 'box',
-                align: 'start',
-            }
         },
     },
 
-    toolbarUi: 'grid',
     layout: 'vbox',
     includeResource: true,
     weighted: true,
 
+    applyToolbarUi(ui){
+        if(this.isPhone()) return 'dark';
+        return ui;
+    },
+
     createToolbar(newCmp) {
         return Ext.apply({
             ownerCmp: this,
-            ui: this.toolbarUi
+            ui: this.getToolbarUi()
         }, newCmp);
     },
 

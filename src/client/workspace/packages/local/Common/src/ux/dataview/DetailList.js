@@ -43,4 +43,5 @@ Ext.define('Common.ux.dataview.DetailList',{
         })
     },
    
+    
 })

@@ -12,6 +12,7 @@ Ext.define('Common.ux.crud.container.Phone',{
 
     toolbarUi: 'dark',
     searchFieldUi: 'search',
+    backMixinContainer: '[isCrudToolbar]',
 
     config:{
         title: null,

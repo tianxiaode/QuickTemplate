@@ -35,11 +35,19 @@ Ext.define('Common.mixin.component.SearchField',{
 
     initialize(){
         let me = this,
+            morePanel = me.up('[isMorePanel]'),
             container = me.getMixinContainer(),
             isPhone = Ext.platformTags.phone,
             field = me.getSearchField();
         if(!me.hasSearchField) return;
         !isPhone && container.add(field);
+        if(morePanel && isPhone){
+            let cmp = container.add(field);
+            cmp.setUi('solo');
+            cmp.setWidth(120);
+            cmp.setMargin('0 5px 0 0');
+            return;
+        }
         isPhone && me.add(field);
     }
 

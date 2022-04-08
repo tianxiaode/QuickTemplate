@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using QuickTemplate.Enumerations;
 using QuickTemplate.Identity.Roles;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -21,12 +24,12 @@ public class UserAppService: QuickTemplateAppService, IUserAppService
 {
     protected IdentityUserManager UserManager { get; }
     protected IIdentityUserRepository UserRepository { get; }
-    public IIdentityRoleRepository RoleRepository { get; }
+    public IRoleRepository RoleRepository { get; }
 
     public UserAppService(
         IdentityUserManager userManager,
         IIdentityUserRepository userRepository,
-        IIdentityRoleRepository roleRepository)
+        IRoleRepository roleRepository)
     {
         UserManager = userManager;
         UserRepository = userRepository;
@@ -55,17 +58,29 @@ public class UserAppService: QuickTemplateAppService, IUserAppService
     }
 
     [Authorize(IdentityPermissions.Users.Default)]
-    public virtual async Task<ListResultDto<IdentityRoleDto>> GetRolesAsync(Guid id, UserGetRolesInput input)
+    public virtual async Task<PagedResultDto<UserGetRoleDto>> GetRolesAsync(Guid id, UserGetRolesInput input)
     {
         //TODO: Should also include roles of the related OUs.
 
         var roles = await UserRepository.GetRolesAsync(id);
+        var roleIds = roles.Select(m => m.Id).ToList();
 
+        Expression<Func<IdentityRole, bool>> predicate = input.Type == SelectedOrNot.Selected.Value
+            ? m => roleIds.Contains(m.Id)
+            : input.Type == SelectedOrNot.Not.Value
+                ? m => !roleIds.Contains(m.Id)
+                : null;
 
+        var totalCount = await RoleRepository.GetCountAsync(input.Filter, predicate);
 
-        return new ListResultDto<IdentityRoleDto>(
-            ObjectMapper.Map<List<IdentityRole>, List<IdentityRoleDto>>(roles)
-        );
+        var list = await RoleRepository.GetListAsync(input.Sorting, input.MaxResultCount, input.SkipCount, input.Filter,
+            predicate);
+
+        var dtos = list.Select(identityRole =>
+            ObjectMapper.Map<Tuple<IdentityRole, bool>, UserGetRoleDto>(
+                new Tuple<IdentityRole, bool>(identityRole, roleIds.Contains(identityRole.Id)))).ToList();
+
+        return new PagedResultDto<UserGetRoleDto>(totalCount, dtos.ToList());
     }
 
     [Authorize(IdentityPermissions.Users.Default)]

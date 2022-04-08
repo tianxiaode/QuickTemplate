@@ -37,7 +37,7 @@ public class UserController: QuickTemplateController,IUserAppService
 
     [HttpGet]
     [Route("{id:guid}/roles")]
-    public Task<ListResultDto<IdentityRoleDto>> GetRolesAsync(Guid id, UserGetRolesInput input)
+    public Task<PagedResultDto<UserGetRoleDto>> GetRolesAsync(Guid id, UserGetRolesInput input)
     {
         return UserAppService.GetRolesAsync(id, input);
     }

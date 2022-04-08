@@ -3,7 +3,7 @@ Ext.define('Common.data.model.identity.Role', {
     alias: 'entity.role',
    
     fields: [
-        { name: 'name', defaultValue: '', messageField: true, allowSort: true},
+        { name: 'name', type: 'string', defaultValue: '', messageField: true, allowSort: true, langText: 'DisplayName:RoleName'},
         { name: 'permissions' , defaultValue: []},
         { name: 'isStatic', type: 'bool', defaultValue: false},
         { name: 'isDefault', type: 'bool', defaultValue: false, updateAction: 'default', allowSort: true},

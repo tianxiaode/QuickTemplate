@@ -15,14 +15,14 @@ Ext.define('Common.mixin.component.TabBar', {
         },
     },
 
-    defaultTabs: [],
-    tabs:[],
+    defaultTabs: null,
+    tabs:null,
     currentPage: null,
 
     createTabBar(newCmp){
         let me = this,            
-            defaults = me.defaultTabs,
-            tabs = [...me.tabs,...defaults],
+            defaults = me.defaultTabs || [],
+            tabs = (me.tabs || []).concat(defaults)
             config = me.isPhone() ? {
                 scrollable: true,
                 layout:{ pack: 'left', overflow: 'scroller' },
@@ -62,7 +62,7 @@ Ext.define('Common.mixin.component.TabBar', {
             tabBar = me.getTabBar(),
             current = me.currentPage;
         
-        currentPage && current.setHidden(true);
+        current && current.setHidden(true);
         if(!item){
             item = me.add(me.getViewConfig(newTab.pageType, newTab.pageItemId));
         }
@@ -74,11 +74,13 @@ Ext.define('Common.mixin.component.TabBar', {
     },
 
     getViewConfig(xtype, itemId){
+        let me = this;
         return { 
             xtype: xtype,
-            includeResource: true,
-            resourceName: this.getResourceName(), 
-            entityName: this.getEntityName(),
+            // includeResource: true,
+            // resourceName: me.getResourceName(),
+            // entityName: me.getEntityName(),
+            // permissions: Ext.clone(me.getPermissions()),
             itemId: itemId, 
             flex:1
         }

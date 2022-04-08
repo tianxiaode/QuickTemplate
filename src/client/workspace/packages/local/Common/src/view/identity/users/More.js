@@ -7,6 +7,7 @@ Ext.define('Common.view.identity.users.More',{
     ],
 
     viewModel: 'usermoremodel',
+    hasBack: true,
 
     defaultTabs:[
         {

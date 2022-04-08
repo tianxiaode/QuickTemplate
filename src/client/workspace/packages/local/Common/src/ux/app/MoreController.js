@@ -2,11 +2,14 @@ Ext.define('Common.ux.app.MoreController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.uxmorecontroller',
 
+    crudPanel: '[isCrudPanel]',
+    morePanel: '[isMorePanel]',
+
     init(){
         let me = this
             view = me.getView();
-        me.list = view.down('[isCrudPanel]').down('[isCrudList]');
-        me.more = view.down('[isMorePanel]');
+        me.list = view.down(me.crudPanel).down('[isCrudList]');
+        me.more = view.down(me.morePanel);
         me.list.on('select', me.onListSelected, me);
         me.list.on('deselect', me.onListDeselected, me);
         me.more.updateRecord(null);

@@ -17,6 +17,7 @@ Ext.define('Common.mixin.component.More', {
             menu:{
                 ui: 'dark',
                 includeResource: true,
+                scrollable: 'y',
                 anchor: true,
                 defaults:{ ui: 'dark'}
             }
@@ -52,6 +53,7 @@ Ext.define('Common.mixin.component.More', {
             menu = me.getMoreButton().getMenu()
             menus = me.getMoreMenus();
         menu.entityName = me.getEntityName();
+        menu.resourceName = me.getResourceName();
         menus.length> 0 && menu.add(me.getMoreMenus());
     },
 
@@ -64,14 +66,16 @@ Ext.define('Common.mixin.component.More', {
     addSortMenus(){
         let me = this,
             button = me.getMoreButton(),
+            store = me.getSortStore(),
             menu = button.getMenu(),
             sortFields = me.getSortFields(),
+            langText = store.langText,
             defaultSorter = me.getDefaultSorter(),            
             menus = [];
-        sortFields.forEach(m=>{
+        Ext.iterate(sortFields, (m, v)=>{
             if(!Ext.isString(m)) return;
-            menus.push(me.getSortMenuItem(m,'ASC' ,defaultSorter));
-            menus.push(me.getSortMenuItem(m,'DESC', defaultSorter));
+            menus.push(me.getSortMenuItem(m,'ASC' , langText[m]));
+            menus.push(me.getSortMenuItem(m,'DESC', langText[m]));
         });
 
         if(menu.getItems().items.length>0) menu.add({xtype: 'menuseparator'})
@@ -91,13 +95,13 @@ Ext.define('Common.mixin.component.More', {
      * @param {默认值} defaultValue 
      * @param {回调函数}} handler 
      */
-    getSortMenuItem(field,dir){
+    getSortMenuItem(field,dir, langText){
         let me = this,
             value = `${field}-${dir}`,
             iconCls = dir === 'ASC' ? 'up': 'down';
         return { 
             xtype: 'menuradioitem',
-            langText: field, 
+            langText: langText || field, 
             value: value, 
             ui: 'dark',
             iconCls: `x-fa fa-sort-alpha-${iconCls}`,

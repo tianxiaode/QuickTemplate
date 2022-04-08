@@ -65,7 +65,9 @@ Ext.define('Common.service.ViewManager', {
             width: '100%',
             height: '100%',
             minWidth: '100%',
-            maxHeight: '100%'
+            maxHeight: '100%',
+            resizable: null,
+            collapsible:null
         }
     },
 

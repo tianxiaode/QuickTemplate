@@ -3,10 +3,12 @@ Ext.define('Common.ux.crud.controller.More', {
 
     currentId: null,
     currentEntity: null,
+    morePanel: '[isMorePanel]',
 
     init(){
         let me = this;
         me.callParent();
+        me.updateToolbarItem(true);
         me.getView().on('hiddenchange', me.onViewHiddenChange, me);
     },
 
@@ -16,7 +18,7 @@ Ext.define('Common.ux.crud.controller.More', {
     },
 
     getRecord(){
-        return this.getView().up('[isMorePanel]').getRecord();
+        return this.getView().up(this.morePanel).getRecord();
     },
 
     isEditable(){
@@ -35,6 +37,13 @@ Ext.define('Common.ux.crud.controller.More', {
         me.onRefreshStore();
         me.initButtons();
         me.updateButtons();
+        me.updateToolbarItem(!id);
+    },
+
+    updateToolbarItem(disabled){
+        Ext.each(this.getView().getToolbar().getItems().items, item=>{
+            item.setDisabled(disabled);
+        })
     },
 
     onRefreshStore(){
@@ -50,10 +59,19 @@ Ext.define('Common.ux.crud.controller.More', {
         if(Ext.isEmpty(id)){
             store.removeAll();
             store.commitChanges();
+            store.getProxy().setUrl(null);
+            me.updateToolbarItem(true);
             return;
         }
         store.getProxy().setUrl(URI.crud(me.entityName, id, Format.pluralize(me.currentEntity)));
         store.loadPage(1);
+    },
+
+    getCheckChangeUrl(entityName, id, action, checked){
+        let me = this;
+        return checked === undefined 
+            ? URI.crud(entityName,me.currentId, me.currentEntity, id, action)
+            : URI.crud(entityName,me.currentId, me.currentEntity,id,action, checked)
     },
 
 

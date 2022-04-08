@@ -8,6 +8,7 @@ Ext.define('Phone.view.home.Home', {
         'Phone.view.home.HomeController',
         'Phone.view.home.HomeModel',
         'Phone.view.identity.roles.Role',
+        'Phone.view.identity.users.User',
     ],
     
     shadow: false,

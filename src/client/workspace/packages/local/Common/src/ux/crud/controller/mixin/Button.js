@@ -20,16 +20,6 @@ Ext.define('Common.ux.crud.controller.mixin.Button',{
         this.initButtons();
     },
 
-    /**
-     * 验证权限
-     * @param {权限} permission 
-     */
-    isGranted(permission){
-        let me = this,
-            entityName = me.entityName,
-            group = `${me.permissionGroup || entityName}.${ me.permissionName || Format.pluralize(entityName) }`;
-        return ACL.isGranted(`${group}.${Format.capitalize(permission)}`);
-    },
 
     /**
      * 获取Crud按钮
@@ -83,10 +73,9 @@ Ext.define('Common.ux.crud.controller.mixin.Button',{
     initButtons(){
         let me = this,
             permissions = me.permissions;
-        console.log('initButtons',me.isGranted(permissions.create))
-        me.setButtonHidden('create', !me.isGranted(permissions.create));
-        me.setButtonHidden('update', !me.isGranted(permissions.update));
-        me.setButtonHidden('delete', !me.isGranted(permissions.delete));
+        me.setButtonHidden('create', !ACL.isGranted(permissions.create));
+        me.setButtonHidden('update', !ACL.isGranted(permissions.update));
+        me.setButtonHidden('delete', !ACL.isGranted(permissions.delete));
     },
 
     setButtonHidden(key, hidden){

@@ -10,10 +10,13 @@ Ext.define('Common.ux.crud.controller.mixin.CheckChange',{
      * @param {事件} e 
      * @param {事件选项} eOpts 
      */
-    onColumnCheckChange(column, rowIndex, checked, record, e, eOpts) {
+    onCheckChange(column, rowIndex, checked, record, e, eOpts) {
         var me = this;
-        if(!me.isGranted(me.permissions.update)) return;
-        me.doColumnCheckChange(record, column.dataIndex, checked);
+        me.doCheckChange(record, column.dataIndex, checked);
+    },
+
+    beforeCheckChange(){
+        return ACL.isGranted(this.permissions.update);
     },
     
     /**
@@ -22,7 +25,7 @@ Ext.define('Common.ux.crud.controller.mixin.CheckChange',{
      * @param {记录} record 
      * @param {要更改的字段} field 
      */
-    doColumnCheckChange(record, field, checked) {
+    doCheckChange(record, field, checked) {
         let me = this,
             store = me.getStore(),
             updateAction = store.updateAction,
@@ -30,20 +33,38 @@ Ext.define('Common.ux.crud.controller.mixin.CheckChange',{
             uncheckAction = store.uncheckAction,
             entityName = me.entityName,
             id = record.getId(),
-            url;
-        if(updateAction){
-            url = URI.crud(entityName,id,updateAction[field], checked);
+            url,
+            request = Http.patch;
+        if(!me.beforeCheckChange()) {
+            store.rejectChanges();
+            return;
+        };
+
+        if(updateAction && updateAction[field]){
+            url = me.getCheckChangeUrl(entityName, id, updateAction[field], checked);
         }else{
             action = checked ? checkAction[field] : uncheckAction[field];
-            url = URI.crud(entityName,id, action);
+            if(Ext.isEmpty(action)){
+                url = me.getCheckChangeUrl(entityName, id);
+                if(!checked) request = Http.delete;
+            }else{
+                url = me.getCheckChangeUrl(entityName, id, action);
+            }
         }
-        Http.patch(url,{id: id, field: field}).then(me.onColumnCheckChangeSuccess, me.onColumnCheckChangeFailure, null, me);
+        request.apply(Http ,[url,{id: id, field: field}])
+            .then(me.onCheckChangeSuccess, me.onCheckChangeFailure, null, me);
+    },
+
+    getCheckChangeUrl(entityName, id, action, checked){
+        return checked === undefined 
+            ? URI.crud(entityName,id, action)
+            : URI.crud(entityName,id,action, checked)
     },
 
     /**
      * 更新成功
      */
-    onColumnCheckChangeSuccess(response){
+    onCheckChangeSuccess(response){
         let me = this;
             request = response.request,
             data = request && request.jsonData,
@@ -63,7 +84,7 @@ Ext.define('Common.ux.crud.controller.mixin.CheckChange',{
     /**
      * 更新失败
      */
-    onColumnCheckChangeFailure(response){
+    onCheckChangeFailure(response){
         this.getStore().rejectChanges();
         this.onAjaxFailure(response);
     },

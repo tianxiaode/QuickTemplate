@@ -34,8 +34,12 @@ Ext.define('Common.mixin.component.SelectedOrNot', {
 
     initialize(){
         let me = this,
-            container = me.getMixinContainer();
-        container.add(me.getSelectedOrNot());
+            morePanel = me.up('[isMorePanel]'),
+            container = me.getMixinContainer(),
+            cmp = container.add(me.getSelectedOrNot());
+        if(me.isPhone()){
+            cmp.setUi('solo');            
+        }
     }
 
 

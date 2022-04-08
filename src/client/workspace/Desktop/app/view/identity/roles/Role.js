@@ -27,16 +27,13 @@ Ext.define('Desktop.view.identity.roles.Role', {
                  {
                     dataIndex: 'displayPermissions', flex: 1,
                     autoText: false, langText: 'Permissions',
-                    sortable: false,
                  },
-                 //{ xtype: 'checkcolumn', dataIndex: 'isStatic', width: 80 },
-                { xtype: 'checkcolumn', dataIndex: 'isDefault', width: 80, listeners: { checkchange: 'onColumnCheckChange' } } ,
-                { xtype: 'checkcolumn', dataIndex: 'isPublic', width: 80, listeners: { checkchange: 'onColumnCheckChange' } },
+                { xtype: 'uxcheckchangecolumn', dataIndex: 'isDefault'} ,
+                { xtype: 'uxcheckchangecolumn', dataIndex: 'isPublic'},
                 {
                     autoText: false,
                     text: '...',
                     width: 60,
-                    sortable: false,
                     menu: false,
                     align: 'center',
                     cell:{

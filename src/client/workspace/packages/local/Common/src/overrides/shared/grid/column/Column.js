@@ -23,5 +23,19 @@ Ext.define('Common.overrides.shared.grid.column.Column',{
         return Template.getTplWithScope(config, this);
     },
 
+    isSortable() {
+        var me = this,
+            grid = me.getGrid(),
+            store = grid.store,
+            sortFields = store.sortFields,
+            dataIndex = me.getDataIndex();
+        return me.isLeafHeader &&
+            (sortFields && sortFields[dataIndex]) &&
+            me.getSortable() &&
+            (me.pickSorter() || dataIndex) &&
+            me.getRootHeaderCt().getSortable() &&
+            grid.sortableColumns !== false;
+    },
+
 
 })

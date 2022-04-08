@@ -28,7 +28,11 @@ Ext.define('Common.view.identity.users.roles.Role',{
                     cell:{  encodeHtml: false,},
                     tpl: `{name:this.listHighlight(values,'name')} {translation:translation('name','- ')}`
                 },
-                { xtype: 'checkcolumn', dataIndex: 'isSelected', width: 80, listeners: { checkchange: 'onColumnCheckChange' } } ,
+                { 
+                    xtype: 'uxcheckchangecolumn', dataIndex: 'isSelected', 
+                    sortable: false, 
+                    autoText: false, langText: 'SelectedOrNot:Selected',
+                }
             ],
             bind: {store: '{userRoles}'}
         }

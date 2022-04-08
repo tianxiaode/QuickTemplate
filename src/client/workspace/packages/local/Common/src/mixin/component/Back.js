@@ -5,17 +5,20 @@ Ext.define('Common.mixin.component.Back', {
         backButton: {
             xtype: 'button',
             iconCls : 'md-icon-arrow-back',
-            handler: 'onBack', 
             weight : -100,
             ui: 'plain'        
         },
     },
 
     hasBack: true,
+    backMixinContainer: null,
 
     createBackButton(newCmp) {
+        let me = this;
         return Ext.apply({
-            ownerCmp: this,
+            ownerCmp: me,
+            handler: me.onBack,
+            scope: me
         }, newCmp);
     },
 
@@ -26,9 +29,14 @@ Ext.define('Common.mixin.component.Back', {
 
     initialize(){
         let me = this,
-            container = (me.isFormPanel && me.getHeader()) ||  me.getMixinContainer();
+            backMixinContainer = me.backMixinContainer,
+            container = (backMixinContainer && me.down(backMixinContainer)) || me.getHeader();
         if(!me.hasBack || !me.isPhone() || !container) return;
         container.add(me.getBackButton());
+    },
+
+    onBack(){
+        Ext.History.back();
     },
 
 })

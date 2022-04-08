@@ -44,7 +44,7 @@ Ext.define('Common.mixin.component.CountMessage',{
     initialize(){
         let me = this,
             container = me.getMixinContainer();
-        if(!me.hasCountMessage) return;
+        if(!me.hasCountMessage || me.isPhone()) return;
         container.add(me.getFill());
         container.add(me.getCountMessage());
     }

@@ -40,15 +40,14 @@ Ext.define('Common.ux.field.Enumeration',{
         if(Ext.isEmpty(values)) return;
         Ext.iterate(values,(k,v)=>{
             resourceName = v.resourceName;
-            let option = {value: v[valueField], langText: v.text , id: v.id, order: v.order};
+            let option = {value: v[valueField], langText: `${v.name}:${v.text}`  , id: v.id, order: v.order};
             if(v.isDefault) defaultOption = option;
             options.push(option);
         })
         me.resourceName = resourceName;
         if(me.getHasAllValue()) {
-            let text = I18N.get(me.getAllValueText(), resourceName) || `${I18N.get('All')}${I18N.get(Format.capitalize(name), resourceName)}`;
-            options = [{value: isIntValue ? -1 : 'all', text: text}]
-                .concat(options);
+            let text = me.getAllValueText() || 'all';
+            options.push({value: isIntValue ? -1 : 'all', langText: text, order : -1000});
             defaultOption = options[0];
         };
         me.setOptions(options);
