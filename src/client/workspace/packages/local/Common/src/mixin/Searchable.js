@@ -32,7 +32,7 @@ Ext.define('Common.mixin.Searchable', {
             view = me.getView(),
             fields = me.searchFields;
         if(fields) return fields;
-        fields = me.searchFields = view.query('field[isSearch]');
+        fields = me.searchFields = view.query('field[isSearch],uxenumerationbutton');
         return fields;
     },
 
@@ -44,11 +44,15 @@ Ext.define('Common.mixin.Searchable', {
             fields = me.getSearchFields(),
             values = {};
         Ext.each(fields,field=>{
+            let name = field.searchName;
+            if(field.isButton){
+                values[name] = field.getValue();
+                return;
+            }
             if(!field.isValid()) return false;
             if(field.isCheckbox && !field.isChecked()) return;
 
-            let name = field.searchName,
-                value = field.getValue();
+            let value = field.getValue();
             if(Ext.isEmpty(value)) return;
             values[name] = value;
 

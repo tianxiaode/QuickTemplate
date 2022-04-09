@@ -2,20 +2,17 @@ Ext.define('Common.mixin.component.SelectedOrNot', {
     extend: 'Common.mixin.component.Base',
 
     requires:[
-        'Common.ux.field.Enumeration'
+        'Common.ux.button.Enumeration'
     ],
 
     hasRefresh: true,
 
     config: {
         selectedOrNot: {
-            xtype: 'uxenumerationfield',
-            weight: 301,
+            xtype: 'uxenumerationbutton',
+            weight: 290,
             margin: '0 0 0 5px',
-            enumName: 'SelectedOrNot',
-            hasAllValue: false,
-            autoLabel: false,
-            width: 100,
+            enumeration: 'SelectedOrNot',
             isSearch: true,
             searchName: 'type',
         },
@@ -34,12 +31,8 @@ Ext.define('Common.mixin.component.SelectedOrNot', {
 
     initialize(){
         let me = this,
-            morePanel = me.up('[isMorePanel]'),
-            container = me.getMixinContainer(),
-            cmp = container.add(me.getSelectedOrNot());
-        if(me.isPhone()){
-            cmp.setUi('solo');            
-        }
+            container = me.getMixinContainer();
+        container.add(me.getSelectedOrNot());
     }
 
 
