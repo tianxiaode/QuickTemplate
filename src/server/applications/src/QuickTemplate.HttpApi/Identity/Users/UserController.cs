@@ -111,10 +111,18 @@ public class UserController: QuickTemplateController,IUserAppService
         return UserAppService.FindByEmailAsync(email);
     }
 
-    [HttpPut]
+    [HttpPatch]
     [Route("{id:guid}/name")]
-    public Task UpdateNameAsync(Guid id, )
+    public Task UpdateNameAsync(Guid id,[FromBody] UserUpdateNameDto input)
     {
-
+        return UserAppService.UpdateNameAsync(id, input);
     }
+
+    [HttpPatch]
+    [Route("{id:guid}/sruname")]
+    public Task UpdateSurnameAsync(Guid id,[FromBody] UserUpdateNameDto input)
+    {
+        return UserAppService.UpdateSurnameAsync(id, input);
+    }
+
 }

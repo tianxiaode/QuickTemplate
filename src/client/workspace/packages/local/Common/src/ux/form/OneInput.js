@@ -1,6 +1,6 @@
-Ext.define('Common.ux.form.SingleInput',{
+Ext.define('Common.ux.form.OneInput',{
     extend: 'Common.ux.form.Base',
-    xtype: 'uxsingleinputform',
+    xtype: 'uxoneinputform',
 
     mixins:[
         'Common.mixin.component.TextField',
@@ -9,13 +9,19 @@ Ext.define('Common.ux.form.SingleInput',{
         'Common.mixin.component.UxNumber',
         'Common.mixin.component.Date',
         'Common.mixin.component.DateTime',
-        
+        'Common.mixin.component.field.Email',
     ],
 
+    emailField:{
+        name: null,
+        inputType: 'email',
+        hidden: true
+    },
 
     hasBack: false,
     hasCancel:false,
     useTextInFormButton: false,
+    hasEmailField: false,
 
     ui: 'dark',
     controller: null,
@@ -90,13 +96,7 @@ Ext.define('Common.ux.form.SingleInput',{
         let me = this,
             url = me.getUrl(),
             value = me.getInputValue(true);
-        if(url){
-            Http.patch(url, {value: value}).then(me.onSubmitSuccess, me.onSubmitFailure, null, me);
-            return;
-        }
-
-        me.onSubmitSuccess();
-        
+        Http.patch(url, {value: value}).then(me.onSubmitSuccess, me.onSubmitFailure, null, me);
     },
 
 
@@ -143,7 +143,7 @@ Ext.define('Common.ux.form.SingleInput',{
 
     onSubmitFailure(response, eOpts) {
         let me = this,
-            error = Failure.getError(response);
+            error = Http.getError(response);
         me.unmask();
         me.showMessage(error, true);
     },

@@ -22,5 +22,6 @@ public interface IUserAppService
     Task<DateTimeOffset?> SetLockoutAsync(Guid id, bool value);
     Task<IdentityUserDto> FindByUsernameAsync(string username);
     Task<IdentityUserDto> FindByEmailAsync(string email);
-    Task UpdateNameAsync(Guid id, string name);
+    Task UpdateNameAsync(Guid id, UserUpdateNameDto input);
+    Task UpdateSurnameAsync(Guid id, UserUpdateNameDto input);
 }

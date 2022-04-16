@@ -14,14 +14,11 @@ Ext.define('Phone.view.identity.users.User', {
     viewModel: 'usermodel',
     childTap: true,
 
-    items: [
-        {
-            xtype: 'uxcrudlist',            
-            autoLoad: true,
-            hasCheckbox: true,
-            itemConfig:{
-                xtype: 'phone-useritem'
-            },
-        }
-    ]
+    list:{
+        autoLoad: true,
+        hasCheckbox: true,
+        itemConfig:{
+            xtype: 'phone-useritem'
+        },
+    }
 });

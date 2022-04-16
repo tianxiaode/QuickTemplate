@@ -1,5 +1,5 @@
 Ext.define('Common.ux.multilingual.Edit',{
-    extend: 'Common.ux.form.SingleInput',
+    extend: 'Common.ux.form.OneInput',
     xtype: 'uxmultilingualedit',
 
     hasTextarea: true,

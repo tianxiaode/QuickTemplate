@@ -16,6 +16,7 @@ Ext.define('Common.ux.crud.controller.mixin.ResourceAndPermission',{
     defaultPermissions:['Create', 'Update', 'Delete'],
     
     init(){
+        console.log('initViewModel')
         let me = this;
         me.isPhone = Ext.platformTags.phone;
         me.initResource(me);
@@ -26,10 +27,11 @@ Ext.define('Common.ux.crud.controller.mixin.ResourceAndPermission',{
         let names = ['entityName', 'resourceName', 'permissionGroup', 'permissionName'],
             view = me.getView();
         view = view.includeResource ? view : view.up('[includeResource]');
+        let vm = view.getViewModel();
         names.forEach(n=>{
             let value = me[n];
             if(!Ext.isEmpty(value)) return;
-            value = me.getViewModelValue(n) || view[n];
+            value = vm.get(n) || view[n];
             if(Ext.isEmpty(value) && n === 'permissionName') value = Format.pluralize(me.entityName);
             if(Ext.isEmpty(value)) Ext.raise(`No ${n}`);
             me[n] = Format.capitalize(value);

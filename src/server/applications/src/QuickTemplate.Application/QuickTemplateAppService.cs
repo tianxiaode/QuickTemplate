@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using QuickTemplate.Localization;
+﻿using QuickTemplate.Localization;
 using Volo.Abp.Application.Services;
 
 namespace QuickTemplate;

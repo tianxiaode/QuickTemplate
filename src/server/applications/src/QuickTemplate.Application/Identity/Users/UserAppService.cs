@@ -1,21 +1,23 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using QuickTemplate.Enumerations;
 using QuickTemplate.Identity.Roles;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.Settings;
 using Volo.Abp.ObjectExtending;
-using Volo.Abp.SettingManagement;
 using Volo.Abp.Settings;
+using Volo.Abp.Validation;
+using Volo.Abp.Validation.StringValues;
 using IdentityRole = Volo.Abp.Identity.IdentityRole;
-using IdentityUser  = Volo.Abp.Identity.IdentityUser;
+using IdentityUser = Volo.Abp.Identity.IdentityUser;
 
 namespace QuickTemplate.Identity.Users;
 
@@ -24,16 +26,19 @@ public class UserAppService: QuickTemplateAppService, IUserAppService
 {
     protected IdentityUserManager UserManager { get; }
     protected IIdentityUserRepository UserRepository { get; }
-    public IRoleRepository RoleRepository { get; }
+    protected IRoleRepository RoleRepository { get; }
+    protected IObjectValidator ObjectValidator { get; }
 
     public UserAppService(
         IdentityUserManager userManager,
         IIdentityUserRepository userRepository,
-        IRoleRepository roleRepository)
+        IRoleRepository roleRepository, 
+        IObjectValidator objectValidator)
     {
         UserManager = userManager;
         UserRepository = userRepository;
         RoleRepository = roleRepository;
+        ObjectValidator = objectValidator;
     }
 
     //TODO: [Authorize(IdentityPermissions.Users.Default)] should go the IdentityUserAppService class.
@@ -221,10 +226,18 @@ public class UserAppService: QuickTemplateAppService, IUserAppService
     }
 
     [Authorize(IdentityPermissions.Users.Update)]
-    public virtual async Task UpdateNameAsync(Guid id, string name)
+    public virtual async Task UpdateNameAsync(Guid id,UserUpdateNameDto input)
     {
         var entity = await UserManager.GetByIdAsync(id);
-        entity.Name = name;
+        entity.Name = input.Value;
+        (await UserManager.UpdateAsync(entity)).CheckErrors();
+    }
+
+    [Authorize(IdentityPermissions.Users.Update)]
+    public virtual async Task UpdateSurnameAsync(Guid id,UserUpdateNameDto input)
+    {
+        var entity = await UserManager.GetByIdAsync(id);
+        entity.Surname = input.Value;
         (await UserManager.UpdateAsync(entity)).CheckErrors();
     }
 

@@ -45,7 +45,7 @@ Ext.define('Common.ux.crud.controller.mixin.ChildTap',{
         let value = record.get(field),
             old = Ext.isBoolean(value) ? value :  !Ext.isEmpty(value),
             checked = !old;
-        Ext.isBoolean(value) && record.set(field, value );
+        Ext.isBoolean(value) && record.set(field, checked );
         me.doCheckChange(record, field, checked);
     }
 
