@@ -10,10 +10,6 @@ Ext.define('Common.ux.dataview.plugin.LabelEditor',{
 
     shim: false,
     
-    width: 'auto',
-    height: 'field',
-    
-
     labelSelector: 'x-editable',
 
     config:{

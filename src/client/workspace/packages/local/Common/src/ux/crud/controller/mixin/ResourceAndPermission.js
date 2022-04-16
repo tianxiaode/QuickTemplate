@@ -13,11 +13,7 @@ Ext.define('Common.ux.crud.controller.mixin.ResourceAndPermission',{
     isPhone: false, //是否手机平台
     permissionGroup: null, //权限组
     permissionName: null, //权限名
-    permissions:{
-        create: 'Create',
-        update: 'Update',
-        delete: 'Delete'
-    },
+    defaultPermissions:['Create', 'Update', 'Delete'],
     
     init(){
         let me = this;
@@ -41,13 +37,23 @@ Ext.define('Common.ux.crud.controller.mixin.ResourceAndPermission',{
     },
 
     initPermission(me){
-        let entityName = me.entityName,
+        let entityName = Format.pluralize(me.entityName),
+            group = me.permissionGroup,
+            permissionName = me.permissionName,
             permissions= {};
-        Ext.iterate(me.permissions, (k,v)=>{
-            permissions[k] = `${me.permissionGroup || entityName}.${ me.permissionName || Format.pluralize(entityName)}.${v}`;
+        Ext.iterate(me.permissions,(k,v)=>{
+            let permission = me.getFullPermissionName(group, entityName, permissionName, v);
+            permissions[k.toLowerCase()] = ACL.isGranted(permission);
+        })
+        Ext.iterate(me.defaultPermissions, p=>{
+            let permission = me.getFullPermissionName(group, entityName, permissionName, p);
+            permissions[p.toLowerCase()] = ACL.isGranted(permission);
         })
         me.permissions = permissions;
+    },
 
+    getFullPermissionName(group , entity, name, action){
+        return `${group || entityName}.${ name || Format.pluralize(entityName)}.${action}`
     },
 
     isGranted(name){

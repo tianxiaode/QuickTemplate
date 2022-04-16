@@ -27,7 +27,8 @@ Ext.define('Common.ux.dataview.DetailList',{
         let store = this.getStore(),
             data = [];
         Ext.each(fields,f=>{
-            data.push({ id: f, label: f, cls: '', value: null, text: null});
+            Ext.isString(f) && data.push({ id: f, label: f, cls: '', value: null, text: null});
+            Ext.isObject(f) &&  data.push({ id: f.name, label: f.label, cls: '', value: null, text: null});
         });
         store.loadData(data);
         return fields;
@@ -38,7 +39,7 @@ Ext.define('Common.ux.dataview.DetailList',{
             resourceName = me.getResourceName(),
             data = me.getStore().getData();
         data.each(r=>{
-            r.set('label', I18N.get(r.getId(), resourceName));
+            r.set('label', I18N.get(r.get('label'), resourceName));
             r.commit();
         })
     },

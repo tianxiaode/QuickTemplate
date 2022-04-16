@@ -220,6 +220,14 @@ public class UserAppService: QuickTemplateAppService, IUserAppService
         );
     }
 
+    [Authorize(IdentityPermissions.Users.Update)]
+    public virtual async Task UpdateNameAsync(Guid id, string name)
+    {
+        var entity = await UserManager.GetByIdAsync(id);
+        entity.Name = name;
+        (await UserManager.UpdateAsync(entity)).CheckErrors();
+    }
+
     protected virtual async Task UpdateUserByInput(IdentityUser user, IdentityUserCreateOrUpdateDtoBase input)
     {
         if (!string.Equals(user.Email, input.Email, StringComparison.InvariantCultureIgnoreCase))

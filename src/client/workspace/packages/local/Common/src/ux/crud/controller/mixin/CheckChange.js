@@ -16,7 +16,7 @@ Ext.define('Common.ux.crud.controller.mixin.CheckChange',{
     },
 
     beforeCheckChange(){
-        return ACL.isGranted(this.permissions.update);
+        return this.permissions.update;
     },
     
     /**

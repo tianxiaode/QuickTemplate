@@ -78,33 +78,23 @@ Ext.define('Common.ux.multilingual.FormController', {
     },
 
     onListChildTap(sender, location, eOpts){
-        console.log(location)
         let record = location.record;
         if(Format.checkTargetCls(location, 'x-editable-text')){
-            let dlg = this.getEditDialog();
+            let me = this,
+                dlg = ViewMgr.getDialog('uxmultilingualedit');
+            dlg.resourceName = me.resourceName;
+            dlg.callback = Ext.bind(me.updateFieldSuccess, me);
             dlg.setField({ 
                 field: record.getId(), 
                 type: 'textarea',
                 value: record.get('value'),
                 title: record.get('languageText') + ':' + record.get('label')
-            })
+            });
             dlg.show();
         }
     },
 
-    getEditDialog(){
-        let me = this,
-            dlg = me.editDialog;
-        if(!dlg){
-            dlg = me.editDialog = Ext.create({
-                xtype: me.getView().editDialog, 
-                resourceName: me.resourceName,
-                listeners:{ saved: me.updateFieldSuccess, scope: me }});
-        }
-        return dlg;
-    },
-
-    updateFieldSuccess(sender, id, value){
+    updateFieldSuccess(id, value){
         let me = this,
             store = me.getStore(),
             record = store.getById(id);

@@ -1,6 +1,6 @@
 Ext.define('Common.ux.panel.MoreEditor',{
     extend: 'Ext.Container',
-    xtype: 'common-moreeditor',
+    xtype: 'uxmoreeditor',
 
     mixins:[
         'Common.mixin.component.Form',

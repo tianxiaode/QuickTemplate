@@ -26,7 +26,7 @@ Ext.define('Common.ux.field.plugin.More', {
 
     onMoreIconTap(sender, trigger, event){
         let me = this,
-            dlg = ViewMgr.getMoreEditor();
+            dlg = ViewMgr.getDialog('uxmoreeditor');
         dlg.callback = Ext.bind(me.onUpdateValue, me);
         dlg.setValue(me.getOwner().getValue());
         dlg.show();

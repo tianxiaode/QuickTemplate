@@ -3,7 +3,8 @@ Ext.define('Common.ux.multilingual.Form',{
 
     requires:[
         'Common.ux.multilingual.List',
-        'Common.ux.multilingual.FormController'
+        'Common.ux.multilingual.FormController',
+        'Common.ux.multilingual.Edit',
     ],
 
 

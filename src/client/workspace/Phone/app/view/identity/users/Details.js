@@ -14,13 +14,12 @@ Ext.define('Phone.view.identity.users.Details', {
     items: [
         {
             xtype: 'uxdetaillist',
-            reference: 'detailList',
             scrollable: true,
             flex: 1,
-            fields: ['userName', 'name', 'surname', 'email',  'phoneNumber', 'creationTime','isActive', 'lockoutEnabled', 'lockoutEnd'],
-            listeners:{
-                childtap: 'onChildTap'
-            }
+            fields: ['userName', 'name', 'surname', 'email',  'phoneNumber', 'creationTime','isActive', 
+                { name: 'lockoutEnabled', label: 'lockable' },
+                { name: 'lockoutEnd', label: 'UserLocked' }
+            ],
         },        
     ]
 });

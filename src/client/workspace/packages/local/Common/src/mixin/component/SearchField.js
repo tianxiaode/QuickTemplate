@@ -5,7 +5,6 @@ Ext.define('Common.mixin.component.SearchField',{
         'Common.ux.field.Search'
     ],
 
-    searchFieldUi: null,
     config:{
         searchField:{
             xtype: 'uxsearchfield',
@@ -14,7 +13,9 @@ Ext.define('Common.mixin.component.SearchField',{
         }
     },
 
+    searchFieldUi: null,
     hasSearchField: true,
+    searchFieldMixinContainer: null,
 
     createSearchField(newCmp){
         let isPhone = Ext.platformTags.phone,
@@ -35,21 +36,20 @@ Ext.define('Common.mixin.component.SearchField',{
 
     initialize(){
         let me = this,
-            morePanel = me.up('[isMorePanel]'),
-            container = me.getMixinContainer(),
-            isPhone = Ext.platformTags.phone,
+            searchFieldMixinContainer = me.searchFieldMixinContainer,
+            container = (searchFieldMixinContainer === 'self' && me)
+                ||  (searchFieldMixinContainer && me.down(searchFieldMixinContainer)) 
+                || me.getMixinContainer();
             field = me.getSearchField();
         if(!me.hasSearchField) return;
-        !isPhone && container.add(field);
-        if(morePanel && isPhone){
-            let cmp = container.add(field);
-            cmp.setUi('solo');
-            cmp.setWidth(null);
-            cmp.setFlex(1);
-            cmp.setMargin('0 5px 0 0');
+        container.add(field);
+        if(me.isPhone() && container.isCrudToolbar){
+            field.setUi('solo');
+            field.setWidth(null);
+            field.setFlex(1);
+            field.setMargin('0 5px 0 0');
             return;
         }
-        isPhone && me.add(field);
     }
 
 

@@ -107,7 +107,6 @@ Ext.define('Common.service.ViewManager', {
         if(Ext.isObject(xtype)) return xtype.prototype.xtype;
         let cls = ViewMgr.getWidget(xtype);
         if(!cls) {
-            //Ext.raise('No class:' + xtype);
             return null;
         }
         return cls.prototype.xtype;
@@ -118,7 +117,7 @@ Ext.define('Common.service.ViewManager', {
         let appName = ViewMgr.getAppName().toLowerCase(),
             plat = Ext.platformTags.desktop ? 'desktop' : 'phone';
         xtype = xtype.toLowerCase();
-        let widget = Ext.ClassManager.getByAlias(`widget.shared-${xtype}`) 
+        let widget = Ext.ClassManager.getByAlias(`widget.common-${xtype}`) 
             || Ext.ClassManager.getByAlias(`widget.${plat}-${xtype}`)
             || Ext.ClassManager.getByAlias(`widget.${appName}-${xtype}`)
             || Ext.ClassManager.getByAlias(`widget.${xtype}`);
@@ -189,14 +188,9 @@ Ext.define('Common.service.ViewManager', {
         }
     },
 
-    getMoreEditor(){
-        let me = ViewMgr,
-            dlg = me.moreEditor;
-        if(!dlg){
-            dlg = me.moreEditor = Ext.create({xtype :'common-moreeditor'});
-        }
-        return dlg;
-    }
+    getDialog(xtype, config){
+        return ViewMgr.getView(xtype, ViewMgr.types.dialog, config, false);
 
+    }
 
 });

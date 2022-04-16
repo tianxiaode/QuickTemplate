@@ -97,6 +97,7 @@ Ext.define('Common.util.TemplateFn',{
         }, 
         checkbox(v){
             let check = v ? Format.checkCls : '';
+            return Format.format(Template.checkBoxItem, v, '', check);
             return `<div class="x-checkcell ${check}"><div class="x-checkbox-el x-font-icon"></div></div>`;
         },
         listCheckbox(v, field){
@@ -261,9 +262,6 @@ Ext.define('Common.util.TemplateFn',{
         getColorText(v, cls, hasBrackets){
             if(hasBrackets) v= `[${v}]`;
             return `<span class="${cls}">${v}</span>`;
-        },
-        boolValue(v){
-            return `<span class="x-fa fa-${v ? 'check' : 'times'} ${v ? 'text-success' : 'text-danger'}"></span>`        
         },
         plaintext2Html(v){
             if(Ext.isEmpty(v)) return I18N.get('None');

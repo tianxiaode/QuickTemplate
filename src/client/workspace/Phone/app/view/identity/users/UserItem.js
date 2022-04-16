@@ -40,7 +40,7 @@ Ext.define('Phone.view.identity.users.UserItem', {
         html[1] = me.getCheckActionHtml(data.isActive, '', 'isActive', 'isActive');
         html[2] = me.getCheckActionHtml(data.lockoutEnabled, '', 'lockoutEnabled', 'Lockable');
         html[3] = me.getCheckActionHtml(data.lockoutEnd, '', 'lockoutEnd', 'UserLocked');
-        if(ACL.isGranted(permissions.update)){
+        if(permissions.update){
             html[4] = me.getIconActionHtml(id, 'x-fa fa-edit text-primary');
         }
         html[5] = me.getIconActionHtml(id, 'x-fa fa-ellipsis-h text-primary');
