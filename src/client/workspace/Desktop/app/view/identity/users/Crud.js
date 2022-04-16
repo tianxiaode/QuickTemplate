@@ -7,7 +7,6 @@ Ext.define('Desktop.view.identity.users.Crud', {
     ],
     
     controller: 'usercontroller',
-    includeResource: false,
 
     grid:{
         doubleTapToEdit: true,

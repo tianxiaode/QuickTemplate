@@ -3,12 +3,14 @@ Ext.define('Common.overrides.shared.Component',{
 
     config:{
         langHtml: null,
-        langTooltip: null
+        langTooltip: null,
     },
 
     initialize(){
         let me = this;
         me.callParent(arguments);
+        me.includeResource = !!me.resourceName;
+        me.permissionGroup && me.initPermissions();
         if(I18N && I18N.isReady){
             me.onLocalized();
         }
@@ -35,16 +37,40 @@ Ext.define('Common.overrides.shared.Component',{
         return this.entityName || this.getContainerResource('entityName');
     },
 
+    getPermissionGroup(){
+        return this.permissionGroup || this.getContainerResource('permissionGroup');
+    },
+
     getPermissions(){
         return this.permissions || this.getContainerResource('permissions');        
     },
 
+    initPermissions(){
+        let me = this,
+            entityName = Format.pluralize(me.entityName),
+            group = me.permissionGroup,
+            permissionName = me.permissionName,
+            permissions= {};
+        Ext.iterate(me.permissions,(k,v)=>{
+            let permission = me.getFullPermissionName(group, entityName, permissionName, v);
+            permissions[k.toLowerCase()] = ACL.isGranted(permission);
+        })
+        ['Create', 'Update', 'Delete'].forEach(p=>{
+            let permission = me.getFullPermissionName(group, entityName, permissionName, p);
+            permissions[p.toLowerCase()] = ACL.isGranted(permission);
+        })
+        me.permissions = permissions;
+
+    },
+
+    getFullPermissionName(group , entityName, permissionName, action){
+        return `${group || entityName}.${ permissionName ||entityName}.${action}`
+    },
+
     getContainerResource(name){
         let me = this,
-            container = (me.includeResource && me) || (me.up && me.up('[includeResource]')),
-            vm = container && container.getViewModel(),
-            controller = container && container.getController && container.getController();
-        return (vm && vm.get(name)) || (controller && controller[name]) || (container && container[name]);
+            container = me.up('[includeResource]');
+        return container && container[name];
 
     },
 

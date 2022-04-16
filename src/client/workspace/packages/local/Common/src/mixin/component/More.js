@@ -16,7 +16,6 @@ Ext.define('Common.mixin.component.More', {
             ui: 'plain',
             menu:{
                 ui: 'dark',
-                includeResource: true,
                 scrollable: 'y',
                 anchor: true,
                 defaults:{ ui: 'dark'}
@@ -54,6 +53,7 @@ Ext.define('Common.mixin.component.More', {
             menus = me.getMoreMenus();
         menu.entityName = me.getEntityName();
         menu.resourceName = me.getResourceName();
+        menu.permissionGroup = me.getPermissionGroup();
         menus.length> 0 && menu.add(me.getMoreMenus());
     },
 

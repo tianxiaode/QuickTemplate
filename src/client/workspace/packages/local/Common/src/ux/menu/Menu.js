@@ -8,7 +8,6 @@ Ext.define('Common.ux.menu.Menu', {
     scrollable: true,
     anchor: true,
     bodyPadding: 10,  
-    includeResource: true,
     title: Ext.emptyString  ,
     headerCls: Ext.baseCSSPrefix + 'dialogheader',
     titleCls: Ext.baseCSSPrefix + 'dialogtitle',

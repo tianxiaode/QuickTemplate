@@ -22,10 +22,8 @@ Ext.define('Common.ux.crud.controller.mixin.View',{
             defaultConfig = {            
                 entityName:  me.entityName, 
                 resourceName: me.resourceName,
-                includeResource: true,
                 permissionGroup: me.permissionGroup,
                 permissionName: me.permissionName,
-                permissions: Ext.clone(me.permissions),
                 backView: Ext.History.getToken(),
                 listeners:{scope: me},
             };

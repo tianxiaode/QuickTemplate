@@ -15,7 +15,6 @@ Ext.define('Common.view.identity.users.roles.Role',{
     hasDelete: false,
 
     controller: 'common-userrolecontroller',
-    includeResource: false,    
 
     items:[
         {

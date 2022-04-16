@@ -18,7 +18,6 @@ Ext.define('Common.ux.form.Panel',{
     trackResetOnLoad: true,
     defaultType: 'textfield',
     layout: 'vbox',
-    includeResource: true,  
 
 
     setValues: function(values) {

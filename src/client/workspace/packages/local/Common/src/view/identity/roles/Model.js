@@ -14,10 +14,4 @@ Ext.define('Common.view.identity.roles.Model',{
         }
     },
 
-    data:{
-        entityName: 'Role',
-        resourceName: 'AbpIdentity',
-        permissionGroup: 'AbpIdentity',
-    }
-
 })

@@ -5,14 +5,7 @@ Ext.define('Common.ux.AppTitle',{
     userCls: 'app-title',
 
     langHtml: 'CompanyFullName',
-    includeResource: true,
     resourceName: 'Service',
-
-    // initialize(){
-    //     let me = this;
-    //     me.callParent();
-    //     me.setHtml(`${I18N.get('CompanyFullName', 'Service')} - ${}` );
-    // },
 
 
 })

@@ -14,7 +14,6 @@ Ext.define('Phone.view.dashboard.Dashboard', {
 
     controller: 'phone-dashboardcontroller',
     layout: 'vbox',
-    includeResource: true,
 
     ui: 'dark',
 

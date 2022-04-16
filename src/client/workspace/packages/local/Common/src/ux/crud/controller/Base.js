@@ -5,7 +5,7 @@ Ext.define('Common.ux.crud.controller.Base',{
     mixins:[
         'Common.ux.crud.controller.mixin.Ajax',
         'Common.ux.crud.controller.mixin.ViewModel',
-        'Common.ux.crud.controller.mixin.ResourceAndPermission',
+        'Common.ux.crud.controller.mixin.ResourceAndPermissions',
         'Common.ux.crud.controller.mixin.Button',
         'Common.ux.crud.controller.mixin.CheckChange',
         'Common.ux.crud.controller.mixin.Batch',

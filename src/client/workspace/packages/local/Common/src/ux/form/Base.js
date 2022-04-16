@@ -15,7 +15,6 @@ Ext.define('Common.ux.form.Base',{
 
     title: '\xA0',
     mixinContainer: '#buttonToolbar',
-    includeResource: true,
     config:{
         defaultTitle: null,
         defaultModelValue: null,

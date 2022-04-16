@@ -12,8 +12,10 @@ Ext.define('Desktop.view.identity.users.User', {
     layout: 'hbox',
     viewModel: 'usermodel',
     controller: 'desktop-usercontroller',
-    includeResource: true,
-    
+    entityName: 'User',
+    resourceName: 'AbpIdentity',
+    permissionGroup: 'AbpIdentity',
+
     items: [
         {
             xtype: 'desktop-usercrudview',

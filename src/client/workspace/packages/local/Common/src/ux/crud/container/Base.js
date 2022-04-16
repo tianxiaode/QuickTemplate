@@ -56,7 +56,6 @@ Ext.define('Common.ux.crud.container.Base',{
     },
 
     layout: 'vbox',
-    includeResource: true,
     weighted: true,
     useGrid: true,
     useList: false,
