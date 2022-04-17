@@ -77,10 +77,10 @@ Ext.define('Common.mixin.component.TabBar', {
         let me = this;
         return { 
             xtype: xtype,
-            // includeResource: true,
-            // resourceName: me.getResourceName(),
-            // entityName: me.getEntityName(),
-            // permissions: Ext.clone(me.getPermissions()),
+            resourceName: me.getResourceName(),
+            entityName: me.getEntityName(),
+            permissionGroup: me.permissionGroup,
+            permissionName: me.permissionName,
             itemId: itemId, 
             flex:1
         }

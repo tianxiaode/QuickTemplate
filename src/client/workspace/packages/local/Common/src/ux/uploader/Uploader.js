@@ -104,7 +104,7 @@ Ext.define('Common.ux.uploader.Uploader',{
         me.files = {};
         me.hashList=[];
         me.checkFileResult = { length : 0};
-        let entityName = me.entityName || me.getEntityName();
+        let entityName = me.getEntityName();
         me.uploadUrl = URI.crud(entityName, me.getUploadRoute());
         me.checkUrl = URI.crud(entityName, me.getCheckRoute());
         me.mergeUrl = URI.crud(entityName, me.getMergeRoute());

@@ -109,9 +109,7 @@ Ext.define('Common.ux.crud.container.Base',{
     },
 
     updateList(config){
-        console.log('updateList')
         if(config && this.useList) this.add(config);
     },
-
 
 })

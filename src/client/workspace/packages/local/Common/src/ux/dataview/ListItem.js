@@ -32,8 +32,12 @@ Ext.define('Common.ux.dataview.ListItem', {
         return value.toString().replace(new RegExp('(' + filter + ')', "gi"), '<span class="text-danger">$1</span>');
     },
 
-    getCheckActionHtml(value, color, field, text){
-        let checkCls = value && Format.checkCls,
+    getCheckActionHtml(record , action){
+        let field = action.field,
+            text = action.text || field,
+            value = record.get(field),
+            color = action.color,
+            checkCls = value && Format.checkCls,
             resourceName = this.getResourceName();
         text = I18N.get(text, resourceName);
         return `<div class="flex-fill text-left ">
@@ -43,21 +47,17 @@ Ext.define('Common.ux.dataview.ListItem', {
         </div>`;
     },
 
-    getIconActionHtml(id, iconCls){
+    getIconActionHtml(record , action){
         return `<div class="flex-fill text-center">
-                <span class="${iconCls}" data-id="${id}"></span>
+                <span class="${action.cls}" data-id="${record.getId()}"></span>
             </div>
         `
     },
 
-    getItemActionTpl(){
-        let html = [`<div class="d-flex py-1">`];
-        for (let i = 0; i < 5; i++) {
-            html.push(`<div class=flex-fill text-left></div>`);
-        }
-        html.push(`</div>`);
-        return html;
+    getEmptyActionHtml(){
+        return `<div class=flex-fill></div>`
     },
+
 
     onLocalized(){
         let me = this;
@@ -67,7 +67,26 @@ Ext.define('Common.ux.dataview.ListItem', {
 
     updateItem(){},
 
-    updateItemAction(){},
+    actions: null,
+    updateItemAction(record){
+        let me = this,
+            actions = me.actions,
+            html = [`<div class="d-flex py-1">`];
+        if(!Ext.isArray(actions)) return;
+        actions.forEach(a=>{
+            a === '-' && html.push(me.getEmptyActionHtml());
+            a && a.type === 'bool' && html.push(me.getCheckActionHtml(record, a));
+            a && a.type === 'icon' && html.push(me.getIconActionHtml(record, a));
+            if(a.type !== 'bool' && a.type !== 'icon'){
+                let fnName = `get${Format.capitalize(a.type)}ActionHtml`
+                console.log(fnName);
+                me[fnName] && html.push(me[fnName].apply(me, [record, a]));
+            }
+        })
+        html.push('</div>')    
+        me.actionElement.setHtml(html.join(''));
+
+    },
 
 
 });

@@ -16,24 +16,23 @@ Ext.define('Common.view.identity.users.roles.Role',{
 
     controller: 'common-userrolecontroller',
 
-    items:[
-        {
-            xtype: 'uxcrudgrid',
-            flex:1,
-            columns:[
-                { 
-                    dataIndex: 'name', flex: 1,
-                    autoText: false, langText: 'DisplayName:RoleName',
-                    cell:{  encodeHtml: false,},
-                    tpl: `{name:this.listHighlight(values,'name')} {translation:translation('name','- ')}`
-                },
-                { 
-                    xtype: 'uxcheckchangecolumn', dataIndex: 'isSelected', 
-                    sortable: false, 
-                    autoText: false, langText: 'SelectedOrNot:Selected',
-                }
-            ],
-            bind: {store: '{userRoles}'}
-        }
-    ]
+
+    grid:{
+        xtype: 'uxcrudgrid',
+        flex:1,
+        columns:[
+            { 
+                dataIndex: 'name', flex: 1,
+                autoText: false, langText: 'DisplayName:RoleName',
+                cell:{  encodeHtml: false,},
+                tpl: `{name:this.listHighlight(values,'name')} {translation:translation('name','- ')}`
+            },
+            { 
+                xtype: 'uxcheckchangecolumn', dataIndex: 'isSelected', 
+                sortable: false, 
+                autoText: false, langText: 'SelectedOrNot:Selected',
+            }
+        ],
+        bind: {store: '{userRoles}'}
+    }
 })

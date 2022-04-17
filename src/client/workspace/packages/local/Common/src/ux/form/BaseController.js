@@ -5,8 +5,8 @@ Ext.define('Common.ux.form.BaseController',{
     init(){
         let me = this,
             view = me.getView();
-        me.entityName = view.entityName || (view.getEntityName && view.getEntityName());
-        me.resourceName = view.resourceName || Format.pluralize(me.entityName);
+        me.entityName = view.getEntityName();
+        me.resourceName = view.getResourceName();
         if(Ext.platformTags.desktop) me.initEnterEvent();
         view.on('hiddenchange', me.initFormState ,me);
     },

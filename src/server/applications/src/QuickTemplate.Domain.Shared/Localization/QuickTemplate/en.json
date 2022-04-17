@@ -28,6 +28,11 @@
     "SubMenu.SystemSetting": "System Setting",
     "SelectedOrNot:All": "All",
     "SelectedOrNot:Selected": "Selected",
-    "SelectedOrNot:NotSelected": "Not Selected"
+    "SelectedOrNot:NotSelected": "Not Selected",
+    "DisplayName:Name": "Name",
+    "DisplayName:Surname": "Surname",
+    "DisplayName:Password": "Password",
+    "DisplayName:Email": "Email address",
+    "DisplayName:PhoneNumber": "Phone number"
   }
 }

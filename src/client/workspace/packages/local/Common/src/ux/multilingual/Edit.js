@@ -5,6 +5,11 @@ Ext.define('Common.ux.multilingual.Edit',{
     hasTextarea: true,
     callback: null,
 
+    onSave(){
+        this.onSubmitSuccess();
+    },
+
+
     onSubmitSuccess(response){
         let me = this;
         me.callback && me.callback.apply(null, [me.field, me.getInputValue()]);

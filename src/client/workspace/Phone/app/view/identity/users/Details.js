@@ -16,9 +16,16 @@ Ext.define('Phone.view.identity.users.Details', {
             xtype: 'uxdetaillist',
             scrollable: true,
             flex: 1,
-            fields: ['userName', 'name', 'surname', 'email',  'phoneNumber', 'creationTime','isActive', 
-                { name: 'lockoutEnabled', label: 'lockable' },
-                { name: 'lockoutEnd', label: 'UserLocked' }
+            fields: [ 
+                'userName', 
+                { name:'name', inputType: 'text' },
+                { name: 'surname', inputType: 'text' },
+                { name: 'email',  inputType: 'email'},
+                { name: 'phoneNumber', inputType: 'text'},
+                'creationTime',
+                { name: 'isActive', inputType: 'bool' },
+                { name: 'lockoutEnabled', label: 'lockable' , inputType: 'bool'},
+                { name: 'lockoutEnd', label: 'UserLocked' , inputType: 'bool'}
             ],
         },        
     ]

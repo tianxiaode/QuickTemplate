@@ -6,11 +6,7 @@ Ext.define('Phone.view.identity.users.DetailController', {
         name === 'lockoutEnd' && record.set('text', Format.dateTimeToCheckbox(value, name));
     },
 
-    editView: 'usersingleunput',
-    editFields:{
-        name: 'text',
-        surname: 'text',
-    },
+    editView: 'useroneinput',
 
 
 });

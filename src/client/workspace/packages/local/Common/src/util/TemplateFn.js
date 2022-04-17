@@ -9,6 +9,7 @@ Ext.define('Common.util.TemplateFn',{
     fn:{
         emptyString: '\xA0',
         checkCls: 'x-checked',
+        defaultPermissions:['Create', 'Update', 'Delete'],
         b64DecodeUnicode(str) {
             const base64 = str.replace(/\-/g, '+').replace(/\_/g, '/');
             return decodeURIComponent(atob(base64)

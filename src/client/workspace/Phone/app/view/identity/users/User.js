@@ -13,6 +13,8 @@ Ext.define('Phone.view.identity.users.User', {
     controller: 'usercontroller',
     viewModel: 'usermodel',
     childTap: true,
+    entityName: 'User',
+    resourceName: 'AbpIdentity',
 
     list:{
         autoLoad: true,

@@ -4,7 +4,7 @@ Ext.define('Phone.view.identity.users.UserItem', {
 
     updateItem(record){
         let me = this,
-            view = me.up('[includeResource]'),
+            view = me.getResourceContainer(),
             data = record.data,
             html = '';
         html = `
@@ -30,23 +30,14 @@ Ext.define('Phone.view.identity.users.UserItem', {
 
     },
 
-    updateItemAction(record){
-        let me = this,
-            permissions = me.getPermissions(),
-            data = record.data,
-            id = data.id,
-            html = me.getItemActionTpl();
-        
-        html[1] = me.getCheckActionHtml(data.isActive, '', 'isActive', 'isActive');
-        html[2] = me.getCheckActionHtml(data.lockoutEnabled, '', 'lockoutEnabled', 'Lockable');
-        html[3] = me.getCheckActionHtml(data.lockoutEnd, '', 'lockoutEnd', 'UserLocked');
-        if(permissions.update){
-            html[4] = me.getIconActionHtml(id, 'x-fa fa-edit text-primary');
-        }
-        html[5] = me.getIconActionHtml(id, 'x-fa fa-ellipsis-h text-primary');
-            
-        me.actionElement.setHtml(html.join(''));
+    actions:[
+        { field: 'isActive', type: 'bool'},
+        { field: 'lockoutEnabled', type: 'bool', text: 'Lockable'},
+        { field: 'lockoutEnd', type: 'bool', text: 'UserLocked'},
+        { type: 'icon', cls: 'x-fa fa-edit text-primary'},
+        { type: 'icon', cls: 'x-fa fa-ellipsis-h text-primary'},
 
-    }
+    ],
+
 
 });

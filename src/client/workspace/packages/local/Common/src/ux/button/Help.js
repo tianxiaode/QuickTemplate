@@ -39,7 +39,7 @@ Ext.define('Common.ux.button.Help',{
     },
 
     getLocalizedText(text){
-        return I18N.get(text , this.getContainerResourceName());
+        return I18N.get(text , this.getResourceName());
     }
 
 

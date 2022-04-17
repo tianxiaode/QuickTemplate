@@ -80,7 +80,7 @@ Ext.define('Common.mixin.More', {
         if(me.currentId === id) return;
         me.currentId = id;
         let url = me.getUrl(),
-            entityName = me.entityName || (me.getEntityName && me.getEntityName);
+            entityName = me.getEntityName();
         if(Ext.isEmpty(url)) url = URI.crud(entityName, record.getId());
         me.mask(I18N.get('LoadingText'));
         Http.get(url, me.getParams()).then(me.getViewDataSuccess, me.getViewDataFailure, null,me);

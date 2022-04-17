@@ -17,7 +17,6 @@ Ext.define('Common.ux.button.user.Button',{
     menu: {
         minWidth: 400,
         anchor: true,
-        includeResource: true,
         resourceName: 'AbpAccount',
         items:[
             {

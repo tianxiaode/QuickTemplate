@@ -12,7 +12,7 @@ Ext.define('Common.mixin.component.Textarea', {
     config: {
         textarea: {
             xtype: 'textareafield',
-            inputType: 'textarea',
+            fieldType: 'textarea',
             minHeight: 300,
             hidden: true,
             autoLabel: false,

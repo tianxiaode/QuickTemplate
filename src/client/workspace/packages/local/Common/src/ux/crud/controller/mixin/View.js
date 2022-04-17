@@ -20,8 +20,8 @@ Ext.define('Common.ux.crud.controller.mixin.View',{
     getViewParams(record, events, config){
         let me = this,
             defaultConfig = {            
-                entityName:  me.entityName, 
                 resourceName: me.resourceName,
+                entityName:  me.entityName, 
                 permissionGroup: me.permissionGroup,
                 permissionName: me.permissionName,
                 backView: Ext.History.getToken(),
@@ -31,6 +31,7 @@ Ext.define('Common.ux.crud.controller.mixin.View',{
             defaultConfig.listeners[event] = fn;
         })
         config =  Ext.apply(defaultConfig, config);
+        console.log(config)
         return {
             record : record,
             type: me.isPhone ? ViewMgr.types.view : ViewMgr.types.dialog,

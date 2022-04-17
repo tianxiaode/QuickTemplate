@@ -8,7 +8,7 @@ Ext.define('Common.mixin.component.TextField', {
     config: {
         text: {
             xtype: 'textfield',
-            inputType: 'text',
+            fieldType: 'text',
             hidden: true,
             autoLabel: false,
         },

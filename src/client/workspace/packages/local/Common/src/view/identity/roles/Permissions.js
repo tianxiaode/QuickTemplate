@@ -152,7 +152,7 @@ Ext.define('Common.view.identity.roles.Permissions',{
 
     onLocalized(){
         let me = this, 
-            resourceName = me.resourceName;
+            resourceName = me._resourceName;
         me.callParent();
         if(!me.isReady) return;
         let  els = me.langElements;

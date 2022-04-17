@@ -38,7 +38,6 @@ Ext.define('Common.ux.navigation.Tree',{
 
 
     loadDataSuccess(response){
-        console.log('navigationtrees')
         let me = this;
         let data = Http.parseResponse(response),
             store = me.getStore(),

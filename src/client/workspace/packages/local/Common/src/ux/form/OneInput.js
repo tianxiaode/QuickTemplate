@@ -14,7 +14,8 @@ Ext.define('Common.ux.form.OneInput',{
 
     emailField:{
         name: null,
-        inputType: 'email',
+        autoLabel: false,
+        fieldType: 'email',
         hidden: true
     },
 
@@ -55,8 +56,9 @@ Ext.define('Common.ux.form.OneInput',{
         let me = this,
             field = config.field,
             value = config.value,
-            f = me.down(`[inputType=${config.type}]`),
+            f = me.down(`[fieldType=${config.type}]`),
             title = config.title || field;
+        console.log(f)
         me.hideMessageButton();
         if(me.currentInput) me.currentInput.setHidden(true);
         if(!f)  {

@@ -1,4 +1,4 @@
-Ext.define('Common.ux.crud.controller.mixin.Ajax',{
+Ext.define('Common.mixin.controller.Ajax',{
     extend: 'Ext.Mixin',
 
     onAjaxFailure(response){    

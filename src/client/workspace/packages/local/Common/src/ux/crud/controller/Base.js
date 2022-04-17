@@ -3,11 +3,11 @@ Ext.define('Common.ux.crud.controller.Base',{
     alias: 'controller.uxcrudbasecontroller',
 
     mixins:[
-        'Common.ux.crud.controller.mixin.Ajax',
+        'Common.mixin.controller.Ajax',
         'Common.ux.crud.controller.mixin.ViewModel',
-        'Common.ux.crud.controller.mixin.ResourceAndPermissions',
+        'Common.mixin.controller.ResourceAndPermissions',
         'Common.ux.crud.controller.mixin.Button',
-        'Common.ux.crud.controller.mixin.CheckChange',
+        'Common.mixin.controller.CheckChange',
         'Common.ux.crud.controller.mixin.Batch',
         'Common.ux.crud.controller.mixin.Crud',
         'Common.ux.crud.controller.mixin.View',

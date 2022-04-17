@@ -1,4 +1,4 @@
-Ext.define('Common.ux.crud.controller.mixin.CheckChange',{
+Ext.define('Common.mixin.controller.CheckChange',{
     extend: 'Ext.Mixin',
 
         /**
@@ -79,6 +79,7 @@ Ext.define('Common.ux.crud.controller.mixin.CheckChange',{
         }
         store.commitChanges();
         Toast(I18N.get('UpdateSuccess'));
+        me.afterCheckChangeSuccess && me.afterCheckChangeSuccess();
     },
 
     /**
@@ -89,5 +90,14 @@ Ext.define('Common.ux.crud.controller.mixin.CheckChange',{
         this.onAjaxFailure(response);
     },
     
-    
+    onCheckBoxTap(field, record){
+        if(!field) return;
+        let me = this,
+            value = record.get(field),
+            old = Ext.isBoolean(value) ? value :  !Ext.isEmpty(value),
+            checked = !old;
+        Ext.isBoolean(value) && record.set(field, checked );
+        me.doCheckChange(record, field, checked);
+    },
+
 })

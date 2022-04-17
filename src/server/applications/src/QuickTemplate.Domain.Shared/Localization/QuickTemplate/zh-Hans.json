@@ -28,6 +28,11 @@
     "SubMenu.SystemSetting": "设置设置",
     "SelectedOrNot:All": "全部",
     "SelectedOrNot:Selected": "已选",
-    "SelectedOrNot:NotSelected": "未选"
+    "SelectedOrNot:NotSelected": "未选",
+    "DisplayName:Name": "名",
+    "DisplayName:Surname": "姓",
+    "DisplayName:Password": "密码",
+    "DisplayName:Email": "邮箱地址",
+    "DisplayName:PhoneNumber": "手机号码"
   }
 }

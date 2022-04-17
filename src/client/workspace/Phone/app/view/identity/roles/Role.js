@@ -13,15 +13,14 @@ Ext.define('Phone.view.identity.roles.Role', {
     controller: 'rolecontroller',
     viewModel: 'rolemodel',
     childTap: true,
+    entityName: 'Role',
+    resourceName: 'AbpIdentity',
 
-    items:[
-        {
-            xtype: 'uxcrudlist',            
-            autoLoad: true,
-            hasCheckbox: true,
-            itemConfig:{
-                xtype: 'phone-roleitem'
-            },
-        }
-    ]
+    list:{
+        autoLoad: true,
+        hasCheckbox: true,
+        itemConfig:{
+            xtype: 'phone-roleitem'
+        },
+    }
 });

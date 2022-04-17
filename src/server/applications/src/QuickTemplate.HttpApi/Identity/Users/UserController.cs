@@ -120,9 +120,23 @@ public class UserController: QuickTemplateController,IUserAppService
 
     [HttpPatch]
     [Route("{id:guid}/sruname")]
-    public Task UpdateSurnameAsync(Guid id,[FromBody] UserUpdateNameDto input)
+    public Task UpdateSurnameAsync(Guid id,[FromBody] UserUpdateSurnameDto input)
     {
         return UserAppService.UpdateSurnameAsync(id, input);
+    }
+
+    [HttpPatch]
+    [Route("{id:guid}/email")]
+    public Task UpdateEmailAsync(Guid id,[FromBody] UserUpdateEmailDto input)
+    {
+        return UserAppService.UpdateEmailAsync(id, input);
+    }
+
+    [HttpPatch]
+    [Route("{id:guid}/phone-number")]
+    public Task UpdatePhoneNumberAsync(Guid id,[FromBody] UserUpdatePhoneNumberDto input)
+    {
+        return UserAppService.UpdatePhoneNumberAsync(id, input);
     }
 
 }

@@ -24,7 +24,10 @@ Ext.define('Common.service.Localized', {
         }
         me.setCurrentLanguage(current);
         AppStorage.set('lang', current);
-        //me.loadResources();
+    },
+
+    getDefaultResourceName(){
+        return this.remoteRawValue.defaultResourceName;
     },
     
     get(key, resourceName, entityName){

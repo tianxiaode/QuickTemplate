@@ -4,13 +4,26 @@ Ext.define('Common.overrides.shared.Component',{
     config:{
         langHtml: null,
         langTooltip: null,
+        resourceName: null,        
+        entityName: null,
+    },
+
+    applyResourceName(value){
+        this.includeResource = !!value;
+        return value;
+    },
+
+    updateEntityName(){
+        !this.isInitPermissions && this.initPermissions();
+    },
+
+    updateResourceName(){
+        !this.isInitPermissions && this.initPermissions();
     },
 
     initialize(){
         let me = this;
         me.callParent(arguments);
-        me.includeResource = !!me.resourceName;
-        me.permissionGroup && me.initPermissions();
         if(I18N && I18N.isReady){
             me.onLocalized();
         }
@@ -30,48 +43,49 @@ Ext.define('Common.overrides.shared.Component',{
     },
 
     getResourceName(){
-        return this.resourceName || this.getContainerResource('resourceName');
+        let me = this,
+            container = me.getResourceContainer();
+        return me._resourceName || (container && container._resourceName);
     },
 
     getEntityName(){
-        return this.entityName || this.getContainerResource('entityName');
-    },
-
-    getPermissionGroup(){
-        return this.permissionGroup || this.getContainerResource('permissionGroup');
+        let me = this,
+            container = me.getResourceContainer();
+        return me._entityName || (container && container._entityName);
     },
 
     getPermissions(){
-        return this.permissions || this.getContainerResource('permissions');        
+        let me = this,
+            container = me.getResourceContainer();
+        return me.permissions || (container && container.permissions);
     },
 
     initPermissions(){
         let me = this,
-            entityName = Format.pluralize(me.entityName),
-            group = me.permissionGroup,
-            permissionName = me.permissionName,
+            entityName = me._entityName,
+            resourceName = me._resourceName,
+            group = me.permissionGroup || resourceName,
+            permissionName = me.permissionName || entityName,
             permissions= {};
-        Ext.iterate(me.permissions,(k,v)=>{
-            let permission = me.getFullPermissionName(group, entityName, permissionName, v);
-            permissions[k.toLowerCase()] = ACL.isGranted(permission);
-        })
-        ['Create', 'Update', 'Delete'].forEach(p=>{
-            let permission = me.getFullPermissionName(group, entityName, permissionName, p);
-            permissions[p.toLowerCase()] = ACL.isGranted(permission);
-        })
+        console.log('initPermissions', me.xtype, group, permissionName);
+        if(Ext.isEmpty(permissionName) || Ext.isEmpty(group)) return;
+        Ext.isArray(me.permissions) && me.setPermissions(permissions, me.permissions, group, permissionName);
+        me.setPermissions(permissions, Format.defaultPermissions, group, permissionName);
         me.permissions = permissions;
-
+        me.isInitPermissions = true;
+        console.log(me.permissions)
     },
 
-    getFullPermissionName(group , entityName, permissionName, action){
-        return `${group || entityName}.${ permissionName ||entityName}.${action}`
+    setPermissions(permissions,actions, group , permissionName){
+        actions.forEach(a=>{
+            if(permissions[a]) return;
+            let permission = `${group}.${Format.pluralize(permissionName) }.${a}`;
+            permissions[a.toLowerCase()] = ACL.isGranted(permission);
+        })
     },
 
-    getContainerResource(name){
-        let me = this,
-            container = me.up('[includeResource]');
-        return container && container[name];
-
+    getResourceContainer(){
+        return this.up('[includeResource]');
     },
 
     getLocalizedText(text, resourceName, entityName){

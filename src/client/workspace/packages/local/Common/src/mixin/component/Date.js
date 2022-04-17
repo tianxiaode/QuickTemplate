@@ -12,7 +12,7 @@ Ext.define('Common.mixin.component.Date', {
     config: {
         date: {
             xtype: 'uxdatepanel',
-            inputType: 'date',
+            fieldType: 'date',
             hidden: true,
             autoLabel: false,
         },

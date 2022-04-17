@@ -26,12 +26,23 @@ Ext.define('Common.ux.dataview.DetailList',{
     applyFields(fields){
         let store = this.getStore(),
             data = [];
-        Ext.each(fields,f=>{
-            Ext.isString(f) && data.push({ id: f, label: f, cls: '', value: null, text: null});
-            Ext.isObject(f) &&  data.push({ id: f.name, label: f.label, cls: '', value: null, text: null});
-        });
+        Ext.each(fields,f=>{data.push(this.getFieldData(f))});
         store.loadData(data);
         return fields;
+    },
+
+    getFieldData(field){
+        let id = field,
+            label = field,
+            editable = false,
+            inputType;
+        if(Ext.isObject(field)){
+            id = field.name,
+            label = field.label || id;
+            inputType = field.inputType;
+            editable = !!inputType;
+        }
+        return { id: id, label: label, cls: '', editable: editable, inputType: inputType, value: null, text: null }
     },
 
     onLocalized(){

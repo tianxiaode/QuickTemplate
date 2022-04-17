@@ -1,6 +1,12 @@
 Ext.define('Common.ux.app.DetailInMoreController', {
     extend: 'Ext.app.ViewController',
 
+    mixins:[
+        'Common.mixin.controller.ResourceAndPermissions',
+        'Common.mixin.controller.Ajax',
+        'Common.mixin.controller.CheckChange',
+    ],
+
     currentId: null,
     currentEntity: null,
     morePanel: '[isMorePanel]',
@@ -25,11 +31,18 @@ Ext.define('Common.ux.app.DetailInMoreController', {
         return panel && panel.getRecord();
     },
 
+    getStore(name) {
+        let vm = this.getViewModel();
+
+        return (name && vm && vm.getStore('name')) 
+            || this.getRecord().store;
+    },
+
     isEditable(){
         let me = this,
             view = me.getView(),
             record = me.getRecord(),
-            permissions = view.up('[includeResource]').permissions;
+            permissions = view.getPermissions();
         return permissions.update || (record && record.get('editable'));
     },
 
@@ -40,8 +53,8 @@ Ext.define('Common.ux.app.DetailInMoreController', {
             id =  record && record.getId();
         if(id === me.currentId) return;
         me.currentId = id;
-        me.resourceName = view.resourceName;
-        me.entityName = view.entityName;
+        me.resourceName = view.getResourceName();
+        me.entityName = view.getEntityName();
         me.refreshList();
     },
 
@@ -78,10 +91,14 @@ Ext.define('Common.ux.app.DetailInMoreController', {
             list = me.list,
             store = list.getStore(),
             field = target.getAttribute('data-field'),
-            type = me.editFields[field],
+            type = target.getAttribute('data-type'),
             record = store.getById(field),
             resourceName = view.getResourceName();
         if(!type || !record || !me.isEditable()) return;
+        if(type === 'bool'){
+            me.onCheckBoxTap(field, me.getRecord());
+            return;
+        }
 
         let dlg = ViewMgr.getDialog(me.editView, {listeners:{ saved: me.updateFieldSuccess, scope: me }});
         dlg.resourceName = me.resourceName;
@@ -91,9 +108,13 @@ Ext.define('Common.ux.app.DetailInMoreController', {
             value: record.get('value'),
             title: I18N.get(field, resourceName)
         });
-        dlg.setUrl(URI.crud(view.getEntityName(), me.getRecord().getId(), field));
+        dlg.setUrl(URI.crud(view.getEntityName(), me.getRecord().getId(), Format.splitCamelCase(field)));
         dlg.show();
 
+    },
+
+    afterCheckChangeSuccess(){
+        this.refreshList();
     },
 
     updateFieldSuccess(sender, field , value){

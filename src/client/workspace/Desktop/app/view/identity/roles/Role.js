@@ -11,9 +11,8 @@ Ext.define('Desktop.view.identity.roles.Role', {
 
     controller: 'rolecontroller',
     viewModel: 'rolemodel',
-    entityName: 'Role',
     resourceName: 'AbpIdentity',
-    permissionGroup: 'AbpIdentity',
+    entityName: 'Role',
 
     grid:{
         doubleTapToEdit: true,

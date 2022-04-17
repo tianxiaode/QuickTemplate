@@ -122,7 +122,7 @@ public class UserAppService: QuickTemplateAppService, IUserAppService
         var user = await UserManager.GetByIdAsync(id);
         user.ConcurrencyStamp = input.ConcurrencyStamp;
 
-        (await UserManager.SetUserNameAsync(user, input.UserName)).CheckErrors();
+        //(await UserManager.SetUserNameAsync(user, input.UserName)).CheckErrors();
 
         await UpdateUserByInput(user, input);
         input.MapExtraPropertiesTo(user);
@@ -234,10 +234,26 @@ public class UserAppService: QuickTemplateAppService, IUserAppService
     }
 
     [Authorize(IdentityPermissions.Users.Update)]
-    public virtual async Task UpdateSurnameAsync(Guid id,UserUpdateNameDto input)
+    public virtual async Task UpdateSurnameAsync(Guid id,UserUpdateSurnameDto input)
     {
         var entity = await UserManager.GetByIdAsync(id);
         entity.Surname = input.Value;
+        (await UserManager.UpdateAsync(entity)).CheckErrors();
+    }
+
+    [Authorize(IdentityPermissions.Users.Update)]
+    public virtual async Task UpdateEmailAsync(Guid id,UserUpdateEmailDto input)
+    {
+        var entity = await UserManager.GetByIdAsync(id);
+        (await UserManager.SetEmailAsync(entity, input.Value)).CheckErrors();
+        (await UserManager.UpdateAsync(entity)).CheckErrors();
+    }
+
+    [Authorize(IdentityPermissions.Users.Update)]
+    public virtual async Task UpdatePhoneNumberAsync(Guid id,UserUpdatePhoneNumberDto input)
+    {
+        var entity = await UserManager.GetByIdAsync(id);
+        (await UserManager.SetPhoneNumberAsync(entity, input.Value)).CheckErrors();
         (await UserManager.UpdateAsync(entity)).CheckErrors();
     }
 

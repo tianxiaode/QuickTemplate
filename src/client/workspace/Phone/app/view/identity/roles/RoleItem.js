@@ -25,19 +25,12 @@ Ext.define('Phone.view.identity.roles.RoleItem', {
 
     },
 
-    updateItemAction(record){
-        let me = this,
-            data = record.data,
-            id = data.id,
-            html = me.getItemActionTpl();
-        
-        html[1] = me.getCheckActionHtml(data.isDefault, '', 'isDefault', 'isDefault');
-        html[2] = me.getCheckActionHtml(data.isPublic, '', 'isPublic', 'isPublic');
-        html[4] = me.getIconActionHtml(data.id, 'x-fa fa-edit text-primary');
-        html[5] = me.getIconActionHtml(data.id, 'x-fa fa-globe text-primary');
-            
-        me.actionElement.setHtml(html.join(''));
+    actions:[
+        { field: 'isDefault', type: 'bool'},
+        { field: 'isPublic', type: 'bool'},
+        { type: 'icon', cls: 'x-fa fa-edit text-primary'},
+        { type: 'icon', cls: 'x-fa fa-globe text-primary'},
+    ],
 
-    }
 
 });

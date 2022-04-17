@@ -12,7 +12,7 @@ Ext.define('Common.mixin.component.Number', {
     config: {
         uxNumber: {
             xtype: 'numberfield',
-            inputType: 'number',
+            fieldType: 'number',
             hidden: true,
             autoLabel: false,
         },

@@ -23,5 +23,7 @@ public interface IUserAppService
     Task<IdentityUserDto> FindByUsernameAsync(string username);
     Task<IdentityUserDto> FindByEmailAsync(string email);
     Task UpdateNameAsync(Guid id, UserUpdateNameDto input);
-    Task UpdateSurnameAsync(Guid id, UserUpdateNameDto input);
+    Task UpdateSurnameAsync(Guid id, UserUpdateSurnameDto input);
+    Task UpdateEmailAsync(Guid id, UserUpdateEmailDto input);
+    Task UpdatePhoneNumberAsync(Guid id, UserUpdatePhoneNumberDto input);
 }

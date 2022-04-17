@@ -18,18 +18,6 @@ Ext.define('Common.ux.Logo', {
         }
     ],
 
-    // logoHtml:`
-    //     <img class="logo-img {1}" src="{0}"></span>
-    //     <span  class="company-name text-truncate" >{2}</span>
-    // `,
-    
-    // initialize(){
-    //     let me = this;
-    //     Config.isReady && me.switchLogo();
-    //     Config.on('ready', me.switchLogo, me);
-    //     me.callParent();
-    // },
-
     onLocalized(){
         this.callParent();
         this.switchLogo();
