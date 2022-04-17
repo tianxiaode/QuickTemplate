@@ -11,12 +11,6 @@ Ext.define('Common.ux.crud.container.Base',{
         'Common.mixin.component.SearchField',
     ],
 
-    requires:[
-        'Ext.grid.column.RowNumberer',
-        'Common.ux.grid.Grid',
-        'Common.ux.dataview.List',
-    ],
-
     config:{
         toolbarUi: 'grid',
         toolbar:{
@@ -26,39 +20,10 @@ Ext.define('Common.ux.crud.container.Base',{
             shadow: false,
             weight: 10,
         },
-        grid:{
-            xtype: 'uxgrid',
-            autoLoad: true,
-            rowNumbers: true,
-            doubleTapToEdit: false,
-            childTap: false,
-            isCrudList: true,
-            weight: 500,
-            
-            selectable:{
-                checkbox: true
-            },
-        
-            bind: { store: '{mainStore}'},         
-        },
-        list:{
-            xtype: 'uxlist',
-            isCrudList: true,
-            hasPullRefresh: true,
-            childTap: true,
-            childLongPress: false,
-            weight: 500,
-            bind:{ store: '{mainStore}'},    
-            selectable:{
-                mode: 'MULTI'
-            }        
-        }
     },
 
     layout: 'vbox',
     weighted: true,
-    useGrid: true,
-    useList: false,
 
     applyToolbarUi(ui){
         if(this.isPhone()) return 'dark';
@@ -82,34 +47,5 @@ Ext.define('Common.ux.crud.container.Base',{
         this.onLocalized();
     },
 
-    createGrid(newCmp) {
-        return Ext.apply({
-            ownerCmp: this,
-        }, newCmp);
-    },
-
-    applyGrid(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createGrid');
-    },
-
-    updateGrid(config){
-        if(config && this.useGrid) this.add(config);
-    },
-
-    createList(newCmp) {
-        return Ext.apply({
-            ownerCmp: this,
-        }, newCmp);
-    },
-
-    applyList(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createList');
-    },
-
-    updateList(config){
-        if(config && this.useList) this.add(config);
-    },
 
 })

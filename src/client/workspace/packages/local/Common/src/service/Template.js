@@ -58,46 +58,6 @@ Ext.define('Common.service.Template', {
             </ul>
         `,
 
-
-    shareProduct:
-        `
-            <div class="row lh-24">
-                <div class="col-6 pl-0 pr-1 text-truncate fw-bolder">{name:this.listHighlight(values,'name')}</div>
-                <div class="col-6 pl-0 pr-0 text-truncate text-right">{category:getTranslationObjectText}</div>
-            </div>
-            <div class="row lh-24">
-                <div class="col-6 pl-0 pr-1 text-truncate">{barcode:this.unDefine(values,'barcode')}</div>
-                <div class="col-6 pl-0 pr-0 text-truncate text-right">{ageLimit}</div>
-            </div>
-            <div class="row lh-24">
-                <div class="col-4 pr-1 text-truncate">{brand:this.unDefine(values, 'brand')}</div>
-                <div class="col-4 pr-1 text-truncate text-center">{specification:this.unDefine(values, 'specification')}</div>
-                <div class="col-4 text-truncate text-right">{unit:this.unDefine(values, 'unit')}</div>
-            </div>
-        `,
-    
-    product:
-    `
-        <div class="row lh-24">
-            <div class="col-6 pr-1 text-truncate fw-bolder productDetail">{name:this.listHighlight(values,'name')}</div>
-            <div class="col-6 text-truncate text-right">{organizationUnitName}</div>
-        </div>
-        <div class="row lh-24">
-            <div class="col-6 pr-1 text-truncate">{category:getTranslationObjectText}</div>
-            <div class="col-6 text-truncate text-right">{barcode:this.unDefine(values,'barcode')}</div>
-        </div>
-        <div class="row lh-24">
-            <div class="col-4 pr-1 text-truncate">{unit:this.unDefine(values, 'unit')}</div>
-            <div class="col-4 pr-1 text-truncate text-center">{brand:this.unDefine(values, 'brand')}</div>
-            <div class="col-4 text-truncate text-right">{specifications:this.unDefine(values, 'specifications')}</div>
-        </div>
-        <div class="row lh-24">
-            <div class="col-4 pr-1 text-truncate">{ageLimit}岁</div>
-            <div class="col-4 pr-1 text-truncate text-center">{memberPrice:currency}</div>
-            <div class="col-4 text-truncate text-right">{salesPrice:currency}</div>
-        </div>
-    `,
-
     treeSearchItem: `
         <div class="row py-2">
             <div class="col-5 px-1 text-truncate">{parentName}</div>

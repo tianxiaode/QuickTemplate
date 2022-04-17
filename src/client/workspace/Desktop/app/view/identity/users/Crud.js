@@ -1,5 +1,5 @@
 Ext.define('Desktop.view.identity.users.Crud', {
-    extend: 'Common.ux.crud.container.Base',
+    extend: 'Common.ux.crud.container.Grid',
     xtype : 'desktop-usercrudview', 
 
     requires:[

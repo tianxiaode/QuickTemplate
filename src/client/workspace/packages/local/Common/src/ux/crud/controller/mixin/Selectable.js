@@ -19,6 +19,7 @@ Ext.define('Common.ux.crud.controller.mixin.Selectable',{
     onViewSelect(sender, selected, eOpts ){
         let me = this;
         me.updateButtons();
+        me.afterViewSelect && me.afterViewSelect(selected);
     },
 
         /**
@@ -30,6 +31,7 @@ Ext.define('Common.ux.crud.controller.mixin.Selectable',{
     onViewDeselect(sender, records, eOpts){
         let me = this;
         me.updateButtons();
+        me.afterViewDeselect && me.afterViewDeselect(selected);
     },
 
     getSelectable(){

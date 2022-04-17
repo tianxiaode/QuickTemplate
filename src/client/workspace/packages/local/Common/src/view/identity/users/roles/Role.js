@@ -1,5 +1,5 @@
 Ext.define('Common.view.identity.users.roles.Role',{
-    extend: 'Common.ux.crud.container.Base',
+    extend: 'Common.ux.crud.container.Grid',
     xtype: 'userroleview',
     
     mixins:[
@@ -18,7 +18,6 @@ Ext.define('Common.view.identity.users.roles.Role',{
 
 
     grid:{
-        xtype: 'uxcrudgrid',
         flex:1,
         columns:[
             { 

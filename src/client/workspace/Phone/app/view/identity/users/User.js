@@ -1,9 +1,8 @@
 Ext.define('Phone.view.identity.users.User', {
-    extend: 'Common.ux.crud.container.Phone',
+    extend: 'Common.ux.crud.container.List',
     xtype : 'phone-userview', 
     
     requires:[
-        'Common.ux.crud.List',
         'Common.view.identity.users.Model',
         'Common.view.identity.users.Controller',
         'Phone.view.identity.users.UserItem',

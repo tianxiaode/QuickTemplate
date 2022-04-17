@@ -15,7 +15,7 @@ Ext.define('Common.ux.crud.controller.Tree',{
     initSearchList(){
         let me = this,
             view = me.getView(),
-            searchList = view.down('#searchList');
+            searchList = view.getSearchList();
         if(!searchList) return;
         searchList.on('storechange', me.onSearchStoreChange ,me);
         me.searchList = searchList;
@@ -28,14 +28,14 @@ Ext.define('Common.ux.crud.controller.Tree',{
      * @param {旧存储} oldStore 
      * @param {配置参数} eOpts 
      */
-     onStoreChange(sender, store, oldStore, eOpts){
+    onStoreChange(sender, store, oldStore, eOpts){
         let me = this;
         me.setRoot(store);
         me.callParent(arguments)
     },
 
     setRoot(store){
-        Ext.raise('没有定义setRoot方法');
+        Ext.raise('There is no setRoot method defined');
     },
     
     /**
