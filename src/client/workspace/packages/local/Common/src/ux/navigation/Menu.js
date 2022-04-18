@@ -4,41 +4,38 @@ Ext.define('Common.ux.navigation.Menu',{
 
     layout: 'vbox',
     width: 220,
-    userCls: 'bg-white ',
-    margin: '0 20px 0 0',
     config:{
-        headerIconCls: 'x-fa fa-hdd',
+        langTitle: null,
+        data: null,
+        headerIconCls: 'x-fa fa-hdd text-primary',
         header:{
             xtype: 'component',
             userCls: 'border-bottom',
-            style: 'font-size:16px;',
+            style: 'font-size:16px;background-color:var(--background-color)',
             padding: '20 15',
-            // html:`
-            //     <span class="x-fa fa-database pr-4" style=""></span><span>fdsdfsdf</span>
-            // `
         },
-        navigationList:{
-            xtype: 'list',
-            flex: 1,
-            userCls: 'bg-white',
-            itemCls: ' listing',
+        list:{
+            xtype: 'dataview',
+            flex: 1,            
+            userCls: 'navigation-menu',
             itemTpl: `
-                <div class="bg-white row " style="padding: 15px 10px;">
-                    <div class="col-auto"><span class="{iconCls} pr-4" style="padding-left:5px;font-size:16px;"></span></div>
-                    <div class="col overflow-hidden"><span>{text}</span></div>
+                <div class="row " style="padding: 15px 10px;">
+                    <div class="col-auto"><span class="{iconCls} pr-4 text-primary" style="padding-left:5px;font-size:16px;"></span></div>
+                    <div class="col text-truncate"><span>{text}</span></div>
                     <div class="col-auto pr-3"><span class="x-fa fa-circle point"></span></div>
                 </div>
                 `
                 ,
             store:{                
                 fields:[
-                    'iconCls', 'text', 'viewType', 'resourceName', 'permission'
+                    'iconCls', 'langText', 'viewType', 'resourceName', 'permission', 'text'
                 ]
             }
         },
-        data: null,
-        title: null,
+    },
 
+    updateLangTitle(){
+        this.onLocalized();
     },
 
     createComponent(newCmp) {
@@ -52,30 +49,22 @@ Ext.define('Common.ux.navigation.Menu',{
             this, 'createComponent');
     },
 
-    applyNavigationList(newCmp, old){
+
+    updateHeader(config){
+        if(!config) return;
+        this.add(config);
+        this.refreshTitle();
+    },
+
+    applyList(newCmp, old){
         return Ext.updateWidget(old, newCmp,
             this, 'createComponent');
     },
 
-
-    initialize(){
-        let me = this;
-        me.callParent();
-        me.initHeader();
-        me.initList();
-    },
-
-    initHeader(){
+    updateList(config){
+        if(!config) return;
         let me = this,
-            header = me.getHeader(),
-            title = I18N.get(me.getTitle());
-        header = me.add(header);
-        header.setHtml(`<span class="${me.getHeaderIconCls()} pr-4" style=""></span><span>${title}</span>`);
-    },
-
-    initList(){
-        let me = this,
-            list = me.getNavigationList(),
+            list = me.getList(),
             data = me.getData();
         if(!data) return;
         list = me.add(list);
@@ -84,11 +73,12 @@ Ext.define('Common.ux.navigation.Menu',{
         data.forEach(r=>{
             if (r.permission && !ACL.isGranted(r.permission)) return;
             record = Object.assign({}, r);
-            record.text = I18N.get(record.text,record.resourceName);
+            record.text = I18N.get(record.langText,record.resourceName);
             store.add(record);
         });
         let first = store.getAt(0);
-        list.getSelectable().select(first);
+        list.select(first);
+
     },
 
     onListSelected(sender, selected, eOpts){
@@ -96,9 +86,26 @@ Ext.define('Common.ux.navigation.Menu',{
         me.fireEvent('select' ,me, selected, eOpts);
     },
 
-    getSelection(){
-        return this.getNavigationList().getSelectable().getSelections()[0];
-    }
+    onLocalized(){
+        let me = this;
+        me.callParent();
+        me.refreshTitle();
+        me.refreshItemText();
+    },
 
+    refreshTitle(){
+        let me = this,
+            header = me.getHeader();
+        header.setHtml(`<span class="${me.getHeaderIconCls()} pr-4" style=""></span><span>${I18N.get(me.getLangTitle(), me.getResourceName())}</span>`);
+    },
+
+    refreshItemText(){
+        let me = this,
+            store = me.getList().getStore(),
+            items = store.getData().items;
+        items.forEach(r=>{
+            r.set('text', I18N.get(r.get('langText'), r.get('resourceName')));
+        })
+    },
 
 })

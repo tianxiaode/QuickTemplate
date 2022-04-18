@@ -1,7 +1,9 @@
 Ext.define('Common.data.model.identity.Role', {
-    extend: 'Common.data.model.TranslationBase',
+    extend: 'Common.data.model.Base',
     alias: 'entity.role',
-   
+
+    hasTranslation: true,
+
     fields: [
         { name: 'name', type: 'string', defaultValue: '', messageField: true, allowSort: true, langText: 'DisplayName:RoleName'},
         { name: 'permissions' , defaultValue: []},

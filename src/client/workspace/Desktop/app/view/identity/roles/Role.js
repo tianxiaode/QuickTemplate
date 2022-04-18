@@ -19,14 +19,13 @@ Ext.define('Desktop.view.identity.roles.Role', {
         columns:[
             { 
                 dataIndex: 'name', width: 200,
-                autoText: false, langText: 'DisplayName:RoleName',
                 cell:{  encodeHtml: false,},
                 tpl: `{name:this.listHighlight(values,'name')} {translation:translation('name','- ')}`
-                },
-                {
-                dataIndex: 'displayPermissions', flex: 1,
-                autoText: false, langText: 'Permissions',
-                },
+            },
+            {
+            dataIndex: 'displayPermissions', flex: 1,
+            autoText: false, langText: 'Permissions',
+            },
             { xtype: 'uxcheckchangecolumn', dataIndex: 'isDefault'} ,
             { xtype: 'uxcheckchangecolumn', dataIndex: 'isPublic'},
             {

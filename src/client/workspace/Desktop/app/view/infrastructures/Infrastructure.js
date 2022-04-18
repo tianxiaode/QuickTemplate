@@ -1,27 +1,21 @@
 Ext.define('Desktop.view.infrastructures.Infrastructure', {
-    extend: 'Common.ux.panel.Content',
+    extend: 'Common.ux.navigation.Panel',
     xtype : 'desktop-infrastructureview', 
     
     requires:[
-        'Common.ux.navigation.View',
+        'Common.view.infrastructures.districts.District',
     ],
 
 
-    items: [
-        {
-            xtype: 'uxnavigationview',
-            flex:1,
-            navigation:{
-                title: 'Infrastructure',
-                data:[
-                    { 
-                        iconCls: 'x-fa fa-map-marker-alt', text: 'Districts', 
-                        resourceName: 'Infrastructures', viewType: 'districtgrid',
-                        permission: 'Infrastructures.Districts.ManagePermissions' 
-                    },
-                ]
-            }
-        } ,
-    ],
+    navigation:{
+        langTitle: 'Infrastructures',
+        resourceName: 'Infrastructures',
+        data:[
+            { 
+                iconCls: 'x-fa fa-map-marker-alt', langText: 'Districts',  resourceName: 'Infrastructures',
+                viewType: 'districtview', permission: 'Infrastructures.Districts.ManagePermissions' 
+            },
+        ]
+    }
 
 });

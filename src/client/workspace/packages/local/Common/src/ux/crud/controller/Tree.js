@@ -22,42 +22,6 @@ Ext.define('Common.ux.crud.controller.Tree',{
     },
 
     /**
-     * 列表组件的存储发生改变执行的操作
-     * @param {列表组件} sender 
-     * @param {存储} store 
-     * @param {旧存储} oldStore 
-     * @param {配置参数} eOpts 
-     */
-    onStoreChange(sender, store, oldStore, eOpts){
-        let me = this;
-        me.setRoot(store);
-        me.callParent(arguments)
-    },
-
-    setRoot(store){
-        Ext.raise('There is no setRoot method defined');
-    },
-    
-    /**
-     * 存储加载后的处理
-     * @param {存储} store 
-     * @param {记录} records 
-     * @param {是否成功} successful 
-     * @param {操作} operation 
-     * @param {操作参数} eOpts 
-     */
-    onStoreLoad(store, records, successful, operation, eOpts){
-        let me = this;
-        if(!successful) return;
-        //数据加载后，选择第一个记录
-        let selection = me.getSelections();
-        //如果当前列表是树，且已存在选择，直接返回
-        if(selection.length>0) return;
-        let record = store.getAt(0);
-        record && me.getSelectable().select(record);
-    },
-
-    /**
      * 当存在查询列表时，执行事件绑定
      * @param {列表组件} sender 
      * @param {存储} store 
@@ -268,6 +232,19 @@ Ext.define('Common.ux.crud.controller.Tree',{
         return { parentId : parentId, parentName: parentName };
     },
 
+    afterStoreChange(store){
+        let me = this;
+        Http.get(URI.crud(me.entityName, 'root'))
+            .then(me.loadRootSuccess, me.onAjaxFailure, null, me);
+    },
 
+    loadRootSuccess(response){
+        let me = this,
+            root = Http.parseResponse(response),
+            store = me.getStore();
+        store.setRoot(Ext.clone(root));
+        store.getRoot().expand();
+    },
+    
 
 })

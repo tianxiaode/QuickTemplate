@@ -67,13 +67,13 @@ Ext.define('Common.overrides.shared.Component',{
             group = me.permissionGroup || resourceName,
             permissionName = me.permissionName || entityName,
             permissions= {};
-        console.log('initPermissions', me.xtype, group, permissionName);
+        //console.log('initPermissions', me.xtype, group, permissionName);
         if(Ext.isEmpty(permissionName) || Ext.isEmpty(group)) return;
         Ext.isArray(me.permissions) && me.setPermissions(permissions, me.permissions, group, permissionName);
         me.setPermissions(permissions, Format.defaultPermissions, group, permissionName);
         me.permissions = permissions;
         me.isInitPermissions = true;
-        console.log(me.permissions)
+        //console.log(me.permissions)
     },
 
     setPermissions(permissions,actions, group , permissionName){

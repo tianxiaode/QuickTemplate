@@ -2,59 +2,16 @@ Ext.define('Common.ux.data.Store', {
     extend: 'Ext.data.Store',
     alias: 'store.uxformatstore',
 
-    requires:[
-        'Common.ux.data.proxy.Format'
+    mixins:[
+        'Common.ux.data.mixin.Model',
+        'Common.ux.data.mixin.Proxy',
     ],
 
-    updateAction:null,
-    checkAction:null,
-    uncheckAction:null,
-    entity: null,
-    controller: null,
     remoteSort: true,
     remoteFilter: true,
-    localFilterFields:null,
-    sortFields: null,
     filterValue: null,
     pageSize: 25,
-    proxy: {
-        type: 'format',
-    },
 
-    applyModel(model) {
-        let me = this;
-        model = me.callParent(arguments);
-        if(Ext.isEmpty(model)) return model;
-        let fields = model.getFields();
-        me.updateAction = {};
-        me.checkAction = {}
-        me.uncheckAction = {};
-        me.localFilterFields =[];
-        me.sortFields = {};
-        me.langText = {};
-        fields.forEach(field => {
-            if(field.messageField) me.messageField = field.name;
-            if(field.updateAction) me.updateAction[field.name] = field.updateAction;
-            if(field.checkAction) me.checkAction[field.name] = field.checkAction;
-            if(field.uncheckAction) me.uncheckAction[field.name] = field.uncheckAction;
-            if(field.localFilter) me.localFilterFields.push(field.name);
-            if(field.allowSort) me.sortFields[field.name] = true;
-            if(field.langText) me.langText[field.name] = field.langText;
-        });
-        return model;
-    },    
-
-    applyProxy(proxy) {
-        let me = this,
-            entity = me.entity;
-        if(Ext.isEmpty(entity)){
-            let model = me.getModel();
-            entity = model.entityName;
-            let index = entity.indexOf('.');
-            if(index>0) entity = entity.substr(index+1);
-        }
-        Ext.apply(proxy,{ entity: entity, controller: me.controller});
-        return me.callParent([proxy]);
-    },
+    proxy: 'format',
 
 });

@@ -48,6 +48,7 @@
         "IconCls": "x-fa fa-hdd",
         "ViewType": "infrastructureView",
         "Order": 220,
+        "Selectable": true,
         "RequiredPermissionNames": [
           "Infrastructures.Districts.ManagePermissions"
         ]

@@ -30,7 +30,8 @@ Ext.define('Common.mixin.component.Back', {
     initialize(){
         let me = this,
             backMixinContainer = me.backMixinContainer,
-            container = (backMixinContainer && me.down(backMixinContainer)) || me.getHeader();
+            container = (backMixinContainer && me.down(backMixinContainer)) 
+                || (me.getHeader && me.getHeader());
         if(!me.hasBack || !me.isPhone() || !container) return;
         container.add(me.getBackButton());
     },

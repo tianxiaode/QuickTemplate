@@ -1,6 +1,6 @@
 Ext.define('Common.data.store.infrastructures.Districts',{
     extend: 'Common.ux.data.TreeStore',
-    alias: 'store.district',
+    alias: 'store.districts',
 
     requires:[
         'Common.data.model.infrastructures.District',

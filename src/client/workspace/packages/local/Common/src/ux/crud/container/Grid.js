@@ -3,6 +3,7 @@ Ext.define('Common.ux.crud.container.Grid',{
 
     mixins:[
         'Common.ux.crud.container.mixin.Grid',
+        'Common.mixin.component.CountMessage',
     ],
 
 

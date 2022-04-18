@@ -25,12 +25,13 @@ Ext.define('Common.mixin.controller.CheckChange',{
      * @param {记录} record 
      * @param {要更改的字段} field 
      */
-    doCheckChange(record, field, checked) {
+    doCheckChange(record, fieldName, checked) {
         let me = this,
-            store = me.getStore(),
-            updateAction = store.updateAction,
-            checkAction = store.checkAction,
-            uncheckAction = store.uncheckAction,
+            field = record.fieldsMap[fieldName];
+        if(!field) return;
+        let updateAction = field.updateAction,
+            checkAction = field.checkAction,
+            uncheckAction = field.uncheckAction,
             entityName = me.entityName,
             id = record.getId(),
             url,
@@ -40,10 +41,10 @@ Ext.define('Common.mixin.controller.CheckChange',{
             return;
         };
 
-        if(updateAction && updateAction[field]){
-            url = me.getCheckChangeUrl(entityName, id, updateAction[field], checked);
+        if(updateAction){
+            url = me.getCheckChangeUrl(entityName, id, updateAction, checked);
         }else{
-            action = checked ? checkAction[field] : uncheckAction[field];
+            action = checked ? checkAction : uncheckAction;
             if(Ext.isEmpty(action)){
                 url = me.getCheckChangeUrl(entityName, id);
                 if(!checked) request = Http.delete;
@@ -51,7 +52,7 @@ Ext.define('Common.mixin.controller.CheckChange',{
                 url = me.getCheckChangeUrl(entityName, id, action);
             }
         }
-        request.apply(Http ,[url,{id: id, field: field}])
+        request.apply(Http ,[url,{id: id, field: fieldName}])
             .then(me.onCheckChangeSuccess, me.onCheckChangeFailure, null, me);
     },
 

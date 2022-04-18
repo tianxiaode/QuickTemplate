@@ -46,11 +46,11 @@ Ext.define('Common.ux.crud.controller.mixin.Selectable',{
      * 取消全部选择
      */
     doDeselectAll(){
-        this.getSelectable().deselectAll();
+        this.list.deselectAll();
     },
     
     hasSelections(alert){
-        let result = (this.getSelections() || []).length > 0;
+        let result = this.list.hasSelection();
         !result && alert && MsgBox.alert(null, I18N.get('NoSelection'));
         return result;
     },

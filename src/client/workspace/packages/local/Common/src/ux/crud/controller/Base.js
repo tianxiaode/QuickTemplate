@@ -63,7 +63,7 @@ Ext.define('Common.ux.crud.controller.Base',{
 
         (autoLoad === 'search') && me.doSearch();
         (autoLoad === true) &&  me.onRefreshStore();
-        me.onAfterStoreChange && me.onAfterStoreChange(store, list);
+        me.afterStoreChange && me.afterStoreChange(store, list);
     },
 
 

@@ -10,7 +10,6 @@ Ext.define('Common.ux.crud.container.List',{
 
     searchFieldMixinContainer: 'self',
     searchFieldUi: 'search',
-    hasCountMessage: false,
     hasUpdate: false,
     hasRefresh: false,
 

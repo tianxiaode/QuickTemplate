@@ -7,12 +7,10 @@ Ext.define('Common.ux.crud.container.Base',{
     mixins:[
         'Common.mixin.component.Crud',
         'Common.mixin.component.Refresh',
-        'Common.mixin.component.CountMessage',
         'Common.mixin.component.SearchField',
     ],
 
     config:{
-        toolbarUi: 'grid',
         toolbar:{
             xtype: 'toolbar',
             isCrudToolbar: true,
@@ -24,16 +22,12 @@ Ext.define('Common.ux.crud.container.Base',{
 
     layout: 'vbox',
     weighted: true,
-
-    applyToolbarUi(ui){
-        if(this.isPhone()) return 'dark';
-        return ui;
-    },
+    toolbarUi: 'grid',
 
     createToolbar(newCmp) {
         return Ext.apply({
             ownerCmp: this,
-            ui: this.getToolbarUi()
+            ui: this.toolbarUi
         }, newCmp);
     },
 

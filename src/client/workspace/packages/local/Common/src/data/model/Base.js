@@ -17,4 +17,29 @@ Ext.define('Common.data.model.Base', {
         namespace: 'Common.data.model'
     },
 
+    statics:{
+        getAbc(){ return 1}
+    }
+
+
+},function(){
+    let Model = this;
+    Model.onExtended(function(cls, data) {
+        if(data.hasTranslation){
+            cls.addFields(
+                [
+                    { name: 'translations'},
+                    {
+                        name: 'translation',
+                        convert(value, record){
+                            let current = I18N.getCurrentLanguage();
+                            return (record.get('translations') || []).find(t=>t.language === current);
+                        },
+                        depends:[ 'translations']
+                    }    
+                ]
+            );
+        }
+    })
 });
+

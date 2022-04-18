@@ -21,7 +21,7 @@ Ext.define('Common.mixin.controller.ResourceAndPermissions',{
 
     initResourceAndPermissions(me){
         let view = me.getView();
-        console.log('initResourceAndPermissions', view.xtype, view.getPermissions());
+        //console.log('initResourceAndPermissions', view.xtype, view.getPermissions());
         me.entityName = view.getEntityName();
         me.resourceName = view.getResourceName();
         me.permissions = view.getPermissions();

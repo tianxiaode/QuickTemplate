@@ -1,12 +1,12 @@
-.x-listitem .point{
+.navigation-menu .point{
     display: none;
   }
   
-  div.x-listitem:hover .point{
+  .navigation-menu .x-dataview-item:hover .point{
     display: inline;
     color: #6c757d ;
   }
-  div.x-listitem.x-selected .point{
+  .navigation-menu .x-selected .point{
     display: inline !important;
     color: #4caf50 !important;
   }

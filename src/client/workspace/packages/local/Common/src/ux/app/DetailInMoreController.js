@@ -63,13 +63,12 @@ Ext.define('Common.ux.app.DetailInMoreController', {
             list = me.list,
             record = me.getRecord(),
             store = list.getStore(),
-            model = record.store.model,            
             data = store.getData().items;
         if(!record) return;
         Ext.each(data ,d=>{
             let f = d.getId(),
                 value = record.get(f),
-                field = model.getField(f);
+                field = record.fieldsMap[f];
             d.set('value', value);
             me.updateItemText(d, f, field, value);
             d.commit();
