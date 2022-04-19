@@ -15,6 +15,10 @@
     "District:District": "地区",
     "District:IsMunicipality": "直辖市",
     "Infrastructures": "基础设施",
-    "Infrastructures.Districts.ManagePermissions": "地区管理"
+    "Infrastructures.Districts.ManagePermissions": "地区管理",
+    "Permission:Create": "创建",
+    "Permission:Edit": "编辑",
+    "Permission:Delete": "删除",
+    "Permission:ChangePermissions": "更改权限"
   }
 }

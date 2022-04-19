@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
@@ -39,11 +40,13 @@ public class DistrictAppService : InfrastructuresAppService, IDistrictAppService
     [UnitOfWork]
     public virtual async Task<ListResultDto<DistrictDto>> GetListAsync(DistrictGetListInput input)
     {
-        var list = input.Node.HasValue ? await Repository.GetListAsync(m => m.ParentId == input.Node.Value, true) :
-            !string.IsNullOrEmpty(input.Filter) ? await Repository.GetListAsync(m =>
-                m.DisplayName.Contains(input.Filter, StringComparison.CurrentCultureIgnoreCase) ||
-                m.Postcode.Contains(input.Filter, StringComparison.OrdinalIgnoreCase), true) : new List<District>();
+        if (!string.IsNullOrEmpty(input.Filter))
+        {
+            return new ListResultDto<DistrictDto>(await GetFilterListAsync(input.Filter));
+        }
 
+        var list = await Repository.GetListAsync(m => m.ParentId == input.Node.Value, true);
+            
         var dtos = new List<DistrictDto>();
         foreach (var district in list.OrderBy(m => m.DisplayName))
         {
@@ -154,5 +157,39 @@ public class DistrictAppService : InfrastructuresAppService, IDistrictAppService
 
     }
 
+    [UnitOfWork]
+    protected virtual async Task<List<DistrictDto>> GetFilterListAsync(string filter)
+    {
+        var codes = await Repository.GetCodeListAsync(filter);
+        if (!codes.Any()) return new List<DistrictDto>();
+        var ln = TreeConsts.GetCodeLength(2);
+        var level2Codes = codes.Where(m => m.Length >= ln).Select(m => m[..ln]).Distinct().ToList();
+        var list = await Repository.GetListAsync(m => level2Codes.Contains(m.Code));
+        var dtos = list.Select(m => new DistrictDto(m, true)).ToList();
+        await GetChildrenAsync(codes, dtos, ln);
+        return dtos;
+    }
+
+    [UnitOfWork]
+    protected virtual async Task GetChildrenAsync(List<string> codes, List<DistrictDto> dtos, int ln)
+    {
+        var next = ln + TreeConsts.CodeUnitLength + 1;
+        var childCodes = codes.Where(m => m.Length >= next).Select(m => m[..next]).Distinct().ToList();
+        if(!childCodes.Any()) return;
+        var allChildren = await Repository.GetListAsync(m => childCodes.Contains(m.Code));
+        foreach (var dto in dtos)
+        {
+            var children = allChildren.Where(m => m.Code.StartsWith(dto.Code)).ToList();
+            if(!children.Any())
+            {
+                continue;
+            }
+
+            dto.Children = children.Select(m=>new DistrictDto(m, true)).ToList();
+            dto.Leaf = false;
+            await GetChildrenAsync(codes, dto.Children, next);
+        }
+
+    }
 
 }

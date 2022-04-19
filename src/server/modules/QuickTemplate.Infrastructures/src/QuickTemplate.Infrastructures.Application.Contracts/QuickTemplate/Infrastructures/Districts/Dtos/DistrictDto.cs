@@ -18,10 +18,11 @@ namespace QuickTemplate.Infrastructures.Districts.Dtos
         public bool Leaf { get; set; }
         public DistrictDto Parent { get; set; }
         public List<DistrictTranslationDto> Translations { get; set; }
-
+        public List<DistrictDto> Children { get; set; }
         public DistrictDto()
         {
             Leaf = true;
+            Children = null;
         }
 
         public DistrictDto(District entity, bool leaf)
@@ -33,11 +34,12 @@ namespace QuickTemplate.Infrastructures.Districts.Dtos
             ParentId = entity.ParentId;
             IsMunicipality = entity.IsMunicipality;
             Leaf = leaf;
-            var local = CultureInfo.CurrentCulture.Name;
+            Children = null;
             Translations = entity.Translations
                 .Select(m => new DistrictTranslationDto(m.Language, m.DisplayName)).ToList();
             if(entity.Parent == null) return;
             Parent = new DistrictDto(entity.Parent, false);
         }
+
     }
 }

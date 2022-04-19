@@ -16,6 +16,7 @@ using IdentityServer4.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using QuickTemplate.Web.Components;
 using Serilog;
 using Volo.Abp;
@@ -95,6 +96,7 @@ public class QuickTemplateWebModule : AbpModule
         {
             options.Kind = DateTimeKind.Utc;
         });
+
     }
 
     private void ConfigureUrls(IConfiguration configuration)

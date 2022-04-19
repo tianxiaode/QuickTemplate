@@ -15,6 +15,10 @@
     "District:District": "District",
     "District:IsMunicipality": "Municipality",
     "Infrastructures": "Infrastructures",
-    "Infrastructures.Districts.ManagePermissions": "Districts management"
+    "Infrastructures.Districts.ManagePermissions": "Districts management",
+    "Permission:Create": "Create",
+    "Permission:Edit": "Edit",
+    "Permission:Delete": "Delete",
+    "Permission:ChangePermissions": "Change permissions"
   }
 }
