@@ -58,6 +58,14 @@ Ext.define('Common.ux.dataview.ListItem', {
         return `<div class=flex-fill></div>`
     },
 
+    getEditActionHtml(record){
+        return this.getIconActionHtml(record, { cls: 'x-fa fa-edit text-primary' })
+    },
+
+    getMoreActionHtml(record){
+        return this.getIconActionHtml(record, { cls: 'x-fa fa-ellipsis-h text-primary'});
+    },
+
 
     onLocalized(){
         let me = this;
@@ -75,11 +83,12 @@ Ext.define('Common.ux.dataview.ListItem', {
         if(!Ext.isArray(actions)) return;
         actions.forEach(a=>{
             a === '-' && html.push(me.getEmptyActionHtml());
+            a === '.' && html.push(me.getMoreActionHtml(record));
+            a === 'edit' && me.getPermissions().update &&  html.push(me.getEditActionHtml(record));
             a && a.type === 'bool' && html.push(me.getCheckActionHtml(record, a));
             a && a.type === 'icon' && html.push(me.getIconActionHtml(record, a));
             if(a.type !== 'bool' && a.type !== 'icon'){
                 let fnName = `get${Format.capitalize(a.type)}ActionHtml`
-                console.log(fnName);
                 me[fnName] && html.push(me[fnName].apply(me, [record, a]));
             }
         })

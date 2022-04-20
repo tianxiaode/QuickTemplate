@@ -42,7 +42,7 @@ Ext.define('Common.mixin.component.More', {
         let me = this,
             container = me.getMixinContainer(),
             button = me.getMoreButton();
-        if(!me.isPhone()) return;
+        if(!me.isPhone() || !me.hasMore) return;
         container && container.add(button);
         me.addMoreMenus();
         me.addSortMenus();

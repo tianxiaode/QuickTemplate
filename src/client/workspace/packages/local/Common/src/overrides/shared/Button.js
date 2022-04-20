@@ -26,45 +26,4 @@ Ext.define('Common.overrides.shared.Button',{
         text && me.setTooltip(text);
     },
 
-    applyLangTooltip(value){
-        return this.isPhone() ? '' : value;
-
-    },
-
-    applyUi(value){
-        let me = this;
-        return me.getPhoneValue(me.phoneUi) || value;
-    },
-
-    applyWeight(value){
-        let me = this;
-        return me.getPhoneValue(me.phoneWeight) || value;
-    },
-
-    updateIconCls(iconCls, oldIconCls) {
-        let me = this;
-        if(iconCls === 'desktop') iconCls = '';
-        iconCls = me.getPhoneValue(me.phoneIconCls) || iconCls;
-
-        let element = me.iconElement,
-            hasIconCls = me.hasIconCls;
-
-        if (iconCls) {
-            me.addCls(hasIconCls);
-            element.replaceCls(oldIconCls, iconCls);
-        }
-        else {
-            element.removeCls(oldIconCls);
-
-            if (!me.getIcon()) {
-                me.removeCls(hasIconCls);
-            }
-        }
-    },
-
-    getPhoneValue(value){
-        return this.isPhone() && value;
-    }
-
-
 })

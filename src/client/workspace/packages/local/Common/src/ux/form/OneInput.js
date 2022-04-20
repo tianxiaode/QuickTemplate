@@ -58,7 +58,6 @@ Ext.define('Common.ux.form.OneInput',{
             value = config.value,
             f = me.down(`[fieldType=${config.type}]`),
             title = config.title || field;
-        console.log(f)
         me.hideMessageButton();
         if(me.currentInput) me.currentInput.setHidden(true);
         if(!f)  {

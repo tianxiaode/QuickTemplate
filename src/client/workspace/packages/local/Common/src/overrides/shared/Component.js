@@ -21,6 +21,7 @@ Ext.define('Common.overrides.shared.Component',{
         !this.isInitPermissions && this.initPermissions();
     },
 
+
     initialize(){
         let me = this;
         me.callParent(arguments);
@@ -108,5 +109,10 @@ Ext.define('Common.overrides.shared.Component',{
         return Ext.platformTags.phone;
     },
 
+    responsiveFormulas:{
+        cancel(context){
+            return this.initialConfig.cancelResponsive;
+        }
+    }
 
 })

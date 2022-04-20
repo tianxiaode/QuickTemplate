@@ -2,15 +2,18 @@ Ext.define('Common.ux.button.Update',{
     extend: 'Ext.Button',
     xtype: 'uxupdatebutton',
 
+    responsiveConfig:{
+        'desktop && !cancel':{
+            langTooltip: 'Edit',
+            weight: 80,
+            iconCls: 'x-fa fa-edit',
+        },
+        'phone && !cancel':{
+            ui: 'plain',
+            weight: 60,
+            iconCls: 'md-icon-edit',
+        }
+    },
 
-    langTooltip: 'Edit',
-
-    ui: 'defaults',
-    weight: 80,
-    iconCls: 'x-fa fa-edit',
-    
-    phoneUi: 'plain',
-    phoneWeight: 60,
-    phoneIconCls: 'md-icon-edit',
 
 })

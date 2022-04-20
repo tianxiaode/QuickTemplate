@@ -11,5 +11,4 @@ Ext.define('Common.ux.data.TreeStore', {
     remoteFilter: false,
     proxy: 'format',
 
-
 });

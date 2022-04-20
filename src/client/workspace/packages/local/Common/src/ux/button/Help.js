@@ -2,9 +2,15 @@ Ext.define('Common.ux.button.Help',{
     extend: 'Ext.Button',
     xtype: 'uxhelpbutton',
 
-    iconCls: 'x-far fa-question-circle',
-    ui: 'defaults',
-    langTooltip: 'Help',
+    responsiveConfig:{
+        'desktop && !cancel':{
+            langTooltip: 'Help',
+            ui: 'success',
+            weight: 70,
+            iconCls: 'x-far fa-question-circle',
+        },
+    },
+
     arrow: false,
 
     config:{

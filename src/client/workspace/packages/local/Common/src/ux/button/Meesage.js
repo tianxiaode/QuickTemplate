@@ -21,11 +21,15 @@ Ext.define('Common.ux.button.Message',{
         closable: true
     },                
 
-    ui: 'defaults',
-    weight: 5,
-    
-    phoneUi: 'plain',
-    phoneWeight: 45,
+    responsiveConfig:{
+        'desktop && !cancel':{
+            weight: 6,
+        },
+        'phone && !cancel':{
+            ui: 'plain',
+            weight: 45,
+        }
+    },
 
 
     updateMessage(message){

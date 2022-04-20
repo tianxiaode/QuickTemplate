@@ -31,7 +31,6 @@ Ext.define('Common.ux.crud.controller.mixin.View',{
             defaultConfig.listeners[event] = fn;
         })
         config =  Ext.apply(defaultConfig, config);
-        console.log(config)
         return {
             record : record,
             type: me.isPhone ? ViewMgr.types.view : ViewMgr.types.dialog,

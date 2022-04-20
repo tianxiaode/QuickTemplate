@@ -1,66 +1,18 @@
 Ext.define('Common.ux.crud.controller.Tree',{
     extend: 'Common.ux.crud.controller.Base',
 
-    searchList: null, //搜索列表
-
-    initList(){
+    afterStoreChange(store){
         let me = this;
-        me.callParent();
-        me.initSearchList();
+        Http.get(URI.crud(me.entityName, 'root'))
+            .then(me.loadRootSuccess, me.onAjaxFailure, null, me);
     },
 
-    /**
-     * 获取查询时的对象
-     */
-    initSearchList(){
+    loadRootSuccess(response){
         let me = this,
-            view = me.getView(),
-            searchList = view.getSearchList();
-        if(!searchList) return;
-        searchList.on('storechange', me.onSearchStoreChange ,me);
-        me.searchList = searchList;
-    },
-
-    /**
-     * 当存在查询列表时，执行事件绑定
-     * @param {列表组件} sender 
-     * @param {存储} store 
-     */
-    onSearchStoreChange(sender, store){
-        let me = this,
-            list = this.searchList;
-        if(!list) return;
-        store.on('beforeload', me.onSearchStoreBeforeLoad, me);
-        store.on('load', me.onSearchStoreLoad, me)
-        list.on('select', me.onSearchViewSelect, me);
-        list.on('deselect', me.onSearchViewDeselect, me);
-    },
-
-    /**
-     * 查询存储加载前的操作
-     */
-    onSearchStoreBeforeLoad(){},
-
-    /**
-     * 查询存储数据加载后的操作
-     * @param {存储} store 
-     * @param {记录} records 
-     * @param {是否成功} successful 
-     * @param {操作} operation 
-     * @param {操作参数} eOpts 
-     */
-    onSearchStoreLoad(store, records, successful, operation, eOpts){
-        if(!successful || records.length === 0) return;
-        let record = store.getAt(0);
-        if(record) this.searchList.getSelectable().select(record);
-    },
-
-    onSearchViewSelect(sender, selected, eOpts){
-        this.searchCode(selected.get('code'), selected);
-    },
-
-    onSearchViewDeselect(sender, selected, eOpts){
-        this.getSelectable().deselect(selected);
+            root = Http.parseResponse(response),
+            store = me.getStore();
+        store.setRoot(Ext.clone(root));
+        store.getRoot().expand();
     },
 
     /**
@@ -73,17 +25,12 @@ Ext.define('Common.ux.crud.controller.Tree',{
             return;
         };
         let store = me.list.getStore();
-        if(!store.isTreeStore){
-            store.loadPage(1);
-            return;
 
-        }
         let selection = me.getSelections()[0];
         //未有选择
         if(!selection){
             let root = store.getRoot();
             selection = root;
-            me.currentList.getSelectable().select(root);
         }
         me.onRefreshTreeNode(store, selection);
     },
@@ -105,41 +52,55 @@ Ext.define('Common.ux.crud.controller.Tree',{
             return;
         }
         node.expand();
-    },
-
-    /**
-     * 根据查询值切换视图
-     * @param {是否存在查询值} isSearch 
-     */
-    switchList(isSearch){
-        let me = this;
-        me.currentList = isSearch ? me.searchList : me.list;
-        let selections = me.selections,
-            selection = selections[0];
-        if(!selection){
-            selection =me.currentList.getStore().getAt(0);
-            if(selection) me.currentList.getSelectable().select(selection);
-        }
-        me.setViewModelValue('masterSelected', selection);
-        //如果存在基本树视图，切换视图
-        let cardContainer = me.list.up();
-        if(cardContainer.getLayout().type === 'card') cardContainer.setActiveItem(me.currentList);
+        console.log(node)
     },
 
     /**
      * 执行远程查询
      */
-     doSearch(){
+    doSearch(){
         let me = this,        
-            values = me.getSearchValues();
-        me.switchList(!Ext.isEmpty(values.query));
-        let store = me.searchList.getStore();
-        let proxy = store.getProxy(),
-            params = proxy.extraParams;
+            values = me.getSearchValues()
+            store = me.getStore(),
+            proxy = store.getProxy(),
+            params = proxy.extraParams,
+            root = store.getRoot();
         if(!me.beforeSearch(values, params)) return;
         me.clearSearchValues(params);
         Ext.apply(params,values);
-        store.loadPage(1);
+        root.removeAll();
+        if(!values.filter){
+            store.setAsynchronousLoad(true);
+            me.onRefreshTreeNode(store , root);
+            return;
+        }
+        store.setAsynchronousLoad(false);
+        Http.get(URI.crud(me.entityName),values).then(me.onLoadSearchDataSuccess, me.onAjaxFailure, null, me);
+    },
+
+    onLoadSearchDataSuccess(response){
+        let me = this,
+            store = me.getStore(),
+            root = store.getRoot(),
+            data = Http.parseResponse(response).items;
+        if(data.length === 0) return;
+        Ext.iterate(data, d=>{
+            let children = d.children;
+            d.children = null;
+            let append = root.appendChild(d,true);
+            me.appendChild(append, children);
+        })
+    },
+
+    appendChild(node, appends){
+        if(!appends) return;        
+        Ext.iterate(appends,d=>{
+            let children = d.children;
+            d.children = null;
+            let append = node.appendChild(d,true);
+            this.appendChild(append, children);
+        })
+        node.expand();
     },
 
     /**
@@ -176,7 +137,7 @@ Ext.define('Common.ux.crud.controller.Tree',{
         //树节点未显示
         let code = node.get('code'),
             root = store.getRoot();
-       me.searchTreeNode(code, root);        
+        me.searchTreeNode(code, root);        
     },
 
     /**
@@ -232,19 +193,6 @@ Ext.define('Common.ux.crud.controller.Tree',{
         return { parentId : parentId, parentName: parentName };
     },
 
-    afterStoreChange(store){
-        let me = this;
-        Http.get(URI.crud(me.entityName, 'root'))
-            .then(me.loadRootSuccess, me.onAjaxFailure, null, me);
-    },
-
-    loadRootSuccess(response){
-        let me = this,
-            root = Http.parseResponse(response),
-            store = me.getStore();
-        store.setRoot(Ext.clone(root));
-        store.getRoot().expand();
-    },
     
 
 })

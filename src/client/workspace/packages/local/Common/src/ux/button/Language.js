@@ -9,12 +9,16 @@ Ext.define('Common.ux.button.Language',{
         'Ext.menu.RadioItem'
     ],
 
-    ui: 'action',
-    iconCls: 'desktop',
-    arrow: false,
-
-    phoneUi: 'plain',
-    phoneIconCls: 'md-icon-language',
+    responsiveConfig:{
+        desktop:{
+            iconCls: 'x-fa fa-sign-out-alt',
+            ui: 'header'
+        },
+        phone:{
+            iconCls: 'md-icon-language',
+            ui: 'plain'
+        }
+    },
 
 
     onLocalized(){

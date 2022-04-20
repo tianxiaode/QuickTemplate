@@ -17,7 +17,7 @@ Ext.define('Common.mixin.component.Crud', {
             isCrud: true,
             crudName: 'create',
             hidden: true,
-            handler: 'onCreate', 
+            handler: 'onCreate',
         },
         updateButton:{
             xtype: 'uxupdatebutton',

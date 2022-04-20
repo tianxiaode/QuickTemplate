@@ -72,7 +72,6 @@ Ext.define('Common.ux.navigation.Panel',{
         if(!widget) Ext.util.History.add('page404');
         xtype = widget.prototype.xtype;
         current && current.setHidden(true);
-        console.log(container)
         let view = container.down(xtype);
         if(view) {
             view.setHidden(false);

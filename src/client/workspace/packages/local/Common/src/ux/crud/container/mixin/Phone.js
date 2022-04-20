@@ -19,7 +19,8 @@ Ext.define('Common.ux.crud.container.mixin.Phone',{
     onLocalized(){
         let me = this,
             isPhone = me.isPhone(),
-            title= me.getTitle() || (isPhone && me.getEntityName());
+            isMore = me.responsive === 'more',
+            title= me.getTitle() || (isPhone && !isMore && me.getEntityName());
         if(!title) return;
         me.getToolbar().setTitle({
             title: I18N.get(title, me.getResourceName()),

@@ -3,13 +3,12 @@ Ext.define('Common.ux.button.History',{
     xtype: 'uxhistorybutton',
 
     responsiveConfig:{
-        desktop:{
+        'desktop && !cancel':{
             ui: 'header',
             iconCls: 'x-fa fa-history',
             langTooltip: 'History'
         },
-        phone:{
-            //ui: 'plain phone-badge',
+        'phone && !cancel':{
             iconCls: 'md-icon-history',
         }
     },

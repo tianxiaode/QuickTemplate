@@ -45,6 +45,8 @@ public class DistrictAppService : InfrastructuresAppService, IDistrictAppService
             return new ListResultDto<DistrictDto>(await GetFilterListAsync(input.Filter));
         }
 
+        if (!input.Node.HasValue) return new ListResultDto<DistrictDto>();
+
         var list = await Repository.GetListAsync(m => m.ParentId == input.Node.Value, true);
             
         var dtos = new List<DistrictDto>();

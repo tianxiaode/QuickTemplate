@@ -34,8 +34,8 @@ Ext.define('Phone.view.identity.users.UserItem', {
         { field: 'isActive', type: 'bool'},
         { field: 'lockoutEnabled', type: 'bool', text: 'Lockable'},
         { field: 'lockoutEnd', type: 'bool', text: 'UserLocked'},
-        { type: 'icon', cls: 'x-fa fa-edit text-primary'},
-        { type: 'icon', cls: 'x-fa fa-ellipsis-h text-primary'},
+        'edit',
+        '.'
 
     ],
 

@@ -6,6 +6,12 @@ Ext.define('Common.ux.button.Enumeration',{
         'Common.mixin.Enumeration'
     ],
 
+    responsiveConfig:{
+        'phone && !cancel':{
+            ui: 'plain',
+        }
+    },
+
 
     config:{
         store:{

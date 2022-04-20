@@ -3,10 +3,13 @@ Ext.define('Common.ux.button.QrCode',{
     xtype: 'uxqrcodebutton',
 
     langTooltip: 'ExportQrCode',
-
-    ui: 'defaults',
     iconCls: 'x-fa fa-qrcode',
     
-    phoneUi: 'plain',
+    responsiveConfig:{
+        'phone && !cancel':{
+            ui: 'plain',
+        }
+    },
+
 
 })

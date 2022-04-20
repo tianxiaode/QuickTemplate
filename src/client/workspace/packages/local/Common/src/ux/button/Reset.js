@@ -2,12 +2,16 @@ Ext.define('Common.ux.button.Reset',{
     extend: 'Ext.Button',
     xtype: 'uxresetbutton',
 
-    ui: 'soft-purple', 
-    iconCls: 'desktop',
-    weight: 90,
-
-    phoneUi: 'plain',
-    phoneIconCls: 'md-icon-undo',
-    phoneWeight: 60,
+    responsiveConfig:{
+        'desktop && !cancel':{
+            weight: 90,
+            ui: 'soft-purple', 
+        },
+        'phone && !cancel':{
+            ui: 'plain',
+            weight: 60,
+            iconCls: 'md-icon-undo',
+        }
+    },
 
 })

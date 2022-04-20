@@ -28,8 +28,8 @@ Ext.define('Phone.view.identity.roles.RoleItem', {
     actions:[
         { field: 'isDefault', type: 'bool'},
         { field: 'isPublic', type: 'bool'},
-        { type: 'icon', cls: 'x-fa fa-edit text-primary'},
-        { type: 'icon', cls: 'x-fa fa-globe text-primary'},
+        'edit',
+        '.'
     ],
 
 
