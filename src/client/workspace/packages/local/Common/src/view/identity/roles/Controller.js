@@ -3,7 +3,8 @@ Ext.define('Common.view.identity.roles.Controller',{
     alias: 'controller.rolecontroller',
 
     requires:[
-        'Common.view.identity.roles.Edit'
+        'Common.view.identity.roles.Edit',
+        'Phone.view.identity.roles.Menu',
     ],
 
 

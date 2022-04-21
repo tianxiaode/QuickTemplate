@@ -8,6 +8,10 @@ Ext.define('Common.ux.multilingual.List',{
         'Common.ux.multilingual.ListItem',
     ],
 
+    mixins:[
+        'Common.mixin.AjaxFailure'
+    ],
+
     config:{
         fields: null
     },
@@ -17,6 +21,7 @@ Ext.define('Common.ux.multilingual.List',{
     },
 
     selectable: false,
+    readOnly: false,
 
     groupHeader: {
         tpl: '{name}'
@@ -27,7 +32,7 @@ Ext.define('Common.ux.multilingual.List',{
     },
 
     responsiveConfig:{
-        desktop:{
+        'desktop && !cancel':{
             plugins:{
                 dataviewtexteditor:{
                     dataIndex: 'value',
@@ -65,11 +70,42 @@ Ext.define('Common.ux.multilingual.List',{
                     language: l.cultureName,
                     label: I18N.get(label, resourceName),
                     languageText: l.displayName,
-                    order: order
+                    order: order,
+                    readOnly: me.readOnly
                 })
                 order++;
             })
         })
         store.loadData(data);
-    }
+    },
+
+    updateRecord(record){
+        let me = this,
+            entityName = me.getEntityName();
+        me.mask(I18N.get('LoadingText'));
+        Http.get(URI.crud(entityName, record.getId(), 'translations'))
+            .then(me.loadDataSuccess, me.onAjaxFailure, null, me);
+        
+    },
+
+    loadDataSuccess(response){
+        let me = this,
+            store  = me.getStore(),
+            data = Http.parseResponse(response),
+            items = data && data.items;
+        me.unmask();
+        if(!items) return;
+        store.each(r=>{
+            r.set('value', null);
+        })
+        items.forEach(r=>{
+            Ext.iterate(r, (k, v)=>{
+                let record = store.getById(`${k}_${r.language}`);
+                if(!record) return;
+                record.set('value', r[k]);
+    
+            })
+        })
+    },
+
 })

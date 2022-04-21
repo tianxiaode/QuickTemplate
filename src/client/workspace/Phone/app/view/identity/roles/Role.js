@@ -5,7 +5,7 @@ Ext.define('Phone.view.identity.roles.Role', {
     requires:[
         'Common.view.identity.roles.Model',
         'Common.view.identity.roles.Controller',
-        'Phone.view.identity.roles.RoleItem'
+        'Phone.view.identity.roles.RoleItem',
     ],
 
 

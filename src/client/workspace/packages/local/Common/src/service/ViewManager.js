@@ -68,6 +68,24 @@ Ext.define('Common.service.ViewManager', {
             maxHeight: '100%',
             resizable: null,
             collapsible:null
+        },
+        menu:{
+            minWidth: 300,
+            minHeight: 400,
+            maxHeight: 600,
+            maxWidth: 600,
+            scrollable: true,
+            anchor: true,
+            // bodyPadding: 10,  
+            //title: Ext.emptyString  ,
+            // headerCls: Ext.baseCSSPrefix + 'dialogheader',
+            // titleCls: Ext.baseCSSPrefix + 'dialogtitle',
+            // toolCls: [
+            //     Ext.baseCSSPrefix + 'paneltool',
+            //     Ext.baseCSSPrefix + 'dialogtool'
+            // ], 
+            defaultListenerScope: true,
+            ui: 'info'
         }
     },
 
@@ -174,10 +192,18 @@ Ext.define('Common.service.ViewManager', {
         me.showView(xtype, me.types.view, null,false, Ext.Viewport);
     },
 
-    getMenu(xtype, config){
-        let me = ViewMgr,
-            view = me.getView(xtype, me.types.menu, config);
-        return view;
+    getMenu(xtype, config ,hasDefault){
+        let me = ViewMgr;
+        if(hasDefault){
+            config = Ext.apply(config, me.defaultConfig.menu);
+        }
+        let menu = me.getView(xtype, me.types.menu, config);
+        return menu;
+    },
+
+    getDialog(xtype, config){
+        return ViewMgr.getView(xtype, ViewMgr.types.dialog, config, false);
+
     },
 
 
@@ -188,9 +214,5 @@ Ext.define('Common.service.ViewManager', {
         }
     },
 
-    getDialog(xtype, config){
-        return ViewMgr.getView(xtype, ViewMgr.types.dialog, config, false);
-
-    }
 
 });

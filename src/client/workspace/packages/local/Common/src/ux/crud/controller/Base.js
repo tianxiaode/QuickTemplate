@@ -3,7 +3,7 @@ Ext.define('Common.ux.crud.controller.Base',{
     alias: 'controller.uxcrudbasecontroller',
 
     mixins:[
-        'Common.mixin.controller.Ajax',
+        'Common.mixin.AjaxFailure',
         'Common.ux.crud.controller.mixin.ViewModel',
         'Common.mixin.controller.ResourceAndPermissions',
         'Common.ux.crud.controller.mixin.Button',
@@ -14,7 +14,7 @@ Ext.define('Common.ux.crud.controller.Base',{
         'Common.ux.crud.controller.mixin.CountMessage',
         'Common.ux.crud.controller.mixin.Multilingual',
         'Common.mixin.Searchable',
-        'Common.mixin.Menuable',        
+        'Common.mixin.InfoMenu',
         'Common.ux.crud.controller.mixin.Selectable',
         'Common.ux.crud.controller.mixin.ChildTap',
         'Common.ux.crud.controller.mixin.ChildLongPress',
@@ -83,7 +83,7 @@ Ext.define('Common.ux.crud.controller.Base',{
      * @param {操作} operation 
      * @param {操作参数} eOpts 
      */
-     onStoreLoad(store, records, successful, operation, eOpts){},
+    onStoreLoad(store, records, successful, operation, eOpts){},
 
 
     /**

@@ -15,7 +15,7 @@ Ext.define('Phone.view.identity.users.UserItem', {
                     </div>
                 </div>
                 <div class="col">
-                    <div class="text-truncate fw-bolder">${me.getHighlightValue(data.userName)} (${data.fullName})</div>
+                    <div class="text-truncate fw-bolder">${me.getHighlightValue(data.userName, data, 'userName')} (${data.fullName})</div>
                 </div>
             </div>
             <div class="row pt-1">

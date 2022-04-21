@@ -11,7 +11,7 @@ Ext.define('Common.ux.button.Language',{
 
     responsiveConfig:{
         desktop:{
-            iconCls: 'x-fa fa-sign-out-alt',
+            iconCls: 'x-fa fa-globe',
             ui: 'header'
         },
         phone:{

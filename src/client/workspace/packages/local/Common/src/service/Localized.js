@@ -2,12 +2,17 @@ Ext.define('Common.service.Localized', {
     alternateClassName: 'I18N',
     singleton: true,
 
+    mixins:[
+        'Common.mixin.AjaxFailure'
+    ],
+
     config:{
         currentLanguage: null,
         labelSeparator: '',
     },
 
     isReady: false,
+    languageMap: null,
 
     constructor(config){
         let me = this;        
@@ -59,6 +64,10 @@ Ext.define('Common.service.Localized', {
         return key;
     },
 
+    getLanguage(cultureName){
+        return this.languageMap[cultureName];
+    },
+
     getLanguages(){
         return this.remoteRawValue.languages;
     },
@@ -97,7 +106,7 @@ Ext.define('Common.service.Localized', {
         let me= this;
         me.isReady = false;
         let promise =Http.get(URI.get('localization' ));
-        promise.then(me.loadSuccess, me.loadFailure, null, me);
+        promise.then(me.loadSuccess, me.onAjaxFailure, null, me);
         return promise;
     },
 
@@ -191,35 +200,24 @@ Ext.define('Common.service.Localized', {
 
     loadSuccess(response){
         let me = this,
-            obj = Ext.decode(response.responseText,true);        
-        if(obj){
-            me.remoteRawValue = Object.assign({}, obj);
-            me.doOverride();
-            if(obj.values && obj.values.ExtResource){
-                me.setLabelSeparator(obj.values.ExtResource.LabelSeparator);
-            }
+            data = Http.parseResponse(response),
+            map;
+        if(!data) return;
+        me.remoteRawValue = Object.assign({}, data);
+        me.doOverride();
+        if(data.values && data.values.ExtResource){
+            me.setLabelSeparator(data.values.ExtResource.LabelSeparator);
+        }
+        map = me.languageMap = {};
+        if(data.languages){
+            Ext.each(data.languages, l=>{
+                map[l.cultureName] = l;
+            })
         }
         me.isReady = true;
         Ext.fireEvent('i18nready', me);
 
     },
 
-    loadFailure(response){
-        let obj  = Ext.decode(response.responseText, true),
-            error = me.getUnknownError();
-        if(obj && obj.error) {
-            if(Ext.isString(obj.error)){
-                error = obj.error_description;
-            }else{
-                error = obj.error.message;
-                if(!Ext.isEmpty(obj.error.code)) error += `[${obj.error.code}]`;
-                if(!Ext.isEmpty(obj.error.details)) 
-                    error += `[${obj.error.code}]${service && service.getLabelSeparator() || ':'}${obj.error.details}`;
-                return error;    
-            }
-            
-        }
-
-    }
 
 })

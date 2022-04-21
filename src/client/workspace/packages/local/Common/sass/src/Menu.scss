@@ -9,3 +9,8 @@
     $color: #fff,
     $active-background-color: #4d4d4d
   );
+  @include menu-ui(
+    $ui: 'info',
+    $component-margin: 0,
+    $component-margin-big: 0,
+  );

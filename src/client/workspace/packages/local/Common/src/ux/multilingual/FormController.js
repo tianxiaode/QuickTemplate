@@ -6,6 +6,7 @@ Ext.define('Common.ux.multilingual.FormController', {
         let  me = this,
             list = me.lookup('multilingualList'),
             isPhone = Ext.platformTags.phone;
+        me.list = list;
         me.callParent();
         isPhone && list.on('childtap', me.onListChildTap, me);
     },
@@ -19,40 +20,11 @@ Ext.define('Common.ux.multilingual.FormController', {
         params.remoteController && view.setRemoteController(params.remoteController);
         view.setTitle(`${I18N.get('Multilingual')}::${record.get(field)}`);
         me.record = record;
-        me.loadData(record);
-    },
-
-    loadData(record){
-        let me = this,
-            view = me.getView(),
-            entityName = view.getEntityName();
-        view.mask(I18N.get('LoadingText'));
-        Http.get(URI.crud(entityName, record.getId(), 'translations'))
-            .then(me.loadDataSuccess, me.onSubmitFailure, null, me);
+        me.list.setRecord(record);
     },
 
     getStore(){
-        return this.lookup('multilingualList').getStore().source;
-    },
-
-    loadDataSuccess(response){
-        let me = this,
-            store  = me.getStore(),
-            data = Http.parseResponse(response),
-            items = data && data.items;
-        me.getView().unmask();
-        if(!items) return;
-        store.each(r=>{
-            r.set('value', null);
-        })
-        items.forEach(r=>{
-            Ext.iterate(r, (k, v)=>{
-                let record = store.getById(`${k}_${r.language}`);
-                if(!record) return;
-                record.set('value', r[k]);
-    
-            })
-        })
+        return this.list.getStore().source;
     },
 
     onSave(){

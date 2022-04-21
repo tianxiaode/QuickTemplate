@@ -27,9 +27,6 @@ Ext.define('Common.ux.crud.container.Base',{
     weighted: true,
 
     defaultResponsive:{
-        desktop:{
-            hasBack: false,
-        },
         phone:{
             searchFieldMixinContainer: 'self',
             searchFieldUi: 'search',
@@ -46,7 +43,6 @@ Ext.define('Common.ux.crud.container.Base',{
             backMixinContainer: '[isCrudToolbar]',        
         }
     },
-
 
 
     createToolbar(newCmp) {
@@ -77,8 +73,7 @@ Ext.define('Common.ux.crud.container.Base',{
             Ext.apply(me, responsive);
             return;
         }
-        console.log(responsive)
-        if(responsive){
+        if(Ext.isString(responsive)){
             let cfg = defaults[responsive];
             cfg && Ext.apply(me, cfg);
             return;

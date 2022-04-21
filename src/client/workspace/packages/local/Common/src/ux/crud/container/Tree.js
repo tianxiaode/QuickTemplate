@@ -6,9 +6,6 @@ Ext.define('Common.ux.crud.container.Tree',{
     ],
 
     defaultResponsive:{
-        desktop:{
-            hasBack: false,
-        },
         phone:{
             searchFieldMixinContainer: 'self',
             searchFieldUi: 'search',
@@ -18,7 +15,17 @@ Ext.define('Common.ux.crud.container.Tree',{
         },
     },
 
+    useDefaultColumn: true,
+    defaultColum: { 
+        xtype: 'treecolumn',
+        dataIndex: 'displayName', 
+        renderer: Format.gridHighlight,
+        cell:{  encodeHtml: false,},
+        flex: 1,
+    },
+
     config:{
+        columns: null,
         tree:{
             xtype: 'tree',
             isCrudList: true,
@@ -27,20 +34,17 @@ Ext.define('Common.ux.crud.container.Tree',{
             weight:200,
             scrollable: 'y',    
             bind:{ store: '{mainStore}'},
-            columns:[
-                { 
-                    xtype: 'treecolumn',
-                    dataIndex: 'displayName', 
-                    cell:{  encodeHtml: false,},
-                    flex: 1
-                },
-            ]
         },
     },
 
     createTree(newCmp) {
+        let me = this,
+            defaultColumn = Ext.clone(me.defaultColum),
+            columns = me.getColumns();
+        columns = me.useDefaultColumn ? [defaultColumn].concat(columns || []): columns;
         return Ext.apply({
             ownerCmp: this,
+            columns: columns
         }, newCmp);
     },
 

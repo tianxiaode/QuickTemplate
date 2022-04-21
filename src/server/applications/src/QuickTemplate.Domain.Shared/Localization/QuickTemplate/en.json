@@ -24,6 +24,7 @@
     "MainMenu.System": "System Management",
     "SubMenu.User": "Users",
     "SubMenu.Role": "Roles",
+    "SubMenu.District": "District",
     "SubMenu.Infrastructure": "Infrastructures",
     "SubMenu.SystemSetting": "System Setting",
     "SelectedOrNot:All": "All",

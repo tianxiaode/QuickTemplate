@@ -100,7 +100,7 @@ Ext.define('Common.ux.crud.controller.Tree',{
             let append = node.appendChild(d,true);
             this.appendChild(append, children);
         })
-        node.expand();
+        node.data && (node.data.depth < 4) && node.expand();
     },
 
     /**

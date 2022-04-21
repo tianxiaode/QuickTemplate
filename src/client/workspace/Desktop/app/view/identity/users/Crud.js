@@ -19,16 +19,16 @@ Ext.define('Desktop.view.identity.users.Crud', {
             { 
                 dataIndex: 'userName', flex:1,
                 cell:{  encodeHtml: false,},
-                tpl: `{userName} ({fullName})`
+                tpl: `{userName:this.listHighlight(values, 'name')} ({fullName})`
             },
             { 
                 dataIndex: 'email', flex:1,
-                renderer: Format.girdHighlight,
+                renderer: Format.gridHighlight,
                 cell:{  encodeHtml: false,},
             },
             { 
                 dataIndex: 'phoneNumber', flex:1,
-                renderer: Format.girdHighlight,
+                renderer: Format.gridHighlight,
                 cell:{  encodeHtml: false,},
             },
             { xtype: 'uxcheckchangecolumn', dataIndex: 'isActive' } ,

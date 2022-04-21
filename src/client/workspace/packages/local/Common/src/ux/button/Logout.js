@@ -16,6 +16,9 @@ Ext.define('Common.ux.button.Logout',{
 
     bind: { hidden: '{!isAuthenticated}'},
 
+    defaultListenerScope: true,
+    handler: 'onLogout',
+
     onLogout() {
         MsgBox.confirm(I18N.get('Logout'), I18N.get('LogoutMessage'),(btn)=>{
             if(btn !== 'yes') return;
@@ -23,12 +26,6 @@ Ext.define('Common.ux.button.Logout',{
             Auth.logout();                
         })
     },
-
-    initialize(){
-        let me = this;
-        me.callParent()
-        me.on('tap', me.onLogout, me);
-    }
 
 
 })

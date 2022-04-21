@@ -38,7 +38,6 @@ public class Program
         try
         {
             Log.Information("Starting web host.");
-            Log.Information($"当前路径：{Directory.GetCurrentDirectory()}");
             var builder = WebApplication.CreateBuilder(args);
             builder.Host
                 .ConfigureAppConfiguration((hostingContext, config) =>

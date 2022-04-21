@@ -17,7 +17,7 @@ Ext.define('Common.ux.button.user.Button',{
     menu: {
         minWidth: 400,
         anchor: true,
-        resourceName: 'AbpAccount',
+        resourceName: 'AbpIdentity',
         items:[
             {
                 xtype: 'uxdetaillist',

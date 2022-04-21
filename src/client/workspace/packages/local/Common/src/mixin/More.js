@@ -30,7 +30,6 @@ Ext.define('Common.mixin.More', {
     layout: 'vbox',
     currentId: null,
 
-   
     applyInfoTpl(config){
         if(!config) return config;
         return Template.getTplWithScope(config, this);

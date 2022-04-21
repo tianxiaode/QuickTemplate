@@ -1,4 +1,4 @@
-Ext.define('Common.mixin.controller.Ajax',{
+Ext.define('Common.mixin.AjaxFailure',{
     extend: 'Ext.Mixin',
 
     onAjaxFailure(response){    

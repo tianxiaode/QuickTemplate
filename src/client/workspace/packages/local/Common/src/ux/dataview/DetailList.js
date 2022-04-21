@@ -42,7 +42,7 @@ Ext.define('Common.ux.dataview.DetailList',{
             inputType = field.inputType;
             editable = !!inputType;
         }
-        return { id: id, label: label, cls: '', editable: editable, inputType: inputType, value: null, text: null }
+        return { id: id, langLabel: label, label: null, cls: '', editable: editable, inputType: inputType, value: null, text: null }
     },
 
     onLocalized(){
@@ -50,10 +50,9 @@ Ext.define('Common.ux.dataview.DetailList',{
             resourceName = me.getResourceName(),
             data = me.getStore().getData();
         data.each(r=>{
-            r.set('label', I18N.get(r.get('label'), resourceName));
+            r.set('label', I18N.get(r.get('langLabel'), resourceName));
             r.commit();
         })
     },
-   
     
 })

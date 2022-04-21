@@ -3,7 +3,7 @@ Ext.define('Common.ux.app.DetailInMoreController', {
 
     mixins:[
         'Common.mixin.controller.ResourceAndPermissions',
-        'Common.mixin.controller.Ajax',
+        'Common.mixin.AjaxFailure',
         'Common.mixin.controller.CheckChange',
     ],
 

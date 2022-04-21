@@ -7,6 +7,7 @@ Ext.define('Common.util.TemplateFn',{
     },
 
     fn:{
+        LF: '&#10;',
         emptyString: '\xA0',
         checkCls: 'x-checked',
         defaultPermissions:['Create', 'Update', 'Delete'],
@@ -30,45 +31,35 @@ Ext.define('Common.util.TemplateFn',{
             if(Ext.isEmpty(v)) return I18N.get(defaultValue);
             return v;
         },     
-        getEnumValue(v, name, isTextValue){  
+        getEnumValue(v, name, isTextValue){
             return Enums.getEnumText(v,name,I18N.get('None'), isTextValue);
         },
-        districtPostcode(value, record, dataIndex, cell ,column){
-            if(!Ext.isNumeric(value)) return '';
-            return Format.girdHighlight(value, record, dataIndex, cell ,column);
-        },
-        translation(translation, field, prefix){
-            let text = translation && translation[field] || '';
-            return text && (prefix+text) || '';
-        },
-        girdHighlight(value, record, dataIndex, cell ,column){
+        gridHighlight(value, record, dataIndex, cell ,column){
             if(Ext.isEmpty(value)) return value;
-            let store = column.up('grid').getStore(), 
-                remoteFilter = store.getRemoteFilter();
-                text = value;
-            if(remoteFilter){
+            let values = record.data,
+                store = column.up('grid').getStore(), 
+                remoteFilter = store.getRemoteFilter(),
+                filter;
+            if(remoteFilter || store.isTreeStore){
                 let proxy = store.getProxy(),
-                params = proxy.extraParams,
+                    params = proxy.extraParams;
                 filter = params && params.filter;
-                if(!filter) return text;
-                if(!Ext.isString(text)) text = text.toString();                
-                return text.replace(new RegExp('(' + filter + ')', "gi"), '<span class="text-danger">$1</span>');
             }else{
-                let filter = store.filterValue;
-                if(Ext.isEmpty(filter)) return text;
-                return text.replace(new RegExp('(' + filter + ')', "gi"), '<span class="text-danger">$1</span>');
+                filter = store.filterValue;
             }
+            if(Ext.isEmpty(filter)) return Format.translations(value, values, dataIndex);
+            return Format.translations(String(value).replace(new RegExp('(' + filter + ')', "gi"), `<span style='color:red;'>$1</span>`), values, dataIndex);
         },
-        tristateCheckBox(v){
-            if(v === null) return '';
-            let check = v ? Format.checkCls : '';
-            return `<div class="x-checkcell ${check}"><div class="x-checkbox-el x-font-icon"></div></div>`;
-        },
-        listHighlight(v, values, field, defaultValue){
-            if(Ext.isEmpty(v)) return Format.defaultValue2(v, defaultValue);
+        listHighlight(value, values, field, defaultValue){
+            if(Ext.isEmpty(value)) return Format.defaultValue2(value, defaultValue);
             let me = this,
                 store = me.getStore && me.getStore() || me.up('grid').getStore() ,
-                filter = null;
+                filter = Format.getFilter(me, store);
+            if(Ext.isEmpty(filter)) return Format.translations(value, values, field);
+            return Format.translations(String(value).replace(new RegExp('(' + filter + ')', "gi"), `<span style='color:red;'>$1</span>`), values, field);
+        },
+        getFilter(me, store){
+            let filter;
             if(me.xtype === 'boundlist'){
                 let filters = store.getFilters().items,
                     find = filters[0];
@@ -83,9 +74,24 @@ Ext.define('Common.util.TemplateFn',{
                     filter = params && params.filter;
                 }
             }
-            if(!Ext.isString(v)) v = v.toString();
-            if(!filter) return v;    
-            return v.replace(new RegExp('(' + filter + ')', "gi"), '<span style="color:red;">$1</span>');
+            return filter;
+        },
+        translations(value, values, field){
+            let translations = values.translations,
+                isPhone = Ext.platformTags.phone;
+                cls = isPhone ? 'text-primary' : '',
+                tips = [];
+            if(!Ext.isArray(translations)) return value;
+            if(!isPhone){
+                Ext.iterate(translations,t=>{
+                    let cultureName = t.language,
+                        language = I18N.getLanguage(cultureName),
+                        text = t[field] || I18N.get('None');
+                    language && tips.push(`${language.displayName}: ${text}`);
+                })    
+            }
+            return `<div class="w-100 translations ${cls}" title="${tips.join(Format.LF)}">${value}</div>`;
+
         },
         langText(v){
             return I18N.get(v);
@@ -99,7 +105,6 @@ Ext.define('Common.util.TemplateFn',{
         checkbox(v){
             let check = v ? Format.checkCls : '';
             return Format.format(Template.checkBoxItem, v, '', check);
-            return `<div class="x-checkcell ${check}"><div class="x-checkbox-el x-font-icon"></div></div>`;
         },
         listCheckbox(v, field){
             if(v === null) return '';
@@ -130,7 +135,7 @@ Ext.define('Common.util.TemplateFn',{
             // [new RegExp('(quiz)$', 'gi'),                '$1zes'],
             [new RegExp('s$', 'gi'),                     's'],
             [new RegExp('$', 'gi'),                      's']
-          ],        
+        ],        
         uncountableWords: {
             'equipment': true,
             'information': true,
@@ -185,25 +190,6 @@ Ext.define('Common.util.TemplateFn',{
                 ext = filename.substring(index+1);
             return Format.mimeType[ext];
         },
-        image(v){
-            let me = this,
-                id = Ext.id('image','listImage'),
-                holder = URI.getResource('holder'),
-                url = Ext.isEmpty(v) ? holder : URI.crud('File', v),
-                img = new Image();
-            img.onload=function(){
-                let el = me.el && me.el.down('#'+id);                
-                if(el) el.appendChild(img);
-            };
-            img.onerror=function(){
-                let el = me.el && me.el.down('#'+id);
-                console.log(el)
-                img.src = holder;
-                if(el) el.appendChild(img);
-            };
-            img.src = url;
-            return id;
-        },
         nullValueAndEditMessage(v){
             let emptyText = I18N.get('NullValueAndEditMessage', 'ProductExtraFields');
             return Ext.isEmpty(v) 
@@ -212,9 +198,6 @@ Ext.define('Common.util.TemplateFn',{
         },
         nullValueRedColor(v){
             return Ext.isEmpty(v) ? 'text-danger': '';
-        },
-        price(v, values){
-            return Format.currency(v/100);
         },
         unDefine(v, values, field, hasDanger){
             let me = this;
@@ -231,31 +214,6 @@ Ext.define('Common.util.TemplateFn',{
         localized(v, langText, resourceName){
             langText = Format.capitalize(langText);
             return I18N.get(langText, resourceName || this.resourceName);
-        },
-        getResourceName(me){
-            return me.resourceName
-            || (me.getViewModel && me.getViewModel() && me.getViewModel().get('resourceName'))
-            || (me.getContainerResourceName && me.getContainerResourceName());
-        },
-        getEntityName(me){
-            return me.entityName
-                || (me.getViewModel && me.getViewModel() && me.getViewModel().get('entityName'));
-        },
-        district(v){     
-            if(!v || Ext.isEmpty(v.displayName)) return `[${I18N.get('District', "Districts")}]`;
-            let text = `${v.displayName}`;
-            let parent = v.parent;
-            if(!parent || Ext.isEmpty(parent.displayName)) return text;
-            text = `${parent.displayName} ${text}`;
-            let province = parent.parent;
-            if(!province || Ext.isEmpty(province.displayName) || province.code.length === 5) return text;
-            text = `${province.displayName} ${text}`;
-            // let text = `${v.parent.displayName} ${v.displayName}`;
-            // if(v.code.length === 23) {
-            //     let province = District.getProvince(v.parent.parentId);
-            //     text = province.get('displayName') + ' ' + text;
-            // } 
-            return text;
         },
         getColorByValue(v,danger, waring, normalCls){
             return v < danger ? 'text-danger' : v < waring ? 'text-warning' : (normalCls || '');
@@ -350,6 +308,14 @@ Ext.define('Common.util.TemplateFn',{
                 checkedCls = checked ?  Format.checkCls : '',
                 text = v ? Format.dateTime(v) : '';
             return Format.format(Template.checkBoxItem, v, text, checkedCls, field);
+        },
+        getListItem(label,text,cls, id, field, inputType ){
+            return `<div class="d-flex px-2 py-2">
+                <div class="fw-bolder text-dark " style="width:150px;">${label}</div>
+                <div class="flex-fill text-black-50 text-right ${cls} " data-field="${field}" data-type="${inputType}" data-id="${id}">
+                    ${text}
+                </div>
+            </div>`
         }
     },
 

@@ -1,20 +1,34 @@
 Ext.define('Common.ux.dataview.ListItem', {
     extend: 'Ext.Component',
     xtype: 'uxlistitem',
- 
+
     userCls: 'p-1 border-bottom',
     inheritUi: true,
     classCls: Ext.baseCSSPrefix + 'listitem',
+
     template: [
         {
-            reference: 'itemElement',
-        },
-        {
-            reference: 'actionElement'
-        }                
+            reference: 'bodyElement',
+            cls: Ext.baseCSSPrefix + 'body-el p-0',
+            uiCls: 'body-el',
+            children: [
+                {
+                    reference: 'innerElement',
+                    cls: Ext.baseCSSPrefix + 'inner-el p-0 d-block',
+                    uiCls: 'inner-el',
+                    children:[
+                        {
+                            reference: 'itemElement',
+                        },
+                        {
+                            reference: 'actionElement',
+                        }
+                    ]
+                }
+            ]
+        }
     ],
 
- 
     updateRecord(record) {
         if(!record) return;
         let me = this;
@@ -22,14 +36,8 @@ Ext.define('Common.ux.dataview.ListItem', {
         me.updateItemAction(record);
     },
 
-    getHighlightValue(value){
-        if(Ext.isEmpty(value)) return I18N.get('None');
-        let store = this.getRecord().store,
-            proxy = store.getProxy(),
-            params = proxy.extraParams,
-            filter = params.filter;
-        if(Ext.isEmpty(filter)) return value;
-        return value.toString().replace(new RegExp('(' + filter + ')', "gi"), '<span class="text-danger">$1</span>');
+    getHighlightValue(value, values, field){
+        return Format.listHighlight.apply(this.parent, [value, values, field]);
     },
 
     getCheckActionHtml(record , action){
@@ -54,19 +62,6 @@ Ext.define('Common.ux.dataview.ListItem', {
         `
     },
 
-    getEmptyActionHtml(){
-        return `<div class=flex-fill></div>`
-    },
-
-    getEditActionHtml(record){
-        return this.getIconActionHtml(record, { cls: 'x-fa fa-edit text-primary' })
-    },
-
-    getMoreActionHtml(record){
-        return this.getIconActionHtml(record, { cls: 'x-fa fa-ellipsis-h text-primary'});
-    },
-
-
     onLocalized(){
         let me = this;
         me.callParent();
@@ -75,21 +70,50 @@ Ext.define('Common.ux.dataview.ListItem', {
 
     updateItem(){},
 
+    defaultActions:{
+        
+        '-'(){
+            return `<div class=flex-fill></div>`
+        },
+
+        '.'(record){  
+            return this.getIconActionHtml(record, { cls: 'x-fa fa-ellipsis-h text-primary'});
+        },
+
+        'edit'(record){
+            return this.getIconActionHtml(record, { cls: 'x-fa fa-edit text-primary' })
+        },
+
+        'lang'(record){
+            return this.getIconActionHtml(record, { cls: 'x-fa fa-globe text-primary'});
+        },
+
+        'bool'(record, action){
+            return this.getCheckActionHtml(record, action);
+        },
+
+        'icon'(record, action){
+            return this.getIconActionHtml(record, action.cls);
+        }
+    },
+
     actions: null,
     updateItemAction(record){
         let me = this,
+            defaults = me.defaultActions,
             actions = me.actions,
             html = [`<div class="d-flex py-1">`];
         if(!Ext.isArray(actions)) return;
-        actions.forEach(a=>{
-            a === '-' && html.push(me.getEmptyActionHtml());
-            a === '.' && html.push(me.getMoreActionHtml(record));
-            a === 'edit' && me.getPermissions().update &&  html.push(me.getEditActionHtml(record));
-            a && a.type === 'bool' && html.push(me.getCheckActionHtml(record, a));
-            a && a.type === 'icon' && html.push(me.getIconActionHtml(record, a));
-            if(a.type !== 'bool' && a.type !== 'icon'){
-                let fnName = `get${Format.capitalize(a.type)}ActionHtml`
-                me[fnName] && html.push(me[fnName].apply(me, [record, a]));
+        actions.forEach(a=>{            
+            if(Ext.isString(a)){
+                let action = defaults[a];
+                action && html.push(action.apply(me, [record]));
+                return;
+            }
+            let type = a && a.type;
+            if(type){
+                let action = actions[type] || defaults[type];
+                action && html.push(action.apply(me, [record, a]));
             }
         })
         html.push('</div>')    

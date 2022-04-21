@@ -20,7 +20,7 @@ Ext.define('Desktop.view.identity.roles.Role', {
             { 
                 dataIndex: 'name', width: 200,
                 cell:{  encodeHtml: false,},
-                tpl: `{name:this.listHighlight(values,'name')} {translation:translation('name','- ')}`
+                renderer: Format.gridHighlight
             },
             {
             dataIndex: 'displayPermissions', flex: 1,

@@ -5,5 +5,4 @@ Ext.define('Common.ux.crud.container.List',{
         'Common.ux.crud.container.mixin.List',
     ],
 
-    responsive: 'phone',
 })

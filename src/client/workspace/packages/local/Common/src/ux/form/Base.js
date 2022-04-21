@@ -23,7 +23,6 @@ Ext.define('Common.ux.form.Base',{
         defaults:{
             labelWidth: 150
         },
-        ui: 'desktop',
         buttons:[
             {
                 xtype: 'component',
@@ -33,17 +32,15 @@ Ext.define('Common.ux.form.Base',{
         ]
     },
 
+    responsiveConfig:{
+        'phone && !cancel':{
+            ui: 'dark'
+        }        
+    },
 
     applyAutoTabIndex(){
         return Ext.platformTags.desktop;
     },
-
-    applyUi(ui){
-        if(Ext.platformTags.phone) return 'dark';
-        if(ui === 'desktop') return null;
-        return ui;
-    },
-
 
     onHide(){
         this.getController().onCancel();

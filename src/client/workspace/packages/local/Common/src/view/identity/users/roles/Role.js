@@ -22,9 +22,8 @@ Ext.define('Common.view.identity.users.roles.Role',{
         columns:[
             { 
                 dataIndex: 'name', flex: 1,
-                autoText: false, langText: 'DisplayName:RoleName',
+                renderer: Format.gridHighlight,
                 cell:{  encodeHtml: false,},
-                tpl: `{name:this.listHighlight(values,'name')} {translation:translation('name','- ')}`
             },
             { 
                 xtype: 'uxcheckchangecolumn', dataIndex: 'isSelected', 

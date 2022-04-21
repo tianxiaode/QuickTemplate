@@ -86,6 +86,16 @@
         "Color": "text-primary",
         "Order": 211,
         "RequiredPermissionNames": [ "AbpIdentity.Users.ManagePermissions" ]
+      },
+      {
+        "Id": "0a2cb2bd-3810-4a5d-9382-111a36bc3ffb",
+        "LangText": "SubMenu.District",
+        "IconCls": "x-fa fa-users",
+        "ViewType": "districtView",
+        "Category": "MobileMenuCategory.Infrastructures",
+        "Color": "text-info",
+        "Order": 212,
+        "RequiredPermissionNames": [ "Infrastructures.Districts.ManagePermissions" ]
       }
 
     ]
