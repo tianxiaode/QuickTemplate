@@ -9,8 +9,11 @@ Ext.define('Common.ux.multilingual.List',{
     ],
 
     mixins:[
-        'Common.mixin.AjaxFailure'
+        'Common.mixin.AjaxFailure',
+        'Common.mixin.Editor',
     ],
+
+    
 
     store:{
         type: 'multilingual'
