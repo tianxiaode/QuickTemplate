@@ -10,21 +10,20 @@ Ext.define('Common.ux.crud.form.FormController',{
         let me = this,
             params = ViewMgr.getParams(view.xtype),
             record = params.record;
-        view.setDefaultModelValue(params.defaultModelValue);
+        me.viewParams = params;
         if(record){
             view.setRecord(null);
             view.setRecord(record);
             me.editRecord(record);
             return;
         }
-        params.remoteController && view.setRemoteController(params.remoteController);
         me.addRecord();
     },
 
     /**
      * 保存并新建
      */
-     onSaveAndNew(){
+    onSaveAndNew(){
         this.afterSavedAction = 'addRecord';
         this.doSave();
     },
@@ -89,11 +88,10 @@ Ext.define('Common.ux.crud.form.FormController',{
         }
         if(record){
             me.beforeSaved(record);
-            Ext.Object.each(result.result,(key,value)=>{
+            Ext.iterate(result,(key,value)=>{
                 if(Ext.isEmpty(value)) return;
                 record.set(key,value);
             });
-            //record.set(result.result);
             record.commit();
             me.afterSaved(record);    
         }
@@ -140,7 +138,7 @@ Ext.define('Common.ux.crud.form.FormController',{
         if (Ext.isEmpty(entityName)) Ext.raise('entityName not define');
         let record= Ext.create(
             model, 
-            Object.assign({}, view.getDefaultModelValue())
+            Object.assign({}, me.viewParams.defaultModelValue)
         );
         me.beforeAddRecord(view,record);
         let title = view.getDefaultTitle() || `${I18N.get(`New${entityName}`,resourceName)}`;
@@ -171,7 +169,6 @@ Ext.define('Common.ux.crud.form.FormController',{
         view.setRecord(record);
         let title = view.getDefaultTitle() || `${I18N.get(`Edit${entityName}`,resourceName)}`;
         view.setTitle(title);
-        //view.setSubmitUrl(URI.get(entityName, 'update'));
         me.isNew = false;
         me.onReset();
         me.afterEditRecord(view,record);

@@ -16,7 +16,8 @@ Ext.define('Common.ux.multilingual.FormController', {
             view = me.getView(),
             params = ViewMgr.getParams(view.xtype),
             record = params.record,
-            field = record.store.messageField;
+            store = record.store || record.getTreeStore(),
+            field = store.messageField;
         params.remoteController && view.setRemoteController(params.remoteController);
         view.setTitle(`${I18N.get('Multilingual')}::${record.get(field)}`);
         me.record = record;

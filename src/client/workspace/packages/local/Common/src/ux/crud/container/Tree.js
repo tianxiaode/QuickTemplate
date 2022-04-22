@@ -2,7 +2,8 @@ Ext.define('Common.ux.crud.container.Tree',{
     extend: 'Common.ux.crud.container.Base',
 
     requires:[
-        'Ext.grid.Tree'
+        'Ext.grid.Tree',
+        'Common.ux.grid.column.Action'
     ],
 
     defaultResponsive:{
@@ -16,12 +17,18 @@ Ext.define('Common.ux.crud.container.Tree',{
     },
 
     useDefaultColumn: true,
+    useActionColumn: true,
     defaultColum: { 
         xtype: 'treecolumn',
         dataIndex: 'displayName', 
         renderer: Format.gridHighlight,
         cell:{  encodeHtml: false,},
+        minWidth: 200,
         flex: 1,
+
+    },
+    actionColumn:{
+        xtype: 'uxactioncolumn',
     },
 
     config:{
@@ -31,7 +38,7 @@ Ext.define('Common.ux.crud.container.Tree',{
             isCrudList: true,
             autoLoad: false,
             flex: 1,
-            weight:200,
+            weight:500,
             scrollable: 'y',    
             bind:{ store: '{mainStore}'},
         },
@@ -42,6 +49,7 @@ Ext.define('Common.ux.crud.container.Tree',{
             defaultColumn = Ext.clone(me.defaultColum),
             columns = me.getColumns();
         columns = me.useDefaultColumn ? [defaultColumn].concat(columns || []): columns;
+        me.useActionColumn && columns.push(Ext.clone(me.actionColumn));
         return Ext.apply({
             ownerCmp: this,
             columns: columns

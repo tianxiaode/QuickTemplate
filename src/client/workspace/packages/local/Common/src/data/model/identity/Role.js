@@ -5,7 +5,7 @@ Ext.define('Common.data.model.identity.Role', {
     hasTranslation: true,
 
     fields: [
-        { name: 'name', type: 'string', defaultValue: '', messageField: true, allowSort: true, langText: 'DisplayName:RoleName'},
+        { name: 'name', type: 'string', defaultValue: '', messageField: true, allowSort: true, langText: 'DisplayName:RoleName', isTranslation: true},
         { name: 'permissions' , defaultValue: []},
         { name: 'isStatic', type: 'bool', defaultValue: false},
         { name: 'isDefault', type: 'bool', defaultValue: false, updateAction: 'default', allowSort: true},

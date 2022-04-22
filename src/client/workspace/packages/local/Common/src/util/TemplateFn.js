@@ -39,6 +39,7 @@ Ext.define('Common.util.TemplateFn',{
             let values = record.data,
                 store = column.up('grid').getStore(), 
                 remoteFilter = store.getRemoteFilter(),
+                field = record.fieldsMap[dataIndex],
                 filter;
             if(remoteFilter || store.isTreeStore){
                 let proxy = store.getProxy(),
@@ -47,13 +48,15 @@ Ext.define('Common.util.TemplateFn',{
             }else{
                 filter = store.filterValue;
             }
-            if(Ext.isEmpty(filter)) return Format.translations(value, values, dataIndex);
-            return Format.translations(String(value).replace(new RegExp('(' + filter + ')', "gi"), `<span style='color:red;'>$1</span>`), values, dataIndex);
+            if(Ext.isEmpty(filter)) return Format.translations(value, values, field);
+            return Format.translations(String(value).replace(new RegExp('(' + filter + ')', "gi"), `<span style='color:red;'>$1</span>`), values, field);
         },
-        listHighlight(value, values, field, defaultValue){
+        listHighlight(value, values, dataIndex, defaultValue){
             if(Ext.isEmpty(value)) return Format.defaultValue2(value, defaultValue);
             let me = this,
                 store = me.getStore && me.getStore() || me.up('grid').getStore() ,
+                model = store.getModel(),
+                field = model.fieldsMap[dataIndex],
                 filter = Format.getFilter(me, store);
             if(Ext.isEmpty(filter)) return Format.translations(value, values, field);
             return Format.translations(String(value).replace(new RegExp('(' + filter + ')', "gi"), `<span style='color:red;'>$1</span>`), values, field);
@@ -77,6 +80,7 @@ Ext.define('Common.util.TemplateFn',{
             return filter;
         },
         translations(value, values, field){
+            if(!field.isTranslation) return value;
             let translations = values.translations,
                 isPhone = Ext.platformTags.phone;
                 cls = isPhone ? 'text-primary' : '',
@@ -86,7 +90,7 @@ Ext.define('Common.util.TemplateFn',{
                 Ext.iterate(translations,t=>{
                     let cultureName = t.language,
                         language = I18N.getLanguage(cultureName),
-                        text = t[field] || I18N.get('None');
+                        text = t[field.name] || I18N.get('None');
                     language && tips.push(`${language.displayName}: ${text}`);
                 })    
             }

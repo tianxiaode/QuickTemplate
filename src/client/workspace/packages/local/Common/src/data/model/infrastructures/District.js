@@ -6,7 +6,6 @@ Ext.define('Common.data.model.infrastructures.District', {
 
     fields: [
         { name: 'postcode' ,  type: 'string'},
-        { name: 'isMunicipality', type: 'bool', defaultValue: false},
     ],
 
 })

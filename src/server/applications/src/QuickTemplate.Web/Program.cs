@@ -22,7 +22,7 @@ public class Program
             .MinimumLevel.Information()
 #endif
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Debug)
+            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
             //.MinimumLevel.Override("IdentityServer4", LogEventLevel.Information)
             .MinimumLevel.Override("QuickTemplate", LogEventLevel.Debug)

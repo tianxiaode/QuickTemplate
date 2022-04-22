@@ -15,6 +15,18 @@ Ext.define('Common.ux.crud.controller.Tree',{
         store.getRoot().expand();
     },
 
+    allowUpdate(hasSelected){
+        if(!hasSelected) return false;
+        let me = this,
+            selection = me.getSelections()[0]
+        return !selection.isRoot();
+    },
+
+    allowDelete(hasSelected){
+        return this.allowUpdate(hasSelected);
+    },
+
+
     /**
      * 刷新列表
      */
@@ -24,13 +36,18 @@ Ext.define('Common.ux.crud.controller.Tree',{
             Enums.on('ready', me.onRefreshStore, me, {single: true});
             return;
         };
-        let store = me.list.getStore();
+        let store = me.list.getStore(),
+            isAsync = store.getAsynchronousLoad();
+        
+        if(!isAsync){
+            me.doSearch();
+            return;
+        }
 
         let selection = me.getSelections()[0];
-        //未有选择
+        //没有选择
         if(!selection){
-            let root = store.getRoot();
-            selection = root;
+            selection = store.getRoot();
         }
         me.onRefreshTreeNode(store, selection);
     },
@@ -52,7 +69,6 @@ Ext.define('Common.ux.crud.controller.Tree',{
             return;
         }
         node.expand();
-        console.log(node)
     },
 
     /**
@@ -113,86 +129,43 @@ Ext.define('Common.ux.crud.controller.Tree',{
         //如果后续操作是新增，不进行任何操作
         if(action === 'update' ) return;
         let me = this,
-            store = me.list.getStore(),
-            node = store.getById(record.get('parentId'));
-        //父节点不存在，直接返回
-        if(!node) return;
-        //当前列表不是查询列表      
-        if(me.currentList.getStore().isTreeStore){                
-            if(node.isLeaf()){
-                //如果父节点是子节点
-                node.set('leaf', false);
-            }
-            me.onRefreshTreeNode(store, node);
-            return;
+            parent = me.currentParent,
+            isExpanded = parent.isExpanded(),
+            isAsync = me.getStore().getAsynchronousLoad();
+        if(isAsync && !isExpanded){
+            me.currentParent.set('leaf',false);
+            me.onRefreshTreeNode(me.getStore(), me.currentParent);
+            return;    
         }
-        //当前为查询视图
-        //获取树节点
-        let treeNode = store.getById(node.getId());
-        //树节点已显示
-        if(treeNode){
-            me.onRefreshTreeNode(store, treeNode);
-            return;
-        }
-        //树节点未显示
-        let code = node.get('code'),
-            root = store.getRoot();
-        me.searchTreeNode(code, root);        
-    },
-
-    /**
-     * 根据code查询新增节点的父节点
-     * @param {要查询的code}} searchCode 
-     * @param {当前节点} node 
-     * @param {查询深度}} index 
-     */
-    searchTreeNode(code, node){
-        let me = this,
-            nodeCode = node.get('code'),
-            searchCode = code.replace(nodeCode,'').substr(1,7);
-        if(Ext.isEmpty(searchCode)) return;
-        let child = node.findChild('code', `${nodeCode}.${searchCode}`);
-        //子节点存在，继续查询
-        if(child) {
-            if(child.isLeaf()){
-                node.set('leaf', false);
-            }
-            //未展开
-            if(!child.isExpanded()){
-                child.on('expand', me.onChildNodeExpand, me, {single: true, args:[code]});
-                child.expand();
-                return;
-            }
-            me.searchTreeNode(code, child);
-        };
-
+        parent.appendChild(Ext.clone(record.data));
+        !isAsync && !isExpanded && parent.expand();
     },
 
     onChildNodeExpand(code, node){
         this.searchTreeNode(code, node);
     },
 
-    getDefaultModelValue(isEdit){
+    getParentNode(record){
         let me = this,
-            selections = me.getSelections(),
-            record = selections[0],
-            parentId = record.getId(),
-            parentName = record.get('displayName');
-        if(isEdit){
-            parentId = record.get('parentId');
-            parentName = record.get('parentName');
-            if(Ext.isEmpty(parentId)){
-                let root = me.list.getStore().getRoot();
-                parentId = root.getId();
-                parentName = root.get('displayName');
-                record.set('parentId', parentId);
-                record.set('parentName', parentName);
-                record.commit();
-            } 
+            store = me.getStore(),
+            selection;
+        console.log('getParentNode', record)
+        if(record){
+            selection = store.getById(record.get('parentId'));
+            if(selection) return selection;
         }
-        return { parentId : parentId, parentName: parentName };
+        selection = me.getSelections()[0];
+        console.log('getParentNode', selection)
+        if(selection) return selection;
+        return store.getRoot();
+
     },
 
-    
+    getDefaultModelValue(record){
+        let me = this,
+            parent = me.getParentNode(record);
+        me.currentParent = parent;
+        return { parentId : parent.getId(), parentName: parent.get('displayName') };
+    },
 
 })

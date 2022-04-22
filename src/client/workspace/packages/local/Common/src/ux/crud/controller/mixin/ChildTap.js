@@ -26,7 +26,7 @@ Ext.define('Common.ux.crud.controller.mixin.ChildTap',{
         }
 
         if(classList.includes('fa-globe')){
-            me.onShowView('multilingual', record);
+            me.doMultilingual(record);
             return;
         }
 

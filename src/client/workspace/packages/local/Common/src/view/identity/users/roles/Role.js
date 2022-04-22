@@ -4,6 +4,7 @@ Ext.define('Common.view.identity.users.roles.Role',{
     
     mixins:[
         'Common.mixin.component.SelectedOrNot',
+        'Common.ux.grid.column.CheckChange',
     ],
 
     requires:[

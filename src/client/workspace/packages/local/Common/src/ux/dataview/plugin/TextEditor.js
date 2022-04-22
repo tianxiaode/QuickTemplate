@@ -10,7 +10,7 @@ Ext.define('Common.ux.dataview.plugin.TextEditor',{
 
     hasMore: false,
 
-    applyField: function(config) {
+    applyField(config) {
         if(this.hasMore){
             Ext.apply(config, {
                 plugins:[

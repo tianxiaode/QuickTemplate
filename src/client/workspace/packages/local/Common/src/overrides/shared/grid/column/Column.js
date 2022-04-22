@@ -9,13 +9,13 @@ Ext.define('Common.overrides.shared.grid.column.Column',{
 
     onLocalized(){
         let me = this,
-            resourceName = me.getResourceName();
+            resourceName = me.getResourceName(),
+            entityName = me.getEntityName();
         if(me.getAutoText()){
             let name = Ext.util.Format.capitalize(me.getDataIndex());
             me.setLangText(name);
         }
-
-        let text = me.getLocalizedText(me.getLangText(), resourceName);
+        let text = me.getLocalizedText(me.getLangText(), resourceName, entityName);
         text && me.setText(text);
     },
 

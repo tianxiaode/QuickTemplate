@@ -2,7 +2,7 @@ Ext.define('Common.data.model.TreeBase', {
     extend: 'Common.data.model.Base',
 
     fields: [
-        { name: 'displayName',type: 'string', defaultValue: '', messageField: true },
+        { name: 'displayName',type: 'string', defaultValue: '', messageField: true, isTranslation: true },
         { name: 'code',type: 'string', defaultValue: ''},
         { name: 'parentId', type: 'string', defaultValue: null },
         { name: 'parent', defaultValue: null },

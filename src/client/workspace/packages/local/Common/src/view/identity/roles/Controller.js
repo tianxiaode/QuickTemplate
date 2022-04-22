@@ -4,9 +4,9 @@ Ext.define('Common.view.identity.roles.Controller',{
 
     requires:[
         'Common.view.identity.roles.Edit',
-        'Phone.view.identity.roles.Menu',
+        'Common.view.identity.roles.Multilingual',
+        'Common.view.identity.roles.Menu',
     ],
-
 
 
 

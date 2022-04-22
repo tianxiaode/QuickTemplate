@@ -34,11 +34,12 @@ Ext.define('Common.overrides.shared.Component',{
     onLocalized(){
         let me = this,
             resourceName = me.getResourceName(),
-            text = me.getLocalizedText(me.getLangTooltip(), resourceName);
+            entityName = me.getEntityName(),
+            text = me.getLocalizedText(me.getLangTooltip(), resourceName, entityName);
 
         text && me.setTooltip(text);
 
-        text = me.getLocalizedText(me.getLangHtml(), resourceName);
+        text = me.getLocalizedText(me.getLangHtml(), resourceName, entityName);
 
         text && me.setHtml(text);
     },

@@ -20,6 +20,7 @@ namespace QuickTemplate.Infrastructures
                         m.Translations.Select(n => new DistrictTranslationDto(n.Language, n.DisplayName))))
                 .ForMember(m => m.Leaf, opts => opts.MapFrom(m => true));
 
+            CreateMap<DistrictTranslation, DistrictTranslationDto>();
         }
     }
 }

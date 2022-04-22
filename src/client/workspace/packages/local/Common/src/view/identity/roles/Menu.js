@@ -1,4 +1,4 @@
-Ext.define('Phone.view.identity.roles.Menu', {
+Ext.define('Common.view.identity.roles.Menu', {
     extend: 'Common.ux.multilingual.Menu',
     xtype : 'rolemultilingualmenu', 
     

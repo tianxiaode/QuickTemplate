@@ -35,7 +35,7 @@ Ext.define('Common.ux.crud.controller.mixin.View',{
             record : record,
             type: me.isPhone ? ViewMgr.types.view : ViewMgr.types.dialog,
             config : config,
-            defaultModelValue: me.getDefaultModelValue && me.getDefaultModelValue()
+            defaultModelValue: me.getDefaultModelValue && me.getDefaultModelValue(record)
         }
     },
 

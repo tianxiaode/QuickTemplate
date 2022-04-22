@@ -5,6 +5,7 @@ Ext.define('Desktop.view.identity.roles.Role', {
     requires:[
         'Common.view.identity.roles.Model',
         'Common.view.identity.roles.Controller',
+        'Common.ux.grid.column.Action',
     ],
 
 
@@ -29,20 +30,7 @@ Ext.define('Desktop.view.identity.roles.Role', {
             { xtype: 'uxcheckchangecolumn', dataIndex: 'isDefault'} ,
             { xtype: 'uxcheckchangecolumn', dataIndex: 'isPublic'},
             {
-                autoText: false,
-                text: '...',
-                width: 60,
-                menu: false,
-                align: 'center',
-                cell:{
-                    tools:{
-                        translation:{
-                            iconCls: 'x-fa fa-globe text-primary',
-                            handler: 'onMultilingual',
-                            langTooltip: 'Display:Translation',
-                        }
-                    }
-                }        
+                xtype: 'uxactioncolumn',
             }
         ]
     }

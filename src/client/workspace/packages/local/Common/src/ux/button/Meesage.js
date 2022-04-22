@@ -23,7 +23,7 @@ Ext.define('Common.ux.button.Message',{
 
     responsiveConfig:{
         'desktop && !cancel':{
-            weight: 6,
+            weight: 4,
         },
         'phone && !cancel':{
             ui: 'plain',

@@ -29,7 +29,15 @@ Ext.define('Common.ux.dataview.plugin.LabelEditor',{
     init(view) {
         let me= this;
         me.view = view;
-        view.element.on('tap', me.onClick, me, {delegate: '.' + me.labelSelector});
+        view.on({
+            destroyable: true,
+            scope: me,
+            tap:{
+                fn: me.onClick,
+                element: 'element',
+                delegate: '.' + me.labelSelector
+            }
+        });
         me.on('complete', me.onSave, me);
     },
 
@@ -62,5 +70,10 @@ Ext.define('Common.ux.dataview.plugin.LabelEditor',{
             store = view.getStore();
         return store.getById(id);
     },
+
+    doDestroy(){
+        this.view = null;
+        this.callParent(arguments);
+    }
 
 })

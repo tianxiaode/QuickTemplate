@@ -12,10 +12,6 @@ Ext.define('Common.ux.multilingual.List',{
         'Common.mixin.AjaxFailure'
     ],
 
-    config:{
-        fields: null
-    },
-
     store:{
         type: 'multilingual'
     },
@@ -31,38 +27,29 @@ Ext.define('Common.ux.multilingual.List',{
         xtype: 'uxmultilinguallistitem'
     },
 
-    responsiveConfig:{
-        'desktop && !cancel':{
-            plugins:{
-                dataviewtexteditor:{
-                    dataIndex: 'value',
-                    hasMore: true
-                },
-            },
-        },
-    },
+    // responsiveConfig:{
+    //     'desktop && !cancel':{
+    //         plugins:{
+    //             dataviewtexteditor:{
+    //                 dataIndex: 'value',
+    //                 hasMore: true
+    //             },
+    //         },
+    //     },
+    // },
 
-    onLocalized(){
-        this.callParent();
-        this.initData();
-    },
-
-    initData(){
+    initData(fields){
         let me = this,
             resourceName = me.getResourceName(),
-            fields = me.getFields(),
             langs = I18N.getLanguages(),
             store = me.getStore().source,
             data = [],
             order = 1;
         if(!Ext.isArray(fields)) return;
         fields.forEach(f=>{
-            let field = f,
-                label = f;
-            if(!Ext.isString(f)){
-                field = f.name;
-                label = f.label || f.name;
-            }
+            let field = f.name,
+                label = f.langText || f.name;
+            if(!f.isTranslation) return;
             langs.forEach(l=>{
                 data.push({
                     id: `${field}_${l.cultureName}`,
@@ -77,11 +64,14 @@ Ext.define('Common.ux.multilingual.List',{
             })
         })
         store.loadData(data);
+        me.isInitData = true;
     },
 
+    isInitData: false,
     updateRecord(record){
         let me = this,
             entityName = me.getEntityName();
+        if(!me.isInitData) me.initData(record.getFields());
         me.mask(I18N.get('LoadingText'));
         Http.get(URI.crud(entityName, record.getId(), 'translations'))
             .then(me.loadDataSuccess, me.onAjaxFailure, null, me);

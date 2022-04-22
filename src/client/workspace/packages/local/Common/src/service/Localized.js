@@ -46,7 +46,7 @@ Ext.define('Common.service.Localized', {
         let extResource = values['ExtResource'] || {},
             defaultResource = values[defaultResourceName] ,  
             displayNameKey = `DisplayName:${key}`,
-            entityKey = `${entityName}.${key}`;
+            entityKey = `${entityName}:${key}`;
         if(resourceName){
             let resource = values[resourceName];  
             if(resource){
