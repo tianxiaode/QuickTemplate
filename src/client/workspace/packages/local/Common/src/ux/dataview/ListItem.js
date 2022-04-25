@@ -32,7 +32,7 @@ Ext.define('Common.ux.dataview.ListItem', {
     updateRecord(record) {
         if(!record) return;
         let me = this;
-        me.updateItem(record);
+        me.updateListItem(record);
         me.updateItemAction(record);
     },
 
@@ -68,7 +68,7 @@ Ext.define('Common.ux.dataview.ListItem', {
         me.updateRecord(me.getRecord());
     },
 
-    updateItem(){},
+    updateListItem(){},
 
     defaultActions:{
         

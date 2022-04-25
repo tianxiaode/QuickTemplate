@@ -2,7 +2,7 @@ Ext.define('Phone.view.identity.roles.RoleItem', {
     extend: 'Common.ux.dataview.ListItem',
     xtype : 'phone-roleitem', 
 
-    updateItem(record){
+    updateListItem(record){
         let me = this,
             data = record.data,
             html = '';

@@ -2,7 +2,7 @@ Ext.define('Common.ux.dataview.DetailListItem',{
     extend: 'Common.ux.dataview.ListItem',
     xtype: 'uxmdetailistitem',
 
-    updateItem(record){
+    updateListItem(record){
         let me = this,
             data = record.data,
             html,

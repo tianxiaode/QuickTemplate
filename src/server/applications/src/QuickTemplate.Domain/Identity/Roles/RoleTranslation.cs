@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace QuickTemplate.Identity.Roles
 {
     [Serializable]
-    public class RoleTranslation: TranslationEntity
+    public class RoleTranslation: Translation
     {
         public virtual string Name { get; protected set; }
 

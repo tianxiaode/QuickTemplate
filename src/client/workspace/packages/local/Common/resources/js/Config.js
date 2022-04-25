@@ -7,7 +7,7 @@ window.AppConfig = {
         redirectUri: "http://localhost:4200/desktop",
         clientId: 'QuickTemplate_App',
         scope: 'offline_access QuickTemplate'
-      },
+    },
     appName:{
         en: 'Quick Template',
         "zh-CN": '快速模板'

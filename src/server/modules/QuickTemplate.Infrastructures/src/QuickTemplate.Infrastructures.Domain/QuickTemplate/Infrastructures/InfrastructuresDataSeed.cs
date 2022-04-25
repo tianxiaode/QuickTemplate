@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Generic.Abp.Domain.Entities;
+using Generic.Abp.Domain.Extensions;
+using Microsoft.Extensions.Logging;
+using QuickTemplate.Infrastructures.Districts;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Generic.Abp.Domain.Entities;
-using Microsoft.Extensions.Logging;
-using QuickTemplate.Infrastructures.Districts;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
 using Volo.Abp.Uow;
@@ -37,10 +37,7 @@ public class InfrastructuresDataSeed: ITransientDependency, IInfrastructuresData
     {
             // //增加地区根节点
             var rootDistrict = new District(GuidGenerator.Create(),DistrictConsts.RootName, DistrictConsts.RootCode);
-            foreach (var key in DistrictConsts.RootTranslation.Keys)
-            {
-                rootDistrict.AddTranslation(key, DistrictConsts.RootTranslation[key]);
-            }
+            rootDistrict.SetTranslations(DistrictConsts.RootTranslation.Select(m=>new DistrictTranslation(m.Key,m.Value)));
             await DistrictManager.CreateAsync(rootDistrict);
             Logger.LogInformation($"根节点:{rootDistrict.DisplayName},{rootDistrict.Postcode},{rootDistrict.Code},{rootDistrict.ParentId}");
 
@@ -48,10 +45,7 @@ public class InfrastructuresDataSeed: ITransientDependency, IInfrastructuresData
 
             //增加中国节点
             var chinaDistrict = new District(GuidGenerator.Create(),DistrictConsts.China, DistrictConsts.ChinaCode, rootDistrict.Id);
-            foreach (var key in DistrictConsts.ChinaTranslation.Keys)
-            {
-                chinaDistrict.AddTranslation(key, DistrictConsts.ChinaTranslation[key]); }
-            
+            chinaDistrict.SetTranslations(DistrictConsts.ChinaTranslation.Select(m=>new DistrictTranslation(m.Key,m.Value)));
             await DistrictManager.CreateAsync(chinaDistrict);
             Logger.LogInformation($"中国节点:{chinaDistrict.DisplayName},{chinaDistrict.Postcode},{chinaDistrict.Code},{chinaDistrict.ParentId}");
 
@@ -68,7 +62,6 @@ public class InfrastructuresDataSeed: ITransientDependency, IInfrastructuresData
                 Logger.LogInformation($"正在处理：{postCode}");
                 Guid parentId;
                 var displayName = "";
-                var isMunicipalities = false;
                 if (postCode.EndsWith("0000"))
                 {
                     parentId = chinaDistrict.Id;
@@ -76,38 +69,25 @@ public class InfrastructuresDataSeed: ITransientDependency, IInfrastructuresData
                 }else
                 {
                     var provinceCode = postCode[..2];
-                    if (provincialCityCode.Contains(provinceCode))
+                    if(postCode.EndsWith("00"))
                     {
                         var parent = postCodeList.FirstOrDefault(m => m.Postcode.StartsWith(provinceCode));
                         if(parent == null) continue;
                         parentId = parent.Id;
-                        displayName = postCodeArray[3];
-                        isMunicipalities = true;
+                        displayName = postCodeArray[2];
                     }
                     else
                     {
-                        //城市
-                        if(postCode.EndsWith("00"))
-                        {
-                            var parent = postCodeList.FirstOrDefault(m => m.Postcode.StartsWith(provinceCode));
-                            if(parent == null) continue;
-                            parentId = parent.Id;
-                            displayName = postCodeArray[2];
-                        }
-                        else
-                        {
-                            //地区
-                            var parent = postCodeList.FirstOrDefault(m => m.Postcode.StartsWith(postCode[..4]));
-                            if(parent == null) continue;
-                            parentId = parent.Id;
-                            displayName = postCodeArray[3];
-            
-                        }
+                        //地区
+                        var parent = postCodeList.FirstOrDefault(m => m.Postcode.StartsWith(postCode[..4]));
+                        if(parent == null) continue;
+                        parentId = parent.Id;
+                        displayName = postCodeArray[3];
             
                     }
             
                 }
-                var entity = new District(GuidGenerator.Create(),displayName, postCode,parentId, isMunicipalities);
+                var entity = new District(GuidGenerator.Create(),displayName, postCode,parentId);
                 
                 postCodeList.Add(entity);
                 await DistrictManager.CreateAsync(entity);

@@ -1,8 +1,10 @@
-﻿using Generic.Abp.Domain.Entities;
+﻿using System;
+using Generic.Abp.Domain.Entities.MultiLingual;
 
 namespace QuickTemplate.Infrastructures.Districts.Dtos
 {
-    public class DistrictTranslationDto : IDistrictTranslation
+    [Serializable]
+    public class DistrictTranslationDto : ITranslation
     {
         public string Language { get; set; }
         public string DisplayName { get; set; }

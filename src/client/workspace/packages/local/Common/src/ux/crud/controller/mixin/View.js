@@ -5,7 +5,7 @@ Ext.define('Common.ux.crud.controller.mixin.View',{
         create: '{entity}EditView',
         update: '{entity}EditView',
         more: '{entity}MoreView',
-        multilingual: '{entity}MultilingualView',
+        multilingual: 'MultilingualView',
     },
 
     getViewXType(action){

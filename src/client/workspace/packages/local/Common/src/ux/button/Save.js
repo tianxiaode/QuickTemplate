@@ -6,6 +6,9 @@ Ext.define('Common.ux.button.Save',{
         'desktop && !cancel':{
             weight: 80,
             ui: 'action',
+            langText: 'Save',
+            userCls: 'lh-24',
+            margin: '0 5px 0 0'
         },
         'phone && !cancel':{
             ui: 'plain',

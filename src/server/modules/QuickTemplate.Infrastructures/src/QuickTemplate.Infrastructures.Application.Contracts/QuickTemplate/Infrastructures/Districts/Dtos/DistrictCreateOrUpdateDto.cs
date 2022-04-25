@@ -23,6 +23,5 @@ namespace QuickTemplate.Infrastructures.Districts.Dtos
         [DisplayName("District:ParentName")]
         public Guid ParentId { get; set;}
 
-        public bool IsMunicipality { get; set; }
     }
 }

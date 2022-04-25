@@ -4,7 +4,7 @@ Ext.define('Common.ux.multilingual.FormController', {
 
     init(){
         let  me = this,
-            list = me.lookup('multilingualList'),
+            list = me.getView().getList(),
             isPhone = Ext.platformTags.phone;
         me.list = list;
         me.callParent();
@@ -15,13 +15,19 @@ Ext.define('Common.ux.multilingual.FormController', {
         let me = this,
             view = me.getView(),
             params = ViewMgr.getParams(view.xtype),
+            config = params.config,
             record = params.record,
             store = record.store || record.getTreeStore(),
-            field = store.messageField;
+            field = store.messageField,
+            list = me.list;
         params.remoteController && view.setRemoteController(params.remoteController);
         view.setTitle(`${I18N.get('Multilingual')}::${record.get(field)}`);
         me.record = record;
-        me.list.setRecord(record);
+        view.setEntityName(config.entityName);
+        view.setResourceName(config.resourceName);
+        view.permissionGroup = config.permissionGroup;
+        view.permissionName = config.permissionName;
+        list.setRecord(record);
     },
 
     getStore(){
@@ -51,20 +57,19 @@ Ext.define('Common.ux.multilingual.FormController', {
     },
 
     onListChildTap(sender, location, eOpts){
-        let record = location.record;
-        if(Format.checkTargetCls(location, 'x-editable-text')){
-            let me = this,
-                dlg = ViewMgr.getDialog('uxmultilingualedit');
-            dlg.resourceName = me.resourceName;
-            dlg.callback = Ext.bind(me.updateFieldSuccess, me);
-            dlg.setField({ 
-                field: record.getId(), 
-                type: 'textarea',
-                value: record.get('value'),
-                title: record.get('languageText') + ':' + record.get('label')
-            });
-            dlg.show();
-        }
+        if(!Format.checkTargetCls(location, 'x-editable')) return;
+        let me = this,
+            record = location.record;
+            dlg = ViewMgr.getDialog('uxmultilingualedit');
+        dlg.resourceName = me.resourceName;
+        dlg.callback = Ext.bind(me.updateFieldSuccess, me);
+        dlg.setField({ 
+            field: record.getId(), 
+            type: 'textarea',
+            value: record.get('value'),
+            title: record.get('languageText') + ':' + record.get('label')
+        });
+        dlg.show();
     },
 
     updateFieldSuccess(id, value){

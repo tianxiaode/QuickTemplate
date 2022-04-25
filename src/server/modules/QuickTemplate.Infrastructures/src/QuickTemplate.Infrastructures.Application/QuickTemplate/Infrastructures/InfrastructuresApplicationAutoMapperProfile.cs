@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using AutoMapper;
+using Generic.Abp.Domain.Extensions;
 using QuickTemplate.Infrastructures.Districts;
 using QuickTemplate.Infrastructures.Districts.Dtos;
 using Volo.Abp.AutoMapper;
@@ -15,12 +16,12 @@ namespace QuickTemplate.Infrastructures
              * into multiple profile classes for a better organization. */
 
             CreateMap<District, DistrictDto>()
+                .ForMember(m => m.Leaf, opts => opts.MapFrom(m => true))
                 .ForMember(m => m.Translations,
-                    opts => opts.MapFrom(m =>
-                        m.Translations.Select(n => new DistrictTranslationDto(n.Language, n.DisplayName))))
-                .ForMember(m => m.Leaf, opts => opts.MapFrom(m => true));
+                    opts => opts.MapFrom(m => m.GetTranslations<District, DistrictTranslation>()));
 
             CreateMap<DistrictTranslation, DistrictTranslationDto>();
+            CreateMap<DistrictTranslationDto, DistrictTranslation>();
         }
     }
 }

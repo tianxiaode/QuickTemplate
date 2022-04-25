@@ -36,7 +36,7 @@ Ext.define('Common.ux.crud.controller.mixin.ChildTap',{
         }
 
         if(classList.includes('translations')){
-            me.onShowInfoMenu(`${me.entityName}multilingualmenu`, location.record, location.sourceElement);
+            me.onShowInfoMenu(`uxmultilingualmenu`, location.record, location.sourceElement);
             return;
         }
 

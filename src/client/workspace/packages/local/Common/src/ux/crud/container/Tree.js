@@ -36,6 +36,7 @@ Ext.define('Common.ux.crud.container.Tree',{
         tree:{
             xtype: 'tree',
             isCrudList: true,
+            childTap: true,
             autoLoad: false,
             flex: 1,
             weight:500,

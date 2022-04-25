@@ -3,7 +3,6 @@ Ext.define('Common.ux.files.List',{
     xtype: 'uxfilelist',
 
     requires:[
-        'Common.ux.dataview.plugin.LabelEditor',
         'Common.ux.files.FileItem',
     ],
 
@@ -22,22 +21,6 @@ Ext.define('Common.ux.files.List',{
         xtype: 'shared-uxfileitem'
     },
 
-    initialize(){
-        let me = this;
-        me.callParent(arguments);
-        if(me.hasEditor) {
-            me.addPlugin({ 
-                type: 'dataviewlabeleditor',
-                dataIndex: 'description',
-                ignoreNoChange: true,
-                updateEl: true,
-                field:{
-                    required: true,
-                    maxLength: 128
-                },
-            })
-        };
-    },
 
 
 })

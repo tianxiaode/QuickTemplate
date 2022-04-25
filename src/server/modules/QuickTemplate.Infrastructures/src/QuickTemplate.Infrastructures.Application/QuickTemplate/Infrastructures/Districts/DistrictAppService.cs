@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Generic.Abp.Domain.Extensions;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
@@ -72,8 +72,7 @@ public class DistrictAppService : InfrastructuresAppService, IDistrictAppService
     public virtual async Task<DistrictDto> CreateAsync(DistrictCreateDto input)
     {
         var parent = await Repository.GetAsync(input.ParentId, false);
-        var entity = new District(GuidGenerator.Create(), input.DisplayName, input.Postcode, parent.Id,
-            input.IsMunicipality);
+        var entity = new District(GuidGenerator.Create(), input.DisplayName, input.Postcode, parent.Id);
         await DistrictManager.CreateAsync(entity);
         await CurrentUnitOfWork.SaveChangesAsync();
         return new DistrictDto(entity, true);
@@ -86,7 +85,6 @@ public class DistrictAppService : InfrastructuresAppService, IDistrictAppService
         var entity = await Repository.GetAsync(id);
         entity.UpdateDisplayName(input.DisplayName);
         entity.UpdatePostcode(input.Postcode);
-        entity.UpdateIsMunicipality(input.IsMunicipality);
         await DistrictManager.UpdateAsync(entity);
         await CurrentUnitOfWork.SaveChangesAsync();
         var dto = new DistrictDto(entity, !await Repository.HasChildAsync(entity.Id));
@@ -115,9 +113,9 @@ public class DistrictAppService : InfrastructuresAppService, IDistrictAppService
     public virtual async Task<ListResultDto<DistrictTranslationDto>> GetTranslationListAsync(Guid id)
     {
         var entity = await Repository.GetAsync(id);
-        var list = entity.Translations.ToList();
-        return new ListResultDto<DistrictTranslationDto>(
-            ObjectMapper.Map<List<DistrictTranslation>, List<DistrictTranslationDto>>(list));
+        var translations = entity.GetTranslations<District, DistrictTranslation>();
+        var list = ObjectMapper.Map<List<DistrictTranslation>,List<DistrictTranslationDto>>(translations);
+        return new ListResultDto<DistrictTranslationDto>(list);
     }
 
     [Authorize(InfrastructuresPermissions.Districts.Update)]
@@ -125,30 +123,21 @@ public class DistrictAppService : InfrastructuresAppService, IDistrictAppService
     public virtual async Task UpdateTranslationAsync(Guid id, List<DistrictTranslationUpdateDto> input)
     {
 
-        CheckTranslationInput(input);
+        var list = input.Where(m => !string.IsNullOrEmpty(m.DisplayName)).ToList();
+        CheckTranslationInput(list);
 
         var entity = await Repository.GetAsync(id);
-        foreach (var dto in input)
-        {
-            if (string.IsNullOrWhiteSpace(dto.DisplayName))
-            {
-                entity.RemoveTranslation(dto.Language);
-                continue;
-            }
-
-            entity.AddTranslation(dto.Language, dto.DisplayName);
-        }
-
+        var translations = list.Select(m => new DistrictTranslation(m.Language, m.DisplayName));
+        entity.SetTranslations<District, DistrictTranslation>(translations);
+        await Repository.UpdateAsync(entity);
         await CurrentUnitOfWork.SaveChangesAsync();
     }
 
     [UnitOfWork]
     protected virtual void CheckTranslationInput(List<DistrictTranslationUpdateDto> input)
     {
-        var checkList = input.Where(m => !string.IsNullOrWhiteSpace(m.DisplayName));
         var errors = input
-            .Where(m => !string.IsNullOrWhiteSpace(m.DisplayName) &&
-                        m.DisplayName.Length > DistrictConsts.DisplayNameMaxLength).Select(m =>
+            .Where(m => m.DisplayName.Length > DistrictConsts.DisplayNameMaxLength).Select(m =>
                 L[BusinessExceptionErrorCodes.ValueExceedsFieldLength].Value
                     .Replace(BusinessExceptionErrorCodes.ValueExceedsFieldLengthParamValue, m.DisplayName).Replace(
                         BusinessExceptionErrorCodes.ValueExceedsFieldLengthParamLength,

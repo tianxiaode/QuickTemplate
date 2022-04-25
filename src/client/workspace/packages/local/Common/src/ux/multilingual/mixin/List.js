@@ -12,16 +12,13 @@ Ext.define('Common.ux.multilingual.mixin.List',{
     config:{
         list:{
             xtype: 'uxmultilinguallist',
-            reference: 'multilingualList',
             flex:1
         }
     },
 
     createList(newCmp) {
-        let me = this;
         return Ext.apply({
-            fields: me.fields,
-            ownerCmp: me
+            ownerCmp: this
         }, newCmp);
     },
 

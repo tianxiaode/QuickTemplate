@@ -4,8 +4,8 @@ Ext.define('Common.ux.multilingual.List',{
 
     requires:[
         'Common.data.store.Multilingual',
-        'Common.ux.dataview.plugin.TextEditor',
         'Common.ux.multilingual.ListItem',
+        'Common.ux.multilingual.Menu',
     ],
 
     mixins:[
@@ -30,17 +30,6 @@ Ext.define('Common.ux.multilingual.List',{
         xtype: 'uxmultilinguallistitem'
     },
 
-    // responsiveConfig:{
-    //     'desktop && !cancel':{
-    //         plugins:{
-    //             dataviewtexteditor:{
-    //                 dataIndex: 'value',
-    //                 hasMore: true
-    //             },
-    //         },
-    //     },
-    // },
-
     initData(fields){
         let me = this,
             resourceName = me.getResourceName(),
@@ -61,7 +50,9 @@ Ext.define('Common.ux.multilingual.List',{
                     label: I18N.get(label, resourceName),
                     languageText: l.displayName,
                     order: order,
-                    readOnly: me.readOnly
+                    readOnly: me.readOnly,
+                    inputType: 'more',
+                    value: null
                 })
                 order++;
             })
@@ -70,11 +61,14 @@ Ext.define('Common.ux.multilingual.List',{
         me.isInitData = true;
     },
 
-    isInitData: false,
     updateRecord(record){
         let me = this,
             entityName = me.getEntityName();
-        if(!me.isInitData) me.initData(record.getFields());
+        if(me.currentEntity != entityName) {
+            me.currentEntity = entityName;
+            me.initData(record.getFields());
+        }
+        
         me.mask(I18N.get('LoadingText'));
         Http.get(URI.crud(entityName, record.getId(), 'translations'))
             .then(me.loadDataSuccess, me.onAjaxFailure, null, me);

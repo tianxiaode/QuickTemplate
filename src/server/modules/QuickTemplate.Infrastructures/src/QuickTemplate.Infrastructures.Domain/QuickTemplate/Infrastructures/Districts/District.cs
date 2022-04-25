@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using Generic.Abp.Domain.Entities;
-using Generic.Abp.Domain.Entities.Auditing;
+﻿using Generic.Abp.Domain.Entities.Auditing;
 using Generic.Abp.Domain.Trees;
+using System;
+using System.Collections.Generic;
 using Volo.Abp;
 
 namespace QuickTemplate.Infrastructures.Districts;
 
-public class District: GenericAuditedAggregateRootWithTranslation<DistrictTranslation>,IDistrict,ITree<District>
+[Serializable]
+public class District: GenericAuditedAggregateRootWithTranslation,ITree<District>
 {
     public string Code { get; set; }
     public Guid? ParentId { get; set; }
     public string DisplayName { get; set; }
     public string Postcode { get; protected set; }
-    public bool IsMunicipality { get; protected set; }
     public virtual District Parent { get; set; }
     public virtual ICollection<District> Children { get; set; }
 
-    public District(Guid id, string displayName, string postcode, Guid? parentId = null, bool isMunicipality = false) : base(id)
+    public District(Guid id, string displayName, string postcode, Guid? parentId = null) : base(id)
     {
         Check.NotNullOrEmpty(displayName, nameof(DisplayName));
         Check.NotNullOrEmpty(postcode, nameof(Postcode));
@@ -25,7 +24,6 @@ public class District: GenericAuditedAggregateRootWithTranslation<DistrictTransl
         DisplayName = displayName;
         Postcode = postcode;
         ParentId = parentId;
-        IsMunicipality = isMunicipality;
     }
 
     public virtual void UpdateDisplayName(string displayName)
@@ -39,27 +37,5 @@ public class District: GenericAuditedAggregateRootWithTranslation<DistrictTransl
         Check.NotNullOrEmpty(postcode, nameof(Postcode));
         Postcode = postcode;
     }
-
-    public virtual void UpdateIsMunicipality(bool isMunicipality)
-    {
-        IsMunicipality = isMunicipality;
-    }
-
-    public virtual void AddTranslation(string language, string displayName)
-    {
-        Check.NotNullOrWhiteSpace(language, nameof(language));
-        Check.NotNullOrWhiteSpace(displayName, nameof(displayName));
-
-        if (IsInTranslation(language))
-        {
-            var entity = GetTranslation(language);
-            if (entity == null) return;
-            entity.DisplayName = displayName;
-            return;
-        }
-
-        Translations.Add(new DistrictTranslation(language, displayName));
-    }
-
 
 }

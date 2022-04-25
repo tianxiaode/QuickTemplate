@@ -1,7 +1,7 @@
 Ext.define('Common.ux.field.plugin.More', {
     extend: 'Ext.plugin.Abstract',
     alias: 'plugin.fieldmore',
- 
+
     requires:[
         'Common.ux.field.trigger.More',
         'Common.ux.panel.MoreEditor',
@@ -33,7 +33,8 @@ Ext.define('Common.ux.field.plugin.More', {
     },
 
     onUpdateValue(value){
-        this.getOwner().up().fireEvent('complete', this, [value])
+        let editor = this.getOwner().up();
+        editor.fireEvent('complete', editor, [value])
     },
 
     destroy() {

@@ -1,5 +1,6 @@
 Ext.define('Common.ux.multilingual.Form',{
     extend: 'Common.ux.form.Base',
+    xtype: 'multilingualview',
 
     requires:[
         'Common.ux.multilingual.FormController',

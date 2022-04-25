@@ -37,17 +37,7 @@ namespace QuickTemplate.Infrastructures.EntityFrameworkCore
                 b.Property(m => m.DisplayName).IsRequired().HasMaxLength(DistrictConsts.DisplayNameMaxLength)
                     .UseCollation("gbk_chinese_ci");
                 b.Property(m => m.Postcode).IsRequired().HasMaxLength(DistrictConsts.PostcodeMaxLength).UseCollation("ascii_general_ci");
-                b.Property(m => m.IsMunicipality).IsRequired().HasDefaultValue(false);
                 b.Property(m => m.Code).IsRequired().HasMaxLength(TreeConsts.CodeMaxLength).UseCollation("ascii_general_ci");
-                b.Property(m => m.Translations).IsRequired()
-                    .HasDefaultValue(new List<DistrictTranslation>())
-                    .HasConversion(
-                        v => JsonConvert.SerializeObject(v, jsonSetting),
-                        v => JsonConvert.DeserializeObject<List<DistrictTranslation>>(v, jsonSetting))
-                    .Metadata
-                    .SetValueComparer(new ValueComparer<List<DistrictTranslation>>((c1, c2) => c1.Equals(c2),
-                        c => c.GetHashCode(),
-                        c => c));
 
                 //Relations
                 b.HasOne<District>(m => m.Parent).WithMany(m => m.Children).HasForeignKey(m => m.ParentId)

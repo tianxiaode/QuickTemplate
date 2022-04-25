@@ -32,18 +32,24 @@ Ext.define('Common.ux.panel.MoreEditor',{
     saveButton:{
         langText: null,
         iconCls: 'md-icon-done text-success',
+        ui: 'defaults',
+        cancelResponsive: true,
         weight: 30,
         ui: null
     },
     resetButton:{
         langText: null,
         iconCls: 'md-icon-undo',
+        ui: 'defaults',
+        cancelResponsive: true,
         weight: 10,
         ui: null
     },
     cancelButton:{
         langText: null,
         iconCls: 'md-icon-close text-danger',
+        ui: 'defaults',
+        cancelResponsive: true,
         weight: 20,
         ui: null
     },

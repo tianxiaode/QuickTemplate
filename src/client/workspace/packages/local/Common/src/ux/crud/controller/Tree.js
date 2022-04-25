@@ -149,13 +149,11 @@ Ext.define('Common.ux.crud.controller.Tree',{
         let me = this,
             store = me.getStore(),
             selection;
-        console.log('getParentNode', record)
         if(record){
             selection = store.getById(record.get('parentId'));
             if(selection) return selection;
         }
         selection = me.getSelections()[0];
-        console.log('getParentNode', selection)
         if(selection) return selection;
         return store.getRoot();
 

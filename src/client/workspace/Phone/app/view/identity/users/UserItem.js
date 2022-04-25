@@ -2,7 +2,7 @@ Ext.define('Phone.view.identity.users.UserItem', {
     extend: 'Common.ux.dataview.ListItem',
     xtype : 'phone-useritem', 
 
-    updateItem(record){
+    updateListItem(record){
         let me = this,
             view = me.getResourceContainer(),
             data = record.data,

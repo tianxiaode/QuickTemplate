@@ -36,12 +36,8 @@ Ext.define('Common.mixin.component.Form', {
     },
 
     createSaveButton(newCmp) {
-        let isPhone = this.isPhone();
         return Ext.apply({
             ownerCmp: this,
-            langText: !isPhone && 'Save',
-            margin: !isPhone && '0 5px 0 0',
-            userCls: !isPhone && 'lh-24',
         }, newCmp);
     },
 
@@ -51,12 +47,8 @@ Ext.define('Common.mixin.component.Form', {
     },
 
     createSaveAndNewButton(newCmp) {
-        let isPhone = this.isPhone();        
         return Ext.apply({
             ownerCmp: this,
-            langText: !isPhone && 'SaveAndNew',
-            margin: '0 5px 0 0',
-            userCls: !isPhone && 'lh-24',
         }, newCmp);
     },
 
@@ -71,9 +63,6 @@ Ext.define('Common.mixin.component.Form', {
         
         return Ext.apply({
             ownerCmp: this,
-            langText: !isPhone && 'Reset',
-            margin: '0 5px 0 0',
-            userCls: !isPhone && 'lh-24',
         }, newCmp);
     },
 

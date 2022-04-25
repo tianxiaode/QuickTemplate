@@ -20,7 +20,7 @@ Ext.define('Phone.view.dashboard.MenuItem', {
         }
     ],
 
-    updateItem(record){
+    updateListItem(record){
         let me = this,
             data = record.data;
         me.iconElement.dom.className = `icon x-fa ${data.iconCls} ${data.color}`;

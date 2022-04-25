@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Generic.Abp.BusinessException;
+﻿using Generic.Abp.BusinessException;
 using Generic.Abp.BusinessException.Exceptions;
 using Generic.Abp.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Generic.Abp.Domain.Extensions;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Authorization.Permissions;
-using Volo.Abp.Data;
 using Volo.Abp.Identity;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.PermissionManagement;
@@ -219,11 +218,7 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
     public virtual async Task<ListResultDto<RoleTranslationDto>> GetTranslationAsync(Guid id)
     {
         var entity = await RoleRepository.GetAsync(id);
-        var translations = entity.GetTranslations();
-        if (translations == null)
-        {
-            return new ListResultDto<RoleTranslationDto>();
-        }
+        var translations = entity.GetTranslations<IdentityRole, RoleTranslation>();
 
         return new ListResultDto<RoleTranslationDto>(translations.Select(m =>
             new RoleTranslationDto(m.Language, m.Name)).ToList());

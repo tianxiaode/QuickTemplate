@@ -1,7 +1,8 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
+using Generic.Abp.Domain.Extensions;
 using QuickTemplate.Identity.Roles;
 using QuickTemplate.Identity.Users;
+using System;
 using Volo.Abp.Identity;
 
 namespace QuickTemplate;
@@ -15,9 +16,9 @@ public class QuickTemplateApplicationAutoMapperProfile : Profile
          * into multiple profile classes for a better organization. */
 
         CreateMap<IdentityRole, RoleDto>()
-            .ForMember(m=>m.Permissions, opts=>opts.Ignore())
-            .ForMember(m=>m.Translations,opts=>opts.MapFrom(m=>m.GetTranslations()))
-            .MapExtraProperties();
+            .ForMember(m => m.Permissions, opts => opts.Ignore())
+            .ForMember(m => m.Translations,
+                opts => opts.MapFrom(m => m.GetTranslations<IdentityRole, RoleTranslation>()));
 
         CreateMap<RoleTranslation, RoleTranslationDto>();
 
@@ -30,7 +31,8 @@ public class QuickTemplateApplicationAutoMapperProfile : Profile
             .ForMember(m => m.IsStatic, opts => opts.MapFrom(m => m.Item1.IsStatic))
             .ForMember(m => m.ConcurrencyStamp, opts => opts.MapFrom(m => m.Item1.ConcurrencyStamp))
             .ForMember(m => m.Permissions, opts => opts.Ignore())
-            .ForMember(m => m.Translations, opts => opts.MapFrom(m => m.Item1.GetTranslations()));
+            .ForMember(m => m.Translations,
+            opts => opts.MapFrom(m => m.Item1.GetTranslations<IdentityRole, RoleTranslation>()));
 
     }
 }

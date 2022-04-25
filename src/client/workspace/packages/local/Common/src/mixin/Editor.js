@@ -1,13 +1,22 @@
 Ext.define('Common.mixin.Editor', {
     extend: 'Ext.Mixin',
 
+    requires:[
+        'Ext.Editor',
+        'Common.ux.field.plugin.More',
+        'Common.ux.field.Date',
+        'Common.ux.field.DateTime',
+    ],
+
     mixinConfig: {
         after:{
             initialize: 'initialize',
+            doDestroy: 'doDestroy',
         },                
     },
 
     labelSelector: 'x-editable',
+    editorMap: null,
 
     initialize(){
         let me  = this;
@@ -18,18 +27,19 @@ Ext.define('Common.mixin.Editor', {
 
     onStartEdit(e, target) {
         let me = this, 
-            editor = me.getEditor(),
-            record,
-            className = target.className;
-        if (className.includes(me.labelSelector) && !me.editing && !e.ctrlKey && !e.shiftKey) {
+            className = target.className,
+            record =  (e.to && e.to.record) || me.getRecordById(target)
+            editor = me.getEditor(record.get('inputType'));
+        if (className.includes(me.labelSelector)&& !editor.editing && !e.ctrlKey && !e.shiftKey) {
+            let field = editor.getField();
+            field.setDecimals && field.setDecimals(record.get('decimals') || 2);
             e.stopEvent();
-            console.log(e,target);
-            record = (e.to && e.to.record) || me.getRecordById(target);
             editor.setWidth(target.offsetWidth);
             editor.startEdit(target, record.get(me.dataIndex));
+            editor.getField().setValue(record.get('value'));
             editor.activeRecord = record;
         }
-        else if (me.editing) {
+        else if (editor.editing) {
             me.field.blur();
             e.preventDefault();
         }
@@ -43,24 +53,66 @@ Ext.define('Common.mixin.Editor', {
     },
 
 
-    getEditor(){
+    getEditor(type){
         let me = this,
-            editor= me.activeEditor;
+            map = me.editorMap || {} ,
+            editor = map[type],
+            config;
         if(editor) return editor;
-        editor = me.activeEditor = new Ext.Editor({
-            updateEl: true,
-            alignment: 'l-l',
-            completeOnEnter: true,
-            cancelOnEsc: true,        
-            shim: false,
-            autoSize: {
-                width: 'boundEl'
-            },
-            field: {
-                autoLabel: false,
-                xtype: 'textfield'
-            }
-        })
+        config = me.getEditorConfig(type);
+        editor = map[type] = Ext.create(config);
+        editor.on('complete', me.onCompleteEdit, me);
         return editor;
+    },
+
+    onCompleteEdit(editor, value, startValue, eOpts){
+        let record = editor.activeRecord;
+        console.log(record);
+        record.set('value', value);
+        record.commit();
+    },
+
+    editorConfig:{
+        xtype: 'editor',
+        updateEl: true,
+        alignment: 'l-l',
+        completeOnEnter: true,
+        cancelOnEsc: true,        
+        shim: false,
+        autoSize: {
+            width: 'boundEl'
+        },
+    },
+
+    getEditorConfig(type){
+        let me = this,
+            config = Ext.clone(me.editorConfig),
+            field = { xtype: 'textfield', autoLabel: false };
+        if(type === 'more'){
+            field = Ext.apply(field, { plugins:[ { type: 'fieldmore'}] });            
+        }
+        if( type === 'number'){
+            field = Ext.apply(field, { xtype: 'numberfield'});
+        }
+        if( type === 'date'){
+            field = Ext.apply(field, { xtype: 'uxdatefield'});
+        }
+        if( type === 'datetime'){
+            field = Ext.apply(field, { xtype: 'uxdatetimefield'});
+        }
+        config.field = field;
+        return config;
+    },
+
+    doDestroy(){
+        let me = this,
+            map = me.editorMap;
+        Ext.iterate(map, (k,value)=>{
+            map[k] = null;
+            delete map[k];
+        });
+        map = null;
     }
+
+
 });

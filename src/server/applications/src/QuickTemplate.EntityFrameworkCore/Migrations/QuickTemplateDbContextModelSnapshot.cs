@@ -54,10 +54,10 @@ namespace QuickTemplate.Migrations
                         .HasColumnType("varchar(256)")
                         .UseCollation("gbk_chinese_ci");
 
-                    b.Property<bool>("IsMunicipality")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false);
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("ExtraProperties");
 
                     b.Property<DateTime?>("LastModificationTime")
                         .HasColumnType("datetime(6)")
@@ -75,12 +75,6 @@ namespace QuickTemplate.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("varchar(16)")
                         .UseCollation("ascii_general_ci");
-
-                    b.Property<string>("Translations")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("longtext")
-                        .HasDefaultValue("[]");
 
                     b.HasKey("Id");
 
