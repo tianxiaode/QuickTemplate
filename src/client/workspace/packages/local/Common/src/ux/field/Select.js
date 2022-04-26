@@ -4,7 +4,7 @@ Ext.define('Common.ux.field.Select',{
 
     requires:[
         'Common.ux.panel.SelectList',
-        'Common.ux.field.plugin.History',
+        'Common.ux.field.plugin.History'
     ],
 
 

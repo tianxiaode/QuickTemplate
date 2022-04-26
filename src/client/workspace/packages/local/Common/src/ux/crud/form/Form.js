@@ -3,7 +3,7 @@ Ext.define('Common.ux.crud.form.Form',{
 
     mixins:[
         'Common.mixin.component.field.Id',
-        'Common.mixin.component.field.ConcurrencyStamp',
+        'Common.mixin.component.field.ConcurrencyStamp'
     ],
 
     requires:[

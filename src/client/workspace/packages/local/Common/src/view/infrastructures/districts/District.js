@@ -7,6 +7,7 @@ Ext.define('Common.view.infrastructures.districts.District',{
         'Common.view.infrastructures.districts.Controller',
         'Common.view.infrastructures.districts.Edit',
         'Common.ux.multilingual.Form',
+        'Common.ux.multilingual.Menu'
     ],
 
 

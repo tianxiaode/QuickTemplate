@@ -6,7 +6,7 @@ Ext.define('Common.ux.panel.More',{
 
     mixins:[
         'Common.mixin.component.TabBar',
-        'Common.mixin.component.Back',
+        'Common.mixin.component.Back'
     ],
 
     width: 480,

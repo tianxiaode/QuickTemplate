@@ -3,7 +3,7 @@ Ext.define('Common.ux.uploader.Panel',{
     xtype: 'uxuploadpanel',
 
     mixins:[
-        'Common.ux.uploader.Uploader',
+        'Common.ux.uploader.Uploader'
     ],
 
     classCls: Ext.baseCSSPrefix + 'upload-panel',

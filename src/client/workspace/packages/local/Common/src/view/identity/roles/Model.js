@@ -5,7 +5,7 @@ Ext.define('Common.view.identity.roles.Model',{
     requires:[
         'Common.data.store.identity.Roles',
         'Common.view.identity.roles.Edit',
-        'Common.ux.multilingual.Form',
+        'Common.ux.multilingual.Form'
     ],
 
     stores: {

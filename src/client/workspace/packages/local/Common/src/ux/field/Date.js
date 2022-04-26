@@ -3,7 +3,7 @@ Ext.define('Common.ux.field.Date',{
     xtype: 'uxdatefield',
 
     requires:[
-            'Common.ux.panel.Date',
+            'Common.ux.panel.Date'
     ],
 
     picker: 'floated',

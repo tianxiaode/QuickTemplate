@@ -4,7 +4,7 @@ Ext.define('Common.ux.dataview.DetailList',{
 
     requires:[
         'Common.data.store.Details',
-        'Common.ux.dataview.DetailListItem',
+        'Common.ux.dataview.DetailListItem'
     ],
 
     flex: 1,

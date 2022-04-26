@@ -4,8 +4,7 @@ Ext.define('Common.ux.multilingual.List',{
 
     requires:[
         'Common.data.store.Multilingual',
-        'Common.ux.multilingual.ListItem',
-        'Common.ux.multilingual.Menu',
+        'Common.ux.multilingual.ListItem'
     ],
 
     mixins:[

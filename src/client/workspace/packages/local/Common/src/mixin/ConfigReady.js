@@ -3,7 +3,7 @@ Ext.define('Common.mixin.ConfigReady', {
 
     mixinConfig: {
         before:{
-            initialize: 'initialize',
+            initialize: 'initialize'
         },
     },
 

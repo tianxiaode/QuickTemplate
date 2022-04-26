@@ -4,7 +4,7 @@ Ext.define('Common.ux.panel.MoreEditor',{
 
     mixins:[
         'Common.mixin.component.Form',
-        'Common.mixin.component.Textarea',
+        'Common.mixin.component.Textarea'
     ],
     
 

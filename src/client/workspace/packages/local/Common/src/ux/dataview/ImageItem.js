@@ -7,7 +7,7 @@ Ext.define('Common.ux.dataview.ImageItem', {
     inheritUi: true,
 
     mixins: [
-        'Ext.dataview.GenericItem',
+        'Ext.dataview.GenericItem'
     ],
 
     config:{

@@ -4,7 +4,7 @@ Ext.define('Common.ux.app.DetailInMoreController', {
     mixins:[
         'Common.mixin.controller.ResourceAndPermissions',
         'Common.mixin.AjaxFailure',
-        'Common.mixin.controller.CheckChange',
+        'Common.mixin.controller.CheckChange'
     ],
 
     currentId: null,

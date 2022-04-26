@@ -3,7 +3,7 @@ Ext.define('Common.ux.grid.Grid',{
     xtype: 'uxgrid',
 
     requires:[
-        'Common.ux.grid.column.CheckChange',
+        'Common.ux.grid.column.CheckChange'
     ],
 
     config:{

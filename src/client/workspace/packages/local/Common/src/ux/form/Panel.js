@@ -12,7 +12,7 @@ Ext.define('Common.ux.form.Panel',{
         'Ext.field.Hidden',
         'Ext.field.Email',
         'Ext.field.Number',
-        'Ext.field.Container',
+        'Ext.field.Container'
     ],
 
     trackResetOnLoad: true,

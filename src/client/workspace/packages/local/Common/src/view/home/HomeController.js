@@ -2,6 +2,7 @@ Ext.define('Common.view.home.HomeController',{
     extend: 'Ext.app.ViewController',
 
     requires:[
+        'Common.util.TemplateFn',
         'Common.service.Template',
         'Common.view.pages.Page404',
         'Common.service.AccessControl',

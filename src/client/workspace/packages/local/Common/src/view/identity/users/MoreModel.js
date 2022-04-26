@@ -3,7 +3,7 @@ Ext.define('Common.view.identity.users.MoreModel',{
     alias:'viewmodel.usermoremodel',
 
     requires:[
-        'Common.data.store.identity.UserRoles',
+        'Common.data.store.identity.UserRoles'
     ],
 
     stores: {

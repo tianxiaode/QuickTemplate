@@ -4,7 +4,7 @@ Ext.define('Common.ux.field.plugin.More', {
 
     requires:[
         'Common.ux.field.trigger.More',
-        'Common.ux.panel.MoreEditor',
+        'Common.ux.panel.MoreEditor'
     ],
 
     config:{

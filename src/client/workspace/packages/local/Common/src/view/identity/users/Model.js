@@ -4,7 +4,7 @@ Ext.define('Common.view.identity.users.Model',{
 
     requires:[
         'Common.data.store.identity.Users',
-        'Common.view.identity.users.Edit',
+        'Common.view.identity.users.Edit'
     ],
 
     stores: {

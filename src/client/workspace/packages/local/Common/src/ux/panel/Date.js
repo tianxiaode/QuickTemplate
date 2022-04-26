@@ -3,7 +3,7 @@ Ext.define('Common.ux.panel.Date',{
     xtype: 'uxdatepanel',
 
     requires:[
-        'Common.ux.panel.Month',
+        'Common.ux.panel.Month'
     ],
 
     //maxHeight: 420,

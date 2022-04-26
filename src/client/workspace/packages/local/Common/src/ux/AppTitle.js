@@ -5,7 +5,7 @@ Ext.define('Common.ux.AppTitle',{
     userCls: 'app-title',
 
     langHtml: 'CompanyFullName',
-    resourceName: 'Service',
+    resourceName: 'Service'
 
 
 })

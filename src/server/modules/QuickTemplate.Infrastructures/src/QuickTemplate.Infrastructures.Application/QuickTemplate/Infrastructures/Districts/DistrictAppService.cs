@@ -83,6 +83,7 @@ public class DistrictAppService : InfrastructuresAppService, IDistrictAppService
     public virtual async Task<DistrictDto> UpdateAsync(Guid id, DistrictUpdateDto input)
     {
         var entity = await Repository.GetAsync(id);
+        entity.ConcurrencyStamp = input.ConcurrencyStamp;
         entity.UpdateDisplayName(input.DisplayName);
         entity.UpdatePostcode(input.Postcode);
         await DistrictManager.UpdateAsync(entity);

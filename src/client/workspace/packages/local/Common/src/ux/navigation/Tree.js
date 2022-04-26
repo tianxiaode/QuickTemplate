@@ -7,7 +7,7 @@ Ext.define('Common.ux.navigation.Tree',{
     ],
 
     requires:[
-        'Common.data.store.NavigationTrees',
+        'Common.data.store.NavigationTrees'
     ],
 
     config:{

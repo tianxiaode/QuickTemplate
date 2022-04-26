@@ -9,7 +9,7 @@ Ext.define('Common.ux.form.OneInput',{
         'Common.mixin.component.UxNumber',
         'Common.mixin.component.Date',
         'Common.mixin.component.DateTime',
-        'Common.mixin.component.field.Email',
+        'Common.mixin.component.field.Email'
     ],
 
     emailField:{

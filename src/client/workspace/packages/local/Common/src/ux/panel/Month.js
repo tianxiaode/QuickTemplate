@@ -3,7 +3,7 @@ Ext.define('Common.ux.panel.Month', {
     alias: 'widget.monthpanel',
 
     requires: [
-        'Ext.XTemplate',
+        'Ext.XTemplate'
     ],
 
     isMonthPanel: true,

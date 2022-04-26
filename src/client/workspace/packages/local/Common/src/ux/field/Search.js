@@ -8,6 +8,6 @@ Ext.define('Common.ux.field.Search', {
     },
 
     langPlaceholder: 'Search',
-    autoLabel: false,
+    autoLabel: false
 
 });

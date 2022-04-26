@@ -4,7 +4,7 @@ Ext.define('Common.ux.data.Store', {
 
     mixins:[
         'Common.ux.data.mixin.Model',
-        'Common.ux.data.mixin.Proxy',
+        'Common.ux.data.mixin.Proxy'
     ],
 
     remoteSort: true,

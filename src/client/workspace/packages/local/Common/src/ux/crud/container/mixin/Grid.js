@@ -3,7 +3,7 @@ Ext.define('Common.ux.crud.container.mixin.Grid',{
 
     requires:[
         'Ext.grid.column.RowNumberer',
-        'Common.ux.grid.Grid',
+        'Common.ux.grid.Grid'
     ],
 
     mixinConfig: {

@@ -10,7 +10,7 @@ Ext.define('Common.ux.crud.container.Base',{
         'Common.mixin.component.SearchField',
         'Common.mixin.component.Back',
         'Common.mixin.component.More',
-        'Common.ux.crud.container.mixin.Phone',
+        'Common.ux.crud.container.mixin.Phone'
     ],
 
     config:{

@@ -18,7 +18,7 @@ Ext.define('Common.ux.crud.controller.Base',{
         'Common.ux.crud.controller.mixin.Selectable',
         'Common.ux.crud.controller.mixin.ChildTap',
         'Common.ux.crud.controller.mixin.ChildLongPress',
-        'Common.ux.crud.controller.mixin.DoubleTapToEdit',
+        'Common.ux.crud.controller.mixin.DoubleTapToEdit'
     ],
 
     list: null , //列表对象

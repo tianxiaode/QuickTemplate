@@ -3,7 +3,7 @@ Ext.define('Common.ux.field.Enumeration',{
     xtype: 'uxenumerationfield',
 
     mixins:[
-        'Common.mixin.Enumeration',
+        'Common.mixin.Enumeration'
     ],
 
     picker: 'floated',

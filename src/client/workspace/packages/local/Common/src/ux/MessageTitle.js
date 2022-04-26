@@ -7,5 +7,5 @@ Ext.define('Common.ux.MessageTitle',{
         'Ext.mixin.Toolable'
     ],
 
-    userCls: 'fs-6 fw-bolder py-2 border-bottom lh-32',
+    userCls: 'fs-6 fw-bolder py-2 border-bottom lh-32'
 })

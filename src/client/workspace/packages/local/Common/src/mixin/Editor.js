@@ -5,7 +5,7 @@ Ext.define('Common.mixin.Editor', {
         'Ext.Editor',
         'Common.ux.field.plugin.More',
         'Common.ux.field.Date',
-        'Common.ux.field.DateTime',
+        'Common.ux.field.DateTime'
     ],
 
     mixinConfig: {

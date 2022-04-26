@@ -12,6 +12,7 @@ using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.Identity;
+using Volo.Abp.IdentityServer.IdentityResources;
 using Volo.Abp.ObjectExtending;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.Uow;
@@ -112,6 +113,12 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
     public virtual async Task<RoleDto> UpdateAsync(Guid id, RoleUpdateDto input)
     {
         var role = await RoleManager.GetByIdAsync(id);
+        if (role.Name.Equals("admin", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new UserFriendlyException("Role admin is not allowed to change");
+        }
+
+        role.ConcurrencyStamp = input.ConcurrencyStamp;
         var oldName = role.Name;
 
         (await RoleManager.SetRoleNameAsync(role, input.Name)).CheckErrors();
@@ -173,7 +180,14 @@ public class RoleAppService: QuickTemplateAppService, IRoleAppService
         foreach (var id in ids)
         {
             var role = await RoleManager.GetByIdAsync(id);
-            if (role.IsStatic) throw new EntityNotBeDeletedBusinessException(L["Role"], role.Name);
+            if (role.Name.Equals("admin", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new UserFriendlyException("Role admin is not allowed to change");
+            }
+            if (role.IsStatic)
+            {
+                throw new EntityNotBeDeletedBusinessException(L["Role"], role.Name);
+            }
 
             (await RoleManager.DeleteAsync(role)).CheckErrors();
             result.Add(ObjectMapper.Map<IdentityRole, RoleDto>(role));

@@ -2,7 +2,7 @@ Ext.define('Common.data.store.Enums',{
     extend: 'Ext.data.Store',
 
     requires:[
-        'Common.data.model.Enum',
+        'Common.data.model.Enum'
     ],
 
     model: 'Common.data.model.Enum',

@@ -4,7 +4,7 @@ Ext.define('Common.mixin.component.Form', {
     requires:[
         'Common.ux.button.Save',
         'Common.ux.button.SaveAndNew',
-        'Common.ux.button.Reset',
+        'Common.ux.button.Reset'
     ],
 
     hasSave: true,

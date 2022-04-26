@@ -3,7 +3,7 @@ Ext.define('Common.data.store.Multilingual',{
     alias: 'store.multilingual',
 
     requires:[
-        'Common.data.model.Multilingual',
+        'Common.data.model.Multilingual'
     ],
 
     model: 'Common.data.model.Multilingual',

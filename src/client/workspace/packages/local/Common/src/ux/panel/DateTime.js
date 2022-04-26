@@ -3,7 +3,7 @@ Ext.define('Common.ux.panel.DateTime',{
     xtype: 'uxdatetimepanel',
 
     requires:[
-        'Common.ux.panel.Time',
+        'Common.ux.panel.Time'
     ],
 
     isDataTimePanel: true,

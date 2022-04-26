@@ -3,5 +3,5 @@ Ext.define('Common.ux.field.trigger.More',{
     xtype: 'moretrigger',
     alias: 'trigger.more',
     classCls: Ext.baseCSSPrefix + 'more-trigger',
-    weight: -1000,
+    weight: -1000
 })

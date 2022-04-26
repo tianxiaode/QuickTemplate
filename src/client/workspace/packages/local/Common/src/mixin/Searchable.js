@@ -7,7 +7,7 @@ Ext.define('Common.mixin.Searchable', {
             onStoreChange: 'onStoreChange'
         },
         before:{
-            destroy: 'destroy',
+            destroy: 'destroy'
         }
     },
 

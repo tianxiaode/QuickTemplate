@@ -2,6 +2,10 @@ Ext.define('Common.service.HttpClient',{
     alternateClassName: 'Http',
     singleton: true,
 
+    requires:[
+        'Common.service.Storage'
+    ],
+
     httpMethod:{
         Post: 'POST',
         Put: 'PUT',

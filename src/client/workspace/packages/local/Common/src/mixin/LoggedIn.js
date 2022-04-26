@@ -3,7 +3,7 @@ Ext.define('Common.mixin.LoggedIn', {
 
     mixinConfig: {
         before:{
-            initialize: 'initialize',
+            initialize: 'initialize'
         },
     },
 

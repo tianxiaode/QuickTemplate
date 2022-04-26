@@ -3,7 +3,7 @@ Ext.define('Common.data.store.infrastructures.Districts',{
     alias: 'store.districts',
 
     requires:[
-        'Common.data.model.infrastructures.District',
+        'Common.data.model.infrastructures.District'
     ],
 
     model: 'Common.data.model.infrastructures.District',

@@ -3,7 +3,7 @@ Ext.define('Common.data.store.PhoneMenus',{
     alias: 'store.phonemenus',
 
     requires:[
-        'Common.data.model.PhoneMenu',
+        'Common.data.model.PhoneMenu'
     ],
 
     model: 'Common.data.model.PhoneMenu',

@@ -3,7 +3,7 @@ Ext.define('Common.ux.uploader.Button',{
     xtype: 'uxuploadbutton',
 
     mixins:[
-        'Common.ux.uploader.Uploader',
+        'Common.ux.uploader.Uploader'
     ],
 
     config:{

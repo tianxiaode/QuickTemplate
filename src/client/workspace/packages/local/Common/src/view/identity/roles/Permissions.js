@@ -3,7 +3,7 @@ Ext.define('Common.view.identity.roles.Permissions',{
     xtype: 'uxpermissionsfield',
     
     mixins:[
-        'Common.mixin.ConfigReady',
+        'Common.mixin.ConfigReady'
     ],
 
     resourceName: 'Permissions',

@@ -120,6 +120,11 @@ public class UserAppService: QuickTemplateAppService, IUserAppService
     public virtual async Task<IdentityUserDto> UpdateAsync(Guid id, UserUpdateDto input)
     {
         var user = await UserManager.GetByIdAsync(id);
+        if (user.Name.Equals("admin", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new UserFriendlyException("User admin is not allowed to change");
+        }
+
         user.ConcurrencyStamp = input.ConcurrencyStamp;
 
         //(await UserManager.SetUserNameAsync(user, input.UserName)).CheckErrors();
@@ -152,10 +157,16 @@ public class UserAppService: QuickTemplateAppService, IUserAppService
         foreach (var guid in ids)
         {
             var user = await UserManager.FindByIdAsync(guid.ToString());
+
             if (user == null)
             {
                 continue;
             }
+            if (user.Name.Equals("admin", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new UserFriendlyException("User admin is not allowed to change");
+            }
+
             (await UserManager.DeleteAsync(user)).CheckErrors();
             dtos.Add(ObjectMapper.Map<IdentityUser, IdentityUserDto>(user));
             

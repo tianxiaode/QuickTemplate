@@ -3,7 +3,7 @@ Ext.define('Common.data.store.identity.UserRoles',{
     alias: 'store.userroles',
 
     requires:[
-        'Common.data.model.identity.UserRole',
+        'Common.data.model.identity.UserRole'
     ],
 
     model: 'Common.data.model.identity.UserRole',

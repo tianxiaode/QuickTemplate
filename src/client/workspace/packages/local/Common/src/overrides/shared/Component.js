@@ -114,6 +114,7 @@ Ext.define('Common.overrides.shared.Component',{
         cancel(context){
             return this.initialConfig.cancelResponsive;
         }
-    }
+    },
+
 
 })

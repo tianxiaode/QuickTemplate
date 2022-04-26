@@ -1,17 +1,14 @@
+Ext.onInternalReady(function() {
+    Ext.destroy(Ext.ComponentManager.unregister('ext-messagebox'));
+    console.log(Ext.clone(Ext.ComponentManager.all));
+    delete Ext.cache['ext-messagebox'];
+})
+
 Ext.define('Common.ux.app.Application', {
     extend: 'Ext.app.Application',
 
     name: 'CommonShared',
 
-    requires:[
-        'Common.service.Storage',
-        'Common.util.TemplateFn',
-        'Common.service.Url',
-        'Common.service.HttpClient',
-        'Common.service.Localized',
-        'Common.service.Config',
-        'Common.service.OAuth',
-    ],
 
     responsiveConfig:{
         desktop:{
@@ -47,7 +44,7 @@ Ext.define('Common.ux.app.Application', {
     onAppUpdate() {
         let title = AppConfig.applicationUpdate[AppConfig.lang] || AppConfig.applicationUpdate["en"],
             message = AppConfig.applicationUpdateMessage[AppConfig.lang] || AppConfig.applicationUpdateMessage["en"];
-        Ext.Msg.confirm(title, message,
+        MsgBox.confirm(title, message,
             function (choice) {
                 if (choice === 'yes') {
                     window.location.reload();

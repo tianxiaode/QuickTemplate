@@ -4,7 +4,7 @@ Ext.define('Common.ux.field.DateTime',{
 
     requires:[
         'Common.ux.panel.DateTime',
-        'Common.ux.field.trigger.DateTime',
+        'Common.ux.field.trigger.DateTime'
    ],
 
    config:{

@@ -1,5 +1,6 @@
 ﻿@page
 @using Microsoft.AspNetCore.Mvc.Localization
+@using QuickTemplate
 @using QuickTemplate.Localization
 @using Volo.Abp.Users
 @model QuickTemplate.Web.Pages.IndexModel
@@ -13,13 +14,24 @@
     <abp-script src="/Pages/Index.js" />
 }
 <div class="container">
-    <p class="h5">@_localizer["WebDescription"]</p>
-    <ul>
+    <p class="h5 text-center">@_localizer["WebDescription"]</p>
+    <div class="d-flex">
+        <div class="flex-fill text-center">@_localizer["DesktopClient"]: <a href="https://d.extjs.tecn">https://d.extjs.tecn</a></div>
+        <div class="flex-fill text-center">@_localizer["MobileClient"]: <a href="https://m.extjs.tecn">https://m.extjs.tecn</a></div>
+    </div>
+    <div class="d-flex align-items-center flex-wrap p-5">
+
         @{
-            for (var i = 1; i < 9; i++)
+            foreach (var s in QuickTemplateConsts.DemoCard)
             {
-                <li>@_localizer[$"DemoList:{i}"]</li>
+                var titleKey = $"{nameof(QuickTemplateConsts.DemoCard)}:{s}";
+                <div class="card overflow-hidden m-2" style="width: calc(33.33% - 1rem ); height: 200px;">
+                    <div class="card-body">
+                        <h5 class="card-title">@_localizer[titleKey]</h5>
+                        <p class="card-text">@_localizer[$"{titleKey}:Description"]</p>
+                    </div>
+                </div>
             }
         }
-    </ul>
+    </div>
 </div>

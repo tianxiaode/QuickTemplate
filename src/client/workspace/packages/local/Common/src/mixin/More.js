@@ -4,7 +4,7 @@ Ext.define('Common.mixin.More', {
     mixinConfig: {
         configs: true,
         before:{
-            initialize: 'initialize',
+            initialize: 'initialize'
         },
         after:{
             updateRecord: 'updateRecord'

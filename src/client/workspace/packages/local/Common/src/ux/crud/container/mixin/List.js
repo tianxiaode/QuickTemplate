@@ -2,7 +2,7 @@ Ext.define('Common.ux.crud.container.mixin.List',{
     extend: 'Ext.Mixin',
 
     requires:[
-        'Common.ux.dataview.List',
+        'Common.ux.dataview.List'
     ],
 
     mixinConfig: {

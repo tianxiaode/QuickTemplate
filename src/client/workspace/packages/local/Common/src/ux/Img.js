@@ -3,7 +3,7 @@ Ext.define('Common.ux.Img',{
     xtype: 'uximage',
 
     mixins:[
-        'Common.mixin.ImageLoad',
+        'Common.mixin.ImageLoad'
     ],
 
     defaultBindProperty: 'url',

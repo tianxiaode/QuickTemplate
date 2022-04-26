@@ -2,7 +2,7 @@ Ext.define('Common.ux.multilingual.mixin.List',{
     extend: 'Ext.Mixin',
 
     requires:[
-        'Common.ux.multilingual.List',
+        'Common.ux.multilingual.List'
     ],
 
     mixinConfig: {

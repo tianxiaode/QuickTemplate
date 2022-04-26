@@ -3,17 +3,13 @@ Ext.define('Common.view.infrastructures.districts.Model',{
     alias: 'viewmodel.districtmodel',
 
     requires:[
-        'Common.data.store.infrastructures.Districts',
-        'Common.data.store.TreeSearches',
+        'Common.data.store.infrastructures.Districts'
     ],
     
     stores: {
         mainStore: {
             type: 'districts'
         },
-        searchStore:{
-            type: 'treesearches'
-        }
     },
 
 })

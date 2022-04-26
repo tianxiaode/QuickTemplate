@@ -3,7 +3,7 @@ Ext.define('Common.data.store.Details',{
     alias: 'store.details',
 
     requires:[
-        'Common.data.model.Detail',
+        'Common.data.model.Detail'
     ],
 
     model: 'Common.data.model.Detail',

@@ -323,7 +323,7 @@ Ext.define('Common.ux.MessageBox', {
         }
  
         config = Ext.apply({
-            buttons: Ext.MessageBox.OK,
+            buttons: Common.ux.MessageBox.OK,
             draggable: false,
             prompt: null,
             defaultFocus: null
@@ -379,7 +379,7 @@ Ext.define('Common.ux.MessageBox', {
         return this.show({
             title: title || I18N.getDefaultMessageTitle(),
             message: message || null,
-            buttons: Ext.MessageBox.OK,
+            buttons: Common.ux.MessageBox.OK,
             defaultFocus: '#ok',
             prompt: false,
             fn: function() {
@@ -395,7 +395,7 @@ Ext.define('Common.ux.MessageBox', {
         return this.show({
             title: title || I18N.getDefaultMessageTitle(),
             message: message || null,
-            buttons: Ext.MessageBox.YESNO,
+            buttons: Common.ux.MessageBox.YESNO,
             defaultFocus: '#yes',
             prompt: false,
             scope: scope,
@@ -412,7 +412,7 @@ Ext.define('Common.ux.MessageBox', {
         return this.show({
             title: title || I18N.getDefaultMessageTitle(),
             message: message || null,
-            buttons: Ext.MessageBox.OKCANCEL,
+            buttons: Common.ux.MessageBox.OKCANCEL,
             scope: scope,
             prompt: prompt || true,
             defaultFocus: 'textfield',
@@ -428,8 +428,6 @@ Ext.define('Common.ux.MessageBox', {
     }
 }, function(MessageBox) {
     Ext.onInternalReady(function() {
-        window.MsgBox = new Common.ux.MessageBox({
-            id: 'ext-uxmessagebox'
-        });
+        window.MsgBox = Ext.create('Common.ux.MessageBox');
     });
 });

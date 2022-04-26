@@ -4,11 +4,11 @@ Ext.define('Common.ux.multilingual.Form',{
 
     requires:[
         'Common.ux.multilingual.FormController',
-        'Common.ux.multilingual.Edit',
+        'Common.ux.multilingual.Edit'
     ],
 
     mixins:[
-        'Common.ux.multilingual.mixin.List',
+        'Common.ux.multilingual.mixin.List'
     ],
 
     controller: 'multilingualformcontroller',

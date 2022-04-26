@@ -5,7 +5,7 @@ Ext.define('Common.mixin.Enumeration', {
         after:{
             initialize: 'initialize',
             doDestroy: 'doDestroy',
-            onLocalized: 'onLocalized',
+            onLocalized: 'onLocalized'
         },                
     },
 

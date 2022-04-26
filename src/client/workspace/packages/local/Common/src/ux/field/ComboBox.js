@@ -11,7 +11,7 @@ Ext.define('Common.ux.field.ComboBox',{
     picker: 'floated',
     //forceSelection: true,
     minChars: 2,
-    clearable: true,
+    clearable: true
 
 
 

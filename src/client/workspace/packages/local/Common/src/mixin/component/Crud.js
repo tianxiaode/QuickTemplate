@@ -4,7 +4,7 @@ Ext.define('Common.mixin.component.Crud', {
     requires:[
         'Common.ux.button.Create',
         'Common.ux.button.Update',
-        'Common.ux.button.Trash',
+        'Common.ux.button.Trash'
     ],
 
     hasCreate: true,

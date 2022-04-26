@@ -3,7 +3,7 @@ Ext.define('Common.ux.uploader.Uploader',{
 
     requires:[
         'Common.ux.uploader.File',
-        'Common.ux.uploader.Status',
+        'Common.ux.uploader.Status'
     ],
 
     mixinConfig: {

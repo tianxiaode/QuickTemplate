@@ -3,6 +3,6 @@ Ext.define('Common.ux.ErrorInfo',{
     xtype: 'errorinfo',
 
     hidden: true,
-    userCls: 'text-danger text-center text-truncate',
+    userCls: 'text-danger text-center text-truncate'
 
 })
