@@ -37,7 +37,7 @@
          *
          *    "toolkit": "classic",
          */
-        "toolkit": "Modern",
+        "toolkit": "modern",
 
          /**
           * The author of the package.

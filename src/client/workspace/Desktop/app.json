@@ -207,7 +207,6 @@
     "js": [
         {
             "path": "${framework.dir}/build/ext-modern-all-debug.js"
-            ,"bundle": true
         },
         {
             "path": "app.js",

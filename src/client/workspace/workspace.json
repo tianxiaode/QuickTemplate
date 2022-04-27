@@ -30,7 +30,6 @@
      */
     "frameworks": {        "ext": {
             "path":"ext",
-            "package":"ext@7.0.0.156",
             "version":"7.0.0.156"
         }
 

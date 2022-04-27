@@ -10,7 +10,7 @@ Ext.application({
     defaultToken: 'phonedashboard',
 
     requires:[
-        'Common.overrides.shared.*',
+        'Common.overrides.*',
         'Common.overrides.phone.*',
         'Phone.view.home.Home'
     ],

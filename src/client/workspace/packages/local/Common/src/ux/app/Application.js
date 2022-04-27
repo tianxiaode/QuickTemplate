@@ -1,13 +1,11 @@
-Ext.onInternalReady(function() {
-    Ext.destroy(Ext.ComponentManager.unregister('ext-messagebox'));
-    console.log(Ext.clone(Ext.ComponentManager.all));
-    delete Ext.cache['ext-messagebox'];
-})
-
 Ext.define('Common.ux.app.Application', {
     extend: 'Ext.app.Application',
 
     name: 'CommonShared',
+
+    requires:[
+
+    ],
 
 
     responsiveConfig:{
