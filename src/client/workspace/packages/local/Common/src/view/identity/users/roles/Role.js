@@ -20,6 +20,7 @@ Ext.define('Common.view.identity.users.roles.Role',{
 
     grid:{
         flex:1,
+        selectable: true,
         columns:[
             { 
                 dataIndex: 'name', flex: 1,

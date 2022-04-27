@@ -2,6 +2,7 @@ Ext.define('Common.mixin.Enumeration', {
     extend: 'Ext.Mixin',
 
     mixinConfig: {
+        configs: true,
         after:{
             initialize: 'initialize',
             doDestroy: 'doDestroy',

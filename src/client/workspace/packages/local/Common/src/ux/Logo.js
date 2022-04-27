@@ -20,7 +20,7 @@ Ext.define('Common.ux.Logo', {
 
     onLocalized(){
         this.callParent();
-        this.switchLogo();
+        this.switchLogo();        
     },
 
     switchLogo(){

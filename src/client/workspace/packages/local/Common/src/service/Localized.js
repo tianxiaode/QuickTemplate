@@ -3,7 +3,8 @@ Ext.define('Common.service.Localized', {
     singleton: true,
 
     mixins:[
-        'Common.mixin.AjaxFailure'
+        'Common.mixin.AjaxFailure',
+        'Ext.mixin.Observable',
     ],
 
     config:{
@@ -16,8 +17,9 @@ Ext.define('Common.service.Localized', {
 
     constructor(config){
         let me = this;        
-        me.initConfig(config);
+        me.initConfig(config)
         me.initLanguages();
+        me.mixins.observable.constructor.call(me, config);
     },
 
     initLanguages(){
@@ -32,7 +34,7 @@ Ext.define('Common.service.Localized', {
     },
 
     getDefaultResourceName(){
-        return this.remoteRawValue.defaultResourceName;
+        return I18N.remoteRawValue.defaultResourceName;
     },
     
     get(key, resourceName, entityName){
@@ -65,15 +67,16 @@ Ext.define('Common.service.Localized', {
     },
 
     getLanguage(cultureName){
-        return this.languageMap[cultureName];
+        let value = I18N.languageMap && I18N.languageMap[cultureName];
+        return value;
     },
 
     getLanguages(){
-        return this.remoteRawValue.languages;
+        return I18N.remoteRawValue.languages;
     },
 
     getCurrentCulture(){
-        return this.remoteRawValue.currentCulture;
+        return I18N.remoteRawValue.currentCulture;
     },
 
     switchLanguages(value){
@@ -86,20 +89,19 @@ Ext.define('Common.service.Localized', {
     },
 
     getUnknownError(){
-        console.trace(1)
-        return this.localText.UnknownError[this.getCurrentLanguage()];
+        return I18N.localText.UnknownError[I18N.getCurrentLanguage()];
     },
 
     getDefaultMessageTitle(){
-        return this.localText.DefaultInfoTitle[this.getCurrentLanguage()];
+        return I18N.localText.DefaultInfoTitle[I18N.getCurrentLanguage()];
     },
 
     getLocalText(key){
-        return this.localText[key][this.getCurrentLanguage()];
+        return I18N.localText[key][I18N.getCurrentLanguage()];
     },
 
     getResourceName(){
-        return Object.keys(this.remoteRawValue.values);
+        return Object.keys(I18N.remoteRawValue.values);
     },
     
     loadResources(){
@@ -128,6 +130,10 @@ Ext.define('Common.service.Localized', {
             'LoadingUserConfiguration':{
                 'en': 'Loading the configuration...',
                 'zh-Hans': '正在加载用户配置...'
+            },
+            'LoadingLocalized':{
+                'en': 'Loading localized text...',
+                'zh-Hans': '正在加载本地化文本...'
             },
             'Error401':{
                 'en': 'There is no permission to do this.',
@@ -215,7 +221,7 @@ Ext.define('Common.service.Localized', {
             })
         }
         me.isReady = true;
-        Ext.fireEvent('i18nready', me);
+        me.fireEvent('ready', me);
 
     },
 

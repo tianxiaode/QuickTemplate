@@ -4,6 +4,11 @@ Ext.define('Common.ux.panel.More',{
 
     isMorePanel: true,
 
+    requires:[
+        'Ext.panel.Resizer',
+        'Ext.panel.Collapser'
+    ],
+
     mixins:[
         'Common.mixin.component.TabBar',
         'Common.mixin.component.Back'

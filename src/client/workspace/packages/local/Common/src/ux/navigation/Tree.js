@@ -74,6 +74,8 @@ Ext.define('Common.ux.navigation.Tree',{
         me.suspendEvent('selectionchange');
         me.setSelection(node);    
         me.resumeEvent ('selectionchange');
+        // let parent = node.parentNode;
+        // !parent.isExpanded() && parent.expand();
     },
 
     hasNode(xtype){

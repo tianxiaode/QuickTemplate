@@ -8,10 +8,11 @@ Ext.define('Common.ux.form.Base',{
     ],
 
     requires:[
-        'Common.ux.form.BaseController',
+        'Common.ux.form.BaseController'
     ],
 
     controller: 'shared-formbasecontroller',
+    
 
     title: '\xA0',
     mixinContainer: '#buttonToolbar',

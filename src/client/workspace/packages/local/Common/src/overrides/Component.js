@@ -1,6 +1,11 @@
 Ext.define('Common.overrides.Component',{
     override: 'Ext.Component',
 
+
+    mixins: [
+        'Ext.mixin.Responsive'
+    ],
+
     config:{
         langHtml: null,
         langTooltip: null,
@@ -28,7 +33,7 @@ Ext.define('Common.overrides.Component',{
         if(I18N && I18N.isReady){
             me.onLocalized();
         }
-        Ext.on('i18nready', me.onLocalized, me);
+        I18N.on('ready', me.onLocalized, me);
     },
 
     onLocalized(){

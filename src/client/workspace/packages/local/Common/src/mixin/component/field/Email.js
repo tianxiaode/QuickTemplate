@@ -1,6 +1,10 @@
 Ext.define('Common.mixin.component.field.Email', {
     extend: 'Ext.Mixin',
 
+    requires:[
+        'Ext.data.validator.Email'
+    ],
+
     mixinConfig: {
         configs: true,
     },

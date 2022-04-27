@@ -26,6 +26,7 @@ Ext.define('Common.view.home.HomeController',{
     },
 
 
+    isLoadConfiguration: false,
     init(){
         let me = this;
         if(!Auth.isAuthenticated()){
@@ -48,6 +49,8 @@ Ext.define('Common.view.home.HomeController',{
 
         if(!isAuthenticated) return;
 
+        if(!me.isReady()) return;
+
         view.setMasked(false);
 
         if(Ext.isEmpty(xtype)){
@@ -56,7 +59,7 @@ Ext.define('Common.view.home.HomeController',{
         }
 
         //如果是显示首页，调整到默认页
-        if(xtype.toLowerCase() === 'homeview'){
+        if(xtype.toLowerCase() === ViewMgr.homeViewXtype){
             let defaultToke = Ext.getApplication().getDefaultToken();
             Ext.History.add(defaultToke, true);
             me.handleRoute(defaultToke);
@@ -71,17 +74,30 @@ Ext.define('Common.view.home.HomeController',{
     loadConfiguration() {        
         let me = this,
             vm = me.getViewModel();
-        me.getView().setMasked(false);
         vm.set('isAuthenticated', true);
 
+        me.getView().setMasked(I18N.getLocalText('LoadingUserConfiguration'));
+        Config.on('ready', me.isReady, me);
+        I18N.on('ready', me.isReady, me);
+        Enums.on('ready', me.isReady, me);
         Config.loadConfiguration();
         I18N.loadResources();
         Enums.init();
         //Signalr.connect();
 
-
-        me.initView();
     },
+
+    isReady(){
+        let me = this,
+            value = Config.isReady && I18N.isReady && Enums.isReady;
+        if(value && !me.isLoadConfiguration){
+            me.isLoadConfiguration = true;
+            me.handleRoute(me.currentToken || ViewMgr.homeViewXtype);
+            me.initView();
+        }
+        return value;
+    },
+
 
     initView: Ext.emptyFn,
 

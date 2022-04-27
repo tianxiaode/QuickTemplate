@@ -3,6 +3,7 @@ Ext.define('Common.ux.grid.Grid',{
     xtype: 'uxgrid',
 
     requires:[
+        'Ext.dataview.plugin.ListPaging',
         'Common.ux.grid.column.CheckChange'
     ],
 

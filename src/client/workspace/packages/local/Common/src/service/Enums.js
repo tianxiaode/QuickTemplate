@@ -17,7 +17,7 @@ Ext.define('Common.service.Enums', {
         let me = this;
         me.mixins.observable.constructor.call(me, config);
     },
-  
+
     init(){
         let me = this,
             store = me.getStore();
@@ -82,7 +82,7 @@ Ext.define('Common.service.Enums', {
             });
             me.updateModelFieldDefaultValue();
             me.isReady = true;
-            me.fireEvent('ready');
+            me.fireEvent('ready',me);
         },
 
         updateModelList:{
@@ -91,7 +91,7 @@ Ext.define('Common.service.Enums', {
         updateModelFieldDefaultValue(){
             let me = this,
                 list = me.updateModelList,
-                 values = me.defaultValue;
+                values = me.defaultValue;
             Ext.Object.each(list,(k,v)=>{
                 let data = values[k];
                 if(!data) return;

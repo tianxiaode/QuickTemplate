@@ -4,7 +4,14 @@ Ext.define('Common.ux.app.Application', {
     name: 'CommonShared',
 
     requires:[
-
+        'Common.overrides.*',
+        'Common.service.Storage',
+        'Common.service.Url',
+        'Common.service.HttpClient',
+        'Common.service.Localized',
+        'Common.service.Config',
+        'Common.service.OAuth',
+        'Common.util.TemplateFn'
     ],
 
 

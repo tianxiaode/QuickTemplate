@@ -321,7 +321,6 @@ Ext.define('Common.service.OAuth', {
         savedNonce = AppStorage.get('nonce');
         if (savedNonce !== nonceInState) {
             const err = 'Validating access_token failed, wrong state/nonce.';
-            console.error(err, savedNonce, nonceInState);
             return false;
         }
         return true;

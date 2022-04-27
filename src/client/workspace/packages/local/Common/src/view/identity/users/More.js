@@ -3,7 +3,8 @@ Ext.define('Common.view.identity.users.More',{
     xtype: 'usermoreview',
 
     requires:[
-        'Common.view.identity.users.roles.Role'
+        'Common.view.identity.users.roles.Role',
+        'Common.view.identity.users.MoreModel',
     ],
 
     viewModel: 'usermoremodel',

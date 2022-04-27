@@ -7,7 +7,7 @@ Ext.define('Desktop.view.home.HomeViewController', {
      * 切换子视图
      * @param {子实体的xtype}} xtype 
      */
-     setCurrentView(xtype) {
+    setCurrentView(xtype) {
         let me = this,
             navigationTree = me.lookup('navigationTree');
         if(!navigationTree.isReady){
@@ -46,7 +46,7 @@ Ext.define('Desktop.view.home.HomeViewController', {
     /**
      * 切换导航栏的显示方式
      */
-     onToggleNavigationSize() {
+    onToggleNavigationSize() {
         let me = this,
             refs = me.getReferences(),
             logo= refs.logo,

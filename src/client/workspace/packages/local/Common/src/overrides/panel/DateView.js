@@ -7,7 +7,7 @@ Ext.define('Common.overrides.panel.DateView', {
         if(I18N && I18N.isReady){
             me.onLocalized();
         }
-        Ext.on('i18nready', me.onLocalized, me);
+        I18N.on('ready', me.onLocalized, me);
     },
 
     onLocalized(){

@@ -10,15 +10,6 @@ Ext.application({
     defaultToken: 'dashboardview',
 
     requires:[
-        'Common.overrides.*',
-        'Common.overrides.desktop.*',
-        'Common.service.Storage',
-        'Common.service.Url',
-        'Common.service.HttpClient',
-        'Common.service.Localized',
-        'Common.service.Config',
-        'Common.service.OAuth',
-        'Common.util.TemplateFn',
         'Desktop.view.home.HomeView'
     ],
 
