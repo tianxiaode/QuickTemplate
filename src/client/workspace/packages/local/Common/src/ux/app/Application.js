@@ -11,7 +11,16 @@ Ext.define('Common.ux.app.Application', {
         'Common.service.Localized',
         'Common.service.Config',
         'Common.service.OAuth',
-        'Common.util.TemplateFn'
+        'Common.util.Format',
+        'Common.ux.dataview.Format',
+        'Common.service.Template',
+        'Common.view.pages.Page404',
+        'Common.service.AccessControl',
+        'Common.service.Enums',
+        'Common.service.ViewManager',
+        'Common.service.SignalR',
+        'Common.ux.MessageBox',
+        'Common.ux.Toast'
     ],
 
 
