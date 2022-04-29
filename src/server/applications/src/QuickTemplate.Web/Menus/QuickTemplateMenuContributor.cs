@@ -39,6 +39,12 @@ public class QuickTemplateMenuContributor : IMenuContributor
             "~/About"
             ));
 
+        context.Menu.Items.Add(new ApplicationMenuItem(
+            QuickTemplateMenus.Github,
+            "Github",
+            "https://github.com/tianxiaode/QuickTemplate",
+            "fab fa-github"
+        ));
 
         administration.SetSubItemOrder(IdentityMenuNames.GroupName, 2);
         administration.SetSubItemOrder(SettingManagementMenuNames.GroupName, 3);

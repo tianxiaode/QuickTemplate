@@ -202,7 +202,6 @@ Ext.define('Common.service.OAuth', {
                 MsgBox(null, I18N.getUnknownError());
                 return;
             }
-            console.log('obj', obj)
             let me = this,
                 storage = AppStorage,
                 keys = me.storageKeys,

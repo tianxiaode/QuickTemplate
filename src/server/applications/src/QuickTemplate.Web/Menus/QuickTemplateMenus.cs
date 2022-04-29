@@ -7,5 +7,6 @@ public class QuickTemplateMenus
 
     public const string About = Prefix + ".About";
     //Add your menu items here...
+    public const string Github = Prefix + ".Github";
 
 }

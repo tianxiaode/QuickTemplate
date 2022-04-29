@@ -99,13 +99,7 @@ Ext.define('Common.ux.crud.controller.Base',{
      * 刷新列表
      */
     onRefreshStore(){
-        let me = this;
-        if(!Enums.isReady) {
-            Enums.on('ready', me.onRefreshStore, me, {single: true});
-            return;
-        };
-        let store = me.getStore();
-        store.loadPage(1);
+        this.getStore().loadPage(1);
     },
 
 

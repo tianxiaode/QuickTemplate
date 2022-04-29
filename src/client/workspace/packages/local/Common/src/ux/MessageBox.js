@@ -48,6 +48,7 @@ Ext.define('Common.ux.MessageBox', {
     centered: true,
     shadow: true,
     hideMode: 'offsets',
+    bodyPadding: '0 10px',
 
     classCls: Ext.baseCSSPrefix + 'messagebox',
     closeAction: 'hide',
