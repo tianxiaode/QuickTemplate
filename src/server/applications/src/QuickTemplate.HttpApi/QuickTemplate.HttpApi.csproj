@@ -13,18 +13,19 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Account.HttpApi" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.Identity.HttpApi" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.FeatureManagement.HttpApi" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.SettingManagement.HttpApi" Version="$(AbpVersion)" />
     <PackageReference Include="Generic.Abp.Enumeration.HttpApi" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.ExtResource.HttpApi" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Generic.Abp.Identity.HttpApi" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Generic.Abp.Application" Version="$(GenericAbpVersion)" />
     <PackageReference Include="QuickTemplate.Infrastructures.HttpApi" Version="$(QuickTemplateVersion)" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ApplicationConfigurations\" />
     <Folder Include="Identity\Users\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

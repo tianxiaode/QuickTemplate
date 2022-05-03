@@ -1,13 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using QuickTemplate.EntityFrameworkCore.Identity.Roles;
+﻿using Generic.Abp.Identity.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using QuickTemplate.Infrastructures.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.MySQL;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
-using Volo.Abp.Identity;
-using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.IdentityServer.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
@@ -17,7 +15,7 @@ namespace QuickTemplate.EntityFrameworkCore;
 
 [DependsOn(
     typeof(QuickTemplateDomainModule),
-    typeof(AbpIdentityEntityFrameworkCoreModule),
+    typeof(GenericAbpIdentityEntityFrameworkCoreModule),
     typeof(AbpIdentityServerEntityFrameworkCoreModule),
     typeof(AbpPermissionManagementEntityFrameworkCoreModule),
     typeof(AbpSettingManagementEntityFrameworkCoreModule),
@@ -41,7 +39,6 @@ public class QuickTemplateEntityFrameworkCoreModule : AbpModule
                 /* Remove "includeAllEntities: true" to create
                  * default repositories only for aggregate roots */
             options.AddDefaultRepositories(includeAllEntities: true);
-            options.AddRepository<IdentityRole, RoleRepository>();
         });
 
         Configure<AbpDbContextOptions>(options =>

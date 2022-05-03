@@ -62,7 +62,9 @@
         "Selectable": true,
         "Order": 230,
         "RequiredPermissionNames": [
-          "SettingManagement.Emailing"
+          "SettingManagement.Emailing",
+          "SettingManagement.PasswordPolicy",
+          "SettingManagement.LookupPolicy"
         ]
       }
     ],

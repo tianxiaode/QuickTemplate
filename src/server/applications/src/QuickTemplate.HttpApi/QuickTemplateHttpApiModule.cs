@@ -1,7 +1,8 @@
-﻿using Generic.Abp.Enumeration;
+﻿using Generic.Abp.Application;
+using Generic.Abp.Enumeration;
 using Generic.Abp.ExtResource;
+using Generic.Abp.Identity;
 using Localization.Resources.AbpUi;
-using Microsoft.Extensions.DependencyInjection;
 using QuickTemplate.Infrastructures;
 using QuickTemplate.Localization;
 using Volo.Abp.Account;
@@ -16,8 +17,9 @@ namespace QuickTemplate;
 
 [DependsOn(
     typeof(QuickTemplateApplicationContractsModule),
+    typeof(GenericAbpApplicationModule),
     typeof(AbpAccountHttpApiModule),
-    typeof(AbpIdentityHttpApiModule),
+    typeof(GenericAbpIdentityHttpApiModule),
     typeof(AbpPermissionManagementHttpApiModule),
     typeof(AbpFeatureManagementHttpApiModule),
     typeof(AbpSettingManagementHttpApiModule),

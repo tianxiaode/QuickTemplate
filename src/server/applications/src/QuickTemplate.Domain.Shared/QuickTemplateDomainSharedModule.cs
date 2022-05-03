@@ -1,5 +1,4 @@
-﻿using Generic.Abp.Enumeration;
-using QuickTemplate.Enumerations;
+﻿using Generic.Abp.Identity;
 using QuickTemplate.Infrastructures;
 using QuickTemplate.Localization;
 using Volo.Abp.AuditLogging;
@@ -21,7 +20,7 @@ namespace QuickTemplate;
     typeof(AbpAuditLoggingDomainSharedModule),
     typeof(AbpBackgroundJobsDomainSharedModule),
     typeof(AbpFeatureManagementDomainSharedModule),
-    typeof(AbpIdentityDomainSharedModule),
+    typeof(GenericAbpIdentityDomainSharedModule),
     typeof(AbpIdentityServerDomainSharedModule),
     typeof(AbpPermissionManagementDomainSharedModule),
     typeof(AbpSettingManagementDomainSharedModule),
@@ -50,14 +49,6 @@ public class QuickTemplateDomainSharedModule : AbpModule
                 .AddVirtualJson("/Localization/QuickTemplate");
 
             options.DefaultResourceType = typeof(QuickTemplateResource);
-        });
-
-        Configure<EnumerationOptions>(options =>
-        {
-            options
-                .Resources
-                .Add(typeof(SelectedOrNot));
-
         });
 
 

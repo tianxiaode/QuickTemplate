@@ -14,17 +14,13 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Account.Application" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.Identity.Application" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="$(AbpVersion)" />
     <PackageReference Include="Generic.Abp.Enumeration.Application" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.ExtResource.Application" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Generic.Abp.Identity.Application" Version="$(GenericAbpVersion)" />
     <PackageReference Include="QuickTemplate.Infrastructures.Application" Version="$(QuickTemplateVersion)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Identity\Users\" />
   </ItemGroup>
 
 </Project>

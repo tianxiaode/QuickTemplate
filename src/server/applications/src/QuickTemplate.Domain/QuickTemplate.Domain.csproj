@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Emailing" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.Identity.Domain" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Identity" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.IdentityServer.Domain" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.PermissionManagement.Domain.IdentityServer" Version="$(AbpVersion)" />
@@ -21,6 +20,7 @@
     <PackageReference Include="Volo.Abp.AuditLogging.Domain" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.FeatureManagement.Domain" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.SettingManagement.Domain" Version="$(AbpVersion)" />
+    <PackageReference Include="Generic.Abp.Identity.Domain" Version="$(GenericAbpVersion)" />
     <PackageReference Include="QuickTemplate.Infrastructures.Domain" Version="$(QuickTemplateVersion)" />
   </ItemGroup>
 

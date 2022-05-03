@@ -1,5 +1,6 @@
 ﻿using Generic.Abp.BusinessException;
 using Generic.Abp.Enumeration;
+using Generic.Abp.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using QuickTemplate.Infrastructures;
@@ -23,7 +24,7 @@ namespace QuickTemplate;
     typeof(AbpAuditLoggingDomainModule),
     typeof(AbpBackgroundJobsDomainModule),
     typeof(AbpFeatureManagementDomainModule),
-    typeof(AbpIdentityDomainModule),
+    typeof(GenericAbpIdentityDomainModule),
     typeof(AbpPermissionManagementDomainIdentityModule),
     typeof(AbpIdentityServerDomainModule),
     typeof(AbpPermissionManagementDomainIdentityServerModule),
