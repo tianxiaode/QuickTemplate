@@ -10,7 +10,7 @@ Ext.define('Common.ux.navigation.Panel',{
     userCls: 'bg-transparent',
 
     config:{
-        card1:{
+        cardContainer:{
             xtype: 'container',
             layout: 'vbox',
             flex: 1,
@@ -43,18 +43,18 @@ Ext.define('Common.ux.navigation.Panel',{
         this.insert(0, config);
     },
 
-    createCard1(newCmp){
+    createCardContainer(newCmp){
         return Ext.apply({
             ownerCmp: this,
-        })
+        }, newCmp)
     },
 
-    applyCard1(newCmp, old) {
+    applyCardContainer(newCmp, old) {
         return Ext.updateWidget(old, newCmp,
-            this, 'createCard');
+            this, 'createCardContainer');
     },
 
-    updateCard1(config){
+    updateCardContainer(config){
         if(!config)  return;
         this.insert(1, config);
     },
@@ -65,7 +65,7 @@ Ext.define('Common.ux.navigation.Panel',{
 
     onSwitchView(selected){
         let me = this,
-            container = me.getCard1(),
+            container = me.getCardContainer(),
             xtype = selected.get('viewType'),
             widget = ViewMgr.getWidget(xtype),
             current = me.current;

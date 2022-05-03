@@ -1,6 +1,6 @@
 Ext.define('Common.ux.form.BaseController',{
     extend: 'Ext.app.ViewController',
-    alias: 'controller.shared-formbasecontroller',
+    alias: 'controller.formbasecontroller',
 
     init(){
         let me = this,
@@ -14,6 +14,7 @@ Ext.define('Common.ux.form.BaseController',{
     allEnterFields:null,
     autoClose: true,
     fireSavedEvent: true,
+    savedText: 'SavedAndExit',
 
 
     /**
@@ -68,15 +69,15 @@ Ext.define('Common.ux.form.BaseController',{
      * @param {事件参数} eOpts 
      */
     initFormState(sender, value, oldValue, eOpts){
-         if(value) return;
-         let me = this,
+        if(value) return;
+        let me = this,
             view = me.getView();
-         me.hasNew = false;
-         me.saved = false;
-         view.hideMessageButton();
-         view.clearErrors();
-         Ext.platformTags.desktop && me.initFocus(view);
-         me.initParams(view);
+        me.hasNew = false;
+        me.saved = false;
+        view.hideMessageButton();
+        view.clearErrors();
+        Ext.platformTags.desktop && me.initFocus(view);
+        me.initParams(view);
     },
 
     initParams: Ext.emptyFn,
@@ -84,7 +85,7 @@ Ext.define('Common.ux.form.BaseController',{
     /**
      * 初始化焦点
      */
-     initFocus(view){
+    initFocus(view){
         let field = view.down('field[tabIndex]:not([readOnly])');
         if(field) field.focus();    
     },
@@ -111,19 +112,19 @@ Ext.define('Common.ux.form.BaseController',{
         if(!Ext.isEmpty(view.backView)){
             Ext.History.back();
         }
-   },
+    },
 
-   onCancel(){
+    onCancel(){
         let me = this,
             view = me.getView();
             view.fireEvent('canceledit', me, me.hasNew);
         me.onHide();
-   },
+    },
 
 
-   onBack(){
-       this.onCancel();
-   },
+    onBack(){
+        this.onCancel();
+    },
 
     /**
      * 提交失败后的操作
@@ -158,7 +159,7 @@ Ext.define('Common.ux.form.BaseController',{
                 f.setError(message);
             }
         }
-        errors = Http.buildValidationErrors(errors, resourceName);
+        errors = me.buildValidationErrors(errors);
         view.showMessage(errors, true);
     },
 
@@ -166,7 +167,7 @@ Ext.define('Common.ux.form.BaseController',{
         let me = this,
             view = me.getView();
         view.unmask();
-        view.showMessage(I18N.get('SavedAndExit'), false);
+        view.showMessage(I18N.get(me.savedText), false);
         if(me.fireSavedEvent) view.fireEvent('saved');
         me.lazyClose();
     },
@@ -176,6 +177,38 @@ Ext.define('Common.ux.form.BaseController',{
         Ext.defer(this.onHide, 2000, this);
     },
 
-    onSave: Ext.emptyFn
+    /**
+     * 保存前执行的操作
+    */
+    beforeFormSave(view){ 
+        if (!view.validate()) {
+            let me = this,
+                errors = view.getErrors(),
+                msg = me.buildValidationErrors(errors);
+            view.showMessage(msg, true);
+            return false;
+        };
+        return true;
+    },
+    
+
+    onSave: Ext.emptyFn,
+
+    buildValidationErrors(errors){
+        let me = this,
+            view = me.getView(),
+            resourceName = me.resourceName;
+            msg = '<ul class="message-tips">';
+        Ext.iterate(errors,(fieldName, error)=>{            
+            if(!Ext.isArray(error)) return;
+            let field = view.down(`[name='${fieldName}']`),
+                label = field.getLabel() || field.getBoxLabel() || I18N.get(fieldName, resourceName);
+            msg += `<li class="text-danger lh-20"><b>${label}</b>： ${error.join('<br>')}</li>`;
+            
+        })
+        msg += '</ul>'
+        return msg;
+    },
+
 
 })

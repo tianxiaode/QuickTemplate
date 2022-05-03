@@ -12,13 +12,14 @@ Ext.define('Common.ux.data.validator.Password', {
     validate(value){
         let me = this,
             setting = Config.getPasswordSetting(),
+            resourceName = 'AbpIdentity',
             len = parseInt(setting.requiredLength)
             msg = [];
-        (value.length < len) && msg.push(Format.format(I18N.get('PasswordRequireLength'), setting.requiredLength));
-        (setting.requireDigit === 'True' && !me.isDigit(value) ) && msg.push(I18N.get('PasswordRequireDigit'));
-        (setting.requireLowercase === 'True' && !me.isLower(value)) &&  msg.push(I18N.get('PasswordRequireLowercase'));
-        (setting.requireUppercase === 'True' && !me.isUpper(value)) &&  msg.push(I18N.get('PasswordRequireUppercase'));
-        (setting.requireNonAlphanumeric === 'True' && !me.isNonAlphanumeric(value)) && msg.push(I18N.get('PasswordRequireNonAlphanumeric'));        
+        (value.length < len) && msg.push(Format.format(I18N.get('Volo.Abp.Identity:PasswordTooShort',resourceName), setting.requiredLength));
+        (setting.requireDigit === 'True' && !me.isDigit(value) ) && msg.push(I18N.get('Volo.Abp.Identity:PasswordRequiresDigit',resourceName));
+        (setting.requireLowercase === 'True' && !me.isLower(value)) &&  msg.push(I18N.get('Volo.Abp.Identity:PasswordRequiresLower',resourceName));
+        (setting.requireUppercase === 'True' && !me.isUpper(value)) &&  msg.push(I18N.get('Volo.Abp.Identity:PasswordRequiresUpper',resourceName));
+        (setting.requireNonAlphanumeric === 'True' && !me.isNonAlphanumeric(value)) && msg.push(I18N.get('Volo.Abp.Identity:PasswordRequiresNonAlphanumeric', resourceName));
         return msg.length>0 ? msg.join(',') : true;
     },
 
@@ -36,6 +37,11 @@ Ext.define('Common.ux.data.validator.Password', {
 
     isNonAlphanumeric(value){
         return (/[\W_]/gi).test(value);
+    },
+
+    uniqueChars(len, value){
+        let unique = new Set(Array.from(value));
+        return unique.size >= len;
     }
 });
 

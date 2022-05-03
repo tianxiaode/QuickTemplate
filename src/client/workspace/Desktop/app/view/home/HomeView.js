@@ -19,7 +19,8 @@ Ext.define('Desktop.view.home.HomeView', {
         'Desktop.view.dashboard.Dashboard',
         'Desktop.view.identity.roles.Role',
         'Desktop.view.identity.users.User',
-        'Desktop.view.infrastructures.Infrastructure', 
+        'Desktop.view.infrastructures.Infrastructure',
+        'Common.view.settings.View', 
     ],
 
     controller: 'homeview',

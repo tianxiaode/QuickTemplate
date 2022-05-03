@@ -10,6 +10,7 @@ Ext.define('Common.mixin.component.TabBar', {
         tabBar: {
             xtype: 'tabbar',
             ui: 'light',
+            weighted: true,
             defaultTabUI: 'light',
             activeTab: 0,
         },
@@ -18,11 +19,11 @@ Ext.define('Common.mixin.component.TabBar', {
     defaultTabs: null,
     tabs:null,
     currentPage: null,
+    isPassingResource: true,
 
     createTabBar(newCmp){
         let me = this,            
-            defaults = me.defaultTabs || [],
-            tabs = (me.tabs || []).concat(defaults)
+            tabs = [],
             config = me.isPhone() ? {
                 scrollable: true,
                 layout:{ pack: 'left', overflow: 'scroller' },
@@ -30,7 +31,10 @@ Ext.define('Common.mixin.component.TabBar', {
             } : {
                 layout:{ pack: 'left',},
             };
-    
+        
+        me.adjustTabs(tabs, me.defaultTabs);
+        me.adjustTabs(tabs, me.tabs);
+
         config = Ext.apply({
             ownerCmp: me,
             items: tabs,
@@ -40,6 +44,14 @@ Ext.define('Common.mixin.component.TabBar', {
             }
         }, newCmp, config);
         return config;
+    },
+
+    adjustTabs(tabs, pending){
+        pending = pending || [];
+        pending.forEach(p=>{
+            if (p.permission && !ACL.isGranted(p.permission)) return;
+            tabs.push(p);
+        })
     },
 
     applyTabBar(newCmp, old){
@@ -53,6 +65,7 @@ Ext.define('Common.mixin.component.TabBar', {
             tabBar = me.add(config),
             first = tabBar.getAt(0);
         me.currentPage = me.add(me.getViewConfig(first.pageType, first.pageItemId));
+        me.currentPage.setHidden(false);
     },
 
     onTabTap(sender, newTab){
@@ -74,16 +87,15 @@ Ext.define('Common.mixin.component.TabBar', {
     },
 
     getViewConfig(xtype, itemId){
-        let me = this;
-        return { 
-            xtype: xtype,
+        let me = this,
+            cfg = { xtype: xtype, itemId: itemId, flex:1 };
+        if(!me.isPassingResource) return cfg;
+        return Ext.apply(cfg,{
             resourceName: me.getResourceName(),
             entityName: me.getEntityName(),
             permissionGroup: me.permissionGroup,
             permissionName: me.permissionName,
-            itemId: itemId, 
-            flex:1
-        }
+        })
     },
 
 })

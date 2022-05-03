@@ -24,7 +24,7 @@ namespace QuickTemplate;
     typeof(AbpAuditLoggingDomainModule),
     typeof(AbpBackgroundJobsDomainModule),
     typeof(AbpFeatureManagementDomainModule),
-    typeof(GenericAbpIdentityDomainModule),
+    typeof(AbpIdentityDomainModule),
     typeof(AbpPermissionManagementDomainIdentityModule),
     typeof(AbpIdentityServerDomainModule),
     typeof(AbpPermissionManagementDomainIdentityServerModule),
@@ -32,6 +32,7 @@ namespace QuickTemplate;
     typeof(AbpEmailingModule),
     typeof(GenericAbpBusinessExceptionModule),
     typeof(GenericAbpEnumerationDomainSharedModule),
+    typeof(GenericAbpIdentityDomainModule),
     typeof(QuickTemplateInfrastructuresDomainModule)
 )]
 public class QuickTemplateDomainModule : AbpModule

@@ -20,10 +20,11 @@ namespace QuickTemplate;
     typeof(AbpAuditLoggingDomainSharedModule),
     typeof(AbpBackgroundJobsDomainSharedModule),
     typeof(AbpFeatureManagementDomainSharedModule),
-    typeof(GenericAbpIdentityDomainSharedModule),
+    typeof(AbpIdentityDomainSharedModule),
     typeof(AbpIdentityServerDomainSharedModule),
     typeof(AbpPermissionManagementDomainSharedModule),
     typeof(AbpSettingManagementDomainSharedModule),
+    typeof(GenericAbpIdentityDomainSharedModule),
     typeof(QuickTemplateInfrastructuresDomainSharedModule)
     )]
 public class QuickTemplateDomainSharedModule : AbpModule

@@ -36,10 +36,6 @@ Ext.define('Common.ux.crud.form.FormController',{
         this.doSave();
     },
 
-    /**
-     * 保存前执行的操作
-     */
-    beforeFormSave(){ return true},
 
     /**
      * 执行保存操作
@@ -49,13 +45,8 @@ Ext.define('Common.ux.crud.form.FormController',{
             view = me.getView(),
             values = view.getSubmitValues(),
             entityName = me.entityName,
-            remoteController = view.getRemoteController() || URI.crud(entityName, me.isNew ? null :  values.id);                
-        if (!(view.validate() && me.beforeFormSave(view, values))) {
-            let errors = view.getErrors(),
-                msg = Http.buildValidationErrors(errors, me.resourceName);
-                view.showMessage(msg, true);
-            return;
-        };
+            remoteController = view.getRemoteController() || URI.crud(entityName, me.isNew ? null :  values.id);
+        if(!me.beforeFormSave()) return;
         view.mask(I18N.get('Saving'));
         let action = me.isNew ? Http.post : Http.put;                
         action.apply(Http, [remoteController,values]).then(me.onSubmitSuccess, me.onSubmitFailure,null, me);

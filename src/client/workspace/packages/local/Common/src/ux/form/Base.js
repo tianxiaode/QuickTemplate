@@ -11,7 +11,7 @@ Ext.define('Common.ux.form.Base',{
         'Common.ux.form.BaseController'
     ],
 
-    controller: 'shared-formbasecontroller',
+    controller: 'formbasecontroller',
     
 
     title: '\xA0',

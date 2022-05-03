@@ -17,15 +17,16 @@ namespace QuickTemplate;
 
 [DependsOn(
     typeof(QuickTemplateApplicationContractsModule),
-    typeof(GenericAbpApplicationModule),
     typeof(AbpAccountHttpApiModule),
-    typeof(GenericAbpIdentityHttpApiModule),
+    typeof(AbpIdentityHttpApiModule),
     typeof(AbpPermissionManagementHttpApiModule),
     typeof(AbpFeatureManagementHttpApiModule),
     typeof(AbpSettingManagementHttpApiModule),
     typeof(GenericAbpEnumerationHttpApiModule),
     typeof(GenericAbpExtResourceHttpApiModule),
-    typeof(QuickTemplateInfrastructuresHttpApiModule)
+    typeof(QuickTemplateInfrastructuresHttpApiModule),
+    typeof(GenericAbpIdentityHttpApiModule),
+    typeof(GenericAbpApplicationModule)
     )]
 public class QuickTemplateHttpApiModule : AbpModule
 {

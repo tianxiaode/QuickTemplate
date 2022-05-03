@@ -78,7 +78,8 @@ Ext.define('Common.util.Format',{
             'news':true,
             'marketing': true,
             'caching': true,
-            'account': true
+            'account': true,
+            'emailing': true
         },    
         pluralize(str){
             if(Ext.isEmpty(str)) return '';

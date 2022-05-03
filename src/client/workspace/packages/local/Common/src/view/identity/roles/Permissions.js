@@ -42,10 +42,11 @@ Ext.define('Common.view.identity.roles.Permissions',{
                         `<div class='d-flex ${flexCls}'>` ,
                         `<div class=' text-truncate lang-el py-1' style='width:${firstWidth};' data-group='${group}' data-lang='${group}'>${group}</div>`,
                     ];
-                let isSpecial = ['FeatureManagement','SettingManagement'].includes(split.first);
-                isSpecial && row.push(me.getCheckBoxHtml(group, p));
-                !isSpecial && row.push(me.getCheckBoxHtml(group, me.accessValue));
-
+                if(split.first === 'FeatureManagement'){
+                    row.push(me.getCheckBoxHtml(group, p));
+                }else if(group !== 'SettingManagement'){
+                    row.push(me.getCheckBoxHtml(group, me.accessValue));
+                }
             }
             if(permission && permission !== 'ManagePermissions' ){
                 row.push(me.getCheckBoxHtml(group, p));
@@ -78,7 +79,7 @@ Ext.define('Common.view.identity.roles.Permissions',{
         if(!Ext.isArray(value)) value = [];
         let valueSet = me.valueSet;
         valueSet.clear();
-        value.forEach(v=>{            
+        value.forEach(v=>{      
             !Ext.isEmpty(v) && valueSet.add(v);
         });
 
@@ -138,7 +139,7 @@ Ext.define('Common.view.identity.roles.Permissions',{
         !value && set.delete(permission);
         permission === group && !value  && me.cancelManagerPermissions(set, group);
         value && set.add(permission);
-        value && set.add(group);
+        group !== 'SettingManagement' && value && set.add(group);
 
         me.setValue(Array.from(set));
 
@@ -164,11 +165,17 @@ Ext.define('Common.view.identity.roles.Permissions',{
 
 
     splitPermission(permission){
-        let names = permission && permission.split('.');
+        let names = permission && permission.split('.'),
+            group = `${names[0]}.${names[1]}`,
+            permissionName = names[2];
+        if(names[0] === 'SettingManagement'){
+            group = names[0];
+            permissionName = names[1];
+        }
         return {
             first: names[0],
-            group: `${names[0]}.${names[1]}`,
-            permission: names[2]
+            group: group,
+            permission: permissionName
         }
     },
 
