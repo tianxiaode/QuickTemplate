@@ -12,6 +12,7 @@ using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement.HttpApi;
 using Volo.Abp.SettingManagement;
+using Generic.Abp.IdentityServer;
 
 namespace QuickTemplate;
 
@@ -26,6 +27,7 @@ namespace QuickTemplate;
     typeof(GenericAbpExtResourceHttpApiModule),
     typeof(QuickTemplateInfrastructuresHttpApiModule),
     typeof(GenericAbpIdentityHttpApiModule),
+    typeof(GenericAbpIdentityServerHttpApiModule),
     typeof(GenericAbpApplicationModule)
     )]
 public class QuickTemplateHttpApiModule : AbpModule

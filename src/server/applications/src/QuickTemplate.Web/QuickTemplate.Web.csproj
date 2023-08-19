@@ -47,6 +47,7 @@
     <PackageReference Include="Volo.Abp.Identity.Web" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.Account.Web.IdentityServer" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.SettingManagement.Web" Version="$(AbpVersion)" />
+    <PackageReference Include="Generic.Abp.IdentityServer.Web" Version="$(GenericAbpVersion)" />
   </ItemGroup>
 
 </Project>

@@ -13,6 +13,7 @@ using Volo.Abp.PermissionManagement;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.Validation.Localization;
 using Volo.Abp.VirtualFileSystem;
+using Generic.Abp.IdentityServer;
 
 namespace QuickTemplate;
 
@@ -25,6 +26,7 @@ namespace QuickTemplate;
     typeof(AbpPermissionManagementDomainSharedModule),
     typeof(AbpSettingManagementDomainSharedModule),
     typeof(GenericAbpIdentityDomainSharedModule),
+    typeof(GenericAbpIdentityServerDomainSharedModule),
     typeof(QuickTemplateInfrastructuresDomainSharedModule)
     )]
 public class QuickTemplateDomainSharedModule : AbpModule

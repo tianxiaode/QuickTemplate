@@ -1,10 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>QuickTemplate</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>$(NoWarn);CS1591;NU1803;</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>$(NoWarn);CS1591;NU1803;</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +28,7 @@
     <PackageReference Include="Generic.Abp.Enumeration.Application" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.ExtResource.Application" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.Identity.Application" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Generic.Abp.IdentityServer.Application" Version="$(GenericAbpVersion)" />
     <PackageReference Include="QuickTemplate.Infrastructures.Application" Version="$(QuickTemplateVersion)" />
   </ItemGroup>
 

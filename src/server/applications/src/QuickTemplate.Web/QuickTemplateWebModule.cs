@@ -37,6 +37,7 @@ using Volo.Abp.Timing;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using Generic.Abp.IdentityServer.Web;
 
 namespace QuickTemplate.Web;
 
@@ -46,6 +47,7 @@ namespace QuickTemplate.Web;
     typeof(QuickTemplateEntityFrameworkCoreModule),
     typeof(AbpAutofacModule),
     typeof(AbpIdentityWebModule),
+    typeof(GenericAbpIdentityServerWebModule),
     typeof(AbpSettingManagementWebModule),
     typeof(AbpAccountWebIdentityServerModule),
     typeof(AbpAspNetCoreMvcUiBasicThemeModule),

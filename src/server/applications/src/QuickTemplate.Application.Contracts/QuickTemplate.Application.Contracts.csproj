@@ -20,6 +20,7 @@
     <PackageReference Include="Generic.Abp.Enumeration.Application.Contracts" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.ExtResource.Application.Contracts" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.Identity.Application.Contracts" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Generic.Abp.IdentityServer.Application.Contracts" Version="$(GenericAbpVersion)" />
     <PackageReference Include="QuickTemplate.Infrastructures.Application.Contracts" Version="$(QuickTemplateVersion)" />
 
   </ItemGroup>

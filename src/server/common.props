@@ -2,7 +2,7 @@
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <Version>0.0.1</Version>
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;NU1803;</NoWarn>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>DQ Huang</Authors>
     <Description>Quick template for Ext Js</Description>
@@ -13,6 +13,7 @@
     <Company></Company>
     <PackageLicenseExpression></PackageLicenseExpression>
   </PropertyGroup>
+
 
   <ItemGroup>
     <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />

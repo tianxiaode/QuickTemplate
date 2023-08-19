@@ -1,6 +1,7 @@
 ﻿using Generic.Abp.BusinessException;
 using Generic.Abp.Enumeration;
 using Generic.Abp.Identity;
+using Generic.Abp.IdentityServer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using QuickTemplate.Infrastructures;

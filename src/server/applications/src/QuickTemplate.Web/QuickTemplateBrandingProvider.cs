@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Localization;
 using QuickTemplate.Localization;
 using Volo.Abp.Ui.Branding;
-using Volo.Abp.DependencyInjection;
+using DependencyAttribute = Volo.Abp.DependencyInjection.DependencyAttribute;
 
 namespace QuickTemplate.Web;
 

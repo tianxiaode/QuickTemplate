@@ -25,6 +25,7 @@
     <PackageReference Include="Generic.Abp.Enumeration.HttpApi" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.ExtResource.HttpApi" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.Identity.HttpApi" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Generic.Abp.IdentityServer.HttpApi" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.Application" Version="$(GenericAbpVersion)" />
     <PackageReference Include="QuickTemplate.Infrastructures.HttpApi" Version="$(QuickTemplateVersion)" />
   </ItemGroup>
