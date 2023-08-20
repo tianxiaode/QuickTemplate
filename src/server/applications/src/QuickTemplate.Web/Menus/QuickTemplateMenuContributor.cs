@@ -1,6 +1,7 @@
 ﻿using QuickTemplate.Localization;
 using System.Threading.Tasks;
 using Generic.Abp.Metro.UI.Identity.Web.Navigation;
+using Generic.Abp.Metro.UI.Theme.Basic.Demo.Menu;
 using Volo.Abp.UI.Navigation;
 
 namespace QuickTemplate.Web.Menus;
@@ -18,6 +19,8 @@ public class QuickTemplateMenuContributor : IMenuContributor
     private Task ConfigureMainMenuAsync(MenuConfigurationContext context)
     {
         var administration = context.Menu.GetAdministration();
+        var demoMenu = context.Menu.FindMenuItem(DemoMenuNames.Application.Main.Examples);
+
         var l = context.GetLocalizer<QuickTemplateResource>();
 
         context.Menu.Items.Insert(
@@ -46,6 +49,9 @@ public class QuickTemplateMenuContributor : IMenuContributor
 
         administration.SetSubItemOrder(IdentityMenuNames.GroupName, 2);
         //administration.SetSubItemOrder(SettingManagementMenuNames.GroupName, 3);
+
+        demoMenu.AddItem(new ApplicationMenuItem("DesktopClient", l["DesktopClient"], "https://d.extjs.tech"));
+        demoMenu.AddItem(new ApplicationMenuItem("MobileClient", l["MobileClient"], "https://m.extjs.tech"));
 
         return Task.CompletedTask;
     }

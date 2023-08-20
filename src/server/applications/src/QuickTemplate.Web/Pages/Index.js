@@ -1,3 +1,4 @@
-$(function () {
-    abp.log.debug('Index.js initialized!');
-});
+(function (Metro, $) {
+
+
+}(Metro, m4q))

@@ -5,21 +5,23 @@
 @using Volo.Abp.Users
 @model QuickTemplate.Web.Pages.IndexModel
 @inject IHtmlLocalizer<QuickTemplateResource> L
-@inject IHtmlLocalizer<QuickTemplateResource> _localizer;
+@inject IHtmlLocalizer<QuickTemplateResource> Localizer;
 @inject ICurrentUser CurrentUser;
 @section styles {
-    <abp-style src="/Pages/Index.css" />
+    <metro-style src="/Pages/Index.css" />
 }
 @section scripts {
-    <abp-script src="/Pages/Index.js" />
+    <metro-script src="/Pages/Index.js" />
 }
 <div class="container">
-    <p class="h5 text-center">@_localizer["WebDescription"]</p>
-
-    <div class="d-flex">
-        <div class="flex-fill text-center">@_localizer["DesktopClient"]: <a href="https://d.extjs.tech">https://d.extjs.tech</a></div>
-        <div class="flex-fill text-center">@_localizer["MobileClient"]: <a href="https://m.extjs.tech">https://m.extjs.tech</a></div>
+    <div class="row">
+        <div class="cell-lg-6">
+            <h1>开源</h1>
+        </div>
+        <div class="cell-lg-6"></div>
     </div>
+    <p class="h5 text-center">@Localizer["WebDescription"]</p>
+
     <div class="d-flex align-items-center flex-wrap p-5">
 
         @{
@@ -28,11 +30,13 @@
                 var titleKey = $"{nameof(QuickTemplateConsts.DemoCard)}:{s}";
                 <div class="card overflow-hidden m-2" style="width: calc(33.33% - 1rem ); height: 200px;">
                     <div class="card-body">
-                        <h5 class="card-title">@_localizer[titleKey]</h5>
-                        <p class="card-text">@_localizer[$"{titleKey}:Description"]</p>
+                        <h5 class="card-title">@Localizer[titleKey]</h5>
+                        <p class="card-text">@Localizer[$"{titleKey}:Description"]</p>
                     </div>
                 </div>
             }
         }
     </div>
 </div>
+
+            
