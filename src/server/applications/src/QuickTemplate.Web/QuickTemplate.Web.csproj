@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>QuickTemplate.Web</RootNamespace>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
   </ItemGroup>
 
@@ -39,15 +39,45 @@
     <ProjectReference Include="..\QuickTemplate.Application\QuickTemplate.Application.csproj" />
     <ProjectReference Include="..\QuickTemplate.HttpApi\QuickTemplate.HttpApi.csproj" />
     <ProjectReference Include="..\QuickTemplate.EntityFrameworkCore\QuickTemplate.EntityFrameworkCore.csproj" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.Autofac" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.Swashbuckle" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.AspNetCore.Authentication.JwtBearer" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.Identity.Web" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.Account.Web.IdentityServer" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.SettingManagement.Web" Version="$(AbpVersion)" />
-    <PackageReference Include="Generic.Abp.IdentityServer.Web" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Volo.Abp.Swashbuckle" Version="$(AbpVersion)" />
+    <PackageReference Include="Generic.Abp.Metro.UI.Account.Web.OpenIddict" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Generic.Abp.Metro.UI.Identity.Web" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Generic.Abp.Metro.UI.OpenIddict.Web" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Generic.Abp.Metro.UI.Theme.Basic.Demo" Version="$(GenericAbpVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\libs\abp\core\abp.js" />
+    <None Include="wwwroot\libs\abp\metro\debug.log" />
+    <None Include="wwwroot\libs\abp\metro\metro-alert.js" />
+    <None Include="wwwroot\libs\abp\metro\metro-crud-toolbar.js" />
+    <None Include="wwwroot\libs\abp\metro\metro-extensions.js" />
+    <None Include="wwwroot\libs\abp\metro\metro-modal.js" />
+    <None Include="wwwroot\libs\abp\metro\modal-manager.js" />
+    <None Include="wwwroot\libs\abp\utils\abp-utils.umd.js" />
+    <None Include="wwwroot\libs\abp\utils\abp-utils.umd.js.map" />
+    <None Include="wwwroot\libs\abp\utils\abp-utils.umd.min.js" />
+    <None Include="wwwroot\libs\abp\utils\abp-utils.umd.min.js.map" />
+    <None Include="wwwroot\libs\fontawesome\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\libs\fontawesome\webfonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\libs\fontawesome\webfonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\libs\fontawesome\webfonts\fa-v4compatibility.woff2" />
+    <None Include="wwwroot\libs\lodash\lodash.min.js" />
+    <None Include="wwwroot\libs\metro\abp.metro.js" />
+    <None Include="wwwroot\libs\metro\metro.js" />
+    <None Include="wwwroot\libs\metro\metro.min.js" />
+    <None Include="wwwroot\libs\metro\metro.min.js.map" />
+    <None Include="wwwroot\libs\mif\metro.svg" />
+    <None Include="wwwroot\libs\w2ui\extensions.js" />
+    <None Include="wwwroot\libs\w2ui\grid-extension.js" />
+    <None Include="wwwroot\libs\w2ui\item-grid.js" />
+    <None Include="wwwroot\libs\w2ui\multilingual-grid.js" />
+    <None Include="wwwroot\libs\w2ui\permission-grid.js" />
+    <None Include="wwwroot\libs\w2ui\property-grid.js" />
+    <None Include="wwwroot\libs\w2ui\w2ui.min.js" />
   </ItemGroup>
 
 </Project>

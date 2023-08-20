@@ -1,10 +1,9 @@
 ﻿using Generic.Abp.Enumeration;
 using Generic.Abp.ExtResource;
 using Generic.Abp.Identity;
-using Generic.Abp.IdentityServer;
+using Generic.Abp.OpenIddict;
 using QuickTemplate.Infrastructures;
 using Volo.Abp.Account;
-using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Modularity;
 using Volo.Abp.ObjectExtending;
@@ -16,7 +15,6 @@ namespace QuickTemplate;
 [DependsOn(
     typeof(QuickTemplateDomainSharedModule),
     typeof(AbpAccountApplicationContractsModule),
-    typeof(AbpFeatureManagementApplicationContractsModule),
     typeof(AbpIdentityApplicationContractsModule),
     typeof(AbpPermissionManagementApplicationContractsModule),
     typeof(AbpSettingManagementApplicationContractsModule),
@@ -24,7 +22,7 @@ namespace QuickTemplate;
     typeof(GenericAbpEnumerationDomainSharedModule),
     typeof(GenericAbpExtResourceApplicationContractsModule),
     typeof(GenericAbpIdentityApplicationContractsModule),
-    typeof(GenericAbpIdentityServerApplicationContractsModule),
+    typeof(GenericAbpOpenIddictApplicationContractsModule),
     typeof(QuickTemplateInfrastructuresApplicationContractsModule)
 )]
 public class QuickTemplateApplicationContractsModule : AbpModule

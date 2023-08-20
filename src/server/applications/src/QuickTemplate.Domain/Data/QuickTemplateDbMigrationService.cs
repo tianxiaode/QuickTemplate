@@ -59,7 +59,6 @@ public class QuickTemplateDbMigrationService : ITransientDependency
 
     private async Task MigrateDatabaseSchemaAsync()
     {
-
         foreach (var migrator in _dbSchemaMigrators)
         {
             await migrator.MigrateAsync();
@@ -71,8 +70,10 @@ public class QuickTemplateDbMigrationService : ITransientDependency
         Logger.LogInformation($"Executing database seed...");
 
         await _dataSeeder.SeedAsync(new DataSeedContext()
-            .WithProperty(IdentityDataSeedContributor.AdminEmailPropertyName, IdentityDataSeedContributor.AdminEmailDefaultValue)
-            .WithProperty(IdentityDataSeedContributor.AdminPasswordPropertyName, IdentityDataSeedContributor.AdminPasswordDefaultValue)
+            .WithProperty(IdentityDataSeedContributor.AdminEmailPropertyName,
+                IdentityDataSeedContributor.AdminEmailDefaultValue)
+            .WithProperty(IdentityDataSeedContributor.AdminPasswordPropertyName,
+                IdentityDataSeedContributor.AdminPasswordDefaultValue)
         );
     }
 

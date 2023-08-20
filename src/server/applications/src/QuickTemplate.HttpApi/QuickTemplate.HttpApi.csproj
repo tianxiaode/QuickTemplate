@@ -3,7 +3,7 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>QuickTemplate</RootNamespace>
   </PropertyGroup>
 
@@ -14,20 +14,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\modules\QuickTemplate.Infrastructures\src\QuickTemplate.Infrastructures.HttpApi\QuickTemplate.Infrastructures.HttpApi.csproj" />
     <ProjectReference Include="..\QuickTemplate.Application.Contracts\QuickTemplate.Application.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Account.HttpApi" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.PermissionManagement.HttpApi" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.FeatureManagement.HttpApi" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.SettingManagement.HttpApi" Version="$(AbpVersion)" />
     <PackageReference Include="Generic.Abp.Enumeration.HttpApi" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.ExtResource.HttpApi" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.Identity.HttpApi" Version="$(GenericAbpVersion)" />
-    <PackageReference Include="Generic.Abp.IdentityServer.HttpApi" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Generic.Abp.OpenIddict.HttpApi" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.Application" Version="$(GenericAbpVersion)" />
-    <PackageReference Include="QuickTemplate.Infrastructures.HttpApi" Version="$(QuickTemplateVersion)" />
   </ItemGroup>
 
   <ItemGroup>

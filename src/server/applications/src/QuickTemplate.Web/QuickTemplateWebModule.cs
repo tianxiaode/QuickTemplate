@@ -1,11 +1,19 @@
+using Generic.Abp.Metro.UI.Account.Web;
+using Generic.Abp.Metro.UI.Identity.Web;
+using Generic.Abp.Metro.UI.OpenIddict.Web;
+using Generic.Abp.Metro.UI.Packages.FontAwesome;
+using Generic.Abp.Metro.UI.Theme.Basic.Bundling;
+using Generic.Abp.Metro.UI.Theme.Basic.Demo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using OpenIddict.Validation.AspNetCore;
 using QuickTemplate.EntityFrameworkCore;
 using QuickTemplate.Localization;
 using QuickTemplate.Web.Components;
@@ -13,31 +21,22 @@ using QuickTemplate.Web.Menus;
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
+using Generic.Abp.Metro.UI.Theme.Shared;
+using QuickTemplate.MultiTenancy;
 using Volo.Abp;
-using Volo.Abp.Account;
-using Volo.Abp.Account.Web;
-using Volo.Abp.AspNetCore.Authentication.JwtBearer;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
-using Volo.Abp.AspNetCore.Mvc.UI.Components.LayoutHook;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.Basic.Bundling;
-using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
-using Volo.Abp.Identity.Web;
-using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
-using Volo.Abp.SettingManagement.Web;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.Timing;
+using Volo.Abp.Ui.LayoutHooks;
 using Volo.Abp.UI.Navigation;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
-using Generic.Abp.IdentityServer.Web;
 
 namespace QuickTemplate.Web;
 
@@ -46,18 +45,15 @@ namespace QuickTemplate.Web;
     typeof(QuickTemplateApplicationModule),
     typeof(QuickTemplateEntityFrameworkCoreModule),
     typeof(AbpAutofacModule),
-    typeof(AbpIdentityWebModule),
-    typeof(GenericAbpIdentityServerWebModule),
-    typeof(AbpSettingManagementWebModule),
-    typeof(AbpAccountWebIdentityServerModule),
-    typeof(AbpAspNetCoreMvcUiBasicThemeModule),
-    typeof(AbpAspNetCoreAuthenticationJwtBearerModule),
+    typeof(GenericAbpMetroUiOpenIddictWebModule),
+    typeof(GenericAbpMetroUiIdentityWebModule),
+    typeof(GenericAbpMetroUiAccountWebOpenIddictModule),
+    typeof(GenericAbpMetroUiThemeBasicDemoModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule)
-    )]
+)]
 public class QuickTemplateWebModule : AbpModule
 {
-
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
@@ -71,6 +67,16 @@ public class QuickTemplateWebModule : AbpModule
                 typeof(QuickTemplateWebModule).Assembly
             );
         });
+
+        PreConfigure<OpenIddictBuilder>(builder =>
+        {
+            builder.AddValidation(options =>
+            {
+                options.AddAudiences(" QuickTemplate"); // Replace with your application Name
+                options.UseLocalServer();
+                options.UseAspNetCore();
+            });
+        });
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -78,22 +84,26 @@ public class QuickTemplateWebModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
 
-        ConfigureBundles();
-        ConfigureUrls(configuration);
+        //ConfigureBundles();
         ConfigureAuthentication(context, configuration);
+        ConfigureUrls(configuration);
         ConfigureAutoMapper();
         ConfigureVirtualFileSystem(hostingEnvironment);
-        ConfigureLocalizationServices();
+        //ConfigureLocalizationServices();
         ConfigureNavigationServices();
         ConfigureAutoApiControllers();
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context.Services);
 
-        Configure<AbpClockOptions>(options =>
-        {
-            options.Kind = DateTimeKind.Utc;
-        });
+        Configure<AbpClockOptions>(options => { options.Kind = DateTimeKind.Utc; });
 
+        Configure<AbpBundlingOptions>(options =>
+        {
+            options
+                .StyleBundles
+                .Get(BasicThemeBundles.Styles.Global)
+                .AddContributors(typeof(FontAwesomeStyleContributor));
+        });
     }
 
     private void ConfigureUrls(IConfiguration configuration)
@@ -103,8 +113,8 @@ public class QuickTemplateWebModule : AbpModule
             options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
             options.RedirectAllowedUrls.AddRange(configuration["App:RedirectAllowedUrls"].Split(','));
 
-            options.Applications["Angular"].RootUrl = configuration["App:ClientUrl"];
-            options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] = "account/reset-password";
+            //options.Applications["Angular"].RootUrl = configuration["App:ClientUrl"];
+            //options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] = "account/reset-password";
         });
     }
 
@@ -114,38 +124,21 @@ public class QuickTemplateWebModule : AbpModule
         {
             options.StyleBundles.Configure(
                 BasicThemeBundles.Styles.Global,
-                bundle =>
-                {
-                    bundle.AddFiles("/global-styles.css");
-                }
+                bundle => { bundle.AddFiles("/global-styles.css"); }
             );
         });
     }
 
 
-
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
-        context.Services.AddAuthentication()
-            .AddJwtBearer(options =>
-            {
-                options.Authority = configuration["AuthServer:Authority"];
-                options.RequireHttpsMetadata = Convert.ToBoolean(configuration["AuthServer:RequireHttpsMetadata"]);
-                options.Audience = "QuickTemplate";
-                options.BackchannelHttpHandler = new HttpClientHandler
-                {
-                    ServerCertificateCustomValidationCallback =
-                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-                };
-            });
+        context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults
+            .AuthenticationScheme);
     }
 
     private void ConfigureAutoMapper()
     {
-        Configure<AbpAutoMapperOptions>(options =>
-        {
-            options.AddMaps<QuickTemplateWebModule>();
-        });
+        Configure<AbpAutoMapperOptions>(options => { options.AddMaps<QuickTemplateWebModule>(); });
     }
 
     private void ConfigureVirtualFileSystem(IWebHostEnvironment hostingEnvironment)
@@ -154,39 +147,21 @@ public class QuickTemplateWebModule : AbpModule
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
-                options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateDomainSharedModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}QuickTemplate.Domain.Shared"));
-                options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateDomainModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}QuickTemplate.Domain"));
-                options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateApplicationContractsModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}QuickTemplate.Application.Contracts"));
-                options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateApplicationModule>(Path.Combine(hostingEnvironment.ContentRootPath, $"..{Path.DirectorySeparatorChar}QuickTemplate.Application"));
+                options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateDomainSharedModule>(
+                    Path.Combine(hostingEnvironment.ContentRootPath,
+                        $"..{Path.DirectorySeparatorChar}QuickTemplate.Domain.Shared"));
+                options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateDomainModule>(
+                    Path.Combine(hostingEnvironment.ContentRootPath,
+                        $"..{Path.DirectorySeparatorChar}QuickTemplate.Domain"));
+                options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateApplicationContractsModule>(
+                    Path.Combine(hostingEnvironment.ContentRootPath,
+                        $"..{Path.DirectorySeparatorChar}QuickTemplate.Application.Contracts"));
+                options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateApplicationModule>(
+                    Path.Combine(hostingEnvironment.ContentRootPath,
+                        $"..{Path.DirectorySeparatorChar}QuickTemplate.Application"));
                 options.FileSets.ReplaceEmbeddedByPhysical<QuickTemplateWebModule>(hostingEnvironment.ContentRootPath);
             });
         }
-    }
-
-    private void ConfigureLocalizationServices()
-    {
-        Configure<AbpLocalizationOptions>(options =>
-        {
-            // options.Languages.Add(new LanguageInfo("ar", "ar", "العربية"));
-            // options.Languages.Add(new LanguageInfo("cs", "cs", "Čeština"));
-            options.Languages.Add(new LanguageInfo("en", "en", "English"));
-            // options.Languages.Add(new LanguageInfo("en-GB", "en-GB", "English (UK)"));
-            // options.Languages.Add(new LanguageInfo("hu", "hu", "Magyar"));
-            // options.Languages.Add(new LanguageInfo("fi", "fi", "Finnish"));
-            // options.Languages.Add(new LanguageInfo("fr", "fr", "Français"));
-            // options.Languages.Add(new LanguageInfo("hi", "hi", "Hindi", "in"));
-            // options.Languages.Add(new LanguageInfo("is", "is", "Icelandic", "is"));
-            // options.Languages.Add(new LanguageInfo("it", "it", "Italiano", "it"));
-            // options.Languages.Add(new LanguageInfo("pt-BR", "pt-BR", "Português"));
-            // options.Languages.Add(new LanguageInfo("ro-RO", "ro-RO", "Română"));
-            // options.Languages.Add(new LanguageInfo("ru", "ru", "Русский"));
-            // options.Languages.Add(new LanguageInfo("sk", "sk", "Slovak"));
-            // options.Languages.Add(new LanguageInfo("tr", "tr", "Türkçe"));
-            options.Languages.Add(new LanguageInfo("zh-Hans", "zh-Hans", "简体中文"));
-            // options.Languages.Add(new LanguageInfo("zh-Hant", "zh-Hant", "繁體中文"));
-            // options.Languages.Add(new LanguageInfo("de-DE", "de-DE", "Deutsch", "de"));
-            // options.Languages.Add(new LanguageInfo("es", "es", "Español"));
-        });
     }
 
     private void ConfigureNavigationServices()
@@ -227,7 +202,6 @@ public class QuickTemplateWebModule : AbpModule
 
     private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
     {
-
         var cors = configuration["App:CorsOrigins"]
             .Split(",", StringSplitOptions.RemoveEmptyEntries)
             .Select(o => o.RemovePostFix("/"))
@@ -245,7 +219,6 @@ public class QuickTemplateWebModule : AbpModule
                     .AllowAnyMethod()
                     .AllowCredentials();
             });
-
         });
     }
 
@@ -272,23 +245,26 @@ public class QuickTemplateWebModule : AbpModule
         app.UseRouting();
         app.UseCors();
 
+        app.UseAuthentication();
+
+        app.UseAbpOpenIddictValidation();
+
+        if (MultiTenancyConsts.IsEnabled)
+        {
+            app.UseMultiTenancy();
+        }
+
+
         app.UseForwardedHeaders(new ForwardedHeadersOptions
         {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
         });
 
-        app.UseAuthentication();
-        app.UseJwtTokenMiddleware();
-
 
         app.UseUnitOfWork();
-        app.UseIdentityServer();
         app.UseAuthorization();
         app.UseSwagger();
-        app.UseAbpSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "QuickTemplate API");
-        });
+        app.UseAbpSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "QuickTemplate API"); });
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();

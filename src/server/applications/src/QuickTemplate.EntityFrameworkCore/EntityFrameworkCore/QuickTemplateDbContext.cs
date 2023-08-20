@@ -5,10 +5,9 @@ using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
-using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
-using Volo.Abp.IdentityServer.EntityFrameworkCore;
+using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 
@@ -50,7 +49,6 @@ public class QuickTemplateDbContext :
     public QuickTemplateDbContext(DbContextOptions<QuickTemplateDbContext> options)
         : base(options)
     {
-
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -64,9 +62,8 @@ public class QuickTemplateDbContext :
         builder.ConfigureBackgroundJobs();
         builder.ConfigureAuditLogging();
         builder.ConfigureIdentity();
-        builder.ConfigureIdentityServer();
-        builder.ConfigureFeatureManagement();
-        
+        builder.ConfigureOpenIddict();
+
         /* Configure your own tables/entities inside here */
 
         //builder.Entity<YourEntity>(b =>

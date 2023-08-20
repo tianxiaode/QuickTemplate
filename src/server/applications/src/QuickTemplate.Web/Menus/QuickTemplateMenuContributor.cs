@@ -1,8 +1,6 @@
-﻿using System.Threading.Tasks;
-using QuickTemplate.Localization;
-using QuickTemplate.MultiTenancy;
-using Volo.Abp.Identity.Web.Navigation;
-using Volo.Abp.SettingManagement.Web.Navigation;
+﻿using QuickTemplate.Localization;
+using System.Threading.Tasks;
+using Generic.Abp.Metro.UI.Identity.Web.Navigation;
 using Volo.Abp.UI.Navigation;
 
 namespace QuickTemplate.Web.Menus;
@@ -37,7 +35,7 @@ public class QuickTemplateMenuContributor : IMenuContributor
             QuickTemplateMenus.About,
             l["Menu:About"],
             "~/About"
-            ));
+        ));
 
         context.Menu.Items.Add(new ApplicationMenuItem(
             QuickTemplateMenus.Github,
@@ -47,7 +45,7 @@ public class QuickTemplateMenuContributor : IMenuContributor
         ));
 
         administration.SetSubItemOrder(IdentityMenuNames.GroupName, 2);
-        administration.SetSubItemOrder(SettingManagementMenuNames.GroupName, 3);
+        //administration.SetSubItemOrder(SettingManagementMenuNames.GroupName, 3);
 
         return Task.CompletedTask;
     }

@@ -1,12 +1,12 @@
 ﻿<Project>
   <PropertyGroup>
 
-    <AbpVersion>5.3.4</AbpVersion>
-    <GenericAbpVersion>0.0.6</GenericAbpVersion>
+    <AbpVersion>7.0.0</AbpVersion>
+    <GenericAbpVersion>1.0.1</GenericAbpVersion>
     <QuickTemplateVersion>0.0.1</QuickTemplateVersion>
     <JetBrainsAnnotationsVersion>2021.3.3</JetBrainsAnnotationsVersion>
-    <IdentityServer4Version>4.1.1</IdentityServer4Version>
-    <FileProvidersEmbeddedVersion>6.0.5</FileProvidersEmbeddedVersion>
+		<FileProvidersEmbeddedVersion>7.0.0</FileProvidersEmbeddedVersion>
+		<SkiaSharpVersion>2.80.3</SkiaSharpVersion>
 
   </PropertyGroup>
 </Project>

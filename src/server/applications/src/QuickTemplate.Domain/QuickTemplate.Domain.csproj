@@ -3,25 +3,24 @@
   <Import Project="..\..\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>QuickTemplate</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\modules\QuickTemplate.Infrastructures\src\QuickTemplate.Infrastructures.Domain\QuickTemplate.Infrastructures.Domain.csproj" />
     <ProjectReference Include="..\QuickTemplate.Domain.Shared\QuickTemplate.Domain.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Volo.Abp.OpenIddict.Domain" Version="$(AbpVersion)" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.OpenIddict" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.Emailing" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Identity" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.IdentityServer.Domain" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.IdentityServer" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.BackgroundJobs.Domain" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.AuditLogging.Domain" Version="$(AbpVersion)" />
-    <PackageReference Include="Volo.Abp.FeatureManagement.Domain" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.SettingManagement.Domain" Version="$(AbpVersion)" />
     <PackageReference Include="Generic.Abp.Identity.Domain" Version="$(GenericAbpVersion)" />
-    <PackageReference Include="QuickTemplate.Infrastructures.Domain" Version="$(QuickTemplateVersion)" />
   </ItemGroup>
 
 </Project>
