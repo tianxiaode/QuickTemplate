@@ -3,12 +3,12 @@
   "texts": {
     "Icp": "粤ICP备2022031812号",
     "Menu:Home": "首页",
-    "Menu:About": "关于我",
+    "Menu:About": "关于我们",
     "Welcome": "欢迎",
     "LongWelcomeMessage": "欢迎来到该应用程序. 这是一个基于ABP框架的启动项目. 有关更多信息, 请访问 abp.io.",
     "QuickTemplate": "快速模板",
     "AppName": "快速模板",
-    "AboutMe": "资深Web技术专家，拥有10余年工作经验，一直致力于Web开发框架的研究，近年来醉心于Ext JS框架的开发与推广，撰写了大量关于Ext JS开发相关的教程，是社区公认的先锋和布道者，与Sencha的官方开发团队有十分紧密的联系。著有经典著作《JavaScript凌厉开发——Ext详解与实践》、《Ext JS高级程序设计》、《Ext JS权威指南》、《Sencha Touch实战》、《Ext JS 4.2实战》和《Ext JS 6.2实战》。活跃于CSDN（博客专家）等各大技术社区，在社区内知名度极高，深受网友欢迎。",
+    "AboutMe": "资深Web技术专家，拥有20余年工作经验，一直致力于Web开发框架的研究",
     "Blog": "博客",
     "CompanyShortName": "快速模板",
     "WebDescription": "本网站是一个演示网站，用于展示Ext Js与Abp.io相结合的相关技术。",
@@ -44,6 +44,10 @@
     "DisplayName:Email": "邮箱地址",
     "DisplayName:PhoneNumber": "手机号码",
     "DesktopClient": "桌面客户端",
-    "MobileClient": "移动客户端"
+    "MobileClient": "移动客户端",
+    "OpenSourceLicenseWith": "开源许可：",
+    "AboutUs": "关于我们",
+    "TagHelpers": "标记帮助程序",
+    "Portfolios": "作品集"
   }
 }

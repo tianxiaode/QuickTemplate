@@ -84,7 +84,7 @@ public class QuickTemplateWebModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
 
-        //ConfigureBundles();
+        ConfigureBundles();
         ConfigureAuthentication(context, configuration);
         ConfigureUrls(configuration);
         ConfigureAutoMapper();

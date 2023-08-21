@@ -34,11 +34,11 @@ public class QuickTemplateMenuContributor : IMenuContributor
             )
         );
 
-        context.Menu.Items.Add(new ApplicationMenuItem(
-            QuickTemplateMenus.About,
-            l["Menu:About"],
-            "~/About"
-        ));
+        //context.Menu.Items.Add(new ApplicationMenuItem(
+        //    QuickTemplateMenus.About,
+        //    l["Menu:About"],
+        //    "~/About"
+        //));
 
         context.Menu.Items.Add(new ApplicationMenuItem(
             QuickTemplateMenus.Github,
