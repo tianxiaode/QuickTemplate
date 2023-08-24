@@ -48,6 +48,15 @@
     "OpenSourceLicenseWith": "开源许可：",
     "AboutUs": "关于我们",
     "TagHelpers": "标记帮助程序",
-    "Portfolios": "作品集"
+    "Portfolios": "作品集",
+    "SourceCode": "源代码",
+    "GetStarted": "开始",
+    "Abp": "ABP是一个以领域驱动设计为原则和模式，内置了后台服务、事件总线、种子数据、分布式锁、审计日志、数据过滤、邮件发送和时钟等基础设施，非常适合用于创建多租户和微服务架构的现代Web应用程序框架。",
+    "QuickTemplateDescription": "快速模板通过结合ABP和Ext JS的各自的优点，进行必要的封装，为快速开发现代Web应用程序提供一个开箱即用的开发框架。通过该框架，既可学习到ABP相关知识，也可学习到相关的Ext JS知识。",
+    "ExtJs": "Sencha Ext JS可以说是目前最优雅的Javascript框架，喜欢的会爱不释手，不喜的会远而避之。它内置了 140+ 个预集成和测试的高性能 UI 组件，非常适合用于构建数据密集型，跨平台的Web和移动应用程序。",
+    "MetroUI": "MetroUI是一个类似于Bootstrap的开源前端工具包，灵感来自Microsoft Fluent（前Metro）设计原则。本网站将MetroUI制作成了ABP的主题模块，可以直接在ABP项目中使用，比ABP原主题更实用。",
+    "W2UI": "W2UI也是一个开源前端工具包，不过整体效果不算太好，它的主要特色是作为开源的框架，Grid做得不错，简单方便，比ABP原有的datatables好用。本网站的部分管理功能实用了W2UI的Grid。该工具包也已做成ABP模块。",
+    "AboutQuickTemplate": "关于快速模板",
+    "Documents": "文档"
   }
 }

@@ -47,6 +47,7 @@
     <PackageReference Include="Generic.Abp.Metro.UI.Identity.Web" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.Metro.UI.OpenIddict.Web" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.Metro.UI.Theme.Basic.Demo" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="$(FileProvidersEmbeddedVersion)" />
   </ItemGroup>
 
   <ItemGroup>

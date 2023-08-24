@@ -21,3 +21,6 @@ footer a {
 footer a:hover {
     color: #fff !important;
 }
+.brand img {
+    padding: 0 !important;
+}

@@ -45,6 +45,15 @@
     "OpenSourceLicenseWith": "Open source license with",
     "AboutUs": "About Us",
     "TagHelpers": "Tag Helpers",
-    "Portfolios": "Portfolios"
+    "Portfolios": "Portfolios",
+    "SourceCode": "SOURCE CODE",
+    "GetStarted": "GET STARTED",
+    "Abp": "ABP is a domain-driven design principle and pattern with built-in infrastructure such as background services, event buses, seed data, distributed locks, audit logs, data filtering, mail sending, and clocking, making it ideal for creating modern web application frameworks for multi-tenancy and microservices architectures.",
+    "QuickTemplateDescription": "Quick template provide an out-of-the-box development framework for rapid development of modern web applications by combining the respective advantages of ABP and Ext JS to provide the necessary encapsulation. Through this framework, you can learn both ABP and Ext JS.",
+    "ExtJs": "Sencha Ext JS is arguably the most elegant Javascript framework out there, and those who like it will love it, and those who don't like it will avoid it. With 140+ pre-integrated and tested high-performance UI components built-in, it's ideal for building data-intensive, cross-platform web and mobile applications.",
+    "MetroUI": "MetroUI is an open-source front-end toolkit similar to Bootstrap, inspired by Microsoft Fluent (formerly Metro) design principles. This website makes MetroUI into ABP's theme module, which can be used directly in ABP projects, which is more practical than ABP's original theme.",
+    "W2UI": "W2UI is also an open source front-end toolkit, but the overall effect is not too good, its main feature is that as an open source framework, Grid is good, simple and convenient, better than ABP's original datatables. Some of the administrative functions of this website are implemented by W2UI's Grid. The toolkit has also been made into an ABP module.",
+    "AboutQuickTemplate": "ABOUT QUCIK TEMPLATE",
+    "Documents": "Documents"
   }
 }
