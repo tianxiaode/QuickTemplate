@@ -52,6 +52,7 @@ public class QuickTemplateMenuContributor : IMenuContributor
 
         demoMenu.AddItem(new ApplicationMenuItem("DesktopClient", l["DesktopClient"], "https://d.extjs.tech"));
         demoMenu.AddItem(new ApplicationMenuItem("MobileClient", l["MobileClient"], "https://m.extjs.tech"));
+        demoMenu.AddItem(new ApplicationMenuItem("Swagger", "Swagger", "/Swagger"));
 
         return Task.CompletedTask;
     }

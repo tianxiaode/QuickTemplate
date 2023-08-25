@@ -6,7 +6,7 @@ window.AppConfig = {
         issuer: 'http://localhost:4200',
         redirectUri: "http://localhost:4200/desktop",
         clientId: 'QuickTemplate_App',
-        scope: 'offline_access QuickTemplate'
+        scope: 'offline_access openid profile role email phone QuickTemplate'
     },
     appName:{
         en: 'Quick Template',

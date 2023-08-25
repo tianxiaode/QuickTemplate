@@ -5,28 +5,36 @@ Ext.define('Common.view.home.HomeController',{
 
     routes: {
         ':xtype': {
+            before : 'onBeforeRoute',
             action: 'handleRoute',
         },
         ':xtype/:id':{
+            before : 'onBeforeRoute',
             action: 'onShowDialog'
         },
 
     },
 
-
-    isLoadConfiguration: false,
-    init(){
+    onBeforeRoute(hash, action){
+        console.log('onBeforeRoute', hash, action)
         let me = this;
         if(!Auth.isAuthenticated()){
+            action.stop();
             Auth.login();
-            Auth.on('loggedin', me.loadConfiguration, me);
             return;
         }
-        me.loadConfiguration();
+        if(me.isReady()){
+            action.stop();
+            me.loadConfiguration();
+        }        
     },
 
 
+    isLoadConfiguration: false,
+    
+
     handleRoute(xtype){
+        console.log('handleRoute')
         let me = this,
             view = me.getView(),
             isAuthenticated = Auth.isAuthenticated();
@@ -76,14 +84,17 @@ Ext.define('Common.view.home.HomeController',{
     },
 
     isReady(){
-        let me = this,
-            value = Config.isReady && I18N.isReady && Enums.isReady;
-        if(value && !me.isLoadConfiguration){
-            me.isLoadConfiguration = true;
-            me.handleRoute(me.currentToken || ViewMgr.homeViewXtype);
-            me.initView();
-        }
-        return value;
+        return Config.isReady && I18N.isReady && Enums.isReady;
+        // let me = this,
+        //     value = ;
+        // if(value && !me.isLoadConfiguration){
+        //     me.isLoadConfiguration = true;
+        //     me.handleRoute(me.currentToken || ViewMgr.homeViewXtype);
+        //     me.initView();
+        //     return;
+        // }
+        // console.trace('isReady')
+        // me.loadConfiguration();
     },
 
 

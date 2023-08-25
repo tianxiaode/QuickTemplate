@@ -202,17 +202,15 @@ public class QuickTemplateWebModule : AbpModule
 
     private void ConfigureCors(ServiceConfigurationContext context, IConfiguration configuration)
     {
-        var cors = configuration["App:CorsOrigins"]
-            .Split(",", StringSplitOptions.RemoveEmptyEntries)
-            .Select(o => o.RemovePostFix("/"))
-            .ToArray();
-
         context.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(builder =>
             {
                 builder
-                    .WithOrigins(cors)
+                    .WithOrigins(configuration["App:CorsOrigins"]?
+                        .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                        .Select(o => o.RemovePostFix("/"))
+                        .ToArray() ?? Array.Empty<string>())
                     .WithAbpExposedHeaders()
                     .SetIsOriginAllowedToAllowWildcardSubdomains()
                     .AllowAnyHeader()
