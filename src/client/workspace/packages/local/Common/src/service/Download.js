@@ -1,5 +1,5 @@
 Ext.define('Common.service.Download', {
-    alternateClassName: 'Download',
+    alternateClassName: 'DL',
     singleton: true,
 
     isWeChatBrowser(){
@@ -63,8 +63,7 @@ Ext.define('Common.service.Download', {
           array[i] = raw.charCodeAt(i);
         }
         return array;
-    }
-      
+    }      
 
 
 });

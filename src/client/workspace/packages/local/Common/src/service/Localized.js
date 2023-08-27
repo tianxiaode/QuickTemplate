@@ -112,6 +112,13 @@ Ext.define('Common.service.Localized', {
         return promise;
     },
 
+    destroy() {
+        let me = this;
+        me.remoteRawValue = null;
+        me.localText = null;
+        me.languageMap = null;
+    },
+
     privates:{
         remoteRawValue: {},
         localText:{
@@ -223,7 +230,7 @@ Ext.define('Common.service.Localized', {
         me.isReady = true;
         me.fireEvent('ready', me);
 
-    },
+    }
 
 
 })

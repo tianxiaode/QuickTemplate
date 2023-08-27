@@ -1,5 +1,5 @@
 Ext.define('Common.service.Template', {
-    alternateClassName: 'Template',
+    alternateClassName: 'Tpl',
     singleton: true,
 
     templates:{},
@@ -50,6 +50,12 @@ Ext.define('Common.service.Template', {
         template = me.templates[key] = Ext.XTemplate.get(config);
         return template;
     },
+
+    destroy() {
+        let me = this;
+        me.templates = null;
+    },
+
 
     privates:{
         create(config, scope){

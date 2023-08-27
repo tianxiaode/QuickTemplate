@@ -11,7 +11,7 @@ Ext.define('Common.view.home.HomeController',{
         ':xtype/:id':{
             before : 'onBeforeRoute',
             action: 'onShowDialog'
-        },
+        }
 
     },
 
@@ -20,13 +20,18 @@ Ext.define('Common.view.home.HomeController',{
         let me = this;
         if(!Auth.isAuthenticated()){
             action.stop();
-            Auth.login();
+            Auth.on('loggedin', me.loadConfiguration, me);
+            Auth.login(hash);
             return;
         }
-        if(me.isReady()){
+
+        if(!me.isReady()){
             action.stop();
             me.loadConfiguration();
-        }        
+            return;
+        }
+
+        action.resume();
     },
 
 
@@ -34,18 +39,13 @@ Ext.define('Common.view.home.HomeController',{
     
 
     handleRoute(xtype){
-        console.log('handleRoute')
+        console.log('handleRoute', xtype);
         let me = this,
-            view = me.getView(),
-            isAuthenticated = Auth.isAuthenticated();
+            view = me.getView();
         if(!ViewMgr.pages.hasOwnProperty(xtype)) {
             me.onHideLastView();
             me.currentToken = xtype;
         }
-
-        if(!isAuthenticated) return;
-
-        if(!me.isReady()) return;
 
         view.setMasked(false);
 
@@ -67,34 +67,32 @@ Ext.define('Common.view.home.HomeController',{
     },
 
 
-    loadConfiguration() {        
+    loadConfiguration() {
         let me = this,
             vm = me.getViewModel();
         vm.set('isAuthenticated', true);
 
         me.getView().setMasked(I18N.getLocalText('LoadingUserConfiguration'));
-        Config.on('ready', me.isReady, me);
-        I18N.on('ready', me.isReady, me);
-        Enums.on('ready', me.isReady, me);
-        Config.loadConfiguration();
-        I18N.loadResources();
+        //I18N.on('ready', me.configurationLoaded.bind(me,[xtype]), me);
+        Enums.on('ready', me.configurationLoaded, me);
+        Config.loadConfiguration().then(me.configurationLoaded.bind(me));
+        I18N.loadResources().then(me.configurationLoaded.bind(me));
         Enums.init();
         //Signalr.connect();
 
     },
 
+    configurationLoaded(){
+        let me = this,
+            hash = Auth.getOrginHash() || Ext.util.History.getToken();
+        console.log('configurationLoaded',  hash);        
+        if(!me.isReady()) return;
+        Auth.removeOrginHash();
+        me.redirectTo(hash, { force: true, replace: true });
+    },
+
     isReady(){
         return Config.isReady && I18N.isReady && Enums.isReady;
-        // let me = this,
-        //     value = ;
-        // if(value && !me.isLoadConfiguration){
-        //     me.isLoadConfiguration = true;
-        //     me.handleRoute(me.currentToken || ViewMgr.homeViewXtype);
-        //     me.initView();
-        //     return;
-        // }
-        // console.trace('isReady')
-        // me.loadConfiguration();
     },
 
 
@@ -138,5 +136,9 @@ Ext.define('Common.view.home.HomeController',{
     onShowPages(){
         let xtype = Ext.History.getToken();
         ViewMgr.showPage(xtype);
+    },
+
+    destroy(){
+        let me = this;
     }
 })

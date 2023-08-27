@@ -24,7 +24,7 @@ Ext.define('Common.service.Storage', {
             return;
         }
         Ext.util.Cookies.clear(key);
-    },
+    }
     
 
 });

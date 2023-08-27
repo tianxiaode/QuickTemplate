@@ -227,7 +227,7 @@ Ext.define('Common.service.HttpClient',{
             }
             msg += '</ul>'
             return msg;
-        },
+        }
 
     }
 

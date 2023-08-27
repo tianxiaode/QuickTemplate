@@ -2,24 +2,24 @@ Ext.define('Common.service.OAuth', {
     alternateClassName: 'Auth',
     singleton: true,
 
-    mixins:[
+    mixins: [
         'Ext.mixin.Observable'
     ],
 
     nonceStateSeparator: ';',
-    responseType : 'code',
+    responseType: 'code',
     loginUrl: '',
     logoutUrl: '',
     oidc: true,
     disablePKCE: false,
     resource: '',
 
-    constructor(config){
+    constructor(config) {
         let me = this;
         me.mixins.observable.constructor.call(me, config);
         Ext.apply(me, AppConfig.oAuthConfig);
         me.loginUrl = `${AppConfig.apiUrl}connect/authorize`;
-        me.logoutUrl = `${AppConfig.apiUrl}connect/endsession`
+        me.logoutUrl = `${AppConfig.apiUrl}connect/endsession`;
     },
 
 
@@ -27,17 +27,17 @@ Ext.define('Common.service.OAuth', {
      * 验证是否已认�?
      * 验证方式为access_token是否存在，且是否已过�?
      */
-    isAuthenticated(){
+    isAuthenticated() {
         let me = this,
             storage = AppStorage,
             keys = me.storageKeys,
             token = storage.get(keys.accessToken);
-        if(token){
+        if (token) {
             let expiresAt = storage.get(keys.expiresAt),
                 now = new Date(),
                 isAuthenticated = expiresAt && parseInt(expiresAt, 10) > now.getTime();
             //如果token已过期，清除全部数据
-            if(!isAuthenticated) me.removeAllStorageItem();
+            if (!isAuthenticated) me.removeAllStorageItem();
             return isAuthenticated;
         }
         return false;
@@ -49,61 +49,61 @@ Ext.define('Common.service.OAuth', {
      * @param {用户名} username 
      * @param {密码} password 
      */
-    login(){
+    login(hash) {
         let me = this;
-        if(!me.tryLogin())
-        {
-            let url = this.createLoginUrl('', '', null, false, {});
-            window.location.href = url;    
-        }
+        return me.tryLogin(hash).then(() => { }, () => {
+            let url = me.createLoginUrl('', '', null, false, {});
+            console.log('login', url, arguments)
+            window.location.href = url;
+        })
     },
 
-    tryLogin() {
-        let me = this; 
-            options = AppConfig.oAuthConfig,
-            querySource = window.location.search,
+    tryLogin(hash) {
+        let me = this;
+        options = AppConfig.oAuthConfig,
+            location = window.location,
+            querySource = location.search,
             parts = me.getCodePartsFromUrl(querySource),
             code = parts['code'],
             state = parts['state'],
             sessionState = parts['session_state'];
+        if (!code) {
+            AppStorage.set(me.storageKeys.originHash, hash);
+        }
         if (!options.preventClearHashAfterLogin) {
-            const href = location.href
-                .replace(/[&\?]code=[^&\$]*/, '')
-                .replace(/[&\?]scope=[^&\$]*/, '')
-                .replace(/[&\?]state=[^&\$]*/, '')
-                .replace(/[&\?]session_state=[^&\$]*/, '');
+            let href = location.href;
+            Object.keys(parts).forEach(key => {
+                let replace = new RegExp(`[&\?]${key}=[^&\$]*`);
+                href = href.replace(replace, '');
+            })
+            //href += `#${AppStorage.get(me.storageKeys.originHash)}`;
+            // const href = location.href
+            //     .replace(/[&\?]code=[^&\$]*/, '')
+            //     .replace(/[&\?]scope=[^&\$]*/, '')
+            //     .replace(/[&\?]state=[^&\$]*/, '')
+            //     .replace(/[&\?]iss=[^&\$]*/, '')
+            //     .replace(/[&\?]session_state=[^&\$]*/, '');
             history.replaceState(null, window.name, href);
         }
         let [nonceInState, userState] = me.parseState(state);
         me.state = userState;
-        if (parts['error']) {
-            return false;
-        }
-        if (!nonceInState) {
-            return false;
+        if (parts['error'] || !nonceInState || !code) {
+            return Promise.reject();
         }
         const success = me.validateNonce(nonceInState);
         if (!success) {
-            return false;
+            return Promise.reject();
         }
         AppStorage.set('session_state', sessionState);
-        if (code) {
-            me.getTokenFromCode(code, options);
-            return true;
-        }
-        else {
-            return false;
-        }
+        return me.getTokenFromCode(code, options);
     },
 
 
-
-
     /**
-     * 退�?
+     * 退出
      * 需要注销access_token和refresh_token并移除存储数�?
      */
-    logout(){
+    logout() {
         let me = this,
             storage = AppStorage,
             keys = me.storageKeys,
@@ -114,49 +114,44 @@ Ext.define('Common.service.OAuth', {
         window.location.href = logoutUrl;
     },
 
-
-    /**
-     * 获取认证头
-     * @param {是否包含JSON Content头}} includeJsonContent 
-     */
-    getAuthorizationHeader(includeJsonContent){
-        let me = this,
-            headers = {
-                'Authorization' : 'Bearer ' +  AppStorage.get(me.storageKeys.accessToken),
-                //'Access-Control-Allow-Origin': '*',
-                "accept-language": AppStorage.get('lang')
-            };
-        if(includeJsonContent){
-            headers['Content-Type'] = 'application/json;charset=utf-8';
-        }    
-        return headers;
+    getOrginHash(){
+        return AppStorage.get(this.storageKeys.originHash);
     },
 
+    removeOrginHash(){
+        AppStorage.remove(this.storageKeys.originHash);
+    },
 
-    privates:{
+    destroy() {
+        let me = this;
+        me.storageKeys = null;
+        me.endpoints = null;
+    },
 
-        storageKeys:{
+    privates: {
+
+        storageKeys: {
             accessToken: 'access_token',
             idToken: 'id_token',
             expiresAt: 'expires_at',
             refreshToken: 'refresh_token',
+            originHash: 'originHash'
         },
-    
+
         remoteController: 'connect',
-        endpoints:{
+        endpoints: {
             authorization: 'authorize',
             token: 'token',
             revocation: 'revocation',
-            endSession: 'endsession',
-    
+            endSession: 'endsession'
         },
-        scopes: "profile email phone role QuickTemplate offline_access",
-    
+        //scopes: "profile email phone role QuickTemplate offline_access",
+
         /**
          * 登录成功
          * @param {获取令牌的结果} response 
          */
-        loginSuccess(response){
+        loginSuccess(response) {
             let me = this,
                 obj = me.processToken(response);
             me.fireEvent('loginsuccess', obj);
@@ -166,25 +161,25 @@ Ext.define('Common.service.OAuth', {
          * 刷新令牌
          * @param {组织编号} organizationUnitId 
          */
-        refreshToken(id, name){
+        refreshToken(id, name) {
             Ext.Viewport.setMasked(Ext.String.format(I18N.get('RefreshToken'), name));
             let me = this,
                 data = {
                     'grant_type': 'refresh_token',
                     'refresh_token': AppStorage.get(me.storageKeys.refreshToken),
-                    'scope': me.scopes,
+                    'scope': me.scope,
                     'organizationUnitId': id
                 };
             let promise = me.send(data, me.endpoints.token)
             promise.then(me.refreshTokenSuccess, me.getTokenFailure, null, me);
             return promise;
         },
-    
+
         /**
          * 
          * @param {获取令牌的结果} response 
          */
-        refreshTokenSuccess(response){
+        refreshTokenSuccess(response) {
             Ext.Viewport.setMasked(false);
             let me = this,
                 obj = me.processToken(response);
@@ -196,9 +191,9 @@ Ext.define('Common.service.OAuth', {
          * 处理令牌成功
          * @param {获取令牌的结果} response 
          */
-        processToken(response){
-            let obj  = Ext.decode(response.responseText,true);
-            if(!obj) {
+        processToken(response) {
+            let obj = Ext.decode(response.responseText, true);
+            if (!obj) {
                 MsgBox(null, I18N.getUnknownError());
                 return;
             }
@@ -213,12 +208,12 @@ Ext.define('Common.service.OAuth', {
             storage.set(keys.idToken, obj[keys.idToken])
             return obj;
         },
-    
+
         /**
          * 获取令牌失败，显示异常
          * @param {获取令牌结果} response 
          */
-        getTokenFailure(response){
+        getTokenFailure(response) {
             return Failure.ajax.apply(this, [response]);
         },
 
@@ -227,7 +222,7 @@ Ext.define('Common.service.OAuth', {
          * @param {要发送的数据} data 
          * @param {端点} endpoint 
          */
-        send(data, endpoint){
+        send(data, endpoint) {
             let me = this,
                 clientId = me.clientId,
                 headers = {
@@ -237,206 +232,227 @@ Ext.define('Common.service.OAuth', {
             data['client_id'] = clientId;
             return Http.post(
                 URI.get(me.remoteController, endpoint, true),
-                data, 
+                data,
                 headers
             );
-        }
-    },
+        },
 
-    /**
-     * 移除全部缓存令牌数据
-     */
-    removeAllStorageItem(){
-        Object.keys(this.storageKeys).forEach(key=>{
-            AppStorage.remove(this.storageKeys[key]);
-        })
-    },
-
-    calcHash(valueToHash, algorithm) {
-        const hashArray = sha256.array(valueToHash);
-        const hashString = this.toHashString2(hashArray);
-        return hashString;
-    },
-    
-    toHashString2(byteArray) {
-        let result = '';
-        for (let e of byteArray) {
-            result += String.fromCharCode(e);
-        }
-        return result;
-    },
-
-    toHashString(buffer) {
-        const byteArray = new Uint8Array(buffer);
-        let result = '';
-        for (let e of byteArray) {
-            result += String.fromCharCode(e);
-        }
-        return result;
-    },
-
-    getCodePartsFromUrl(queryString) {
-        if (!queryString || queryString.length === 0) {
-            return this.getHashFragmentParams();
-        }
-        // normalize query string
-        if (queryString.charAt(0) === '?') {
-            queryString = queryString.substr(1);
-        }
-        return Ext.Object.fromQueryString(queryString);
-    },
-
-    getHashFragmentParams(customHashFragment) {
-        let hash = customHashFragment || window.location.hash;
-        hash = decodeURIComponent(hash);
-        if (hash.indexOf('#') !== 0) {
-            return {};
-        }
-        const questionMarkPosition = hash.indexOf('?');
-        if (questionMarkPosition > -1) {
-            hash = hash.substr(questionMarkPosition + 1);
-        }
-        else {
-            hash = hash.substr(1);
-        }
-        return Ext.Object.fromQueryString(hash);
-    },
-
-    parseState(state) {
-        let nonce = state;
-        let userState = '';
-        if (state) {
-            const idx = state.indexOf(this.config.nonceStateSeparator);
-            if (idx > -1) {
-                nonce = state.substr(0, idx);
-                userState = state.substr(idx + this.config.nonceStateSeparator.length);
+        /**
+         * 获取认证头
+         * @param {是否包含JSON Content头}} includeJsonContent 
+         */
+        getAuthorizationHeader(includeJsonContent) {
+            let me = this,
+                headers = {
+                    'Authorization': 'Bearer ' + AppStorage.get(me.storageKeys.accessToken),
+                    //'Access-Control-Allow-Origin': '*',
+                    "accept-language": AppStorage.get('lang')
+                };
+            if (includeJsonContent) {
+                headers['Content-Type'] = 'application/json;charset=utf-8';
             }
-        }
-        return [nonce, userState];
-    },
+            return headers;
+        },
 
-    validateNonce(nonceInState) {
-        let savedNonce;
-        savedNonce = AppStorage.get('nonce');
-        if (savedNonce !== nonceInState) {
-            const err = 'Validating access_token failed, wrong state/nonce.';
-            return false;
-        }
-        return true;
-    },
 
-    getTokenFromCode(code, options) {
-        let me = this,
-            verifier = AppStorage.get('PKCE_verifier'),
-        data = {
-            'grant_type': 'authorization_code',
-            'code': code,
-            'redirect_uri': me.redirectUri,
-            'code_verifier': verifier
-        };
-        let promise = me.send(data, me.endpoints.token);
-        promise.then(me.getTokenFromCodeSuccess, me.getTokenFromCodeFailure, null, me);
-        return promise;
 
-    },
+        /**
+         * 移除全部缓存令牌数据
+         */
+        removeAllStorageItem() {
+            Object.keys(this.storageKeys).forEach(key => {
+                AppStorage.remove(this.storageKeys[key]);
+            })
+        },
 
-    getTokenFromCodeSuccess(response){
-        let me = this;
-        me.processToken(response);
-        me.fireEvent('loggedin');
-    },
+        calcHash(valueToHash, algorithm) {
+            const hashArray = sha256.array(valueToHash);
+            const hashString = this.toHashString2(hashArray);
+            return hashString;
+        },
 
-    getTokenFromCodeFailure(response){
-        let me = this,
-            current = I18N.getCurrentLanguage() || 'zh-CN',
-            msg = AppConfig.loginFailure[current];
-        MsgBox.alert('' , msg);
-        me.fireEvent('loginfailtre');
-    },
+        toHashString2(byteArray) {
+            let result = '';
+            for (let e of byteArray) {
+                result += String.fromCharCode(e);
+            }
+            return result;
+        },
 
-    createLoginUrl() {
-        let me = this,
-            redirectUri = me.redirectUri,
-            nonce = me.createAndSaveNonce(),
-            state = nonce,
-            seperationChar = me.loginUrl.indexOf('?') > -1 ? '&' : '?';
-        let scope = AppConfig.oAuthConfig.scope;
-        if (me.oidc && !scope.match(/(^|\s)openid($|\s)/)) {
-            scope = 'openid ' + scope;
-        }
-        let url = me.loginUrl +
-            seperationChar +
-            'response_type=' +
-            encodeURIComponent(me.responseType) +
-            '&client_id=' +
-            encodeURIComponent(me.clientId) +
-            '&state=' +
-            encodeURIComponent(state) +
-            '&redirect_uri=' +
-            encodeURIComponent(redirectUri) +
-            '&scope=' +
-            encodeURIComponent(scope);
-        if (me.responseType.includes('code') && !me.disablePKCE) {
-            const [challenge, verifier] = me.createChallangeVerifierPairForPKCE();
-            AppStorage.set('PKCE_verifier', verifier);
-            url += '&code_challenge=' + challenge;
-            url += '&code_challenge_method=S256';
-        }
-        // if (loginHint) {
-        //     url += '&login_hint=' + encodeURIComponent(loginHint);
-        // }
-        if (me.resource) {
-            url += '&resource=' + encodeURIComponent(me.resource);
-        }
-        if (me.oidc) {
-            url += '&nonce=' + encodeURIComponent(nonce);
-        }
-        return url;
-    },
+        toHashString(buffer) {
+            const byteArray = new Uint8Array(buffer);
+            let result = '';
+            for (let e of byteArray) {
+                result += String.fromCharCode(e);
+            }
+            return result;
+        },
 
-    createAndSaveNonce() {
-        let me = this,
-            nonce = me.createNonce();
+        getCodePartsFromUrl(queryString) {
+            if (!queryString || queryString.length === 0) {
+                return this.getHashFragmentParams();
+            }
+            // normalize query string
+            if (queryString.charAt(0) === '?') {
+                queryString = queryString.substr(1);
+            }
+            return Ext.Object.fromQueryString(queryString);
+        },
+
+        getHashFragmentParams(customHashFragment) {
+            let hash = customHashFragment || window.location.hash;
+            hash = decodeURIComponent(hash);
+            if (hash.indexOf('#') !== 0) {
+                return {};
+            }
+            const questionMarkPosition = hash.indexOf('?');
+            if (questionMarkPosition > -1) {
+                hash = hash.substr(questionMarkPosition + 1);
+            }
+            else {
+                hash = hash.substr(1);
+            }
+            return Ext.Object.fromQueryString(hash);
+        },
+
+        parseState(state) {
+            let nonce = state;
+            let userState = '';
+            if (state) {
+                const idx = state.indexOf(this.config.nonceStateSeparator);
+                if (idx > -1) {
+                    nonce = state.substr(0, idx);
+                    userState = state.substr(idx + this.config.nonceStateSeparator.length);
+                }
+            }
+            return [nonce, userState];
+        },
+
+        validateNonce(nonceInState) {
+            let savedNonce;
+            savedNonce = AppStorage.get('nonce');
+            if (savedNonce !== nonceInState) {
+                const err = 'Validating access_token failed, wrong state/nonce.';
+                return false;
+            }
+            return true;
+        },
+
+        getTokenFromCode(code, options) {
+            let me = this,
+                verifier = AppStorage.get('PKCE_verifier'),
+                data = {
+                    'grant_type': 'authorization_code',
+                    'code': code,
+                    'redirect_uri': me.redirectUri,
+                    'code_verifier': verifier
+                };
+            let promise = me.send(data, me.endpoints.token);
+            promise.then(me.getTokenFromCodeSuccess, me.getTokenFromCodeFailure, null, me);
+            return promise;
+
+        },
+
+        getTokenFromCodeSuccess(response) {
+            let me = this;
+            me.processToken(response);
+            me.fireEvent('loggedin');
+        },
+
+        getTokenFromCodeFailure(response) {
+            let me = this,
+                current = I18N.getCurrentLanguage() || 'zh-CN',
+                msg = AppConfig.loginFailure[current];
+            MsgBox.alert('', msg);
+            me.fireEvent('loginfailtre');
+        },
+
+        createLoginUrl() {
+            let me = this,
+                redirectUri = me.redirectUri,
+                nonce = me.createAndSaveNonce(),
+                state = nonce,
+                seperationChar = me.loginUrl.indexOf('?') > -1 ? '&' : '?',
+                scope = me.scope;
+            if (me.oidc && !scope.match(/(^|\s)openid($|\s)/)) {
+                scope = 'openid ' + scope;
+            }
+            let url = me.loginUrl +
+                seperationChar +
+                'response_type=' +
+                encodeURIComponent(me.responseType) +
+                '&client_id=' +
+                encodeURIComponent(me.clientId) +
+                '&state=' +
+                encodeURIComponent(state) +
+                '&redirect_uri=' +
+                encodeURIComponent(redirectUri) +
+                '&scope=' +
+                encodeURIComponent(scope);
+            if (me.responseType.includes('code') && !me.disablePKCE) {
+                const [challenge, verifier] = me.createChallangeVerifierPairForPKCE();
+                AppStorage.set('PKCE_verifier', verifier);
+                url += '&code_challenge=' + challenge;
+                url += '&code_challenge_method=S256';
+            }
+            // if (loginHint) {
+            //     url += '&login_hint=' + encodeURIComponent(loginHint);
+            // }
+            if (me.resource) {
+                url += '&resource=' + encodeURIComponent(me.resource);
+            }
+            if (me.oidc) {
+                url += '&nonce=' + encodeURIComponent(nonce);
+            }
+            return url;
+        },
+
+        createAndSaveNonce() {
+            let me = this,
+                nonce = me.createNonce();
             AppStorage.set('nonce', nonce);
-        return nonce;
-    },
+            return nonce;
+        },
 
-    createNonce() {
-        /*
-            * This alphabet is from:
-            * https://tools.ietf.org/html/rfc7636#section-4.1
-            *
-            * [A-Z] / [a-z] / [0-9] / "-" / "." / "_" / "~"
-            */
-        let unreserved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~',
-            size = 45,
-            id = '',
-            crypto = typeof self === 'undefined' ? null : self.crypto || self['msCrypto'];
-        if (crypto) {
-            let bytes = new Uint8Array(size);
-            crypto.getRandomValues(bytes);
-            // Needed for IE
-            if (!bytes.map) {
-                bytes.map = Array.prototype.map;
+        createNonce() {
+            /*
+                * This alphabet is from:
+                * https://tools.ietf.org/html/rfc7636#section-4.1
+                *
+                * [A-Z] / [a-z] / [0-9] / "-" / "." / "_" / "~"
+                */
+            let unreserved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~',
+                size = 45,
+                id = '',
+                crypto = typeof self === 'undefined' ? null : self.crypto || self['msCrypto'];
+            if (crypto) {
+                let bytes = new Uint8Array(size);
+                crypto.getRandomValues(bytes);
+                // Needed for IE
+                if (!bytes.map) {
+                    bytes.map = Array.prototype.map;
+                }
+                bytes = bytes.map(x => unreserved.charCodeAt(x % unreserved.length));
+                id = String.fromCharCode.apply(null, bytes);
             }
-            bytes = bytes.map(x => unreserved.charCodeAt(x % unreserved.length));
-            id = String.fromCharCode.apply(null, bytes);
-        }
-        else {
-            while (0 < size--) {
-                id += unreserved[(Math.random() * unreserved.length) | 0];
+            else {
+                while (0 < size--) {
+                    id += unreserved[(Math.random() * unreserved.length) | 0];
+                }
             }
+            return Ext.util.Format.base64UrlEncode(id);
+        },
+
+        createChallangeVerifierPairForPKCE() {
+            let me = this,
+                verifier = me.createNonce(),
+                challengeRaw = me.calcHash(verifier, 'sha-256'),
+                challenge = Ext.util.Format.base64UrlEncode(challengeRaw);
+            return [challenge, verifier];
         }
-        return Ext.util.Format.base64UrlEncode(id);
-    },
 
-    createChallangeVerifierPairForPKCE() {
-        let me = this, 
-            verifier = me.createNonce(),
-            challengeRaw = me.calcHash(verifier, 'sha-256'),
-            challenge = Ext.util.Format.base64UrlEncode(challengeRaw);
-        return [challenge, verifier];
-    },
+    }
 
-    
+
+
 });

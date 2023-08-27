@@ -54,7 +54,7 @@ Ext.define('Common.service.Config', {
     loadConfiguration(){
         let me = this;
         me.isReady = false;
-        Http.get(URI.get('application-configuration'))
+        return Http.get(URI.get('application-configuration'))
             .then(me.loadConfigurationSuccess, me.loadConfigurationFailure, null ,me);
     },
 

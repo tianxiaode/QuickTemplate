@@ -19,11 +19,13 @@ using QuickTemplate.Localization;
 using QuickTemplate.Web.Components;
 using QuickTemplate.Web.Menus;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Generic.Abp.Metro.UI.Theme.Shared;
 using QuickTemplate.MultiTenancy;
 using Volo.Abp;
+using Volo.Abp.Account;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
@@ -72,8 +74,10 @@ public class QuickTemplateWebModule : AbpModule
         {
             builder.AddValidation(options =>
             {
-                options.AddAudiences(" QuickTemplate"); // Replace with your application Name
+                options.AddAudiences("QuickTemplate"); // Replace with your application Name
                 options.UseLocalServer();
+                //options.EnableAuthorizationEntryValidation();
+                //options.EnableTokenEntryValidation();
                 options.UseAspNetCore();
             });
         });
@@ -111,10 +115,11 @@ public class QuickTemplateWebModule : AbpModule
         Configure<AppUrlOptions>(options =>
         {
             options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
-            options.RedirectAllowedUrls.AddRange(configuration["App:RedirectAllowedUrls"].Split(','));
+            options.RedirectAllowedUrls.AddRange(configuration["App:RedirectAllowedUrls"]?.Split(',') ??
+                                                 new string[] { });
 
-            //options.Applications["Angular"].RootUrl = configuration["App:ClientUrl"];
-            //options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] = "account/reset-password";
+            options.Applications["Angular"].RootUrl = configuration["App:ClientUrl"];
+            options.Applications["Angular"].Urls[AccountUrlNames.PasswordReset] = "account/reset-password";
         });
     }
 

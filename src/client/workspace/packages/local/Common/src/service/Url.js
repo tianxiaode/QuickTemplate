@@ -48,6 +48,12 @@
     getResource(res) {
         let me = this;
         return me.getResourcePath() +  me.resources[res];
-    }
+    },
+
+    destroy() {
+        let me = this;
+        me.resources = null;
+    },
+   
 
 });

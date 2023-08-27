@@ -52,6 +52,7 @@ Ext.define('Common.ux.app.Application', {
                 Http.postScriptError(msg, url, line, col, error);
             }
         }
+
                 
     },
 
@@ -80,7 +81,7 @@ Ext.define('Common.ux.app.Application', {
         let elem = document.getElementById("splash")
         if(elem)
             elem.parentNode.removeChild(elem)
-    },
+    }
     
 
 

@@ -27,8 +27,8 @@ Ext.define('Common.service.Enums', {
     },
 
     getStore(){
-        let me = this;
-        let store = me.store;
+        let me = this,
+            store = me.store;
         if(!store){
             store = me.store = Ext.create('Common.data.store.Enums');
         }        
@@ -64,16 +64,28 @@ Ext.define('Common.service.Enums', {
         Enums[name] = enums;
     },
 
+    destroy() {
+        let me = this;
+        me.store = null;
+        Ext.each(me.enumNames, name=>{
+            me[name] = null;
+        })
+        me.enumNames = null;
+    },
+
+
     privates:{
         store : null,
 
         onStoreLoad(store, records, successful, operation, eOpts ){
-            let me = this;
+            let me = this,
+                names = [];
             if(!successful) return;
             records.forEach(record => {
                 let name = Format.uncapitalize(record.get('name')),
                     data = me[name];
                 if(!data){
+                    names.push(name);
                     data = me[name] = {};
                 }
                 let d = Ext.clone(record.data);
@@ -81,6 +93,7 @@ Ext.define('Common.service.Enums', {
                 if(record.get('isDefault')) me.defaultValue[name] = d;
             });
             me.updateModelFieldDefaultValue();
+            me.enumNames = names;
             me.isReady = true;
             me.fireEvent('ready',me);
         },

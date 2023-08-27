@@ -50,15 +50,15 @@ namespace QuickTemplate.OpenIddict
 
         private async Task CreateScopesAsync()
         {
-            if (await _scopeManager.FindByNameAsync("Demo") == null)
+            if (await _scopeManager.FindByNameAsync("QuickTemplate") == null)
             {
                 await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
                 {
-                    Name = "Demo",
-                    DisplayName = "Demo API",
+                    Name = "QuickTemplate",
+                    DisplayName = "QuickTemplate API",
                     Resources =
                     {
-                        "Demo"
+                        "QuickTemplate"
                     }
                 });
             }
@@ -73,25 +73,25 @@ namespace QuickTemplate.OpenIddict
                 OpenIddictConstants.Permissions.Scopes.Phone,
                 OpenIddictConstants.Permissions.Scopes.Profile,
                 OpenIddictConstants.Permissions.Scopes.Roles,
-                "Demo"
+                "QuickTemplate"
             };
 
             var configurationSection = _configuration.GetSection("OpenIddict:Applications");
 
             //Web Client
-            var webClientId = configurationSection["Demo_Web:ClientId"];
+            var webClientId = configurationSection["QuickTemplate_Web:ClientId"];
             if (!webClientId.IsNullOrWhiteSpace())
             {
-                var webClientRootUrl = configurationSection["Demo_Web:RootUrl"].EnsureEndsWith('/');
+                var webClientRootUrl = configurationSection["QuickTemplate_Web:RootUrl"].EnsureEndsWith('/');
 
-                /* Demo_Web client is only needed if you created a tiered
+                /* QuickTemplate_Web client is only needed if you created a tiered
                  * solution. Otherwise, you can delete this client. */
                 await CreateApplicationAsync(
                     name: webClientId,
                     type: OpenIddictConstants.ClientTypes.Confidential,
                     consentType: OpenIddictConstants.ConsentTypes.Implicit,
                     displayName: "Web Application",
-                    secret: configurationSection["Demo_Web:ClientSecret"] ?? "1q2w3e*",
+                    secret: configurationSection["QuickTemplate_Web:ClientSecret"] ?? "1q2w3e*",
                     grantTypes: new List<string> //Hybrid flow
                     {
                         OpenIddictConstants.GrantTypes.AuthorizationCode,
@@ -105,10 +105,10 @@ namespace QuickTemplate.OpenIddict
             }
 
             //Console Test / Angular Client
-            var consoleAndAngularClientId = configurationSection["Demo_App:ClientId"];
+            var consoleAndAngularClientId = configurationSection["QuickTemplate_App:ClientId"];
             if (!consoleAndAngularClientId.IsNullOrWhiteSpace())
             {
-                var consoleAndAngularClientRootUrl = configurationSection["Demo_App:RootUrl"]?.TrimEnd('/');
+                var consoleAndAngularClientRootUrl = configurationSection["QuickTemplate_App:RootUrl"]?.TrimEnd('/');
                 await CreateApplicationAsync(
                     name: consoleAndAngularClientId,
                     type: OpenIddictConstants.ClientTypes.Public,
@@ -131,10 +131,10 @@ namespace QuickTemplate.OpenIddict
 
 
             // Swagger Client
-            var swaggerClientId = configurationSection["Demo_Swagger:ClientId"];
+            var swaggerClientId = configurationSection["QuickTemplate_Swagger:ClientId"];
             if (!swaggerClientId.IsNullOrWhiteSpace())
             {
-                var swaggerRootUrl = configurationSection["Demo_Swagger:RootUrl"].TrimEnd('/');
+                var swaggerRootUrl = configurationSection["QuickTemplate_Swagger:RootUrl"].TrimEnd('/');
 
                 await CreateApplicationAsync(
                     name: swaggerClientId,
