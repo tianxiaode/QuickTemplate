@@ -1,5 +1,5 @@
 Ext.define('Common.service.Template', {
-    alternateClassName: 'Tpl',
+    alternateClassName: 'Template',
     singleton: true,
 
     templates:{},

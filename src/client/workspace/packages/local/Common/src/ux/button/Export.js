@@ -1,17 +1,24 @@
 Ext.define('Common.ux.button.Export',{
-    extend: 'Ext.Button',
+    extend: 'Common.ux.button.Auto',
     xtype: 'uxexportbutton',
 
-
-    responsiveConfig:{
-        'desktop && !cancel':{
-            langTooltip: 'Export',
-            iconCls: 'x-fa fa-file-export',
-        },
-        'phone && !cancel':{
-            ui: 'plain',
-            iconCls: 'md-icon-publish',
-        }
+    applyLangTooltip(tip){
+        if(tip !== 'auto') return tip;
+        if(Ext.platformTags.desktop) return 'Export';
+        return null;
     },
+
+    applyIconCls(cls){
+        if(cls !== 'auto') return cls;
+        if(Ext.platformTags.desktop) return 'x-fa fa-file-export';
+        return 'md-icon-add';
+    },
+
+    applyUi(ui){
+        if(ui !== 'auto') return ui;
+        if(Ext.platformTags.desktop) return null;
+        return 'plain';
+    }
+
 
 })

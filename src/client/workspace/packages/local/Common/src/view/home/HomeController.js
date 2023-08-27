@@ -27,6 +27,9 @@ Ext.define('Common.view.home.HomeController',{
 
         if(!me.isReady()){
             action.stop();
+            Config.on('ready', me.checkConfigLoaded, me);
+            I18N.on('ready', me.checkConfigLoaded, me);
+            Enums.on('ready', me.checkConfigLoaded, me);    
             me.loadConfiguration();
             return;
         }
@@ -73,25 +76,24 @@ Ext.define('Common.view.home.HomeController',{
         vm.set('isAuthenticated', true);
 
         me.getView().setMasked(I18N.getLocalText('LoadingUserConfiguration'));
-        //I18N.on('ready', me.configurationLoaded.bind(me,[xtype]), me);
-        Enums.on('ready', me.configurationLoaded, me);
-        Config.loadConfiguration().then(me.configurationLoaded.bind(me));
-        I18N.loadResources().then(me.configurationLoaded.bind(me));
+        Config.loadConfiguration();
+        I18N.loadResources();
         Enums.init();
         //Signalr.connect();
 
     },
 
-    configurationLoaded(){
+    checkConfigLoaded(){
+        console.log('checkConfigLoaded', arguments)
         let me = this,
             hash = Auth.getOrginHash() || Ext.util.History.getToken();
-        console.log('configurationLoaded',  hash);        
         if(!me.isReady()) return;
         Auth.removeOrginHash();
         me.redirectTo(hash, { force: true, replace: true });
     },
 
     isReady(){
+        console.log(Config.isReady , I18N.isReady , Enums.isReady)
         return Config.isReady && I18N.isReady && Enums.isReady;
     },
 

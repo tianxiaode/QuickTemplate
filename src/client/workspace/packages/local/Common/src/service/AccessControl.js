@@ -15,6 +15,7 @@ Ext.define('Common.service.AccessControl',{
     constructor(config) {
         let me = this;
         me.initConfig(config);
+        Config.on('ready', me.init, me);
     },
 
     isGranted(permissionName){
@@ -27,9 +28,10 @@ Ext.define('Common.service.AccessControl',{
         return this.getPolicies()[permission];
     },
 
-    init(){
+    init(){        
         let me = this,
             auth = Config.getAuthData();
+        console.log('acl init')
         if(!auth) return;
         me.setPolicies(Object.assign({}, auth.grantedPolicies) );
         me.setGrantedPolicies(Object.assign({},auth.grantedPolicies));

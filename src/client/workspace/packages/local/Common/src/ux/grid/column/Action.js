@@ -33,4 +33,10 @@ Ext.define('Common.ux.grid.column.Action',{
         return cell;
     },
 
+    destroy() {
+        let me = this;
+        me.setTranslation(null);
+        me.callParent();
+    },
+
 })

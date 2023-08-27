@@ -5,5 +5,5 @@ Ext.define('Common.ux.button.Done',{
     iconCls : 'md-icon-done',
     ui: 'plain',
     weight: 200,
-    handler: 'onDone' , 
+    handler: 'onDone' 
 })

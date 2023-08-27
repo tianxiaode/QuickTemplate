@@ -228,7 +228,8 @@ Ext.define('Common.service.Localized', {
             })
         }
         me.isReady = true;
-        me.fireEvent('ready', me);
+        Ext.defer(me.fireEvent, 10, me,  ['ready',me]);
+        //me.fireEvent('ready', me);
 
     }
 

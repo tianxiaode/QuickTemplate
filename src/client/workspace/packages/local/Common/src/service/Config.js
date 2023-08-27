@@ -14,6 +14,7 @@ Ext.define('Common.service.Config', {
     images:{},
 
     isReady: false,
+
     constructor(config){
         let me = this;
         me.initConfig(config)
@@ -54,8 +55,9 @@ Ext.define('Common.service.Config', {
     loadConfiguration(){
         let me = this;
         me.isReady = false;
-        return Http.get(URI.get('application-configuration'))
-            .then(me.loadConfigurationSuccess, me.loadConfigurationFailure, null ,me);
+        let promise = Http.get(URI.get('application-configuration'));
+        promise.then(me.loadConfigurationSuccess, me.loadConfigurationFailure, null ,me);
+        return promise;
     },
 
     getImage(hash){
@@ -73,6 +75,12 @@ Ext.define('Common.service.Config', {
         me.isReady = false;
         me.data = null;
     },
+    
+    destroy() {
+        let me = this;
+        me.data = null;
+        me.setFileOptions(null);
+    },
 
     privates:{
         data: {},
@@ -81,10 +89,12 @@ Ext.define('Common.service.Config', {
             let me = this,
                 data = Http.parseResponse(response);
             me.data = Object.assign({}, data);
-            ACL.init();
+            //ACL.init();
             //me.setFileOptions(result.fileOption);
             me.isReady = true;
-            me.fireEvent('ready', data);
+            console.log('loadConfigurationSuccess', me.data, Config.isReady )
+            Ext.defer(me.fireEvent, 10, me,  ['ready',me]);
+            //me.fireEvent('ready', data);
         },
 
         loadConfigurationFailure(response){
@@ -93,7 +103,7 @@ Ext.define('Common.service.Config', {
         }
 
     
-    },
+    }
 
 
 });

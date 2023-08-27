@@ -1,5 +1,5 @@
 Ext.define('Common.ux.button.Message',{
-    extend: 'Ext.Button',
+    extend: 'Common.ux.button.Auto',
     xtype: 'uxmessagebutton',
 
     config:{
@@ -21,14 +21,10 @@ Ext.define('Common.ux.button.Message',{
         closable: true
     },                
 
-    responsiveConfig:{
-        'desktop && !cancel':{
-            weight: 4,
-        },
-        'phone && !cancel':{
-            ui: 'plain',
-            weight: 45,
-        }
+    applyUi(ui){
+        if(ui !== 'auto') return ui;
+        if(Ext.platformTags.phone) return 'plain';
+        return null;
     },
 
 
@@ -57,6 +53,12 @@ Ext.define('Common.ux.button.Message',{
 
     onShowTooltip(){
         this.getTooltip().show();
+    },
+
+    destroy(){
+        let me = this;
+        me.setError(null);
+        me.callParent();
     }
 
 })

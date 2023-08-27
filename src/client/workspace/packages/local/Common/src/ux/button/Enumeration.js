@@ -1,16 +1,10 @@
 Ext.define('Common.ux.button.Enumeration',{
-    extend: 'Ext.Button',
+    extend: 'Common.ux.button.Auto',
     xtype: 'uxenumerationbutton',
 
     mixins:[
         'Common.mixin.Enumeration'
     ],
-
-    responsiveConfig:{
-        'phone && !cancel':{
-            ui: 'plain',
-        }
-    },
 
 
     config:{

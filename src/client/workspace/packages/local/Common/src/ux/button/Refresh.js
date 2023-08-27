@@ -1,21 +1,23 @@
 Ext.define('Common.ux.button.Refresh',{
-    extend: 'Ext.Button',
+    extend: 'Common.ux.button.Auto',
     xtype: 'uxrefreshbutton',
 
-    langTooltip: 'Refresh',
-
-    responsiveConfig:{
-        'desktop && !cancel':{
-            langTooltip: 'Refresh',
-            weight: 200,
-            ui: 'cyan', 
-            iconCls: 'x-fa fa-undo',
-        },
-        'phone && !cancel':{
-            ui: 'plain',
-            weight: 80,
-            iconCls: 'md-icon-refresh',
-        }
+    applyLangTooltip(tip){
+        if(tip !== 'auto') return tip;
+        if(Ext.platformTags.desktop) return 'Refresh';
+        return null;
     },
+
+    applyIconCls(cls){
+        if(cls !== 'auto') return cls;
+        if(Ext.platformTags.desktop) return 'x-fa fa-undo';
+        return 'md-icon-refresh';
+    },
+
+    applyUi(ui){
+        if(ui !== 'auto') return ui;
+        if(Ext.platformTags.desktop) return 'cyan';
+        return 'plain';
+    }
 
 })

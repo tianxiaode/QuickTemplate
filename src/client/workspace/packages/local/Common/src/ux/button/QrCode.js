@@ -1,15 +1,23 @@
 Ext.define('Common.ux.button.QrCode',{
-    extend: 'Ext.Button',
+    extend: 'Common.ux.button.Auto',
     xtype: 'uxqrcodebutton',
 
-    langTooltip: 'ExportQrCode',
-    iconCls: 'x-fa fa-qrcode',
-    
-    responsiveConfig:{
-        'phone && !cancel':{
-            ui: 'plain',
-        }
+
+    applyLangTooltip(tip){
+        if(tip !== 'auto') return tip;
+        if(Ext.platformTags.desktop) return 'ExportQrCode';
+        return null;
     },
 
+    applyIconCls(cls){
+        if(cls !== 'auto') return cls;
+        return 'x-fa fa-qrcode';
+    },
+
+    applyUi(ui){
+        if(ui !== 'auto') return ui;
+        if(Ext.platformTags.desktop) return null;
+        return 'plain';
+    }
 
 })
