@@ -50,7 +50,7 @@
         return me.getResourcePath() +  me.resources[res];
     },
 
-    destroy() {
+    doDestroy() {
         let me = this;
         me.resources = null;
     },

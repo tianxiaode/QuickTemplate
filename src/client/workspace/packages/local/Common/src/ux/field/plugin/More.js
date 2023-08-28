@@ -37,7 +37,7 @@ Ext.define('Common.ux.field.plugin.More', {
         editor.fireEvent('complete', editor, [value])
     },
 
-    destroy() {
+    doDestroy() {
         let me = this;
         me.setOwner(null);
         me.cleanup();

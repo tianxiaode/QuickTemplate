@@ -1,4 +1,4 @@
-Ext.define('Common.ux.grid.column.Action',{
+Ext.define('Common.ux.grid.column.Action', {
     extend: 'Ext.grid.column.Column',
     xtype: 'uxactioncolumn',
 
@@ -8,9 +8,8 @@ Ext.define('Common.ux.grid.column.Action',{
     align: 'center',
     width: 60,
 
-    useTranslation: true,
-    config:{
-        translation:{
+    config: {
+        translation: {
             iconCls: 'x-fa fa-globe text-primary',
             handler: 'onMultilingual',
             langTooltip: 'Multilingual',
@@ -19,24 +18,26 @@ Ext.define('Common.ux.grid.column.Action',{
     },
 
 
-    applyCell: function(cell, oldCell) {
+    applyCell(cell, oldCell) {
         if (oldCell) {
             cell = Ext.apply(oldCell, cell);
         }
 
-        if(this.useTranslation){
+        let translation = me.getTranslation();
+
+        if (translation) {
             let tools = cell.tools;
-            if(!tools) tools = cell.tools = {};
-            tools.translation = Ext.clone(this.getTranslation());
+            if (!tools) tools = cell.tools = {};
+            tools.translation = Ext.clone(translation);
         }
 
         return cell;
     },
 
-    destroy() {
+    doDestroy() {
         let me = this;
         me.setTranslation(null);
         me.callParent();
-    },
+    }
 
 })

@@ -140,7 +140,7 @@ Ext.define('Common.view.home.HomeController',{
         ViewMgr.showPage(xtype);
     },
 
-    destroy(){
+    doDestroy(){
         let me = this;
     }
 })

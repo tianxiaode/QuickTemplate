@@ -112,7 +112,7 @@ Ext.define('Common.service.Localized', {
         return promise;
     },
 
-    destroy() {
+    doDestroy() {
         let me = this;
         me.remoteRawValue = null;
         me.localText = null;

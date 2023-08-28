@@ -31,7 +31,7 @@ Ext.define('Common.mixin.component.Search', {
         panel.setHidden(!hidden);
     },
 
-    destroy() {
+    doDestroy() {
         this.setSearchButton(null);
     }
 

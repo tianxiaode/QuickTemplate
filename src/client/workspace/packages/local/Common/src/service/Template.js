@@ -51,7 +51,7 @@ Ext.define('Common.service.Template', {
         return template;
     },
 
-    destroy() {
+    doDestroy() {
         let me = this;
         me.templates = null;
     },

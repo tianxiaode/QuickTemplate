@@ -4,7 +4,7 @@ Ext.define('Common.mixin.Paging', {
 
     mixinConfig: {
         before:{
-            destroy: 'destroy'
+            doDestroy: 'doDestroy'
         }
     },
 
@@ -319,7 +319,7 @@ Ext.define('Common.mixin.Paging', {
         return pageNum;
     },
 
-    destroy(){
+    doDestroy(){
         this.emptyPageData = null;
     }
 

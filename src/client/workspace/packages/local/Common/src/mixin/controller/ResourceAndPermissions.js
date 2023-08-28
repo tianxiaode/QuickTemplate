@@ -5,7 +5,7 @@ Ext.define('Common.mixin.controller.ResourceAndPermissions', {
         configs: true,
         before: {
             init: 'init',
-            destroy: 'destroy'
+            doDestroy: 'doDestroy'
         }
     },
 
@@ -29,7 +29,7 @@ Ext.define('Common.mixin.controller.ResourceAndPermissions', {
     },
 
 
-    destroy() {
+    doDestroy() {
         this.permissions = null;
     }
 

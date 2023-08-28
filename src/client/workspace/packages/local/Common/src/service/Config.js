@@ -76,7 +76,7 @@ Ext.define('Common.service.Config', {
         me.data = null;
     },
     
-    destroy() {
+    doDestroy() {
         let me = this;
         me.data = null;
         me.setFileOptions(null);

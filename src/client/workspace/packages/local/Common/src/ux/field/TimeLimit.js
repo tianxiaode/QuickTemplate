@@ -12,19 +12,7 @@ Ext.define('Common.ux.field.TimeLimit',{
     required: true,
 
     config:{
-        longTerm:{
-            xtype: 'checkboxfield',
-            name: 'isLongTerm',
-            autoLabel: false,
-            value: true,
-            weight: 50,
-            width:80,
-            margin: '0 5px 0 0',
-            checked: false,
-            uncheckedValue: false,
-            bodyAlign: 'start',
-            langBoxLabel:  'LongTerm',
-        }
+        longTerm:{}
     },
 
     updateDisabled(disabled, oldDisabled){
@@ -41,6 +29,17 @@ Ext.define('Common.ux.field.TimeLimit',{
     createLongTerm(newCmp){
         let me = this;
         return Ext.apply({
+            xtype: 'checkboxfield',
+            name: 'isLongTerm',
+            autoLabel: false,
+            value: true,
+            weight: 50,
+            width:80,
+            margin: '0 5px 0 0',
+            checked: false,
+            uncheckedValue: false,
+            bodyAlign: 'start',
+            langBoxLabel:  'LongTerm',
             ownerCmp: me,
             listeners:{
                 change: me.onLongTermChange,
@@ -55,7 +54,7 @@ Ext.define('Common.ux.field.TimeLimit',{
     },
 
     updateLongTerm(config){
-        if(config) this.add(config);
+        config && this.add(config);
     },
 
 
@@ -79,7 +78,13 @@ Ext.define('Common.ux.field.TimeLimit',{
             if(Ext.isDate(startValue) && startValue.getFullYear() === 1) start.setValue(date);
             if(Ext.isDate(endValue) && endValue.getFullYear() === 9999)  end.setValue(date);
         }
+    },
+
+    doDestroy(){
+        this.setLongTerm(null);
+        this.callParent();
     }
+
 
 
 })

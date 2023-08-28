@@ -64,7 +64,7 @@ Ext.define('Common.service.Enums', {
         Enums[name] = enums;
     },
 
-    destroy() {
+    doDestroy() {
         let me = this;
         me.store = null;
         Ext.each(me.enumNames, name=>{

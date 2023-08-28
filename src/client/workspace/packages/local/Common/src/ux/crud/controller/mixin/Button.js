@@ -4,7 +4,7 @@ Ext.define('Common.ux.crud.controller.mixin.Button',{
     mixinConfig: {
         configs: true,
         before:{
-            destroy: 'destroy',
+            doDestroy: 'doDestroy',
             initButtons: 'initButtons',
             updateButtons: 'updateButtons'
         },
@@ -89,7 +89,7 @@ Ext.define('Common.ux.crud.controller.mixin.Button',{
         button && button.setDisabled(disabled);
     },
 
-    destroy(){
+    doDestroy(){
         this.buttons = null;
     }
     

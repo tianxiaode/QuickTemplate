@@ -43,7 +43,7 @@ Ext.define('Common.mixin.component.CountMessage',{
         config && this.add(config);
     },
 
-    destroy(){
+    doDestroy(){
         this.setCountMessage(null);
         this.setFill(null);
     }

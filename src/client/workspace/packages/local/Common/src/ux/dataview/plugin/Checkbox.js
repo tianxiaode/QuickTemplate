@@ -40,7 +40,7 @@ Ext.define('Common.ux.dataview.plugin.Checkbox',{
         controller.doColumnCheckChange(record, field, selected);
     },
 
-    destroy(){
+    doDestroy(){
         let me = this;
         me.list = null;
         Ext.destroy(me._listListeners);

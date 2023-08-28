@@ -10,7 +10,7 @@ Ext.define('Common.ux.uploader.Uploader',{
         configs: true,
         after:{
             initialize: 'initialize',
-            destroy: 'destroy',
+            doDestroy: 'doDestroy',
             onSelectFiles: 'onSelectFiles'
         }
     },
@@ -164,7 +164,7 @@ Ext.define('Common.ux.uploader.Uploader',{
                 if(!me.getMultiple() && files.length === 1) return false;
                 files.push(file);
             }else{
-                file.destroy();
+                file.doDestroy();
             }
         })
 
@@ -249,7 +249,7 @@ Ext.define('Common.ux.uploader.Uploader',{
      * 销毁Uploader
      */
     
-    destroy(){
+    doDestroy(){
         let me = this;
         me.clearFiles();
         me.callParent();
@@ -399,7 +399,7 @@ Ext.define('Common.ux.uploader.Uploader',{
                 checkFileResult = me.checkFileResult;
             hashList.forEach(hash=>{
                 let f = files[hash];
-                if(f && f.destroy) f.destroy();
+                if(f && f.destroy) f.doDestroy();
                 if(f) delete me.files[hash];
                 if(checkFileResult[hash]) delete me.checkFileResult[hash];
             });

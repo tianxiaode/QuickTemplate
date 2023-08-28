@@ -39,7 +39,7 @@ Ext.define('Common.mixin.component.SearchField',{
 
     },
 
-    destroy() {
+    doDestroy() {
         this.setSearchFie(null);
     }
 

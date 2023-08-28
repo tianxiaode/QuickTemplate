@@ -129,4 +129,5 @@ Ext.define('Common.ux.field.CheckBoxList',{
     },
 
     rawToValue: Ext.emptyFn
+
 });

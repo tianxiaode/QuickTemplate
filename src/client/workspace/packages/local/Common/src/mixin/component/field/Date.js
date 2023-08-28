@@ -28,7 +28,7 @@ Ext.define('Common.mixin.component.field.Date', {
         config && this.add({ xtype: 'container', layout: 'center', items:[config]});
     },
 
-    destroy(){
+    doDestroy(){
         this.setDate(null);
     }
 

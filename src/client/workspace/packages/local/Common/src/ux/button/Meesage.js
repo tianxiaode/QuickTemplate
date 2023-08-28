@@ -55,7 +55,7 @@ Ext.define('Common.ux.button.Message',{
         this.getTooltip().show();
     },
 
-    destroy(){
+    doDestroy(){
         let me = this;
         me.setError(null);
         me.callParent();

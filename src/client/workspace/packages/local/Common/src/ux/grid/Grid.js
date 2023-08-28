@@ -11,20 +11,6 @@ Ext.define('Common.ux.grid.Grid',{
         grouped: false,
     },
 
-    hasPaging: true,
-
-    initialize() {
-        let me = this;
- 
-        me.callParent();
-        if(me.hasPaging){
-            me.addPlugin({
-                type: 'listpaging',
-                autoPaging: true
-            });
-        }
-    },
-
     privates:{
         updateStore(store){
             let me= this;

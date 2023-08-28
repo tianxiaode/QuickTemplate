@@ -134,8 +134,8 @@ Ext.define('Common.ux.field.Select',{
         var me = this;
 
         if (oldStore) {
-            if (oldStore.getAutoDestroy()) {
-                oldStore.destroy();
+            if (oldStore.getAutodoDestroy()) {
+                oldStore.doDestroy();
             }
             else {
                 oldStore.byValue = oldStore.byText = Ext.destroy(oldStore.byValue, oldStore.byText);

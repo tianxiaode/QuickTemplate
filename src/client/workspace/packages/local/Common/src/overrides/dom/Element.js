@@ -75,7 +75,7 @@ Ext.define('Common.overrides.dom.Element', {
     //             console.log(Ext.clone(Ext.cache));
     //             Ext.raise("DOM element with id " + id +
     //                 " in Element cache is not the same as element in the DOM. " +
-    //                 "Make sure to clean up Element instances using destroy()");
+    //                 "Make sure to clean up Element instances using doDestroy()");
     //         }
     //         //</debug>
 
@@ -103,7 +103,7 @@ Ext.define('Common.overrides.dom.Element', {
     //                     return entry;
     //                 }
     //                 else {
-    //                     entry.destroy();
+    //                     entry.doDestroy();
     //                 }
     //             }
 
@@ -164,7 +164,7 @@ Ext.define('Common.overrides.dom.Element', {
     //                     return entry;
     //                 }
     //                 else {
-    //                     entry.destroy();
+    //                     entry.doDestroy();
     //                 }
     //             }
 

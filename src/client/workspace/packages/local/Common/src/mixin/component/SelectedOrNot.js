@@ -30,7 +30,7 @@ Ext.define('Common.mixin.component.SelectedOrNot', {
     },
 
 
-    destroy() {
+    doDestroy() {
         this.setSelectedOrNot(null);
     }
 

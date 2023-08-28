@@ -83,7 +83,7 @@ Ext.define('Common.ux.field.plugin.History', {
     },
 
 
-    destroy() {
+    doDestroy() {
         let me = this;
         me.setOwner(null);
         me.cleanup();

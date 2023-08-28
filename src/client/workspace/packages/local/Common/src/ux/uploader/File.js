@@ -91,12 +91,12 @@ Ext.define('Common.ux.uploader.File',{
         loadNext();        
     },
 
-    destroy(){
+    doDestroy(){
         let me = this,
             chunks = me.chunks;
         me.file = null;
         chunks.forEach(c => {
-            c.destroy();            
+            c.doDestroy();            
         });
         me.chunks = null;
         me.callParent();

@@ -207,7 +207,7 @@ Ext.define('Common.service.ViewManager', {
     },
 
 
-    destroy(){
+    doDestroy(){
         let me = ViewMgr;
         for(let key in me.views){
             Ext.clear(me.views[key]);

@@ -122,7 +122,7 @@ Ext.define('Common.service.OAuth', {
         AppStorage.remove(this.storageKeys.originHash);
     },
 
-    destroy() {
+    doDestroy() {
         let me = this;
         me.storageKeys = null;
         me.endpoints = null;

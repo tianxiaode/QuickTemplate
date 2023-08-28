@@ -24,7 +24,7 @@ Ext.define('Common.mixin.component.field.TextField', {
         config && this.add(config);
     },
 
-    destroy() {
+    doDestroy() {
         this.setTextField(null);
     }
 

@@ -16,7 +16,7 @@ Ext.define('Common.ux.multilingual.Edit',{
         me.onCancel()
     },
 
-    doDestroy(){        
+    dodoDestroy(){        
         this.callback = false;
         this.callParent(arguments);
     },

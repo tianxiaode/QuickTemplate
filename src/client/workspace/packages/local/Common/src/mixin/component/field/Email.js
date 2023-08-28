@@ -27,7 +27,7 @@ Ext.define('Common.mixin.component.field.Email', {
         config && this.add(config);
     },
 
-    destroy() {
+    doDestroy() {
         this.setEmailField(null);
     }
 

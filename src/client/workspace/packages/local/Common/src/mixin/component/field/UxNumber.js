@@ -27,7 +27,7 @@ Ext.define('Common.mixin.component.field.UxNumber', {
         config && this.add(config);
     },
 
-    destroy() {
+    doDestroy() {
         this.setUxNumber(null);
     }
 

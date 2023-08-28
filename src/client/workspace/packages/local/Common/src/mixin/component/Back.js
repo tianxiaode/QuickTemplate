@@ -30,7 +30,7 @@ Ext.define('Common.mixin.component.Back', {
         Ext.History.back();
     },
 
-    destroy(){
+    doDestroy(){
         this.setBackButton(null);
     }
 

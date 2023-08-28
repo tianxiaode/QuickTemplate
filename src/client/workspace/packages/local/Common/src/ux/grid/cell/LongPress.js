@@ -85,7 +85,7 @@ Ext.define('Common.ux.grid.cell.LongPress',{
         if(Ext.isString(max)) max = record.get(max);
         if(value> max) return;
         record.set(params.field, value);
-    },
+    }
 
 
 

@@ -1,9 +1,9 @@
-Ext.define('Common.ux.field.Date',{
+Ext.define('Common.ux.field.Date', {
     extend: 'Ext.field.Date',
     xtype: 'uxdatefield',
 
-    requires:[
-            'Common.ux.panel.Date'
+    requires: [
+        'Common.ux.panel.Date'
     ],
 
     picker: 'floated',
@@ -77,29 +77,29 @@ Ext.define('Common.ux.field.Date',{
     },
 
 
-    privates:{
+    privates: {
         realignFloatedPicker(picker) {
             var me = this;
-    
+
             picker = picker || me.getConfig('picker', false, true);
-    
+
             if (picker && picker.isVisible()) {
                 let pickerValue = picker.getValue(),
                     value = me.getValue();
-                if(pickerValue && pickerValue.getTime() === value && value.getTime()) return;
-                
-                if(Ext.platformTags.desktop){
+                if (pickerValue && pickerValue.getTime() === value && value.getTime()) return;
+
+                if (Ext.platformTags.desktop) {
                     if (me.getMatchFieldWidth()) {
                         picker.setWidth(me[me.alignTarget].getWidth());
                     }
-        
+
                     picker.realign(me[me.alignTarget], me.getFloatedPickerAlign(), {
                         minHeight: 100
-                    });    
-                }else{
+                    });
+                } else {
                     picker.setWidth('90%');
                 }
-    
+
                 // If some keyboard gesture caused this, then there is an active location
                 // which we don't want to disturb.
                 if (!Ext.keyboardMode) {
@@ -107,11 +107,11 @@ Ext.define('Common.ux.field.Date',{
                 }
             }
         },
-    
-   
+
+
     },
 
-    onLocalized(){
+    onLocalized() {
         let me = this;
         me.callParent();
         me.setDateFormat(Format.defaultDateFormat);

@@ -152,7 +152,7 @@ Ext.define('Common.mixin.component.More', {
         store.sort(field, dir);
     },
 
-    destroy(){
+    doDestroy(){
         this.setMoreMenus(null);
         this.setMoreButton(null);
     }

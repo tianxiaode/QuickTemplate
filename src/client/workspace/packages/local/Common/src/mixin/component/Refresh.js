@@ -26,7 +26,7 @@ Ext.define('Common.mixin.component.Refresh', {
         config && this.add(config);
     },
 
-    destroy() {
+    doDestroy() {
         this.setRefreshButton(null);
     }
 

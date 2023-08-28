@@ -62,7 +62,7 @@ Ext.define('Common.ux.button.Enumeration',{
         me.fireEvent('change', me, value);
     },
 
-    doDestroy(){
+    dodoDestroy(){
         this.setStore(null);
         this.callParent();
     }

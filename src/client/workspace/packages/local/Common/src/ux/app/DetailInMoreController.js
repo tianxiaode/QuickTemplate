@@ -124,7 +124,7 @@ Ext.define('Common.ux.app.DetailInMoreController', {
         me.refreshList();
     },
 
-    destroy(){
+    doDestroy(){
         this.list = null;
         this.callParent(arguments);
     }

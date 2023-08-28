@@ -5,7 +5,7 @@ Ext.define('Common.mixin.More', {
         configs: true,
         before:{
             initialize: 'initialize',
-            destroy: 'destroy'
+            doDestroy: 'doDestroy'
         },
         after:{
             updateRecord: 'updateRecord'
@@ -116,7 +116,7 @@ Ext.define('Common.mixin.More', {
 
     onSwitchTitle: Ext.emptyFn,
 
-    destroy(){
+    doDestroy(){
         let me = this;
         me.setInfo(null);
         me.setErrorInfo(null);

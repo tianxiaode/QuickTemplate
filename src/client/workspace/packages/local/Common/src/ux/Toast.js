@@ -237,7 +237,7 @@ Ext.define('Common.ux.Toast', {
         }
     },
  
-    doDestroy() {
+    dodoDestroy() {
         this.stopTimer();
         this.callParent();
     },

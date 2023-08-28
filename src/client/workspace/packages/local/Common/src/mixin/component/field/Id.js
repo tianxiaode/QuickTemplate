@@ -26,7 +26,7 @@ Ext.define('Common.mixin.component.field.Id', {
         config && this.add(config);
     },
 
-    destroy() {
+    doDestroy() {
         this.setIdField(null);
     }
 

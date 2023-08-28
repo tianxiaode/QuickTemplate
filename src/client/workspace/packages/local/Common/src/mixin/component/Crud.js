@@ -80,7 +80,7 @@ Ext.define('Common.mixin.component.Crud', {
         config && this.add(config);
     },
 
-    destroy() {
+    doDestroy() {
         let me = this;
 
         me.setCreateButton(null);

@@ -5,14 +5,14 @@ Ext.define('Common.mixin.component.Base',{
         configs: true,
         before:{
             initialize: 'initialize',
-            destroy: 'destroy'
+            doDestroy: 'doDestroy'
         }
     },
 
 
     initialize(){},
 
-    destroy(){}
+    doDestroy(){}
 
 
 })

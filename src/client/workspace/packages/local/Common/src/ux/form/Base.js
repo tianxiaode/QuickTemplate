@@ -45,6 +45,11 @@ Ext.define('Common.ux.form.Base',{
 
     onHide(){
         this.getController().onCancel();
+    },
+
+    doDestroy(){
+        this.setLongTerm(null);
+        this.callParent();
     }
 
 

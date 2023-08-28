@@ -29,7 +29,7 @@ Ext.define('Common.mixin.component.field.Textarea', {
         config && this.add(config);
     },
 
-    destroy() {
+    doDestroy() {
         this.setTextarea(null);
     }
 
