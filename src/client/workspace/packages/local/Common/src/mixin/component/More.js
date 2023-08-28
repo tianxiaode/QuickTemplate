@@ -7,8 +7,12 @@ Ext.define('Common.mixin.component.More', {
     ],
 
     config: {
-        moreMenus:[],
-        moreButton: {
+        moreMenus: [],
+        moreButton: {}
+    },
+
+    createMoreButton(config) {
+        return Ext.apply({
             xtype: 'button',
             arrow: false,
             iconCls: 'md-icon-more-horiz',
@@ -20,33 +24,31 @@ Ext.define('Common.mixin.component.More', {
                 maxHeight: '80%',
                 anchor: true,
                 defaults:{ ui: 'dark'}
-            }
-        },
-    },
-
-    hasMore: true,
-
-    createMoreButton(newCmp) {
-        return Ext.apply({
+            },
             ownerCmp: this,
             handler: this.onSwitchSearchPanel
-        }, newCmp);
+        }, config);
     },
 
-    applyMoreButton(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createMoreButton');
+    applyMoreButton(config, old) {
+        return Ext.updateWidget(old, config, this, 'createMoreButton');
     },
 
-    initialize(){
-        let me = this,
-            container = me.getMixinContainer(),
-            button = me.getMoreButton();
-        if(!me.isPhone() || !me.hasMore) return;
-        container && container.add(button);
+    updateMoreButton(config){
+        let me = this;
+        if(!config || !me.isPhone()) return;
+        me.add(config);
         me.addMoreMenus();
         me.addSortMenus();
     },
+
+    // initialize(){
+    //     let me = this,
+    //         container = me.getMixinContainer(),
+    //         button = me.getMoreButton();
+    //     if(!me.isPhone() || !me.hasMore) return;
+    //     container && container.add(button);
+    // },
 
     addMoreMenus(){
         let me = this,
@@ -149,5 +151,10 @@ Ext.define('Common.mixin.component.More', {
             store = me.getSortStore();
         store.sort(field, dir);
     },
+
+    destroy(){
+        this.setMoreMenus(null);
+        this.setMoreButton(null);
+    }
 
 })

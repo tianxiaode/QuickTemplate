@@ -1,34 +1,33 @@
 Ext.define('Common.mixin.component.Refresh', {
     extend: 'Common.mixin.component.Base',
 
-    requires:[
+    requires: [
         'Common.ux.button.Refresh'
     ],
 
-    hasRefresh: true,
 
     config: {
-        refreshButton: {
-            xtype: 'uxrefreshbutton',
-            handler: 'onRefreshStore', 
-        },
+        refreshButton: {}
     },
 
-    createRefreshButton(newCmp) {
+    createRefreshButton(config) {
         return Ext.apply({
+            xtype: 'uxrefreshbutton',
+            handler: 'onRefreshStore',
             ownerCmp: this,
-        }, newCmp);
+        }, config);
     },
 
-    applyRefreshButton(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createRefreshButton');
+    applyRefreshButton(config, old) {
+        return Ext.updateWidget(old, config, this, 'createRefreshButton');
     },
 
-    initialize(){
-        let me = this,
-            container = me.getMixinContainer();
-        me.hasRefresh && container.add(me.getRefreshButton());
+    updateRefreshButton(config) {
+        config && this.add(config);
+    },
+
+    destroy() {
+        this.setRefreshButton(null);
     }
 
 

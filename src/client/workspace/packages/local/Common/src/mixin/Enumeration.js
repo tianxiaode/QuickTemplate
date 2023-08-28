@@ -3,9 +3,11 @@ Ext.define('Common.mixin.Enumeration', {
 
     mixinConfig: {
         configs: true,
+        before:{
+            destroy: 'destroy'
+        },
         after:{
             initialize: 'initialize',
-            doDestroy: 'doDestroy',
             onLocalized: 'onLocalized'
         },                
     },
@@ -118,7 +120,7 @@ Ext.define('Common.mixin.Enumeration', {
         })
     },
 
-    doDestroy(){
+    destroy(){
         let me = this;
         me.list = null;
         me.setDefaultItem(null);

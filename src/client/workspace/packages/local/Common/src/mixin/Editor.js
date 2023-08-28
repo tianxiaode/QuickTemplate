@@ -9,9 +9,11 @@ Ext.define('Common.mixin.Editor', {
     ],
 
     mixinConfig: {
+        before:{
+            destroy: 'destroy'            
+        },
         after:{
-            initialize: 'initialize',
-            doDestroy: 'doDestroy',
+            initialize: 'initialize'
         },                
     },
 
@@ -104,7 +106,7 @@ Ext.define('Common.mixin.Editor', {
         return config;
     },
 
-    doDestroy(){
+    destroy(){
         let me = this,
             map = me.editorMap;
         Ext.iterate(map, (k,value)=>{

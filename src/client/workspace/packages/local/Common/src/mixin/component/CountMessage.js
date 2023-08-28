@@ -6,47 +6,46 @@ Ext.define('Common.mixin.component.CountMessage',{
     ],
 
     config:{
-        fill:{
+        fill:{},
+        countMessage:{}
+    },
+
+    createCountMessage(config){
+        return Ext.apply({
+            xtype: 'uxcountmessage',
+            weight: 600,
+            ownerCmp: this
+        }, config);
+    },
+
+    applyCountMessage(config, old){
+        return Ext.updateWidget(old, config,this, 'createCountMessage');
+    },
+
+    updateCountMessage(config){
+        config && this.add(config);
+    },
+
+    createFill(config){
+        return Ext.apply({
             xtype: 'component',
             flex: 1,
-            weight: 499
-        },
-        countMessage:{
-            xtype: 'uxcountmessage',
             weight: 500,
-        }
-    },
-
-    hasCountMessage: true,
-
-    createCountMessage(newCmp){
-        return Ext.apply({
             ownerCmp: this,
-        }, newCmp);
+        }, config);
     },
 
-    applyCountMessage(newCmp, old){
-        return Ext.updateWidget(old, newCmp,
-            this, 'createCountMessage');
+    applyFill(config, old){
+        return Ext.updateWidget(old, config, this, 'createFill');
     },
 
-    createFill(newCmp){
-        return Ext.apply({
-            ownerCmp: this,
-        }, newCmp);
+    updateFill(config){
+        config && this.add(config);
     },
 
-    applyFill(newCmp, old){
-        return Ext.updateWidget(old, newCmp,
-            this, 'createFill');
-    },
-
-    initialize(){
-        let me = this,
-            container = me.getMixinContainer();
-        if(!me.hasCountMessage || me.isPhone()) return;
-        container.add(me.getFill());
-        container.add(me.getCountMessage());
+    destroy(){
+        this.setCountMessage(null);
+        this.setFill(null);
     }
 
 

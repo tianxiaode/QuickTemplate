@@ -2,6 +2,12 @@ Ext.define('Common.mixin.Paging', {
     extend: 'Ext.Mixin',
     //mixinId: 'pagingGridMixin',
 
+    mixinConfig: {
+        before:{
+            destroy: 'destroy'
+        }
+    },
+
     /**
      * 默认分页数据
      */
@@ -311,6 +317,10 @@ Ext.define('Common.mixin.Paging', {
         }
         
         return pageNum;
+    },
+
+    destroy(){
+        this.emptyPageData = null;
     }
 
 

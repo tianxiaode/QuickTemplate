@@ -4,7 +4,8 @@ Ext.define('Common.mixin.More', {
     mixinConfig: {
         configs: true,
         before:{
-            initialize: 'initialize'
+            initialize: 'initialize',
+            destroy: 'destroy'
         },
         after:{
             updateRecord: 'updateRecord'
@@ -23,8 +24,7 @@ Ext.define('Common.mixin.More', {
         },
         errorInfo:{
             xtype: 'errorinfo'
-        },
-
+        }
     },
 
     layout: 'vbox',
@@ -114,6 +114,13 @@ Ext.define('Common.mixin.More', {
 
     getParams(){return null},
 
-    onSwitchTitle: Ext.emptyFn
+    onSwitchTitle: Ext.emptyFn,
+
+    destroy(){
+        let me = this;
+        me.setInfo(null);
+        me.setErrorInfo(null);
+        me.setInfoTpl(null);
+    }
 
 });

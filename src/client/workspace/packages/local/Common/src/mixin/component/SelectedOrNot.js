@@ -5,34 +5,33 @@ Ext.define('Common.mixin.component.SelectedOrNot', {
         'Common.ux.button.Enumeration'
     ],
 
-    hasRefresh: true,
-
     config: {
-        selectedOrNot: {
+        selectedOrNot: {}
+    },
+
+    createSelectedOrNot(config) {
+        return Ext.apply({
             xtype: 'uxenumerationbutton',
             weight: 290,
             margin: '0 0 0 5px',
             enumeration: 'SelectedOrNot',
             isSearch: true,
             searchName: 'type',
-        },
-    },
-
-    createSelectedOrNot(newCmp) {
-        return Ext.apply({
             ownerCmp: this,
-        }, newCmp);
+        }, config);
     },
 
-    applySelectedOrNot(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createSelectedOrNot');
+    applySelectedOrNot(config, old) {
+        return Ext.updateWidget(old, config, this, 'createSelectedOrNot');
     },
 
-    initialize(){
-        let me = this,
-            container = me.getMixinContainer();
-        container.add(me.getSelectedOrNot());
+    updateSelectedOrNot(config){
+        config && this.add(config);
+    },
+
+
+    destroy() {
+        this.setSelectedOrNot(null);
     }
 
 

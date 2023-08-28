@@ -3,17 +3,16 @@ Ext.define('Common.mixin.component.Base',{
 
     mixinConfig: {
         configs: true,
-        after:{
-            initialize: 'initialize'
+        before:{
+            initialize: 'initialize',
+            destroy: 'destroy'
         }
     },
 
-    mixinContainer: '[isCrudToolbar]',
 
-    getMixinContainer(){
-        let me = this;
-        return (me.isFormPanel && me.isPhone() && me.getHeader()) || me.down(me.mixinContainer);
-    },
+    initialize(){},
 
-    initialize(){}
+    destroy(){}
+
+
 })

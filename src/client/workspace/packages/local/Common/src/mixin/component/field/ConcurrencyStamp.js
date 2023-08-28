@@ -1,37 +1,34 @@
 Ext.define('Common.mixin.component.field.ConcurrencyStamp', {
-    extend: 'Ext.Mixin',
+    extend: 'Common.mixin.component.Base',
 
-    requires:[
+    requires: [
         'Ext.field.Hidden'
     ],
 
-    mixinConfig: {
-        configs: true,
-    },
-
     config: {
-        concurrencyStamp: {
-            xtype: 'hiddenfield',
-            name: 'concurrencyStamp'
-        },
+        concurrencyStamp: {},
     },
 
-    hasConcurrencyStamp: true,
-
-    createConcurrencyStamp(newCmp) {
+    createConcurrencyStamp(config) {
         return Ext.apply({
+            xtype: 'hiddenfield',
+            name: 'concurrencyStamp',
             ownerCmp: this,
-        }, newCmp);
+        }, config);
     },
 
-    applyConcurrencyStamp(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createConcurrencyStamp');
+    applyConcurrencyStamp(config, old) {
+        return Ext.updateWidget(old, config, this, 'createConcurrencyStamp');
     },
 
-    updateConcurrencyStamp(config){
-        this.hasConcurrencyStamp && config && this.insert(1,config);
+    updateConcurrencyStamp(config) {
+        config && this.add(config);
     },
+
+    destroy() {
+        this.setConcurrencyStamp(null);
+    }
+
 
 
 })

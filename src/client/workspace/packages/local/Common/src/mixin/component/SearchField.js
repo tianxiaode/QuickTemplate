@@ -6,51 +6,44 @@ Ext.define('Common.mixin.component.SearchField',{
     ],
 
     config:{
-        searchField:{
+        searchField:{}
+    },
+
+    createSearchField(config){
+        let isPhone = Ext.platformTags.phone;
+        return Ext.apply({
             xtype: 'uxsearchfield',
             isSearch: true,
             searchName: 'filter',
-        }
-    },
-
-    searchFieldUi: null,
-    hasSearchField: true,
-    searchFieldMixinContainer: null,
-
-    createSearchField(newCmp){
-        let isPhone = Ext.platformTags.phone,
-            ui = this.searchFieldUi;
-        return Ext.apply({
             ownerCmp: this,
-            ui: ui,
             width: !isPhone && 140 ,
             weight: 300,
             padding: ui === 'faded' && '0 5px'
-        }, newCmp);
+        }, config);
     },
 
-    applySearchField(newCmp, old){
-        return Ext.updateWidget(old, newCmp,
-            this, 'createSearchField');
+    applySearchField(config, old){
+        return Ext.updateWidget(old, config, this, 'createSearchField');
     },
 
-    initialize(){
-        let me = this,
-            searchFieldMixinContainer = me.searchFieldMixinContainer,
-            container = (searchFieldMixinContainer === 'self' && me)
-                ||  (searchFieldMixinContainer && me.down(searchFieldMixinContainer)) 
-                || me.getMixinContainer();
-            field = me.getSearchField();
-        if(!me.hasSearchField) return;
-        container.add(field);
-        if(me.isPhone() && container.isCrudToolbar){
+    updateSearchField(config){
+        if(!config) return;
+        let me = this;
+        if(me.isPhone() && me.isCrudToolbar){
             field.setUi('solo');
             field.setWidth(null);
             field.setFlex(1);
             field.setMargin('0 5px 0 0');
             return;
         }
+
+    },
+
+    destroy() {
+        this.setSearchFie(null);
     }
+
+
 
 
 })

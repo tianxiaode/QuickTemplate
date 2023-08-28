@@ -2,29 +2,26 @@ Ext.define('Common.mixin.component.Search', {
     extend: 'Common.mixin.component.Base',
 
     config: {
-        searchButton: {
+        searchButton: {}
+    },
+
+
+    createSearchButton(config) {
+        return Ext.apply({
             xtype: 'button',
             iconCls: 'md-icon-search',
             ui: 'plain',
-        },
-    },
-
-    hasSearchButton: false,
-
-    createSearchButton(newCmp) {
-        return Ext.apply({
             ownerCmp: this,
             handler: this.onSwitchSearchPanel
-        }, newCmp);
+        }, config);
     },
 
-    applySearchButton(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createSearchButton');
+    applySearchButton(config, old) {
+        return Ext.updateWidget(old, config,this, 'createSearchButton');
     },
 
-    initMixinComponent(me, container){
-        me.hasSearchButton && container.add(me.getSearchButton());
+    updateSearchButton(config){
+        config && this.add(config);
     },
 
     onSwitchSearchPanel(){
@@ -32,7 +29,12 @@ Ext.define('Common.mixin.component.Search', {
         if(!panel) Ext.raise('No search panel');
         let hidden =  panel.getHidden();
         panel.setHidden(!hidden);
+    },
+
+    destroy() {
+        this.setSearchButton(null);
     }
+
 
 
 })

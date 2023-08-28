@@ -1,43 +1,35 @@
 Ext.define('Common.mixin.component.field.Email', {
-    extend: 'Ext.Mixin',
+    extend: 'Common.mixin.component.Base',
 
-    requires:[
+    requires: [
         'Ext.data.validator.Email'
     ],
 
-    mixinConfig: {
-        configs: true,
+    config: {
+        emailField: {}
     },
 
-    config: {
-        emailField: {
+    createEmailField(config) {
+        return Ext.apply({
             xtype: 'textfield',
             name: 'email',
             validators: 'email',
-            maxLength: 256
-        },
+            maxLength: 256,
+            ownerCmp: this
+        }, config);
     },
 
-    hasEmailField: true,
-    emailRequired: true,
-    emailFieldIndex: 3,
-
-    createEmailField(newCmp) {
-        return Ext.apply({
-            ownerCmp: this,
-            required: this.emailRequired
-        }, newCmp);
+    applyEmailField(config, old) {
+        return Ext.updateWidget(old, config, this, 'createEmailField');
     },
 
-    applyEmailField(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createEmailField');
+    updateEmailField(config) {
+        config && this.add(config);
     },
 
-    updateEmailField(config){
-        let me = this;
-        me.hasEmailField && config && me.insert(me.emailFieldIndex,config);
-    },
+    destroy() {
+        this.setEmailField(null);
+    }
 
 
 })

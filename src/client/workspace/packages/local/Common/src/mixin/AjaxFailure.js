@@ -4,5 +4,5 @@ Ext.define('Common.mixin.AjaxFailure',{
     onAjaxFailure(response){    
         let error = Http.getError(response, this.resourceName);
         MsgBox.alert(null,error);
-    },
+    }
 })

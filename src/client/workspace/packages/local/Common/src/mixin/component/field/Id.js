@@ -1,37 +1,35 @@
 Ext.define('Common.mixin.component.field.Id', {
-    extend: 'Ext.Mixin',
+    extend: 'Common.mixin.component.Base',
 
-    requires:[
+    requires: [
         'Ext.field.Hidden'
     ],
 
-    mixinConfig: {
-        configs: true,
-    },
-
     config: {
-        idField: {
-            xtype: 'hiddenfield',
-            name: 'id'
-        },
+        idField: {},
     },
 
-    hasIdField: true,
 
-    createIdField(newCmp) {
+    createIdField(config) {
         return Ext.apply({
+            xtype: 'hiddenfield',
+            name: 'id',
             ownerCmp: this,
-        }, newCmp);
+        }, config);
     },
 
-    applyIdField(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createIdField');
+    applyIdField(config, old) {
+        return Ext.updateWidget(old, config, this, 'createIdField');
     },
 
-    updateIdField(config){
-        this.hasIdField && config && this.insert(0,config);
+    updateIdField(config) {
+        config && this.add(config);
     },
+
+    destroy() {
+        this.setIdField(null);
+    }
+
 
 
 })

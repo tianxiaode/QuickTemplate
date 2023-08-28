@@ -1,85 +1,91 @@
 Ext.define('Common.mixin.component.Crud', {
     extend: 'Common.mixin.component.Base',
 
-    requires:[
+    requires: [
         'Common.ux.button.Create',
         'Common.ux.button.Update',
         'Common.ux.button.Trash'
     ],
 
-    hasCreate: true,
-    hasUpdate: true,
-    hasDelete: true,
+    config: {
+        createButton: {},
+        updateButton: null,
+        deleteButton: {},
+    },
 
-    config:{
-        createButton:{
+    createCreateButton(config) {
+        let weight = Ext.platformTags.desktop ? 100 : 300;
+        return Ext.apply({
             xtype: 'uxcreatebutton',
             isCrud: true,
             crudName: 'create',
             hidden: true,
             handler: 'onCreate',
-        },
-        updateButton:{
+            weight: weight,
+            ownerCmp: this,
+        }, config);
+    },
+
+    applyCreateButton(config, old) {
+        return Ext.updateWidget(old, config, this, 'createCreateButton');
+    },
+
+    updateCreateButton(config) {
+        config && this.add(config);
+    },
+
+
+    createUpdateButton(config) {
+        let weight = 200;
+        return Ext.apply({
             xtype: 'uxupdatebutton',
+            weight: weight,
             isCrud: true,            
             crudName: 'update',
             hidden: true,
             disabled:true,
             handler: 'onUpdate', 
-        },
-        deleteButton:{
-            xtype: 'uxtrashbutton',
-            isCrud: true,
-            crudName: 'delete',
-            hidden: true,
-            disabled:true,
-            handler: 'onDelete',
-        },
+            ownerCmp: this
+        }, config);
     },
 
-
-    createCreateButton(newCmp) {
-        return Ext.apply({
-            ownerCmp: this,
-        }, newCmp);
+    applyUpdateButton(config, old) {
+        return Ext.updateWidget(old, config,this, 'createUpdateButton');
     },
 
-    applyCreateButton(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createCreateButton');
-    },
-
-
-    createUpdateButton(newCmp) {
-        return Ext.apply({
-            ownerCmp: this,
-        }, newCmp);
-    },
-
-    applyUpdateButton(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createUpdateButton');
+    updateUpdateButton(config){
+        config && this.add(config);
     },
 
 
     createDeleteButton(newCmp) {
-        
+        let weight = Ext.platformTags.desktop ? 300 : 100;
         return Ext.apply({
-            ownerCmp: this,
+            xtype: 'uxtrashbutton',
+            weight: weight,
+            isCrud: true,
+            crudName: 'delete',
+            hidden: true,
+            disabled: true,
+            handler: 'onDelete',
+            ownerCmp: this
         }, newCmp);
     },
 
-    applyDeleteButton(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createDeleteButton');
+    applyDeleteButton(config, old) {
+        return Ext.updateWidget(old, config, this, 'createDeleteButton');
     },
 
-    initialize(){
-        let me = this,
-            container = me.getMixinContainer();
-        me.hasCreate && container.add(me.getCreateButton());
-        me.hasUpdate && container.add(me.getUpdateButton());
-        me.hasDelete && container.add(me.getDeleteButton());
+    updateDeleteButton(config){
+        config && this.add(config);
+    },
+
+    destroy() {
+        let me = this;
+
+        me.setCreateButton(null);
+        me.setUpdateButton(null);
+        me.setDeleteButton(null);
     }
 
 

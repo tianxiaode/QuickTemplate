@@ -6,24 +6,26 @@ Ext.define('Common.mixin.component.Message', {
     ],
 
     config: {
-        messageButton: {
-            xtype: 'uxmessagebutton',
-            weight: 1
-        },
+        messageButton: {},
     },
 
-    createMessageButton(newCmp) {
+    createMessageButton(config) {
         return Ext.apply({
+            xtype: 'uxmessagebutton',
+            weight: 1,
             ownerCmp: this,
             listeners:{
                 tap: this.onMessageButtonTap
             }
-        }, newCmp);
+        }, config);
     },
 
-    applyMessageButton(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createMessageButton');
+    applyMessageButton(config, old) {
+        return Ext.updateWidget(old, config, this, 'createMessageButton');
+    },
+
+    updateMessageButton(config){
+        config && this.add(config);
     },
 
     onMessageButtonTap(sender){
@@ -45,10 +47,9 @@ Ext.define('Common.mixin.component.Message', {
         this.getMessageButton().setHidden(true);
     },
 
-    initialize(){
-        let me = this,
-            container = me.getMixinContainer();
-        container.add(me.getMessageButton());
-    },
+    destroy(){
+        this.setMessageButton(null);
+    }
+    
 
 })

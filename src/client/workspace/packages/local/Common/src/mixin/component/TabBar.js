@@ -1,5 +1,5 @@
 Ext.define('Common.mixin.component.TabBar', {
-    extend: 'Ext.Mixin',
+    extend: 'Common.mixin.component.Base',
 
     requires:[
         'Ext.tab.Bar',
@@ -7,42 +7,38 @@ Ext.define('Common.mixin.component.TabBar', {
     ],
 
     config: {
-        tabBar: {
+        tabBar: {}
+    },
+
+    currentPage: null,
+    isPassingResource: true,
+
+    createTabBar(config){
+        let me = this,            
+            tabs = [];
+        config.layout = { pack: 'left'} ;
+        if(me.isPhone()){
+            config.layout.overflow = 'scroller';
+            config.scrollable = true;
+            config.defaults = { minWidth: 100};
+        }
+        
+        me.adjustTabs(tabs, config.defaultTabs);
+        me.adjustTabs(tabs, config.tabs);
+
+        config = Ext.apply({
             xtype: 'tabbar',
             ui: 'light',
             weighted: true,
             defaultTabUI: 'light',
             activeTab: 0,
-        },
-    },
-
-    defaultTabs: null,
-    tabs:null,
-    currentPage: null,
-    isPassingResource: true,
-
-    createTabBar(newCmp){
-        let me = this,            
-            tabs = [],
-            config = me.isPhone() ? {
-                scrollable: true,
-                layout:{ pack: 'left', overflow: 'scroller' },
-                defaults:{ minWidth: 100}
-            } : {
-                layout:{ pack: 'left',},
-            };
-        
-        me.adjustTabs(tabs, me.defaultTabs);
-        me.adjustTabs(tabs, me.tabs);
-
-        config = Ext.apply({
             ownerCmp: me,
             items: tabs,
             listeners:{
                 activeTabchange: me.onTabTap,
                 scope: me
             }
-        }, newCmp, config);
+        }, config);
         return config;
     },
 
@@ -54,9 +50,8 @@ Ext.define('Common.mixin.component.TabBar', {
         })
     },
 
-    applyTabBar(newCmp, old){
-        return Ext.updateWidget(old, newCmp,
-            this, 'createTabBar');
+    applyTabBar(config, old){
+        return Ext.updateWidget(old, config, this, 'createTabBar');
     },
 
     updateTabBar(config){     
@@ -97,5 +92,9 @@ Ext.define('Common.mixin.component.TabBar', {
             permissionName: me.permissionName,
         })
     },
+
+    destroy() {
+        this.setTabBar(null);
+    }
 
 })
