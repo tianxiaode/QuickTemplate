@@ -153,8 +153,7 @@ Ext.define('Common.mixin.component.More', {
     },
 
     doDestroy(){
-        this.setMoreMenus(null);
-        this.setMoreButton(null);
+        this.destroyMembers('moreMenus', 'mmoreButton');
     }
 
 })

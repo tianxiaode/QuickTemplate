@@ -2,11 +2,10 @@ Ext.define('Common.mixin.component.CountMessage',{
     extend: 'Common.mixin.component.Base',
 
     requires:[
-        'Common.ux.crud.CountMessage'
+        'Common.ux.CountMessage'
     ],
 
     config:{
-        fill:{},
         countMessage:{}
     },
 
@@ -14,6 +13,11 @@ Ext.define('Common.mixin.component.CountMessage',{
         return Ext.apply({
             xtype: 'uxcountmessage',
             weight: 600,
+            flex: 1,
+            margin: '0 5px',
+            style: {
+                textAlign: 'right'
+            },
             ownerCmp: this
         }, config);
     },
@@ -26,26 +30,8 @@ Ext.define('Common.mixin.component.CountMessage',{
         config && this.add(config);
     },
 
-    createFill(config){
-        return Ext.apply({
-            xtype: 'component',
-            flex: 1,
-            weight: 500,
-            ownerCmp: this,
-        }, config);
-    },
-
-    applyFill(config, old){
-        return Ext.updateWidget(old, config, this, 'createFill');
-    },
-
-    updateFill(config){
-        config && this.add(config);
-    },
-
     doDestroy(){
-        this.setCountMessage(null);
-        this.setFill(null);
+        this.destroyMembers( 'countMessage');
     }
 
 

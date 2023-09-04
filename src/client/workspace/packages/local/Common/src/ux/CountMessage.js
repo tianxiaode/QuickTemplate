@@ -1,4 +1,4 @@
-Ext.define('Common.ux.crud.CountMessage',{
+Ext.define('Common.ux.CountMessage',{
     extend: 'Ext.Component',
     xtype: 'uxcountmessage',
 

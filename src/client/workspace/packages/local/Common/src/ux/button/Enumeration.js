@@ -1,10 +1,16 @@
 Ext.define('Common.ux.button.Enumeration',{
-    extend: 'Common.ux.button.Auto',
+    extend: 'Ext.Button',
     xtype: 'uxenumerationbutton',
 
     mixins:[
         'Common.mixin.Enumeration'
     ],
+
+    responsiveConfig:{
+        'phone && !cancel':{
+            ui: 'plain',
+        }
+    },
 
 
     config:{
@@ -62,7 +68,7 @@ Ext.define('Common.ux.button.Enumeration',{
         me.fireEvent('change', me, value);
     },
 
-    dodoDestroy(){
+    doDestroy(){
         this.setStore(null);
         this.callParent();
     }

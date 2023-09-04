@@ -1,4 +1,4 @@
-Ext.define('Common.ux.data.mixin.Model',{
+Ext.define('Common.mixin.data.Model',{
     extend: 'Ext.Mixin',
 
     mixinConfig: {

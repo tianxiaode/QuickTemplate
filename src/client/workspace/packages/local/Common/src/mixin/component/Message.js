@@ -47,8 +47,8 @@ Ext.define('Common.mixin.component.Message', {
         this.getMessageButton().setHidden(true);
     },
 
-    doDestroy(){
-        this.setMessageButton(null);
+    doDestroy() {
+        this.destroyMembers('messageButton');
     }
     
 

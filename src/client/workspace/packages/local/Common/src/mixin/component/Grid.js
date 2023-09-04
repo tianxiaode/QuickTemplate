@@ -1,48 +1,48 @@
 Ext.define('Common.ux.crud.container.mixin.Grid',{
-    extend: 'Ext.Mixin',
+    extend: 'Common.mixin.component.Base',
 
     requires:[
         'Ext.grid.column.RowNumberer',
+        'Common.ux.grid.column.Action',
         'Common.ux.grid.Grid'
     ],
 
-    mixinConfig: {
-        configs: true,
+    config:{
+        grid: null
     },
 
-    config:{
-        grid:{
+    createGrid(config) {
+        return Ext.apply({
             xtype: 'uxgrid',
             autoLoad: true,
             rowNumbers: true,
             doubleTapToEdit: false,
             childTap: false,
             isCrudList: true,
-            weight: 500,
+            weight: 200,
             
             selectable:{
                 checkbox: true
             },
         
             bind: { store: '{mainStore}'},         
-        },
-    },
-
-    useGrid: true,
-
-    createGrid(newCmp) {
-        return Ext.apply({
             ownerCmp: this,
-        }, newCmp);
+        }, config);
     },
 
-    applyGrid(newCmp, old) {
-        return Ext.updateWidget(old, newCmp,
-            this, 'createGrid');
+    applyGrid(config, old) {
+        return Ext.updateWidget(old, config, this, 'createGrid');
     },
 
     updateGrid(config){
-        if(config && this.useGrid) this.add(config);
+        if(!config) return;
+        let me = this,
+            container = (me.getContainer && me.getContainer()) || me;
+        container.add(config);
     },
+
+    doDestroy(){
+        this.destroyMembers('grid');
+    }
 
 })

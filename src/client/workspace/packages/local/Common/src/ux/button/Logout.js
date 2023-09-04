@@ -1,23 +1,17 @@
 Ext.define('Common.ux.button.Logout',{
-    extend: 'Common.ux.button.Auto',
+    extend: 'Ext.Button',
     xtype: 'uxlogoutbutton',
 
-    applyLangTooltip(tip){
-        if(tip !== 'auto') return tip;
-        if(Ext.platformTags.desktop) return 'Logout';
-        return null;
-    },
-
-    applyIconCls(cls){
-        if(cls !== 'auto') return cls;
-        if(Ext.platformTags.desktop) return 'x-fa fa-sign-out-alt';
-        return 'md-icon-exit-to-app';
-    },
-
-    applyUi(ui){
-        if(ui !== 'auto') return ui;
-        if(Ext.platformTags.desktop) return 'header';
-        return 'plain';
+    responsiveConfig:{
+        'desktop && !cancel':{
+            iconCls: 'x-fa fa-sign-out-alt',
+            langTooltip: 'Logout',
+            ui: 'header'
+        },
+        'phone && !cancel':{
+            iconCls: 'md-icon-exit-to-app',
+            ui: 'plain'
+        }
     },
 
     bind: { hidden: '{!isAuthenticated}'},
@@ -34,7 +28,7 @@ Ext.define('Common.ux.button.Logout',{
             Config.clearAll();
             Auth.logout();                
         })
-    },
+    }
 
 
 })

@@ -2,29 +2,22 @@
  * 语言选择按钮
  */
 Ext.define('Common.ux.button.Language',{
-    extend: 'Common.ux.button.Auto',
+    extend: 'Ext.Button',
     xtype: 'uxlanguagebutton',
 
     requires:[
         'Ext.menu.RadioItem'
     ],
 
-    applyLangTooltip(tip){
-        if(tip !== 'auto') return tip;
-        if(Ext.platformTags.desktop) return 'Add';
-        return null;
-    },
-
-    applyIconCls(cls){
-        if(cls !== 'auto') return cls;
-        if(Ext.platformTags.desktop) return 'x-fa fa-globe';
-        return 'md-icon-language';
-    },
-
-    applyUi(ui){
-        if(ui !== 'auto') return ui;
-        if(Ext.platformTags.desktop) return 'header';
-        return 'plain';
+    responsiveConfig:{
+        'desktop && !cancel':{
+            iconCls: 'x-fa fa-globe',
+            ui: 'header'
+        },
+        'phone && !cancel':{
+            iconCls: 'md-icon-language',
+            ui: 'plain'
+        }
     },
 
 

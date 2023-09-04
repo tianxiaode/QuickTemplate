@@ -31,7 +31,7 @@ Ext.define('Common.mixin.component.Back', {
     },
 
     doDestroy(){
-        this.setBackButton(null);
+        this.destroyMembers( 'backButton');
     }
 
 

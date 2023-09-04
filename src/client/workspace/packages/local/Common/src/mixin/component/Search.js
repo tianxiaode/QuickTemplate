@@ -32,7 +32,7 @@ Ext.define('Common.mixin.component.Search', {
     },
 
     doDestroy() {
-        this.setSearchButton(null);
+        this.destroyMembers('searchButton');
     }
 
 

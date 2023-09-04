@@ -94,7 +94,7 @@ Ext.define('Common.mixin.component.TabBar', {
     },
 
     doDestroy() {
-        this.setTabBar(null);
+        this.destroyMembers('tabBar');
     }
 
 })

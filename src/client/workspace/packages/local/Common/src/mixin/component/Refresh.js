@@ -27,7 +27,7 @@ Ext.define('Common.mixin.component.Refresh', {
     },
 
     doDestroy() {
-        this.setRefreshButton(null);
+        this.destroyMembers('refreshButton');
     }
 
 

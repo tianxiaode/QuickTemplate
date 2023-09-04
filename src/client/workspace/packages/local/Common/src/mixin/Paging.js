@@ -57,7 +57,7 @@ Ext.define('Common.mixin.Paging', {
     },
 
     /**
-     * 初始化分页数�?
+     * 初始化分页数
      * @param {存储} store 
      */
     initPaging(store){

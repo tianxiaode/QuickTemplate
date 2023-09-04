@@ -1,22 +1,14 @@
 Ext.define('Common.ux.button.Help',{
-    extend: 'Common.ux.button.Auto',
+    extend: 'Ext.Button',
     xtype: 'uxhelpbutton',
 
-    applyLangTooltip(tip){
-        if(tip !== 'auto') return tip;
-        if(Ext.platformTags.desktop) return 'Help';
-        return null;
-    },
-
-    applyIconCls(cls){
-        if(cls !== 'auto') return cls;
-        return 'x-far fa-question-circle';
-    },
-
-    applyUi(ui){
-        if(ui !== 'auto') return ui;
-        if(Ext.platformTags.desktop) return 'success';
-        return null;
+    responsiveConfig:{
+        'desktop && !cancel':{
+            langTooltip: 'Help',
+            ui: 'success',
+            weight: 70,
+            iconCls: 'x-far fa-question-circle',
+        }
     },
 
     arrow: false,
