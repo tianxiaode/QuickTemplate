@@ -1,5 +1,5 @@
 Ext.define('Common.view.infrastructures.districts.Controller',{
-    extend: 'Common.ux.crud.controller.Tree',
+    extend: 'Ext.app.ViewController',
     alias: 'controller.districtcontroller',
 
 });

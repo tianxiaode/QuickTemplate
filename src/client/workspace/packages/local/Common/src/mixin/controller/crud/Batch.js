@@ -1,5 +1,5 @@
-Ext.define('Common.ux.crud.controller.mixin.Batch',{
-    extend: 'Ext.Mixin',
+Ext.define('Common.mixin.controller.crud.Batch',{
+    extend: 'Common.mixin.controller.crud.Base',
 
     messageTemplate: null , //信息模板
 
@@ -108,5 +108,9 @@ Ext.define('Common.ux.crud.controller.mixin.Batch',{
         Toast(msg.join(''),null,null, 3000);
 
     },
+
+    doDestroy(){
+        this.destroyMembers('messageTemplate');
+    }
 
 })

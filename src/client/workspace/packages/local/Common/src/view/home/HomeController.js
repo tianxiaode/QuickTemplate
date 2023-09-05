@@ -27,9 +27,6 @@ Ext.define('Common.view.home.HomeController',{
 
         if(!me.isReady()){
             action.stop();
-            Config.on('ready', me.checkConfigLoaded, me);
-            I18N.on('ready', me.checkConfigLoaded, me);
-            Enums.on('ready', me.checkConfigLoaded, me);    
             me.loadConfiguration();
             return;
         }
@@ -59,7 +56,7 @@ Ext.define('Common.view.home.HomeController',{
 
         //如果是显示首页，调整到默认页
         if(xtype.toLowerCase() === ViewMgr.homeViewXtype){
-            let defaultToke = Ext.getApplication().getDefaultToken();
+            let defaultToke = me.getDefaultToken();
             Ext.History.add(defaultToke, true);
             me.handleRoute(defaultToke);
             return;
@@ -76,9 +73,14 @@ Ext.define('Common.view.home.HomeController',{
         vm.set('isAuthenticated', true);
 
         me.getView().setMasked(I18N.getLocalText('LoadingUserConfiguration'));
-        Config.loadConfiguration();
-        I18N.loadResources();
-        Enums.init();
+        Config.on('ready', me.checkConfigLoaded, me);
+        I18N.on('ready', me.checkConfigLoaded, me);
+        Enums.on('ready', me.checkConfigLoaded, me);    
+        Ext.defer(()=>{
+            Config.loadConfiguration();
+            I18N.loadResources();
+            Enums.init();    
+        },10)
         //Signalr.connect();
 
     },
@@ -86,7 +88,7 @@ Ext.define('Common.view.home.HomeController',{
     checkConfigLoaded(){
         console.log('checkConfigLoaded', arguments)
         let me = this,
-            hash = Auth.getOrginHash() || Ext.util.History.getToken();
+            hash = Auth.getOrginHash() || Ext.util.History.getToken() || me.getDefaultToken();
         if(!me.isReady()) return;
         Auth.removeOrginHash();
         me.redirectTo(hash, { force: true, replace: true });
@@ -101,6 +103,10 @@ Ext.define('Common.view.home.HomeController',{
     initView: Ext.emptyFn,
 
     setCurrentView: Ext.emptyFn,
+
+    getDefaultToken(){
+        return Ext.getApplication().getDefaultToken();
+    },
 
     show404Page(){
         ViewMgr.showPage(ViewMgr.pages.page404);

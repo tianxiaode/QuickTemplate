@@ -1,5 +1,5 @@
 Ext.define('Common.ux.app.MoreController', {
-    extend: 'Ext.app.ViewController',
+    extend: 'Common.ux.app.ViewController',
     alias: 'controller.uxmorecontroller',
 
     crudPanel: '[isCrudPanel]',

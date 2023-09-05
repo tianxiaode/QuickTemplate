@@ -1,4 +1,4 @@
-Ext.define('Common.ux.crud.controller.mixin.CountMessage',{
+Ext.define('Common.mixin.controller.crud.CountMessage',{
     extend: 'Ext.Mixin',
 
     mixinConfig: {
@@ -13,6 +13,6 @@ Ext.define('Common.ux.crud.controller.mixin.CountMessage',{
             view = me.getView(),  
             countMessage = view.getCountMessage && view.getCountMessage();
         countMessage && countMessage.setCount(store.getTotalCount());
-    },
+    }
 
 })

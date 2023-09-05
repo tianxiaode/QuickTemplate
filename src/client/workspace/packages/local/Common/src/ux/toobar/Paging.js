@@ -1,6 +1,5 @@
-Ext
 Ext.define('Common.ux.toolbar.Paging',{
-    extend: 'Ext.Ext.Toolbar',
+    extend: 'Ext.Toolbar',
     xtype: 'uxpagingtoolbar',
 
     requires:[

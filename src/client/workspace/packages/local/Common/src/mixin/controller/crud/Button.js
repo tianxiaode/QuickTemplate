@@ -1,4 +1,4 @@
-Ext.define('Common.ux.crud.controller.mixin.Button',{
+Ext.define('Common.mixin.controller.crud.Button',{
     extend: 'Ext.Mixin',
 
     mixinConfig: {
@@ -90,7 +90,7 @@ Ext.define('Common.ux.crud.controller.mixin.Button',{
     },
 
     doDestroy(){
-        this.buttons = null;
+        this.destroyMembers('buttons');
     }
     
 })

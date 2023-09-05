@@ -1,4 +1,4 @@
-Ext.define('Common.ux.crud.controller.mixin.Crud',{
+Ext.define('Common.mixin.controller.crud.Crud',{
     extend: 'Ext.Mixin',
 
     /**
@@ -89,7 +89,7 @@ Ext.define('Common.ux.crud.controller.mixin.Crud',{
 
     deleteAction(data){
         return Http.delete(URI.crud(this.entityName), data.ids);
-    },
+    }
 
 
 })

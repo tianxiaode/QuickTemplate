@@ -1,5 +1,5 @@
 Ext.define('Common.view.identity.users.roles.RoleController',{
-    extend: 'Common.ux.crud.controller.More',
+    extend: 'Ext.app.ViewController',
     alias: 'controller.common-userrolecontroller',
     
     currentEntity: 'Role'

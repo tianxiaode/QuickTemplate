@@ -1,5 +1,5 @@
-Ext.define('Common.ux.crud.controller.mixin.DoubleTapToEdit',{
-    extend: 'Common.ux.crud.controller.mixin.Base',
+Ext.define('Common.mixin.controller.crud.DoubleTapToEdit',{
+    extend: 'Common.mixin.controller.crud.Base',
 
     initList(){
         let me = this,
@@ -9,6 +9,6 @@ Ext.define('Common.ux.crud.controller.mixin.DoubleTapToEdit',{
 
     onChildDoubleTap(sender, location, eOpts){
         this.doUpdate(location.record);
-    },
+    }
 
 })

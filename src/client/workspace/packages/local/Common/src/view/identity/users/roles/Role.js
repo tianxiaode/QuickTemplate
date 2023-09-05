@@ -1,5 +1,5 @@
 Ext.define('Common.view.identity.users.roles.Role',{
-    extend: 'Common.ux.crud.container.Grid',
+    extend: 'Ext.Panel',
     xtype: 'userroleview',
     
     mixins:[

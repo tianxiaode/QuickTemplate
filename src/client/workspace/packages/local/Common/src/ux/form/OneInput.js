@@ -3,12 +3,12 @@ Ext.define('Common.ux.form.OneInput',{
     xtype: 'uxoneinputform',
 
     mixins:[
-        'Common.mixin.component.TextField',
-        'Common.mixin.component.Textarea',
-        'Common.mixin.component.Number',
-        'Common.mixin.component.UxNumber',
-        'Common.mixin.component.Date',
-        'Common.mixin.component.DateTime',
+        'Common.mixin.component.field.TextField',
+        'Common.mixin.component.field.Textarea',
+        'Common.mixin.component.field.Number',
+        'Common.mixin.component.field.UxNumber',
+        'Common.mixin.component.field.Date',
+        'Common.mixin.component.field.DateTime',
         'Common.mixin.component.field.Email'
     ],
 

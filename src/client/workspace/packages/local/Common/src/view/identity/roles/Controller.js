@@ -1,5 +1,5 @@
 Ext.define('Common.view.identity.roles.Controller',{
-    extend: 'Common.ux.crud.controller.Base',
+    extend: 'Ext.app.ViewController',
     alias: 'controller.rolecontroller',
 
     requires:[

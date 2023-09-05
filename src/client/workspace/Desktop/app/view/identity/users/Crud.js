@@ -1,9 +1,9 @@
 Ext.define('Desktop.view.identity.users.Crud', {
-    extend: 'Common.ux.crud.container.Grid',
+    extend: 'Ext.Panel',
     xtype : 'desktop-usercrudview', 
 
     requires:[
-        'Common.view.identity.users.Controller',
+        // 'Common.view.identity.users.Controller',
     ],
     
     controller: 'usercontroller',

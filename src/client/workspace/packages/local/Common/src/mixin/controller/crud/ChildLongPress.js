@@ -1,5 +1,5 @@
-Ext.define('Common.ux.crud.controller.mixin.ChildLongPress',{
-    extend: 'Common.ux.crud.controller.mixin.Base',
+Ext.define('Common.mixin.controller.crud.ChildLongPress',{
+    extend: 'Common.mixin.controller.crud.Base',
 
     detailViewXtype: null,
 

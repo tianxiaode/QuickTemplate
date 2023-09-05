@@ -1,4 +1,4 @@
 Ext.define('Common.view.identity.users.Controller',{
-    extend: 'Common.ux.crud.controller.Base',
+    extend: 'Ext.app.ViewController',
     alias: 'controller.usercontroller'
 })

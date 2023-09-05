@@ -31,7 +31,6 @@ Ext.define('Common.service.AccessControl',{
     init(){        
         let me = this,
             auth = Config.getAuthData();
-        console.log('acl init')
         if(!auth) return;
         me.setPolicies(Object.assign({}, auth.grantedPolicies) );
         me.setGrantedPolicies(Object.assign({},auth.grantedPolicies));

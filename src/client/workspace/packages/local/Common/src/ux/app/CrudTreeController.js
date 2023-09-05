@@ -1,5 +1,5 @@
-Ext.define('Common.ux.crud.controller.Tree',{
-    extend: 'Common.ux.crud.controller.Base',
+Ext.define('Common.ux.app.CrudTreeController',{
+    extend: 'Common.ux.app.CrudController',
 
     afterStoreChange(store){
         let me = this;
@@ -164,6 +164,6 @@ Ext.define('Common.ux.crud.controller.Tree',{
             parent = me.getParentNode(record);
         me.currentParent = parent;
         return { parentId : parent.getId(), parentName: parent.get('displayName') };
-    },
+    }
 
 })

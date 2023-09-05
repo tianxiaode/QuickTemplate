@@ -30,7 +30,7 @@ Ext.define('Common.mixin.controller.ResourceAndPermissions', {
 
 
     doDestroy() {
-        this.permissions = null;
+        this.destroyMembers('permissions');
     }
 
 

@@ -68,6 +68,23 @@ extExt.define('Common.ux.panel.Crud',{
         config && this.add(config);
     },
 
+    onLocalized(){
+        let me = this,
+            isPhone = me.isPhone(),
+            isMore = me.responsive === 'more',
+            title= me.getTitle() || (isPhone && !isMore && me.getEntityName());
+        me.callParent();
+        if(!title) return;
+        me.getToolbar().setTitle({
+            title: I18N.get(title, me.getResourceName()),
+            centered: null,
+            userCls: 'lh-36',
+            flex: 1,
+            weight: 0
+        });
+    },
+
+
     doDestroy(){
         let me = this;
         me.destroyMembers('crudToolbar', 'container', 'paging');

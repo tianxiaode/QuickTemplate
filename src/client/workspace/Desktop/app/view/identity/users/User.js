@@ -3,10 +3,10 @@ Ext.define('Desktop.view.identity.users.User', {
     xtype : 'desktop-userview', 
 
     requires:[
-        'Desktop.view.identity.users.Crud',
-        'Common.view.identity.users.Model',
-        'Common.view.identity.users.More',
-        'Desktop.view.identity.users.UserController',
+        // 'Desktop.view.identity.users.Crud',
+        // 'Common.view.identity.users.Model',
+        // 'Common.view.identity.users.More',
+        // 'Desktop.view.identity.users.UserController',
     ],
 
     layout: 'hbox',

@@ -1,5 +1,5 @@
 Ext.define('Common.ux.app.DetailInMoreController', {
-    extend: 'Ext.app.ViewController',
+    extend: 'Common.ux.app.ViewController',
 
     mixins:[
         'Common.mixin.controller.ResourceAndPermissions',

@@ -1,4 +1,4 @@
-Ext.define('Common.ux.crud.controller.mixin.Multilingual',{
+Ext.define('Common.mixin.controller.crud.Multilingual',{
     extend: 'Ext.Mixin',
 
     onMultilingual(grid, info){

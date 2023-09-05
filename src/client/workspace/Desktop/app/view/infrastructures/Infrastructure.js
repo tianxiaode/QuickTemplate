@@ -3,7 +3,7 @@ Ext.define('Desktop.view.infrastructures.Infrastructure', {
     xtype : 'desktop-infrastructureview', 
     
     requires:[
-        'Common.view.infrastructures.districts.District',
+        // 'Common.view.infrastructures.districts.District',
     ],
 
 

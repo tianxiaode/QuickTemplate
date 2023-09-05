@@ -1,5 +1,5 @@
 Ext.define('Common.view.infrastructures.districts.District',{
-    extend: 'Common.ux.crud.container.Tree',
+    extend: 'Ext.Panel',
     xtype: 'districtview',
 
     requires:[

@@ -1,5 +1,5 @@
-Ext.define('Common.ux.crud.controller.mixin.ChildTap',{
-    extend: 'Common.ux.crud.controller.mixin.Base',
+Ext.define('Common.mixin.controller.crud.ChildTap',{
+    extend: 'Common.mixin.controller.crud.Base',
 
     initList(){
         let me = this,
@@ -41,7 +41,7 @@ Ext.define('Common.ux.crud.controller.mixin.ChildTap',{
         }
 
         me.doListChildTap && me.doListChildTap(me, record, target, classList);
-    },
+    }
 
 
 

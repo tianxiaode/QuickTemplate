@@ -1,5 +1,5 @@
-Ext.define('Common.ux.crud.controller.mixin.Selectable',{
-    extend: 'Common.ux.crud.controller.mixin.Base',
+Ext.define('Common.mixin.controller.crud.Selectable',{
+    extend: 'Common.mixin.controller.crud.Base',
 
     detailViewXtype: null,
 
@@ -53,7 +53,7 @@ Ext.define('Common.ux.crud.controller.mixin.Selectable',{
         let result = this.list.hasSelection();
         !result && alert && MsgBox.alert(null, I18N.get('NoSelection'));
         return result;
-    },
+    }
 
     
 })

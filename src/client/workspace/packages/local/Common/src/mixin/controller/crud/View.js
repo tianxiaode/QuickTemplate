@@ -1,5 +1,5 @@
-Ext.define('Common.ux.crud.controller.mixin.View',{
-    extend: 'Ext.Mixin',
+Ext.define('Common.mixin.controller.crud.View',{
+    extend: 'Common.mixin.controller.crud.Base',
 
     defaultViewXTypes:{
         create: '{entity}EditView',
@@ -46,8 +46,12 @@ Ext.define('Common.ux.crud.controller.mixin.View',{
         ViewMgr.setParams(viewXtype, params);
         me.redirectTo(`${viewXtype}/${xtype}`);
 
-    }
+    },
 
+
+    doDestroy(){
+        this.destroyMembers('defaultViewXTypes');
+    }
 
 
 

@@ -1,11 +1,11 @@
 Ext.define('Desktop.view.identity.roles.Role', {
-    extend: 'Common.ux.crud.container.Grid',
+    extend: 'Ext.Panel',
     xtype : 'desktop-roleview', 
 
     requires:[
-        'Common.view.identity.roles.Model',
-        'Common.view.identity.roles.Controller',
-        'Common.ux.grid.column.Action',
+        // 'Common.view.identity.roles.Model',
+        // 'Common.view.identity.roles.Controller',
+        // 'Common.ux.grid.column.Action',
     ],
 
 

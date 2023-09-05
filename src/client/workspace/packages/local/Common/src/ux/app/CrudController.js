@@ -1,24 +1,23 @@
-Ext.define('Common.ux.crud.controller.Base',{
-    extend: 'Ext.app.ViewController',
+Ext.define('Common.ux.app.CrudController',{
+    extend: 'Common.ux.app.ViewController',
     alias: 'controller.uxcrudbasecontroller',
 
     mixins:[
         'Common.mixin.AjaxFailure',
-        'Common.ux.crud.controller.mixin.ViewModel',
         'Common.mixin.controller.ResourceAndPermissions',
-        'Common.ux.crud.controller.mixin.Button',
         'Common.mixin.controller.CheckChange',
-        'Common.ux.crud.controller.mixin.Batch',
-        'Common.ux.crud.controller.mixin.Crud',
-        'Common.ux.crud.controller.mixin.View',
-        'Common.ux.crud.controller.mixin.CountMessage',
-        'Common.ux.crud.controller.mixin.Multilingual',
+        'Common.mixin.controller.crud.Button',
+        'Common.mixin.controller.crud.Batch',
+        'Common.mixin.controller.crud.Crud',
+        'Common.mixin.controller.crud.View',
+        'Common.mixin.controller.crud.CountMessage',
+        'Common.mixin.controller.crud.Multilingual',
+        'Common.mixin.controller.crud.Selectable',
+        'Common.mixin.controller.crud.ChildTap',
+        'Common.mixin.controller.crud.ChildLongPress',
+        'Common.mixin.controller.crud.DoubleTapToEdit',
         'Common.mixin.Searchable',
-        'Common.mixin.InfoMenu',
-        'Common.ux.crud.controller.mixin.Selectable',
-        'Common.ux.crud.controller.mixin.ChildTap',
-        'Common.ux.crud.controller.mixin.ChildLongPress',
-        'Common.ux.crud.controller.mixin.DoubleTapToEdit'
+        'Common.mixin.InfoMenu'
     ],
 
     list: null , //列表对象
@@ -102,5 +101,9 @@ Ext.define('Common.ux.crud.controller.Base',{
         this.getStore().loadPage(1);
     },
 
+    doDestroy(){
+        this.destroyMembers('list');
+        this.callParent();
+    }
 
 })
