@@ -1,6 +1,6 @@
 Ext.define('Common.ux.form.BaseController',{
     extend: 'Ext.app.ViewController',
-    alias: 'controller.formbasecontroller',
+    alias: 'controller.formcontroller',
 
     init(){
         let me = this,
@@ -8,7 +8,6 @@ Ext.define('Common.ux.form.BaseController',{
         me.entityName = view.getEntityName();
         me.resourceName = view.getResourceName();
         if(Ext.platformTags.desktop) me.initEnterEvent();
-        view.on('hiddenchange', me.initFormState ,me);
     },
 
     allEnterFields:null,
@@ -21,23 +20,23 @@ Ext.define('Common.ux.form.BaseController',{
      * 初始化回车事件
      */
     initEnterEvent(){
-        let me = this;
-        let view = me.getView();
-        if(view.getAutoTabIndex()){
-            let fields = me.allEnterFields = view.query('field[focusable]:not([hidden]):not(textfield):not(containerfield):not([disabled]):not([readOnly])');
-            let index=0;
-            fields.forEach(f=>{
-                f.setTabIndex(index+1);
-                f.setKeyMapEnabled(true);
-                f.setKeyMap({
-                    enter: {
-                        handler: me.doEnterNextField,
-                        scope: me
-                    } 
-                });
-                index++;
-            })
-        }
+        let me = this,
+            view = me.getView(),
+            autoTabIndex = view.getAutoTabIndex(),
+            index = 0;
+        if(!autoTabIndex) return;
+        let fields = me.allEnterFields = view.query('field[focusable]:not([hidden]):not(textfield):not(containerfield):not([disabled]):not([readOnly])');
+        fields.forEach(f=>{
+            f.setTabIndex(index+1);
+            f.setKeyMapEnabled(true);
+            f.setKeyMap({
+                enter: {
+                    handler: me.doEnterNextField,
+                    scope: me
+                } 
+            });
+            index++;
+        })
     },
 
     /**
@@ -62,32 +61,11 @@ Ext.define('Common.ux.form.BaseController',{
     },
 
     /**
-     * 初始化表单状态
-     * @param {事件触发者} sender 
-     * @param {值} value 
-     * @param {旧值} oldValue 
-     * @param {事件参数} eOpts 
-     */
-    initFormState(sender, value, oldValue, eOpts){
-        if(value) return;
-        let me = this,
-            view = me.getView();
-        me.hasNew = false;
-        me.saved = false;
-        view.hideMessageButton();
-        view.clearErrors();
-        Ext.platformTags.desktop && me.initFocus(view);
-        me.initParams(view);
-    },
-
-    initParams: Ext.emptyFn,
-    
-    /**
      * 初始化焦点
      */
     initFocus(view){
         let field = view.down('field[tabIndex]:not([readOnly])');
-        if(field) field.focus();    
+        field && field.focus();    
     },
 
     /**
@@ -209,6 +187,11 @@ Ext.define('Common.ux.form.BaseController',{
         msg += '</ul>'
         return msg;
     },
+
+    doDestroy(){
+        this.destroyMembers('allEnterFields');
+        this.callParent();
+    }
 
 
 })

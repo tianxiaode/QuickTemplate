@@ -7,11 +7,13 @@ Ext.define('Common.ux.dialog.Form', {
 
     createForm(config){
         return Ext.apply({
-            xtype: 'uxcrudtoolbar',
+            xtype: 'formpanel',
             weight: 100,
             ownerCmp: this
         }, config)
     },
+
+
 
     doDestroy() {
         let me = this;

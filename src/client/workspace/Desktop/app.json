@@ -206,6 +206,11 @@
      */
     "js": [
         {
+            "path": "config.js",
+            "requiresSdk": false,
+            "compress": false
+          },
+        {
             "path": "${framework.dir}/build/ext-modern-all-debug.js"
         },
         {

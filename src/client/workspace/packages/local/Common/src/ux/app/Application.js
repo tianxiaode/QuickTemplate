@@ -10,7 +10,7 @@ Ext.define('Common.ux.app.Application', {
         'Common.service.HttpClient',
         'Common.service.Localized',
         'Common.service.Config',
-        'Common.service.OAuth',
+        'Common.service.oauth.*',
         'Common.util.Format',
         'Common.ux.dataview.Format',
         'Common.service.Template',
@@ -32,9 +32,9 @@ Ext.define('Common.ux.app.Application', {
 
     viewport:{
         items:[
-            {
-                xtype: 'homeview'
-            }
+            // {
+            //     xtype: 'homeview'
+            // }
         ]
     },
 
@@ -52,8 +52,7 @@ Ext.define('Common.ux.app.Application', {
                 Http.postScriptError(msg, url, line, col, error);
             }
         }
-
-                
+               
     },
 
     onAppUpdate() {
@@ -79,8 +78,7 @@ Ext.define('Common.ux.app.Application', {
     removeSplash() {
         Ext.getBody().removeCls('launching')
         let elem = document.getElementById("splash")
-        if(elem)
-            elem.parentNode.removeChild(elem)
+        elem && elem.parentNode.removeChild(elem)
     }
     
 

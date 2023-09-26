@@ -17,7 +17,8 @@ Ext.define('Common.ux.form.Panel',{
 
     trackResetOnLoad: true,
     defaultType: 'textfield',
-    layout: 'vbox',
+    layout: 'auto',
+    userCls: 'layout-auto-item',
 
 
     setValues: function(values) {
@@ -90,7 +91,7 @@ Ext.define('Common.ux.form.Panel',{
         }
  
         return this;
-    },
+    }
 
 
 })

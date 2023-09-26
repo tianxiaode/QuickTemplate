@@ -1,4 +1,4 @@
-Ext.define('Common.service.OAuth', {
+Ext.define('Common.service.oauth.OAuth', {
     alternateClassName: 'Auth',
     singleton: true,
 
@@ -19,7 +19,9 @@ Ext.define('Common.service.OAuth', {
         me.mixins.observable.constructor.call(me, config);
         Ext.apply(me, AppConfig.oAuthConfig);
         me.loginUrl = `${AppConfig.apiUrl}connect/authorize`;
-        me.logoutUrl = `${AppConfig.apiUrl}connect/endsession`;
+        me.logoutUrl = `${AppConfig.apiUrl}connect/endsession`;        
+        me.strategy = Ext.create(me.responseType === 'code' ? 'Common.service.oauth.AuthFlowStrategy' : 'Common.service.oauth.AuthPasswordFlowStrategy');
+        me.storage = AppStorage;
     },
 
 
@@ -29,7 +31,7 @@ Ext.define('Common.service.OAuth', {
      */
     isAuthenticated() {
         let me = this,
-            storage = AppStorage,
+            storage = me.storage,
             keys = me.storageKeys,
             token = storage.get(keys.accessToken);
         if (token) {
@@ -50,12 +52,14 @@ Ext.define('Common.service.OAuth', {
      * @param {密码} password 
      */
     login(hash) {
-        let me = this;
-        return me.tryLogin(hash).then(() => { }, () => {
-            let url = me.createLoginUrl('', '', null, false, {});
-            console.log('login', url, arguments)
-            window.location.href = url;
-        })
+        return this.strategy.login();
+        // let me = this;
+        // re
+        // return me.tryLogin(hash).then(() => { }, () => {
+        //     let url = me.createLoginUrl('', '', null, false, {});
+        //     console.log('login', url, arguments)
+        //     window.location.href = url;
+        // })
     },
 
     tryLogin(hash) {
@@ -122,21 +126,12 @@ Ext.define('Common.service.OAuth', {
         AppStorage.remove(this.storageKeys.originHash);
     },
 
-    doDestroy() {
-        let me = this;
-        me.storageKeys = null;
-        me.endpoints = null;
+    destroy() {
+        this.destroyMembers('storageKeys', 'endpoints', 'strategy');
     },
 
     privates: {
 
-        storageKeys: {
-            accessToken: 'access_token',
-            idToken: 'id_token',
-            expiresAt: 'expires_at',
-            refreshToken: 'refresh_token',
-            originHash: 'originHash'
-        },
 
         remoteController: 'connect',
         endpoints: {
@@ -198,7 +193,7 @@ Ext.define('Common.service.OAuth', {
                 return;
             }
             let me = this,
-                storage = AppStorage,
+                storage = me.storage,
                 keys = me.storageKeys,
                 now = new Date(),
                 expiresAt = now.getTime() + (obj.expires_in || 0) * 1000;
@@ -227,7 +222,7 @@ Ext.define('Common.service.OAuth', {
                 clientId = me.clientId,
                 headers = {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    "accept-language": AppStorage.get('lang')
+                    "accept-language": me.storage.get('lang')
                 };
             data['client_id'] = clientId;
             return Http.post(
@@ -449,7 +444,8 @@ Ext.define('Common.service.OAuth', {
                 challengeRaw = me.calcHash(verifier, 'sha-256'),
                 challenge = Ext.util.Format.base64UrlEncode(challengeRaw);
             return [challenge, verifier];
-        }
+        },
+
 
     }
 
