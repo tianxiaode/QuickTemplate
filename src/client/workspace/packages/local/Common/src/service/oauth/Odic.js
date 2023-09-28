@@ -306,22 +306,21 @@ Ext.define('Common.service.oauth.Odic', {
      */
     refreshToken() {
         let me = this,
-            storeage = me.storage,
             deferred = new Ext.Deferred();
         me.assertUrlNotNullAndCorrectProtocol(me.tokenEndpoint, 'tokenEndpoint');
         let params = {
-                'grant_type': 'refresh_token',
-                'scope': me.scope,
-                'refresh_token': storage.get('refresh_token')
-            },
-            headers = { 'Content-Type': 'application/x-www-form-urlencoded'};
+            'grant_type': 'refresh_token',
+            'scope': me.scope,
+            'refresh_token': storage.get('refresh_token')
+        },
+            headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
-        if(me.useHttpBasicAuth){
+        if (me.useHttpBasicAuth) {
             const header = btoa(`${me.clientId}:${me.dummyClientSecret}`);
             headers = headers.Authorization = 'Basic ' + header;
-        }else{
+        } else {
             params.client_id = me.clientId;
-            if(me.dummyClientSecret){
+            if (me.dummyClientSecret) {
                 params.client_secret = me.dummyClientSecret;
             }
         }
@@ -330,38 +329,42 @@ Ext.define('Common.service.oauth.Odic', {
                 params[key] = me.customQueryParams[key];
             }
         }
-        Http.post(params, me.tokenEndpoint, {headers})
+        Http.post(params, me.tokenEndpoint, { headers })
             .then(
-                (response)=>{
-                    deferred.resolve();
+                (response) => {
+                    let data = response.jsonData;
+                    if (me.oidc && data.id_token) {
+                        return me.processIdToken(data.id_token, data.access_token, true, deferred)
+                    }
+                    me.refreshTokenResponse(response);
+                    deferred.resolve(response);
                 },
-                (response)=>{
+                (response) => {
+                    Ext.log('Error refreshing token ', response);
+                    me.fireEvent('tokenRefreshError', me)
                     deferred.reject(response);
                 }
             );
-    return new Promise((resolve, reject) => {
+        return deferred.promise;
+        return new Promise((resolve, reject) => {
             this.http
                 .post(this.tokenEndpoint, params, { headers })
                 .pipe(switchMap((tokenResponse) => {
-                if (this.oidc && tokenResponse.id_token) {
-                    return from(this.processIdToken(tokenResponse.id_token, tokenResponse.access_token, true)).pipe(tap((result) => this.storeIdToken(result)), map((_) => tokenResponse));
-                }
-                else {
-                    return of(tokenResponse);
-                }
-            }))
+                    if (this.oidc && tokenResponse.id_token) {
+                        return from(this.processIdToken(tokenResponse.id_token, tokenResponse.access_token, true)).pipe(tap((result) => this.storeIdToken(result)), map((_) => tokenResponse));
+                    }
+                    else {
+                        return of(tokenResponse);
+                    }
+                }))
                 .subscribe((tokenResponse) => {
-                this.debug('refresh tokenResponse', tokenResponse);
-                this.storeAccessTokenResponse(tokenResponse.access_token, tokenResponse.refresh_token, tokenResponse.expires_in ||
-                    this.fallbackAccessTokenExpirationTimeInSec, tokenResponse.scope, this.extractRecognizedCustomParameters(tokenResponse));
-                this.eventsSubject.next(new OAuthSuccessEvent('token_received'));
-                this.eventsSubject.next(new OAuthSuccessEvent('token_refreshed'));
-                resolve(tokenResponse);
-            }, (err) => {
-                this.logger.error('Error refreshing token', err);
-                this.eventsSubject.next(new OAuthErrorEvent('token_refresh_error', err));
-                reject(err);
-            });
+                    this.debug('refresh tokenResponse', tokenResponse);
+                    this.storeAccessTokenResponse(tokenResponse.access_token, tokenResponse.refresh_token, tokenResponse.expires_in ||
+                        this.fallbackAccessTokenExpirationTimeInSec, tokenResponse.scope, this.extractRecognizedCustomParameters(tokenResponse));
+                    this.eventsSubject.next(new OAuthSuccessEvent('token_received'));
+                    this.eventsSubject.next(new OAuthSuccessEvent('token_refreshed'));
+                    resolve(tokenResponse);
+                });
         });
     },
 
@@ -370,7 +373,7 @@ Ext.define('Common.service.oauth.Odic', {
         debug(...args) {
             let me = this;
             if (me.showDebugInformation) {
-                Ext.log({ level: 'log' }, args);
+                Ext.log({ stack: true }, args);
             }
         },
 
@@ -462,8 +465,8 @@ Ext.define('Common.service.oauth.Odic', {
         hasValidIdToken() {
             let me = this;
             if (me.getIdToken()) {
-                const expiresAt = me.storage.get('id_token_expires_at');
-                const now = new Date();
+                let expiresAt = me.storage.get('id_token_expires_at'),
+                    now = new Date();
                 if (expiresAt &&
                     parseInt(expiresAt, 10) - me.decreaseExpirationBySec <
                     now.getTime() - me.getClockSkewInMsec()) {
@@ -479,18 +482,18 @@ Ext.define('Common.service.oauth.Odic', {
             if (!me.canPerformSessionCheck()) {
                 return;
             }
-            const existingIframe = me.document.getElementById(me.sessionCheckIFrameName);
+            let existingIframe = me.document.getElementById(me.sessionCheckIFrameName);
             if (existingIframe) {
                 me.document.body.removeChild(existingIframe);
             }
-            const iframe = me.document.createElement('iframe');
+            let iframe = me.document.createElement('iframe');
             iframe.id = me.sessionCheckIFrameName;
             me.setupSessionCheckEventListener();
-            const url = this.sessionCheckIFrameUrl;
+            let url = me.sessionCheckIFrameUrl;
             iframe.setAttribute('src', url);
             iframe.style.display = 'none';
-            this.document.body.appendChild(iframe);
-            this.startSessionCheckTimer();
+            me.document.body.appendChild(iframe);
+            me.startSessionCheckTask();
         },
 
         canPerformSessionCheck() {
@@ -499,12 +502,12 @@ Ext.define('Common.service.oauth.Odic', {
                 return false;
             }
             if (!me.sessionCheckIFrameUrl) {
-                console.warn('sessionChecksEnabled is activated but there is no sessionCheckIFrameUrl');
+                Ext.log({ level: 'warn' }, 'sessionChecksEnabled is activated but there is no sessionCheckIFrameUrl');
                 return false;
             }
-            const sessionState = me.getSessionState();
+            let sessionState = me.getSessionState();
             if (!sessionState) {
-                console.warn('sessionChecksEnabled is activated but there is no session_state');
+                Ext.log({ level: 'warn' }, 'sessionChecksEnabled is activated but there is no session_state');
                 return false;
             }
             if (typeof me.document === 'undefined') {
@@ -554,7 +557,7 @@ Ext.define('Common.service.oauth.Odic', {
             let me = this,
                 task = me.sessionCheckTask;
             me.stopSessionCheckTask();
-            if(!task){
+            if (!task) {
                 task = me.sessionCheckTask = {
                     run: me.checkSession.bind(me),
                     interval: me.sessionCheckIntervall,
@@ -568,14 +571,14 @@ Ext.define('Common.service.oauth.Odic', {
         stopSessionCheckTask() {
             let me = this,
                 task = me.sessionCheckTask;
-            if (task) Ext.TaskManager.start(task);
+            task && Ext.TaskManager.start(task);
         },
 
         checkSession() {
             let me = this,
                 iframe = me.document.getElementById(me.sessionCheckIFrameName);
             if (!iframe) {
-                Ext.log({ level: 'warn' }, 'checkSession did not find iframe', me.sessionCheckIFrameName);
+                Ext.log({ level: 'warn' }, 'checkSession did not find iframe ', me.sessionCheckIFrameName);
             }
             let sessionState = me.getSessionState();
             if (!sessionState) {
@@ -597,15 +600,17 @@ Ext.define('Common.service.oauth.Odic', {
             me.fireEvent('sessionChanged', me);
             me.stopSessionCheckTask();
             if (!me.useSilentRefresh && me.responseType === 'code') {
-                me.refreshToken()
-                    .then((_) => {
-                    this.debug('token refresh after session change worked');
-                })
-                    .catch((_) => {
-                    this.debug('token refresh did not work after session changed');
-                    this.eventsSubject.next(new OAuthInfoEvent('session_terminated'));
-                    this.logOut(true);
-                });
+                me.refreshToken().then(
+                    () => {
+                        me.debug('token refresh after session change worked');
+                    },
+                    () => {
+                        me.debug('token refresh did not work after session changed');
+                        me.fireEvent('sessionTerminated', me);
+                        me.logOut(true);
+
+                    }
+                );
             }
             else if (me.silentRefreshRedirectUri) {
                 me.silentRefresh().catch((_) => me.debug('silent refresh failed after session changed'));
@@ -620,23 +625,285 @@ Ext.define('Common.service.oauth.Odic', {
         waitForSilentRefreshAfterSessionChange() {
             this.events
                 .pipe(filter((e) => e.type === 'silently_refreshed' ||
-                e.type === 'silent_refresh_timeout' ||
-                e.type === 'silent_refresh_error'), first())
+                    e.type === 'silent_refresh_timeout' ||
+                    e.type === 'silent_refresh_error'), first())
                 .subscribe((e) => {
-                if (e.type !== 'silently_refreshed') {
-                    this.debug('silent refresh did not work after session changed');
-                    this.eventsSubject.next(new OAuthInfoEvent('session_terminated'));
-                    this.logOut(true);
-                }
-            });
+                    if (e.type !== 'silently_refreshed') {
+                        this.debug('silent refresh did not work after session changed');
+                        this.eventsSubject.next(new OAuthInfoEvent('session_terminated'));
+                        this.logOut(true);
+                    }
+                });
         },
 
         handleSessionError() {
             this.stopSessionCheckTimer();
             this.eventsSubject.next(new OAuthInfoEvent('session_error'));
+        },
+
+
+        processIdToken(idToken, accessToken, skipNonceCheck, deferred) {
+            let me = this,
+                storage = me.storage,
+                tokenParts = idToken.split('.'),
+                headerBase64 = me.padBase64(tokenParts[0]),
+                headerJson = me.b64DecodeUnicode(headerBase64),
+                header = JSON.parse(headerJson),
+                claimsBase64 = me.padBase64(tokenParts[1]),
+                claimsJson = me.b64DecodeUnicode(claimsBase64),
+                claims = JSON.parse(claimsJson),
+                savedNonce,
+                err;
+            if (me.saveNoncesInLocalStorage &&
+                typeof window['localStorage'] !== 'undefined') {
+                savedNonce = localStorage.getItem('nonce');
+            }
+            else {
+                savedNonce = storage.get('nonce');
+            }
+            if (Array.isArray(claims.aud)) {
+                if (claims.aud.every((v) => v !== this.clientId)) {
+                    err = 'Wrong audience: ' + claims.aud.join(',');
+                    Ext.log({ level: 'warn'}, err);
+                    return deferred.reject(err);
+                }
+            }
+            else {
+                if (claims.aud !== this.clientId) {
+                    err = 'Wrong audience: ' + claims.aud;
+                    Ext.log({ level: 'warn'}, err);
+                    return deferred.reject(err);
+                }
+            }
+            if (!claims.sub) {
+                err = 'No sub claim in id_token';
+                Ext.log({ level: 'warn'}, err);
+                return deferred.reject(err);
+            }
+            /* For now, we only check whether the sub against
+             * silentRefreshSubject when sessionChecksEnabled is on
+             * We will reconsider in a later version to do this
+             * in every other case too.
+             */
+            if (me.sessionChecksEnabled &&
+                me.silentRefreshSubject &&
+                me.silentRefreshSubject !== claims['sub']) {
+                err = 'After refreshing, we got an id_token for another user (sub). ' +
+                    `Expected sub: ${this.silentRefreshSubject}, received sub: ${claims['sub']}`;
+                Ext.log({ level: 'warn'}, err);
+                return deferred.reject(err);
+            }
+            if (!claims.iat) {
+                err = 'No iat claim in id_token';
+                Ext.log({ level: 'warn'}, err);
+                return deferred.reject(err);
+            }
+            if (!this.skipIssuerCheck && claims.iss !== this.issuer) {
+                err = 'Wrong issuer: ' + claims.iss;
+                Ext.log({ level: 'warn'}, err);
+                return deferred.reject(err);
+            }
+            if (!skipNonceCheck && claims.nonce !== savedNonce) {
+                err = 'Wrong nonce: ' + claims.nonce;
+                Ext.log({ level: 'warn'}, err);
+                return deferred.reject(err);
+            }
+            // at_hash is not applicable to authorization code flow
+            // addressing https://github.com/manfredsteyer/angular-oauth2-oidc/issues/661
+            // i.e. Based on spec the at_hash check is only true for implicit code flow on Ping Federate
+            // https://www.pingidentity.com/developer/en/resources/openid-connect-developers-guide.html
+            if (me.hasOwnProperty('responseType') &&
+                (me.responseType === 'code' || me.responseType === 'id_token')) {
+                me.disableAtHashCheck = true;
+            }
+            if (!me.disableAtHashCheck &&
+                me.requestAccessToken &&
+                !claims['at_hash']) {
+                err = 'An at_hash is needed!';
+                Ext.log({ level: 'warn'}, err);
+                return deferred.reject(err);
+            }
+            let now = new Date(),
+                issuedAtMSec = claims.iat * 1000,
+                expiresAtMSec = claims.exp * 1000,
+                clockSkewInMSec = this.getClockSkewInMsec(); // (this.getClockSkewInMsec() || 600) * 1000;
+            if (issuedAtMSec - clockSkewInMSec >= now ||
+                expiresAtMSec + clockSkewInMSec - me.decreaseExpirationBySec <= now) {
+                err = 'Token has expired';
+                Ext.log(err);
+                Ext.log({
+                    now: now,
+                    issuedAtMSec: issuedAtMSec,
+                    expiresAtMSec: expiresAtMSec,
+                });
+                return deferred.reject(err);
+            }
+            let validationParams = {
+                accessToken: accessToken,
+                idToken: idToken,
+                jwks: me.jwks,
+                idTokenClaims: claims,
+                idTokenHeader: header,
+                loadKeys: () => me.loadJwks(),
+            };
+            if (me.disableAtHashCheck) {
+                return me.checkSignature(validationParams).then((_) => {
+                    const result = {
+                        idToken: idToken,
+                        idTokenClaims: claims,
+                        idTokenClaimsJson: claimsJson,
+                        idTokenHeader: header,
+                        idTokenHeaderJson: headerJson,
+                        idTokenExpiresAt: expiresAtMSec,
+                    };
+                    return result;
+                });
+            }
+            return this.checkAtHash(validationParams).then((atHashValid) => {
+                if (!this.disableAtHashCheck && this.requestAccessToken && !atHashValid) {
+                    const err = 'Wrong at_hash';
+                    this.logger.warn(err);
+                    return Promise.reject(err);
+                }
+                return this.checkSignature(validationParams).then((_) => {
+                    const atHashCheckEnabled = !this.disableAtHashCheck;
+                    const result = {
+                        idToken: idToken,
+                        idTokenClaims: claims,
+                        idTokenClaimsJson: claimsJson,
+                        idTokenHeader: header,
+                        idTokenHeaderJson: headerJson,
+                        idTokenExpiresAt: expiresAtMSec,
+                    };
+                    if (atHashCheckEnabled) {
+                        return this.checkAtHash(validationParams).then((atHashValid) => {
+                            if (this.requestAccessToken && !atHashValid) {
+                                const err = 'Wrong at_hash';
+                                this.logger.warn(err);
+                                return Promise.reject(err);
+                            }
+                            else {
+                                return result;
+                            }
+                        });
+                    }
+                    else {
+                        return result;
+                    }
+                });
+            });
+        },
+
+        padBase64(base64data) {
+            while (base64data.length % 4 !== 0) {
+                base64data += '=';
+            }
+            return base64data;
+        },
+
+        b64DecodeUnicode(str) {
+            const base64 = str.replace(/\-/g, '+').replace(/\_/g, '/');
+            return decodeURIComponent(atob(base64)
+                .split('')
+                .map(function (c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                })
+                .join(''));
+        },
+
+        base64UrlEncode(str) {
+            const base64 = btoa(str);
+            return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+        },
+
+        refreshTokenResponse(response){
+            let me = this,
+                data = response.jsonData;
+            me.debug('refresh tokenResponse', response);
+            me.storeAccessTokenResponse(data.access_token, data.refresh_token, data.expires_in ||
+                me.fallbackAccessTokenExpirationTimeInSec, data.scope, me.extractRecognizedCustomParameters(response));
+            me.fireEvent('tokenReceived', me);
+            me.fireEvent('tokenRefreshed', me);
+        },
+
+        storeAccessTokenResponse(accessToken, refreshToken, expiresIn, grantedScopes, customParameters) {
+            let me = this,
+                now = new Date(),
+                storage = me.storage;
+            storage.set('access_token', accessToken);
+            if (grantedScopes && !Array.isArray(grantedScopes)) {
+                storage.set('granted_scopes', JSON.stringify(grantedScopes.split(' ')));
+            }
+            else if (grantedScopes && Array.isArray(grantedScopes)) {
+                storage.set('granted_scopes', JSON.stringify(grantedScopes));
+            }
+            storage.set('access_token_stored_at', '' + now);
+            if (expiresIn) {
+                let expiresInMilliSeconds = expiresIn * 1000,
+                    expiresAt = now.getTime() + expiresInMilliSeconds;
+                storage.set('expires_at', '' + expiresAt);
+            }
+            if (refreshToken) {
+                storage.set('refresh_token', refreshToken);
+            }
+            if (customParameters) {
+                customParameters.forEach((value, key) => {
+                    storage.set(key, value);
+                });
+            }
+        },
+    
+        extractRecognizedCustomParameters(response) {
+            let foundParameters = new Map();
+            if (!me.customTokenParameters) {
+                return foundParameters;
+            }
+            me.customTokenParameters.forEach((recognizedParameter) => {
+                if (response[recognizedParameter]) {
+                    foundParameters.set(recognizedParameter, JSON.stringify(response[recognizedParameter]));
+                }
+            });
+            return foundParameters;
+        },
+    
+        checkAtHash(params) {
+            return __awaiter(this, void 0, void 0, function* () {
+                if (!this.tokenValidationHandler) {
+                    this.logger.warn('No tokenValidationHandler configured. Cannot check at_hash.');
+                    return true;
+                }
+                return this.tokenValidationHandler.validateAtHash(params);
+            });
+        },
+
+        checkSignature(params) {
+            if (!this.tokenValidationHandler) {
+                this.logger.warn('No tokenValidationHandler configured. Cannot check signature.');
+                return Promise.resolve(null);
+            }
+            return this.tokenValidationHandler.validateSignature(params);
+        },
+
+        loadJwks() {
+            let me = this,
+                deferred = new Ext.Deferred();
+            if(!jwksUri) return deferred.resolve(null);
+            Http.get(me.jwksUri).then(
+                (response)=>{
+                    me.jwks = jwks;
+                    deferred.resolve(jwks);
+                },
+                (response)=>{
+                    let err = Http.getError(response);
+                    Ext.log({ level: 'error'}, 'error loading jwks', err);
+                    Ext.fireEvent('jwksLoadError', me, err);
+                    deferred.reject(err);
+                }
+            );
+            return deferred.promise;
         }
     
-
+    
 
 
     } // end privates

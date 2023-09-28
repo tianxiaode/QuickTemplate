@@ -38,7 +38,7 @@ Ext.define('Common.ux.app.Application', {
         ]
     },
 
-    init() {
+    async init() {
         //桌面应用允许用户选择文字
         if(Ext.platformTags.desktop){
             Ext.Viewport.setUserSelectable({
@@ -52,6 +52,8 @@ Ext.define('Common.ux.app.Application', {
                 Http.postScriptError(msg, url, line, col, error);
             }
         }
+
+        console.log(await Http.get(URI.get('test')))
                
     },
 

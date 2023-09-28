@@ -15,32 +15,41 @@ Ext.define('Common.service.HttpClient', {
         Ext.Ajax.on('beforerequest', me.onAjaxBeforeRequest, me);
     },
 
-    post(url, data, opts) {
+    async get(url, data, opts) {
+        return await this.send(data, url, this.GET, opts);
+    },
+
+    async post(url, data, opts) {
         return this.send(data, url, this.POST, opts);
     },
 
-    put(url, data, opts) {
+    async put(url, data, opts) {
         return this.send(data, url, this.PUT, opts);
     },
 
-    patch(url, data, opts) {
+    async patch(url, data, opts) {
         return this.send(data, url, this.PATCH, opts);
     },
 
-    get(url, data, opts) {
-        return this.send(data, url, this.GET, opts);
-    },
-
-    delete(url, data, opts) {
+    async delete(url, data, opts) {
         return this.send(data, url, this.DELETE, opts);
     },
 
-    upload(url, data, opts) {
-        return this.send(data, url, this.POST, opts, true);
+    async upload(url, data, opts) {
+        opts = Ext.apply({
+            xhr2:  true,
+            rawData : data
+        },opts);
+        opts.headers = opts.headers || {};
+        opts.headers['Content-Type'] = null;
+
+        return this.send(data, url, this.POST, opts);
     },
 
-    download(url, data, opts){
-        return this.send(data, url, this.GET, opts, false, binary);
+    async download(url, data, opts){
+        opts = opts || {};
+        opts.binary = true;
+        return this.get(url, data, opts);
     },
 
     postScriptError(msg, url, line, col, error) {
@@ -64,38 +73,38 @@ Ext.define('Common.service.HttpClient', {
     },
 
 
-    send(data, url, method, opts, isUpload, binary) {
+    async send(data, url, method, opts) {
         let me = this,
-            deferred = new Ext.Deferred(),
-            options = me.getOptions(url, method, opts);
-        if (binary) options.binary = true;
-        if (method === me.GET) {
-            options.params = data
-        }else if(isUpload){
-            options.xhr2 = true;
-            options.headers['Content-Type'] = null;
-            options.rawData = data;
-        }else{
-            let contentType = options.headers['Content-Type'];
-            if (contentType && contentType.includes('x-www-form')) {
-                options.rawData = Ext.Object.toQueryString(data);
-            } else {
-                //options.headers["accept-language"] = "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2"
-                options.jsonData = data;
+            deferred = new Ext.Deferred();
+            options = me.getOptions(url, method, data, opts);
+
+            Ext.Ajax.request(options).then(
+                (response)=>{
+                    Ext.log('resolve:', response, response.success);
+                    if(!options.binary){
+                        response.jsonData = me.parseResponse(response);
+                    }
+                    deferred.resolve(response);
+                },
+                (response)=>{
+                    console.log('reject:', response);
+                    deferred.reject(me.getError(response));
+                },
+            );
+            return deferred.promise;
+            try {
+                response = await Ext.Ajax.request(options);
+                Ext.log('response:', response, response.success);
+                return response;                    
+            } catch (error) {
+                Ext.log('44444', response);
+                throw error;
             }
-        }
-        Ext.Ajax.request(options).then(
-            (response)=>{
-                console.log('resolve', response);
-                response.jsonData = me.parseResponse(response);
-                deferred.resolve();
-            },
-            (response)=>{
-                deferred.reject(response);
-            });
+            // if(await response.success){
+            //     return await me.parseResponse(response);
+            // }
+            // return await me.getError(response);
 
-
-        return deferred.promise; 
     },
 
     parseResponse(response) {
@@ -145,11 +154,25 @@ Ext.define('Common.service.HttpClient', {
 
     privates: {
 
-        getOptions(url, method, opts){
-            return Ext.apply({
-                url: url,
-                method: method
-            },opts);
+        getOptions(url, method, data, opts){
+            opts = opts || {};
+            opts.url = url;
+            opts.method = method;
+            if(method === 'GET') {
+                opts.params = data;
+                return opts;
+            }
+            if(opts.xhr2){
+                opts.rawData = data;
+                return opts;
+            }
+            let contentType = opts.headers['Content-Type'];
+            if (contentType && contentType.includes('x-www-form')) {
+                options.rawData = Ext.Object.toQueryString(data);
+            } else {
+                options.jsonData = data;
+            }
+
         },
 
         onAjaxBeforeRequest(conn, options, eOpts){

@@ -17,6 +17,7 @@ public class TestController : QuickTemplateController
     [HttpGet]
     public Task<ListResultDto<string>> GetAsync()
     {
+        //throw new AbpAuthorizationException("ddd");
         return Task.FromResult(new ListResultDto<string>(new List<string>() { "dddddd" }));
     }
 }
