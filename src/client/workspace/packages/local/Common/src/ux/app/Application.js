@@ -53,8 +53,20 @@ Ext.define('Common.ux.app.Application', {
             }
         }
 
-        console.log(await Http.get(URI.get('test')))
-               
+        Ext.debug = (message)=>{
+            if(!AppConfig.debug) return;
+            Ext.log(arguments);
+        }
+        
+        Ext.warn = (message, ...args)=>{
+            console.log(args);
+            if(typeof message === 'string'){
+                return Ext.log.apply(null, [{ level: 'warn' }, message, ...args]);
+            }
+            message.level = 'warn';
+            Ext.log.apply(null, [message, ...args]);
+        }
+       
     },
 
     onAppUpdate() {

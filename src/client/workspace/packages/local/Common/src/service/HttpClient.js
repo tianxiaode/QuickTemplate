@@ -88,23 +88,11 @@ Ext.define('Common.service.HttpClient', {
                 },
                 (response)=>{
                     console.log('reject:', response);
-                    deferred.reject(me.getError(response));
+                    response.errorMessage = me.getError(response);
+                    deferred.reject(response);
                 },
             );
             return deferred.promise;
-            try {
-                response = await Ext.Ajax.request(options);
-                Ext.log('response:', response, response.success);
-                return response;                    
-            } catch (error) {
-                Ext.log('44444', response);
-                throw error;
-            }
-            // if(await response.success){
-            //     return await me.parseResponse(response);
-            // }
-            // return await me.getError(response);
-
     },
 
     parseResponse(response) {
@@ -147,6 +135,11 @@ Ext.define('Common.service.HttpClient', {
 
 
     getBlobData(response, mimeType) {
+        let headers = response.getAllResponseHeaders();
+        mimeType = mimeType || (headers && headers['content-type']);
+        if(!mimeType){
+            Ext.raise('unknown mime type');
+        }
         let bytes = response.responseBytes,
             blob = new Blob([bytes], { type: mimeType });
         return blob;

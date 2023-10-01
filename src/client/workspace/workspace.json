@@ -2,10 +2,7 @@
     /**
      *  An array of the paths to all the applications present in this workspace
      */
-    "apps": [
-        "Desktop",
-        "Phone"
-    ],
+    "apps": ["Desktop", "Phone"],
 
     /**
      * An object containing key value pair framework descriptors.
@@ -28,11 +25,11 @@
      * with "sencha workspace install". See "sencha help workspace install" for more information.
      *
      */
-    "frameworks": {        "ext": {
-            "path":"ext",
-            "version":"7.0.0.156"
+    "frameworks": {
+        "ext": {
+            "path": "ext",
+            "version": "7.0.0.156"
         }
-
     },
 
     /**

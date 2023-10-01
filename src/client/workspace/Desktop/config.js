@@ -1,6 +1,7 @@
 window.AppConfig = {
     apiUrl: 'https://localhost:44320/',
     localUrl: './',
+    debug: true,
     lang: '',
     oAuthConfig: {
         issuer: 'http://localhost:4200',
