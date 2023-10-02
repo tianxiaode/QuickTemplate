@@ -209,6 +209,7 @@ Ext.define('Common.util.Format', {
 
     destroy() {
         this.destroyMembers('fn');
+        this.callParent();
     }
 
 

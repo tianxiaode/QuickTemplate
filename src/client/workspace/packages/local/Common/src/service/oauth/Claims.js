@@ -78,6 +78,7 @@ Ext.define('Common.sevices.oauth.Claims',{
 
     destroy() {
         this.destroyMembers('defaultProtocolClaims', 'internalRequiredProtocolClaims', 'settings');
+        this.callParent();
     }
 
 

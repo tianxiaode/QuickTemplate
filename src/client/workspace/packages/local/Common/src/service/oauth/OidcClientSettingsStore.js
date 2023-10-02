@@ -73,6 +73,7 @@ Ext.define('Common.service.oauth.OidcClientSettingsStore',{
         this.destroyMembers('stateStore', 'metadata', 'metadataSeed', 
             'resource', 'filterProtocolClaims', 'extraQueryParams', 'extraTokenParams', 
             'extraHeaders', 'revokeTokenAdditionalContentTypes', 'fetchRequestCredentials');
+        this.callParent();
     }
 
 })

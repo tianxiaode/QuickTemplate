@@ -212,6 +212,7 @@ Ext.define('Common.service.ViewManager', {
         for(let key in me.views){
             Ext.clear(me.views[key]);
         }
+        this.callParent();
     },
 
 

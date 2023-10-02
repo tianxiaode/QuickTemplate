@@ -107,6 +107,7 @@ Ext.define('Common.service.oauth.Metadata',{
 
     destroy() {
         this.destroyMembers('settings','signingKeys', 'metadata');
+        this.callParent();
     },
 
     privates:{

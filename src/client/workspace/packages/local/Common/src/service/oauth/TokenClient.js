@@ -193,6 +193,7 @@ Ext.define('Common.sevices.oauth.TokenClient',{
 
     destroy() {
         this.destroyMembers('settings', 'metadataService');
+        this.callParent();
     }
 
 })

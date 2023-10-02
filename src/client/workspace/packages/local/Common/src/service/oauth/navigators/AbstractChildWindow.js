@@ -1,20 +1,11 @@
 Ext.define('Common.service.oauth.navigators.AbstractChildWindow',{
 
-    statics:{
-        notifyParent(parent, url, keepOpen, targetOrigin){
-            parent.postMessage({
-                source: messageSource,
-                url,
-                keepOpen,
-            }, targetOrigin);
-        }        
-    },
 
     constructor(config){
         let me = this;
         Ext.apply(this, config);
         me.disposeHandlers = new Set();
-        me.abort = [];
+        me.abort = Ext.create('oauth.event');
     },
 
     async navigate(params){
@@ -53,19 +44,11 @@ Ext.define('Common.service.oauth.navigators.AbstractChildWindow',{
             };
             window.addEventListener("message", listener, false);
             me.disposeHandlers.add(() => window.removeEventListener("message", listener, false));
-            let cb = (reason) => {
+            me.disposeHandlers.add(me.abort.addHandler((reason) => {
                 me.dispose();
                 reject(reason);
-            };
-            me.abort.push(cb)
-            let removeHandler = (cb)=>{
-                let idx = me.abort.lastIndexOf(cb);
-                if (idx >= 0) {
-                    me.abort.splice(idx, 1);
-                }
-            }
+            }));
         
-            me.disposeHandlers.add(() => removeHandler(cb));
         });
         Ext.debug("got response from window");
         me.dispose();
@@ -78,6 +61,20 @@ Ext.define('Common.service.oauth.navigators.AbstractChildWindow',{
     },
 
     close: Ext.emptyFn,
+
+    notifyParent(parent, url, keepOpen, targetOrigin){
+        parent.postMessage({
+            source: messageSource,
+            url,
+            keepOpen,
+        }, targetOrigin);
+    },
+
+    destroy() {
+        this.destroyMembers('disposeHandlers', 'abort');
+        this.callParent();
+    },
+
 
     privates:{
         dispose(){

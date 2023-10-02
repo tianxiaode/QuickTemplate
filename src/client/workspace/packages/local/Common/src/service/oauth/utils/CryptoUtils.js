@@ -1,4 +1,4 @@
-Ext.define('Oauth.CryptoUtils',{
+Ext.define('Common.service.oauth.utils.CryptoUtils',{
     alternateClassName: 'OauthCryptoUtils',
 
     statics:{

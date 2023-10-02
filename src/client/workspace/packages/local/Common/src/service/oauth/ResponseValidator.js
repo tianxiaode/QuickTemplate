@@ -79,6 +79,7 @@ Ext.define('Common.sevices.oauth.ResponseValidator',{
 
     destroy(){
         this.destroyMembers('setrrings');
+        this.callParent();
     },
 
     privates:{

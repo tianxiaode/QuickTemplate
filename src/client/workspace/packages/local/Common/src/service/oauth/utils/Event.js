@@ -7,7 +7,7 @@ Ext.define('Common.service.oauth.utils.Event',{
 
     addHandler(cb){
         this.callbacks.push(cb);
-        return () => this.removeHandler(cb);
+        return () => this.removeHandler(cb);    
     },
 
     removeHandler(cb){
@@ -22,7 +22,11 @@ Ext.define('Common.service.oauth.utils.Event',{
         for (const cb of this.callbacks) {
             cb(...ev);
         }
-    }
+    },
 
+    destroy() {
+        this.destroyMembers('callbacks');
+        this.callParent();
+    },
 
 })
