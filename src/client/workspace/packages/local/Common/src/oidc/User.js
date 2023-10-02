@@ -1,5 +1,5 @@
-Ext.define('Common.sevices.oauth.User',{
-    alias: 'oauth.user',
+Ext.define('Common.odic.User',{
+    alias: 'odic.user',
 
     /**
      * A JSON Web Token (JWT). Only provided if `openid` scope was requested.

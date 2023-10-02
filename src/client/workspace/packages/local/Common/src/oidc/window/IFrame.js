@@ -1,6 +1,7 @@
-Ext.define('Common.service.oauth.navigators.IFrameWindow',{
-    extend: 'Common.service.oauth.navigators.AbstractChildWindow',
-    alias: 'oauth.iFramewindow',
+
+Ext.define('Common.oidc.window.IFrame', {
+    extend: 'Common.oidc.window.Abstract',
+    alias: 'oidc.window.iframe',
 
     constructor(config){
         let me = this;
@@ -53,7 +54,7 @@ Ext.define('Common.service.oauth.navigators.IFrameWindow',{
     },
 
     notifyParent(url, targetOrigin){
-        return me.callParent(window.parent, url, false, targetOrigin);
+        return this.callParent(window.parent, url, false, targetOrigin);
     },
 
     destroy() {

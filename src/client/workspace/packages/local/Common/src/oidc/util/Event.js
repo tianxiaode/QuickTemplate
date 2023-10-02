@@ -1,5 +1,5 @@
-Ext.define('Common.service.oauth.utils.Event',{
-    alias: 'oauth.event',
+Ext.define('Common.oidc.util.Event',{
+    alias: 'oidc.event',
 
     constructor(){
         this.callbacks = [];
@@ -27,6 +27,6 @@ Ext.define('Common.service.oauth.utils.Event',{
     destroy() {
         this.destroyMembers('callbacks');
         this.callParent();
-    },
+    }
 
 })

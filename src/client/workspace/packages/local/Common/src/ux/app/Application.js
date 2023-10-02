@@ -10,7 +10,6 @@ Ext.define('Common.ux.app.Application', {
         'Common.service.HttpClient',
         'Common.service.Localized',
         'Common.service.Config',
-        'Common.service.oauth.*',
         'Common.util.Format',
         'Common.ux.dataview.Format',
         'Common.service.Template',
@@ -20,7 +19,10 @@ Ext.define('Common.ux.app.Application', {
         'Common.service.ViewManager',
         'Common.service.SignalR',
         'Common.ux.MessageBox',
-        'Common.ux.Toast'
+        'Common.ux.Toast',
+        'Common.oidc.util.Crypto',
+        'Common.oidc.util.Jwt',
+        'Common.oidc.util.Popup'
     ],
 
 

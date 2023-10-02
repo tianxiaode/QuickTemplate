@@ -55,6 +55,7 @@
         // the base URL is irrelevant, it's just here to support relative url arguments
         let parsedUrl = new URL(url, "http://127.0.0.1"),
             params = parsedUrl[responseMode === "fragment" ? "hash" : "search"];
+        console.log(parsedUrl);
         return new URLSearchParams(params.slice(1));
     },
 
@@ -62,7 +63,7 @@
     doDestroy() {
         let me = this;
         me.resources = null;
-    },
+    }
    
 
 });

@@ -1,14 +1,26 @@
-Ext.define('Common.service.oauth.navigators.AbstractChildWindow',{
 
+Ext.define('Common.oidc.window.Abstract', {
+    requires:[
+        'Common.oidc.util.Event'
+    ],
 
-    constructor(config){
+    /**
+    * Window implementation which resolves via communication from a child window
+    * via the `Window.postMessage()` interface.
+    *
+    * @internal
+    */
+
+    messageSource: "oidc-client",
+
+    constructor(config) {
         let me = this;
         Ext.apply(this, config);
         me.disposeHandlers = new Set();
-        me.abort = Ext.create('oauth.event');
+        me.abort = Ext.create('oidc.event');
     },
 
-    async navigate(params){
+    async navigate(params) {
         let me = this;
         if (!me.window) {
             Ext.raise("Attempted to navigate on a disposed window");
@@ -21,12 +33,12 @@ Ext.define('Common.service.oauth.navigators.AbstractChildWindow',{
             let listener = (e) => {
                 let data = e.data,
                     origin = params.scriptOrigin ?? window.location.origin;
-                if (e.origin !== origin || data?.source !== messageSource) {
+                if (e.origin !== origin || data?.source !== me.messageSource) {
                     // silently discard events not intended for us
                     return;
                 }
                 try {
-                    let state = URI.readParams(data.url, params.response_mode).get("state");
+                    let state = URI.readParams(data.url, params.responseMode).get("state");
                     if (!state) {
                         Ext.warn("no state found in response url");
                     }
@@ -48,7 +60,7 @@ Ext.define('Common.service.oauth.navigators.AbstractChildWindow',{
                 me.dispose();
                 reject(reason);
             }));
-        
+
         });
         Ext.debug("got response from window");
         me.dispose();
@@ -62,9 +74,9 @@ Ext.define('Common.service.oauth.navigators.AbstractChildWindow',{
 
     close: Ext.emptyFn,
 
-    notifyParent(parent, url, keepOpen, targetOrigin){
+    notifyParent(parent, url, keepOpen, targetOrigin) {
         parent.postMessage({
-            source: messageSource,
+            source: this.messageSource,
             url,
             keepOpen,
         }, targetOrigin);
@@ -76,14 +88,14 @@ Ext.define('Common.service.oauth.navigators.AbstractChildWindow',{
     },
 
 
-    privates:{
-        dispose(){
+    privates: {
+        dispose() {
 
             for (const dispose of this.disposeHandlers) {
                 dispose();
             }
             this.disposeHandlers.clear();
-    
+
         }
     }
 

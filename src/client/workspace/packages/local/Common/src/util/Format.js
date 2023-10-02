@@ -12,22 +12,6 @@ Ext.define('Common.util.Format', {
         getEpochTime() {
             return Math.floor(Ext.now() / 1000);
         },
-        b64DecodeUnicode(str) {
-            const base64 = str.replace(/\-/g, '+').replace(/\_/g, '/');
-            return decodeURIComponent(atob(base64)
-                .split('')
-                .map(function (c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                })
-                .join(''));
-        },
-        base64UrlEncode(str) {
-            const base64 = btoa(str);
-            return base64
-                .replace(/\+/g, '-')
-                .replace(/\//g, '_')
-                .replace(/=/g, '');
-        },
         defaultValue2(v, defaultValue) {
             if (Ext.isEmpty(v)) return I18N.get(defaultValue);
             return v;
