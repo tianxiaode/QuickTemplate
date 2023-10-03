@@ -1,4 +1,4 @@
-Ext.define('Common.service.Download', {
+Ext.define('Common.core.service.Download', {
     alternateClassName: 'DL',
     singleton: true,
 

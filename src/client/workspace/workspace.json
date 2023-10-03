@@ -2,7 +2,9 @@
     /**
      *  An array of the paths to all the applications present in this workspace
      */
-    "apps": ["Desktop", "Phone"],
+    "apps": ["Desktop", "Phone",
+        "Test"
+    ],
 
     /**
      * An object containing key value pair framework descriptors.

@@ -1,4 +1,4 @@
-Ext.define('Common.service.Storage', {
+Ext.define('Common.core.service.Storage', {
     alternateClassName: 'AppStorage',
     singleton: true,
 

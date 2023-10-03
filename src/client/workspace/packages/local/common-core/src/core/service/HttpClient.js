@@ -1,9 +1,9 @@
-Ext.define('Common.service.HttpClient', {
+Ext.define('Common.core.service.HttpClient', {
     alternateClassName: 'Http',
     singleton: true,
 
     requires: [
-        'Common.service.Storage'
+        'Common.core.service.Storage'
     ],
 
     constructor() {
@@ -16,7 +16,7 @@ Ext.define('Common.service.HttpClient', {
     },
 
     async get(url, data, opts) {
-        return await this.send(data, url, this.GET, opts);
+        return this.send(data, url, this.GET, opts);
     },
 
     async post(url, data, opts) {
@@ -80,7 +80,7 @@ Ext.define('Common.service.HttpClient', {
 
             Ext.Ajax.request(options).then(
                 (response)=>{
-                    Ext.log('resolve:', response, response.success);
+                    Ext.debug('resolve:', JSON.stringify(response), response.success);
                     if(!options.binary){
                         response.jsonData = me.parseResponse(response);
                     }

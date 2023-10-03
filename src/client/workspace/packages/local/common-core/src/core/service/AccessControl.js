@@ -1,9 +1,9 @@
-Ext.define('Common.service.AccessControl',{
+Ext.define('Common.core.service.AccessControl',{
     alternateClassName: 'ACL',
     singleton: true,
 
     requires:[
-        'Common.service.Config'
+        'Common.core.service.Config'
     ],
 
     config:{

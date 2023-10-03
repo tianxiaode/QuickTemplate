@@ -1,4 +1,4 @@
-Ext.define('Common.service.Config', {
+Ext.define('Common.core.service.Config', {
     alternateClassName: 'Config',
     singleton: true,
 
@@ -7,11 +7,9 @@ Ext.define('Common.service.Config', {
     ],
 
     config:{
-        fileOptions: null,
-        district: null
+        fileOptions: null
     },
 
-    images:{},
 
     isReady: false,
 
@@ -20,6 +18,10 @@ Ext.define('Common.service.Config', {
         me.initConfig(config)
         me.mixins.observable.constructor.call(me, config);
     },
+
+    getAppName(){
+        return Ext.getApplication().getName();
+    },    
 
     isAuthenticated(){
         let me = this;
@@ -52,22 +54,12 @@ Ext.define('Common.service.Config', {
         return fileOptions[key];
     },
 
-    loadConfiguration(){
+    async loadConfiguration(){
         let me = this;
         me.isReady = false;
         let promise = Http.get(URI.get('application-configuration'));
         promise.then(me.loadConfigurationSuccess, me.loadConfigurationFailure, null ,me);
         return promise;
-    },
-
-    getImage(hash){
-        if(Ext.isEmpty(hash)) return null;
-        return this.images[hash];
-    },
-
-    setImage(hash, url){
-        if(Ext.isEmpty(hash)) return;
-        this.images[hash] = url;
     },
 
     clearAll(){
@@ -76,10 +68,11 @@ Ext.define('Common.service.Config', {
         me.data = null;
     },
     
-    doDestroy() {
+    destroy() {
         let me = this;
         me.data = null;
         me.setFileOptions(null);
+        me.callParent();
     },
 
     privates:{
@@ -103,7 +96,7 @@ Ext.define('Common.service.Config', {
         }
 
     
-    }
+    }// end privates
 
 
 });

@@ -1,4 +1,4 @@
-Ext.define('Common.service.Enums', {
+Ext.define('Common.core.service.Enums', {
     alternateClassName: 'Enums',
     singleton: true,
 
@@ -8,8 +8,8 @@ Ext.define('Common.service.Enums', {
 
 
     requires:[
-        'Common.data.store.Enums',
-        'Common.service.Config',
+        //'Common.data.store.Enums',
+        'Common.core.service.Config',
     ],
     
     isReady: false,

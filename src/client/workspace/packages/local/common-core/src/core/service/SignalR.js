@@ -1,4 +1,4 @@
-Ext.define('Common.service.SignalR',{
+Ext.define('Common.core.service.SignalR',{
     alternateClassName: 'Signalr',
     singleton: true,
 
