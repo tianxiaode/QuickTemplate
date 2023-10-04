@@ -53,7 +53,7 @@ Ext.define('Common.core.service.HttpClient', {
     },
 
     postScriptError(msg, url, line, col, error) {
-        Http.post(URI.get('script-errors'), {
+        return Http.post(URI.get('script-errors'), {
             source: url,
             message: msg,
             line: line,
@@ -73,26 +73,28 @@ Ext.define('Common.core.service.HttpClient', {
     },
 
 
-    async send(data, url, method, opts) {
+    send(data, url, method, opts) {
         let me = this,
-            deferred = new Ext.Deferred();
+            //deferred = new Ext.Deferred();
             options = me.getOptions(url, method, data, opts);
 
-            Ext.Ajax.request(options).then(
-                (response)=>{
-                    Ext.debug('resolve:', JSON.stringify(response), response.success);
-                    if(!options.binary){
-                        response.jsonData = me.parseResponse(response);
-                    }
-                    deferred.resolve(response);
-                },
-                (response)=>{
-                    console.log('reject:', response);
-                    response.errorMessage = me.getError(response);
-                    deferred.reject(response);
-                },
-            );
-            return deferred.promise;
+            return Ext.Ajax.request(options);
+
+            // Ext.Ajax.request(options).then(
+            //     (response)=>{
+            //         Ext.debug('resolve:', JSON.stringify(response), response.success);
+            //         if(!options.binary){
+            //             response.jsonData = me.parseResponse(response);
+            //         }
+            //         deferred.resolve(response);
+            //     },
+            //     (response)=>{
+            //         console.log('reject:', response);
+            //         response.errorMessage = me.getError(response);
+            //         deferred.reject(response);
+            //     },
+            // );
+            // return deferred.promise;
     },
 
     parseResponse(response) {
@@ -105,7 +107,13 @@ Ext.define('Common.core.service.HttpClient', {
         let status = response && response.status,
             data = response,
             returnObj = Http.parseResponse(response),
-            error = returnObj && returnObj.error && returnObj.error.message;
+            error = '';
+        if(returnObj && returnObj.error && returnObj.error.message){
+            error = returnObj.error.message;
+        }
+        if(status === 0){
+            return response.statusText;
+        }
         if (status === 401) {
             window.location.href = '.';
             return;
@@ -122,7 +130,7 @@ Ext.define('Common.core.service.HttpClient', {
             return error;
         };
         if (status) data = response.responseType === 'json' ? response.responseJson : returnObj;
-        if (!(data && data.error)) return response;
+        if (!(data && data.error)) return null;
         if (data.error.validationErrors) return Http.getValidationErrors(data, resourceName);
         if (!Ext.isString(data.error)) {
             error = data.error.message;

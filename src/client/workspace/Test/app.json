@@ -211,14 +211,14 @@
             "path": "resources/jasmine-5.1.1/jasmine-html.js"
         },
         {            
-            "path": "resources/mock-ajax.js"
-        },
-        {            
             "path": "resources/jasmine-5.1.1/boot0.js"
         },
-        // {            
-        //     "path": "resources/jasmine-5.1.1/boot1.js"
-        // },
+        {            
+            "path": "resources/jasmine-5.1.1/boot1.js"
+        },
+        {            
+            "path": "resources/mock-ajax.js"
+        },
         {
             "path": "config.js",
             "bundle": true

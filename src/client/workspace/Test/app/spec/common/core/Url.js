@@ -1,7 +1,11 @@
 Ext.define('Test.spec.common.core.Url', {
+    singleton: true,
+
+    requires:[
+        'Common.core.service.Url'
+    ],
 
     constructor() {
-        console.log('Test.spec.common.core.Url')
         describe('Common.core.service.Url', () => {
             let url,
                 apiUrl = AppConfig.apiUrl;
