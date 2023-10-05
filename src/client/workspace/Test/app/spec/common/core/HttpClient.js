@@ -17,6 +17,7 @@ Ext.define('Test.spec.common.core.HttpClient', {
                 },
                 successFunction: function (data) {
                     console.log(data);
+                    return data.responseText;
                 }
             }
 
@@ -30,7 +31,7 @@ Ext.define('Test.spec.common.core.HttpClient', {
             })
 
             it('sample test', function () {
-                spyOn(testObj, 'successFunction').and.callThrough();
+                spyOn(Http, 'successFunction').and.callThrough();
                 testObj.ajaxFunction(url);
                 let temp = jasmine.Ajax.requests.mostRecent();
                 expect(temp.url).toContain(url);
