@@ -1,4 +1,4 @@
-Ext.define('Test.spec.common.core.HttpClient', {
+Ext.define('Test.spec.common.core.service.HttpClient', {
     singleton: true,
 
     requires: [
@@ -13,7 +13,7 @@ Ext.define('Test.spec.common.core.HttpClient', {
 
             var testObj = {
                 ajaxFunction: function (url) {
-                    Http.get(url).then(this.successFunction.bind(this))
+                    Http.download(url).then(this.successFunction.bind(this))
                 },
                 successFunction: function (data) {
                     console.log(data);
@@ -31,7 +31,7 @@ Ext.define('Test.spec.common.core.HttpClient', {
             })
 
             it('sample test', function () {
-                spyOn(Http, 'successFunction').and.callThrough();
+                spyOn(testObj, 'successFunction').and.callThrough();
                 testObj.ajaxFunction(url);
                 let temp = jasmine.Ajax.requests.mostRecent();
                 expect(temp.url).toContain(url);

@@ -15,27 +15,27 @@ Ext.define('Common.core.service.HttpClient', {
         Ext.Ajax.on('beforerequest', me.onAjaxBeforeRequest, me);
     },
 
-    async get(url, data, opts) {
+    get(url, data, opts) {
         return this.send(data, url, this.GET, opts);
     },
 
-    async post(url, data, opts) {
+    post(url, data, opts) {
         return this.send(data, url, this.POST, opts);
     },
 
-    async put(url, data, opts) {
+    put(url, data, opts) {
         return this.send(data, url, this.PUT, opts);
     },
 
-    async patch(url, data, opts) {
+    patch(url, data, opts) {
         return this.send(data, url, this.PATCH, opts);
     },
 
-    async delete(url, data, opts) {
+    delete(url, data, opts) {
         return this.send(data, url, this.DELETE, opts);
     },
 
-    async upload(url, data, opts) {
+    upload(url, data, opts) {
         opts = Ext.apply({
             xhr2:  true,
             rawData : data
@@ -46,7 +46,7 @@ Ext.define('Common.core.service.HttpClient', {
         return this.send(data, url, this.POST, opts);
     },
 
-    async download(url, data, opts){
+    download(url, data, opts){
         opts = opts || {};
         opts.binary = true;
         return this.get(url, data, opts);
@@ -75,26 +75,26 @@ Ext.define('Common.core.service.HttpClient', {
 
     send(data, url, method, opts) {
         let me = this,
-            //deferred = new Ext.Deferred();
+            deferred = new Ext.Deferred();
             options = me.getOptions(url, method, data, opts);
 
-            return Ext.Ajax.request(options);
+            //return Ext.Ajax.request(options);
 
-            // Ext.Ajax.request(options).then(
-            //     (response)=>{
-            //         Ext.debug('resolve:', JSON.stringify(response), response.success);
-            //         if(!options.binary){
-            //             response.jsonData = me.parseResponse(response);
-            //         }
-            //         deferred.resolve(response);
-            //     },
-            //     (response)=>{
-            //         console.log('reject:', response);
-            //         response.errorMessage = me.getError(response);
-            //         deferred.reject(response);
-            //     },
-            // );
-            // return deferred.promise;
+            Ext.Ajax.request(options).then(
+                (response)=>{
+                    Ext.debug('resolve:', JSON.stringify(response), response.success);
+                    if(!options.binary){
+                        response.jsonData = me.parseResponse(response);
+                    }
+                    deferred.resolve(response);
+                },
+                (response)=>{
+                    console.log('reject:', response);
+                    response.errorMessage = me.getError(response);
+                    deferred.reject(response);
+                },
+            );
+            return deferred.promise;
     },
 
     parseResponse(response) {
