@@ -6,10 +6,6 @@ Ext.define('Common.core.service.Config', {
         'Ext.mixin.Observable'
     ],
 
-    config:{
-        fileOptions: null
-    },
-
 
     isReady: false,
 
@@ -71,7 +67,6 @@ Ext.define('Common.core.service.Config', {
     destroy() {
         let me = this;
         me.data = null;
-        me.setFileOptions(null);
         me.callParent();
     },
 

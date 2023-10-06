@@ -2,7 +2,7 @@ Ext.define('Common.core.util.HttpStatusCode',{
     alternateClassName: 'HttpStatusCode',
     singleton: true,
 
-    statusCode:{
+    status:{
         Continue: 100,
         SwitchingProtocols: 101,
         Processing: 102,
@@ -71,10 +71,10 @@ Ext.define('Common.core.util.HttpStatusCode',{
     constructor(){
         let me = this,
             maps = new Map(),
-            codes = me.statusCode;
-        Object.entries(codes).forEach(([k,v])=>{
+            status = me.status;
+        Object.entries(status).forEach(([k,v])=>{
             me[k] = v;
-            me[`Code${v}`] = v;
+            me[`Status${v}`] = v;
             maps.set(v, k);
         })
         me.maps = maps;
@@ -88,6 +88,6 @@ Ext.define('Common.core.util.HttpStatusCode',{
     },
 
     destroy(){
-        this.destroyMembers('statusCode', 'maps');
+        this.destroyMembers('status', 'maps');
     }
 })

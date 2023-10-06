@@ -7,7 +7,8 @@ Ext.define('Test.Application', {
     extend: 'Ext.app.Application',
 
     requires: [
-        'Common.*',
+        'Common.overrides.*',
+        'Common.core.*',
     ],
 
     name: 'Test',

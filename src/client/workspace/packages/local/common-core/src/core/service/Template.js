@@ -51,9 +51,9 @@ Ext.define('Common.core.service.Template', {
         return template;
     },
 
-    doDestroy() {
+    destroy() {
         let me = this;
-        me.templates = null;
+        me.destroyMembers('templates')
     },
 
 
