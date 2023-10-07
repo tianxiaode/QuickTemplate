@@ -89,5 +89,6 @@ Ext.define('Common.core.util.HttpStatusCode',{
 
     destroy(){
         this.destroyMembers('status', 'maps');
+        this.callParent();
     }
 })

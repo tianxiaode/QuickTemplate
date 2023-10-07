@@ -34,7 +34,7 @@ Ext.define('Common.core.service.Template', {
     getTplWithScope(config, scope){
         if(config.isXTemplate) return;
         let me = Template;
-        config = Ext.isString(config) && me[config] || config;
+        config = (Ext.isString(config) && me[config]) || config;
         if(!config) return;
         return me.create(config, scope);
     },

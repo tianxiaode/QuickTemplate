@@ -15,7 +15,7 @@ Ext.define('Common.overrides.data.request.Base',{
         let blob = me.getFile(mimeType),
             a = document.createElement("a"),
         evt = document.createEvent("MouseEvents");
-        filename = filename || Ext.data.identifier.Uuid.Global.generate();
+        filename = filename || (Ext.data.identifier.Uuid.Global.generate() + MimeTypeExt.getSuffixes(blob.type)[0]);
         a.innerHTML = filename;
         a.download = filename;
         a.href = URL.createObjectURL(blob);

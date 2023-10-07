@@ -88,6 +88,7 @@ Ext.define('Common.core.service.HttpClient', {
     privates: {
 
         setOptions(url, method, data, opts){
+            let me = this;
             opts = Object.assign({}, opts);
             opts.url = url;
             opts.method = method;
@@ -95,6 +96,7 @@ Ext.define('Common.core.service.HttpClient', {
             // Add xsrf header
             if(url.startsWith(window.location.href)){
                 let xsrfValue = Ext.util.Cookies.get(me.xsrfCookieName);
+                opts.headers = opts.headers || {};
                 if (xsrfValue) {
                     opts.headers[me.xsrfHeaderName] = xsrfValue;
                 }
@@ -120,7 +122,7 @@ Ext.define('Common.core.service.HttpClient', {
 
         onAjaxBeforeRequest(conn, options, eOpts){
             if(!options.headers) options.headers = this.getDefaultHeaders();
-        },
+        }
 
 
 

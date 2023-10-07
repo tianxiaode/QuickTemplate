@@ -6,9 +6,9 @@ Ext.define('Test.spec.common.core.util.HttpStatusCode', {
     ],
 
     constructor() {
-        describe('Common.core.service.HttpStatusCode', () => {
+        describe('Common.core.util.HttpStatusCode', () => {
 
-            it('获取200的状态信息', function () {
+            it('获取200的状态信息', () => {
                 let code = HttpStatusCode.getMessage(HttpStatusCode.Status200);
                 expect(code).toEqual('Ok');
 

@@ -9,6 +9,7 @@ Ext.define('Test.Application', {
     requires: [
         'Common.overrides.*',
         'Common.core.*',
+        'Common.localized.*'
     ],
 
     name: 'Test',
