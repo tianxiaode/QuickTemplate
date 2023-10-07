@@ -7,7 +7,8 @@ Ext.define('Common.core.service.HttpClient', {
     xsrfHeaderName: 'RequestVerificationToken',
   
     requires: [
-        'Common.core.service.Storage'
+        'Common.core.service.Storage',
+        'Common.overrides.data.request.Base'
     ],
 
     constructor() {
@@ -80,8 +81,7 @@ Ext.define('Common.core.service.HttpClient', {
     send(url, data, method, opts) {
         let me = this,
             options = me.setOptions(url, method, data, opts);
-
-        return Ext.Ajax.request(options);
+        return Ext.Ajax.request(options)
     },
 
 

@@ -108,20 +108,12 @@ Ext.define('Common.localized.Localized', {
     },
 
     loadResources(url) {
-        let me = this,
-            defferrd = new Ext.Deferred();
+        let me = this;
         me.isReady = false;
         url = url || URI.get('localization');
-        Http.get(url).then(
-            (response) => {
-                me.loadSuccess(response);
-                defferrd.resolve(response);
-            },
-            (response) => {
-                defferrd.reject(response);
-            },
-        );
-        return defferrd.promise;
+        let request = Http.get(url);
+        request.then(me.loadSuccess.bind(me));
+        return request;
     },
 
     destroy() {
@@ -224,7 +216,7 @@ Ext.define('Common.localized.Localized', {
 
     loadSuccess(response) {
         let me = this,
-            data = response.getJson(),
+            data = response.request.getJson(),
             map;
         if (!data) return;
         me.remoteRawValue = Object.assign({}, data);

@@ -1,10 +1,6 @@
 Ext.define('Common.overrides.Component',{
     override: 'Ext.Component',
 
-    requires:[
-        'Common.localized.Localized'
-    ],
-
     mixins: [
         'Ext.mixin.Responsive'
     ],
@@ -24,7 +20,11 @@ Ext.define('Common.overrides.Component',{
     initialize(){
         let me = this;
         me.callParent(arguments);
-        if(I18N && I18N.isReady){
+        if(!I18N){
+            Ext.defer(me.initialize, 50, me );
+            return;
+        }
+        if(I18N.isReady){
             me.onLocalized();
         }
         I18N.on('ready', me.onLocalized, me);

@@ -23,7 +23,7 @@ Ext.define('Test.spec.common.core.service.HttpClient', {
             })
 
             describe("测试返回结果的getJson方法", () => {
-                let jonsTestData = { test: 'test' };
+                let jsonTestData = { test: 'test' };
                 beforeEach(() => {
                     response = Http.get(url);
                     spyOn(Http, 'get').and.callThrough();
@@ -36,9 +36,9 @@ Ext.define('Test.spec.common.core.service.HttpClient', {
                 it('验证返回数据', () => {
                     request.respondWith({
                         status: 200,
-                        responseText: JSON.stringify(jonsTestData)
+                        responseText: JSON.stringify(jsonTestData)
                     });
-                    expect(response.getJson().test).toEqual(jonsTestData.test);
+                    expect(response.getJson().test).toEqual(jsonTestData.test);
                 })
             });
 
