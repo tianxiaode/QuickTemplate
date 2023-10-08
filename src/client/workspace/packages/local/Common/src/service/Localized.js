@@ -3,6 +3,7 @@ Ext.define('Common.service.Localized', {
     singleton: true,
 
     mixins:[
+        'Common.core.service.Config',
         'Common.mixin.AjaxFailure',
         'Ext.mixin.Observable',
     ],
@@ -23,11 +24,12 @@ Ext.define('Common.service.Localized', {
     },
 
     initLanguages(){
-        let me = this;
-        let current = AppStorage.get('lang');
+        let me = this,
+            current = AppStorage.get('lang'),
+            lang = Config.getLanguage();
         if(!current) {
-            current = AppConfig.lang === 'zh-CN' ? 'zh-Hans' 
-            : AppConfig.lang === 'zh-TW' ? 'zh-Hant' : AppConfig.lang;
+            current = lang === 'zh-CN' ? 'zh-Hans' 
+            : lang === 'zh-TW' ? 'zh-Hant' : lang;
         }
         me.setCurrentLanguage(current);
         AppStorage.set('lang', current);

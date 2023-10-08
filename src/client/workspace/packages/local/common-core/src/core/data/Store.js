@@ -1,10 +1,9 @@
-Ext.define('Common.ux.data.Store', {
+Ext.define('Common.core.data.Store', {
     extend: 'Ext.data.Store',
-    alias: 'store.uxformatstore',
+    alias: 'store.formatstore',
 
     mixins:[
-        'Common.mixin.data.Model',
-        'Common.mixin.data.Proxy'
+        'Common.core.mixin.data.Store'
     ],
 
     remoteSort: true,

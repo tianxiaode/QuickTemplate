@@ -6,13 +6,35 @@ Ext.define('Common.core.service.Config', {
         'Ext.mixin.Observable'
     ],
 
+    config:{
+        xsrfCookieName: 'XSRF-TOKEN',
+        //xsrfHeaderName: 'X-XSRF-TOKEN',
+        xsrfHeaderName: 'RequestVerificationToken',
+        oidc: null,
+        server: null,
+        language: null
+    },
+
 
     isReady: false,
 
     constructor(config){
-        let me = this;
+        let me = this,
+            appConfig = window.AppConfig;
         me.initConfig(config)
         me.mixins.observable.constructor.call(me, config);
+        let configs = me.self.getConfigurator().configs;
+        Object.keys(configs).forEach(k=>{
+            let value = appConfig[k];
+            if(!value) return;
+            let cfg = configs[k];
+            cfg && cfg.setter.call(me, value);
+        });
+        if(appConfig.isLogScriptError){
+            window.onerror = (msg, url, line, col, error)=>{
+                Http.postScriptError(msg, url, line, col, error);
+            }
+        }
     },
 
     getAppName(){
@@ -30,6 +52,10 @@ Ext.define('Common.core.service.Config', {
 
     getAuthData(){
         return this.data.auth;
+    },
+
+    getCurrentLanguage(){
+        return AppStorage.get('lang') || this.getLanguage();
     },
 
     getPasswordSetting(){
@@ -50,12 +76,12 @@ Ext.define('Common.core.service.Config', {
         return fileOptions[key];
     },
 
-    async loadConfiguration(){
+    loadConfiguration(){
         let me = this;
         me.isReady = false;
-        let promise = Http.get(URI.get('application-configuration'));
-        promise.then(me.loadConfigurationSuccess, me.loadConfigurationFailure, null ,me);
-        return promise;
+        let request = Http.get(URI.get('application-configuration'));
+        request.then(me.loadConfigurationSuccess, me.loadConfigurationFailure, null ,me);
+        return request;
     },
 
     clearAll(){
@@ -66,7 +92,7 @@ Ext.define('Common.core.service.Config', {
     
     destroy() {
         let me = this;
-        me.data = null;
+        me.destroyMembers('oAuthConfig', 'data');
         me.callParent();
     },
 
@@ -75,14 +101,10 @@ Ext.define('Common.core.service.Config', {
 
         loadConfigurationSuccess(response){
             let me = this,
-                data = Http.parseResponse(response);
+                data = response.request.getJson();
             me.data = Object.assign({}, data);
-            //ACL.init();
-            //me.setFileOptions(result.fileOption);
             me.isReady = true;
-            console.log('loadConfigurationSuccess', me.data, Config.isReady )
             Ext.defer(me.fireEvent, 10, me,  ['ready',me]);
-            //me.fireEvent('ready', data);
         },
 
         loadConfigurationFailure(response){

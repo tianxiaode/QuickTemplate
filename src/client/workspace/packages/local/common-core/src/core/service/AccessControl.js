@@ -36,10 +36,11 @@ Ext.define('Common.core.service.AccessControl',{
         me.setGrantedPolicies(Object.assign({},auth.grantedPolicies));
     },
 
-    doDestroy() {
+    destroy() {
         let me = this;
         me.setPolicies(null);
         me.setGrantedPolicies(null);
+        me.callParent();
     }
 
 

@@ -13,7 +13,7 @@ Ext.define('Common.ux.button.Scan',{
     initialize(){
         let me = this;
         me.callParent();
-        if(AppConfig.apiUrl.includes('localhost')) return;
+        if(Config.getServer().includes('localhost')) return;
         me.getWxConfig();
     },
 

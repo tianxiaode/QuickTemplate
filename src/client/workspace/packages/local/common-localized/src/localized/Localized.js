@@ -3,6 +3,7 @@ Ext.define('Common.localized.Localized', {
     singleton: true,
 
     requires:[
+        'Common.core.service.Config',
         'Common.core.service.Storage'
     ],
 
@@ -26,11 +27,12 @@ Ext.define('Common.localized.Localized', {
     },
 
     initLanguages() {
-        let me = this;
-        let current = AppStorage.get('lang');
+        let me = this,
+            lang = Config.getLanguage(),
+            current = AppStorage.get('lang');
         if (!current) {
-            current = AppConfig.lang === 'zh-CN' ? 'zh-Hans'
-                : AppConfig.lang === 'zh-TW' ? 'zh-Hant' : AppConfig.lang;
+            current = lang === 'zh-CN' ? 'zh-Hans'
+                : lang === 'zh-TW' ? 'zh-Hant' : lang;
         }
         me.setCurrentLanguage(current);
         AppStorage.set('lang', current);

@@ -1,5 +1,5 @@
 
-Ext.define('Common.ux.data.validator.Mobile', {
+Ext.define('Common.core.data.validator.Mobile', {
     extend: 'Ext.data.validator.Format',
     alias: 'data.validator.mobile',
  

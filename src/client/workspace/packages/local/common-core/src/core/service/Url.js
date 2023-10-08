@@ -3,11 +3,12 @@
     singleton: true,
 
     requires:[
+        'Common.core.util.Format',
         'Common.core.service.Config'
     ],
 
     urlFormat: '{0}{1}{2}',
-    defaultPath: 'api/',
+    defaultPath: 'api',
 
     getResourcePath(){
         let appName = Config.getAppName(),
@@ -17,17 +18,21 @@
    
 
     get(isUseDefaultPath, ...args) {
-        let me = this,            
-            url = AppConfig.apiUrl;
-        if(url.endsWith('/')) url = url.substr(0, url.length -1);
+        let me = this,
+            url = me.ensureNotSlash(Config.getServer())
+            defaultPath = me.ensureNotSlash(me.defaultPath);
         if(isUseDefaultPath !== false){
-            url += `/${me.defaultPath}${isUseDefaultPath}`;
+            url = url + (defaultPath.startsWith('/') ? '' : '/') + defaultPath;
+            let first =  Ext.isArray(isUseDefaultPath) ? isUseDefaultPath : [isUseDefaultPath];
+            args = [...first, ...args];        
         }
-        args.forEach(s=>{
-            if(Ext.isEmpty(s)) return;
-            url += `/${s.toString().toLowerCase()}`;
-        })
-        return url;
+
+        return `${url}/${args.map(m=>Format.splitCamelCase(m.toString()).toLocaleLowerCase()).join('/')}`;
+    },
+
+    ensureNotSlash(str){
+        if(!str.endsWith('/')) return str;
+        return str.substr(0, str.length -1);
     },
 
     resources: {

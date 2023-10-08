@@ -2,11 +2,9 @@ Ext.define('Common.core.service.HttpClient', {
     alternateClassName: 'Http',
     singleton: true,
 
-    xsrfCookieName: 'XSRF-TOKEN',
-    //xsrfHeaderName: 'X-XSRF-TOKEN',
-    xsrfHeaderName: 'RequestVerificationToken',
   
     requires: [
+        'Common.core.service.Config',
         'Common.core.service.Storage',
         'Common.overrides.data.request.Base'
     ],
@@ -68,11 +66,12 @@ Ext.define('Common.core.service.HttpClient', {
     },
 
     getDefaultHeaders() {
+        let lang = Config.getCurrentLanguage();
         return {
             'Authorization': 'Bearer ' + AppStorage.get('access_token'),
             'Access-Control-Allow-Origin': '*',
-            "accept-language": AppStorage.get('lang') || (AppConfig.lang === 'zh-CN' ? 'zh-Hans'
-                : AppConfig.lang === 'zh-TW' ? 'zh-Hant' : AppConfig.lang)
+            "accept-language": AppStorage.get('lang') || (lang === 'zh-CN' ? 'zh-Hans'
+                : lang === 'zh-TW' ? 'zh-Hant' : lang)
         };
 
     },

@@ -28,59 +28,6 @@ Ext.define('Common.core.util.Format', {
         date2(v) {
             return Format.date(v, Format.defaultDateFormat);
         },
-        pluralRules: [
-            // [new RegExp('(m)an$', 'gi'),                 '$1en'],
-            // [new RegExp('(pe)rson$', 'gi'),              '$1ople'],
-            // [new RegExp('(child)$', 'gi'),               '$1ren'],
-            // [new RegExp('^(ox)$', 'gi'),                 '$1en'],
-            // [new RegExp('(ax|test)is$', 'gi'),           '$1es'],
-            // [new RegExp('(octop|vir)us$', 'gi'),         '$1i'],
-            // [new RegExp('(alias|status)$', 'gi'),        '$1es'],
-            // [new RegExp('(bu)s$', 'gi'),                 '$1ses'],
-            // [new RegExp('(buffal|tomat|potat)o$', 'gi'), '$1oes'],
-            // [new RegExp('([ti])um$', 'gi'),              '$1a'],
-            // [new RegExp('sis$', 'gi'),                   'ses'],
-            // [new RegExp('(?:([^f])fe|([lr])f)$', 'gi'),  '$1$2ves'],
-            // [new RegExp('(hive)$', 'gi'),                '$1s'],
-            [new RegExp('(^media$)', 'gi'), '$1e'],
-            [new RegExp('([^aeiouy]|qu)y$', 'gi'), '$1ies'],
-            // [new RegExp('(matr|vert|ind)ix|ex$', 'gi'),  '$1ices'],
-            // [new RegExp('(x|ch|ss|sh)$', 'gi'),          '$1es'],
-            // [new RegExp('([m|l])ouse$', 'gi'),           '$1ice'],
-            // [new RegExp('(quiz)$', 'gi'),                '$1zes'],
-            [new RegExp('s$', 'gi'), 's'],
-            [new RegExp('$', 'gi'), 's']
-        ],
-        uncountableWords: {
-            'equipment': true,
-            'information': true,
-            'rice': true,
-            'money': true,
-            'species': true,
-            'series': true,
-            'fish': true,
-            'sheep': true,
-            'moose': true,
-            'deer': true,
-            'news': true,
-            'marketing': true,
-            'caching': true,
-            'account': true,
-            'emailing': true
-        },
-        pluralize(str) {
-            if (Ext.isEmpty(str)) return '';
-            if (Format.uncountableWords[str.toLowerCase()]) return str;
-            let rules = Format.pluralRules;
-            for (var i = 0, l = rules.length; i < l; i++) {
-                if (str.match(rules[i][0])) {
-                    str = str.replace(rules[i][0], rules[i][1]);
-                    break;
-                }
-            }
-
-            return str;
-        },
         splitCamelCase(str) {
             if (Ext.isEmpty(str)) return '';
             return str.replace(/::/g, '-')

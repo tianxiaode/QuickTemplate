@@ -1,9 +1,7 @@
 window.AppConfig = {
-    apiUrl: 'https://localhost:44320/',
-    localUrl: './',
-    debug: true,
-    lang: '',
-    oAuthConfig: {
+    server: 'https://localhost:44320/',
+    language: '',
+    oidc: {
         issuer: 'http://localhost:4200',
         redirectUri: "http://localhost:4200/desktop",
         clientId: 'QuickTemplate_App',
@@ -27,13 +25,13 @@ window.AppConfig = {
         "zh-CN": '应用程序已更新，是否重新加载？'
     },
     currentLoadingText: '',
-    logError: false
+    isLogScriptError: false
 };
 
 //加载语言
 let locale  = window.location.href.match(/lang=([\w-]+)/),
     currentLang = navigator.language || navigator.browserLanguage;
-window.AppConfig.lang = (locale && locale[1]) || currentLang;
+window.AppConfig.language = (locale && locale[1]) || currentLang;
 let appName = window.AppConfig.appName[window.AppConfig.lang] || window.AppConfig.appName["en"];
 document.title = appName;
 window.setTimeout(()=>{

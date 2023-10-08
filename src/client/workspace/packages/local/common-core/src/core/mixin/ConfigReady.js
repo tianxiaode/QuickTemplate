@@ -1,4 +1,4 @@
-Ext.define('Common.mixin.ConfigReady', {
+Ext.define('Common.core.mixin.ConfigReady', {
     extend: 'Ext.Mixin',
 
     mixinConfig: {

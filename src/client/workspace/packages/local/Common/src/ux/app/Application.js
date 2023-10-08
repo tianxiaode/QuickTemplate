@@ -40,7 +40,7 @@ Ext.define('Common.ux.app.Application', {
         ]
     },
 
-    async init() {
+    init() {
         //桌面应用允许用户选择文字
         if(Ext.platformTags.desktop){
             Ext.Viewport.setUserSelectable({
@@ -48,27 +48,7 @@ Ext.define('Common.ux.app.Application', {
                 bodyElement: true
             })    
         }
-
-        if(AppConfig.logError){
-            window.onerror = (msg, url, line, col, error)=>{
-                Http.postScriptError(msg, url, line, col, error);
-            }
-        }
-
-        Ext.debug = (message)=>{
-            if(!AppConfig.debug) return;
-            Ext.log(arguments);
-        }
-        
-        Ext.warn = (message, ...args)=>{
-            console.log(args);
-            if(typeof message === 'string'){
-                return Ext.log.apply(null, [{ level: 'warn' }, message, ...args]);
-            }
-            message.level = 'warn';
-            Ext.log.apply(null, [message, ...args]);
-        }
-       
+      
     },
 
     onAppUpdate() {

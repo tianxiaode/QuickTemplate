@@ -1,4 +1,4 @@
-﻿Ext.define('Common.ux.data.proxy.Format', {
+﻿Ext.define('Common.core.data.proxy.Format', {
     extend: 'Ext.data.proxy.Ajax',
     alias: 'proxy.format',
 
