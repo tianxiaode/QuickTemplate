@@ -23,13 +23,13 @@
 
 @include tabbar-ui(
     $ui: 'light-white',
-    $background-color : $white,
+    $background-color : $base-foreground-color,
     $box-shadow : none
 );
 
 @include tab-ui(
     $ui: 'light-white',
-    $background-color : $white,
+    $background-color : $base-foreground-color,
     $color : var(--color),
     $active-color: $base-color,
     $active-icon-color: $base-color,
@@ -38,8 +38,8 @@
     $active-focused-color :$base-color,
     $active-focused-icon-color :$base-color,
     $hovered-color: #6c757d,
-    $hovered-background-color :$white,
-    $active-background-color:$white,
+    $hovered-background-color :$base-foreground-color,
+    $active-background-color:$base-foreground-color,
     $box-shadow : none,
     $disabled-color: var(--disabled-color)
 );

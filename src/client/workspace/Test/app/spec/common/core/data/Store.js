@@ -2,12 +2,13 @@ Ext.define('Test.spec.common.core.data.Store', {
     singleton: true,
 
     requires: [
-        'Test.spec.common.core.data.Roles'
+        'Test.store.Roles',
+        'Test.store.identity.Roles',
     ],
 
     constructor() {
         describe('Common.core.data.Store', () => {
-            let jsonTestData = {};
+            let jsonTestData = this.responseData;
 
             beforeEach(() => {
                 jasmine.Ajax.install();
@@ -28,19 +29,19 @@ Ext.define('Test.spec.common.core.data.Store', {
 
 
             describe("测试store属性和方法", () => {
-                let store = Ext.create('Test.spec.common.core.data.Roles'),
+                let store = Ext.create('Test.store.Roles'),
                     proxy = store.getProxy(),
                     model = store.getModel(),                    
-                    store2 = Ext.create('Test.spec.common.core.data.Roles2'),
-                    model2 = store2.getModel(),
-                    proxy2 = store2.getProxy();
+                    identityRoleStore = Ext.create('Test.store.identity.Roles'),
+                    identityRoleModel = identityRoleStore.getModel(),
+                    identityRoleProxy = identityRoleStore.getProxy();
 
                 it('测试模型别名为entity.role时由entiyName生成的url', () => {
                     expect(proxy.getUrl()).toEqual(`${Config.getServer()}api/roles`);
                 })
 
                 it('测试模型别名为 entity.identity.role 时由entiyName生成的url', () => {
-                    expect(proxy2.getUrl()).toEqual(`${Config.getServer()}api/identity/roles`);
+                    expect(identityRoleProxy.getUrl()).toEqual(`${Config.getServer()}api/identity/roles`);
                 })
 
                 it('测试模型是否包含id和concurrencyStamp字段', () => {
@@ -49,7 +50,20 @@ Ext.define('Test.spec.common.core.data.Store', {
                 })
 
                 it('测试模型是否包含translations字段', () => {
-                    expect(model2.getField('translations').getName()).toEqual('translations');
+                    expect(identityRoleModel.getField('translations').getName()).toEqual('translations');
+                })
+
+                it('测试设置proxy参数', () => {
+                    store.setExtraParams('name', 'a');
+                    expect(proxy.extraParams.name).toEqual('a');
+                })
+
+                it('测试模型数据加载', (done) => {
+                    store.load(()=>{
+                        expect(store.getTotalCount()).toEqual(2);
+                        expect(store.getAt(0).get('name')).toEqual('admin');
+                        done();
+                    });
                 })
                 
             });
@@ -63,4 +77,61 @@ Ext.define('Test.spec.common.core.data.Store', {
         me.callParent();
     },
 
+    responseData:{
+        "items": [
+          {
+            "extraProperties": {
+              "additionalProp1": "string",
+              "additionalProp2": "string",
+              "additionalProp3": "string"
+            },
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "admin",
+            "isDefault": true,
+            "isStatic": true,
+            "isPublic": true,
+            "concurrencyStamp": "6330d7b5d7c549deb406c96ebdd30845",
+            "permissions": [
+              "AbpIdentity.Roles", "AbpIdentity.Roles.Create"
+            ],
+            "translations": [
+              {
+                "language": "en",
+                "name": "admin"
+              },
+              {
+                "language": "zh-hans",
+                "name": "管理员"
+              }
+            ]
+          },
+          {
+            "extraProperties": {
+              "additionalProp1": "string",
+              "additionalProp2": "string",
+              "additionalProp3": "string"
+            },
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa5",
+            "name": "user",
+            "isDefault": false,
+            "isStatic": false,
+            "isPublic": false,
+            "concurrencyStamp": "6330d7b5d7c549deb406c96ebdd30844",
+            "permissions": [
+              "AbpIdentity.Roles", "AbpIdentity.Roles.Create"
+            ],
+            "translations": [
+              {
+                "language": "en",
+                "name": "user"
+              },
+              {
+                "language": "zh-hans",
+                "name": "用户"
+              }
+            ]
+          }
+        ],
+        "totalCount": 2
+      }
 });

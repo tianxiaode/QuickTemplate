@@ -3,7 +3,7 @@ Ext.define('Common.core.data.TreeStore', {
     alias: 'store.formattreestore',
 
     mixins:[
-        'Common.core.mixin.data.Store'
+        'Common.core.mixin.data.StoreExtensions'
     ],
 
     rootVisible: false,

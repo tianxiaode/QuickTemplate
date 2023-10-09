@@ -80,7 +80,7 @@ Ext.define('Common.core.service.Config', {
         let me = this;
         me.isReady = false;
         let request = Http.get(URI.get('application-configuration'));
-        request.then(me.loadConfigurationSuccess, me.loadConfigurationFailure, null ,me);
+        request.then(me.loadConfigurationSuccess, Ext.Msg.showAjaxErrors.bind(me, 'LoadConfiguration'), null ,me);
         return request;
     },
 
@@ -105,13 +105,7 @@ Ext.define('Common.core.service.Config', {
             me.data = Object.assign({}, data);
             me.isReady = true;
             Ext.defer(me.fireEvent, 10, me,  ['ready',me]);
-        },
-
-        loadConfigurationFailure(response){
-            let error = Http.getError(response);
-            MsgBox.alert(null, error);
         }
-
     
     }// end privates
 

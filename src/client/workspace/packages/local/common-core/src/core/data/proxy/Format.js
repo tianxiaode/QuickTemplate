@@ -1,4 +1,7 @@
-﻿Ext.define('Common.core.data.proxy.Format', {
+﻿/**
+ * 根据api定义一个格式化的proxy
+ */
+Ext.define('Common.core.data.proxy.Format', {
     extend: 'Ext.data.proxy.Ajax',
     alias: 'proxy.format',
 
@@ -32,8 +35,7 @@
 
     listeners: {
         exception(proxy,response,options,eOpts){
-            let error = Http.getError(response);
-            MsgBox.alert(null,error);
+            MsgBox.showAjaxErrors(response);
         }
     }
 

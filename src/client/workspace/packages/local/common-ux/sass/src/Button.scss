@@ -3,10 +3,10 @@ $button-border-radius: dynamic(null);
 
 @include button-ui(
     $ui: 'header',
-    $color:  $gray-700,
+    $color:  $material-colors('grey'),
     $background-color: transparent,
     $pressed-background-color: $base-pressed-color,
-    $hovered-background-color: $gray-300,
+    $hovered-background-color: $material-colors('grey', 700),
     $disabled-background-color: rgba(0,0,0,0.12)
 
 );
@@ -26,7 +26,7 @@ $button-border-radius: dynamic(null);
 @include button-ui(
  $ui: 'phone-badge',
  $badge-background-color : transparent,
- $badge-color :var(--accent-color),
+ $badge-color :var($accent-color),
  $badge-border-color : transparent,
  $badge-min-width : 40px
 );
@@ -34,41 +34,41 @@ $button-border-radius: dynamic(null);
 @include button-ui(
  $ui: 'danger',
  $background-color: transparent,
- $hovered-background-color: $gray-300,
- $color: $red
+ $hovered-background-color: $material-colors('grey', 700),
+ $color: $alert-color
 );
 
 @include button-ui(
  $ui: 'success',
  $background-color: transparent,
- $hovered-background-color: $gray-300,
- $color: $success
+ $hovered-background-color: $material-colors('grey', 700),
+ $color: $confirm-color
 );
 
 @include button-ui(
  $ui: 'cyan',
  $background-color: transparent,
- $hovered-background-color: $gray-300,
- $color: $cyan
+ $hovered-background-color: $material-colors('grey', 700),
+ $color: $material-foreground-color('cyan')
 );
 
 
 @include button-ui(
     $ui: 'soft-grey',
-    $color: $base-foreground-color,
-    $background-color: $gray-500,
+    $color: $material-foreground-color('grey'),
+    $background-color: $material-colors('grey'),
     $pressed-background-color: $base-pressed-color,
-    $hovered-background-color: $gray-700,
+    $hovered-background-color: $material-colors('grey', 700),
     $disabled-background-color: rgba(0,0,0,0.12)
 
 );
 
 @include button-ui(
     $ui: 'soft-purple',
-    $color: $base-foreground-color,
-    $background-color: $purple,
+    $color: $material-foreground-color('purple'),
+    $background-color: $material-colors('purple'),
     $pressed-background-color: $base-pressed-color,
-    $hovered-background-color: $purple-700,
+    $hovered-background-color: $material-colors('purple', 700),
     $disabled-background-color: rgba(0,0,0,0.12)
 
 );

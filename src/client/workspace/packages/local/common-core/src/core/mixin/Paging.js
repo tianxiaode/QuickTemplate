@@ -1,6 +1,5 @@
-Ext.define('Common.mixin.Paging', {
+Ext.define('Common.core.mixin.Paging', {
     extend: 'Ext.Mixin',
-    //mixinId: 'pagingGridMixin',
 
     mixinConfig: {
         before:{

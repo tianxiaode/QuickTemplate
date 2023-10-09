@@ -3,7 +3,7 @@ Ext.define('Common.core.data.Store', {
     alias: 'store.formatstore',
 
     mixins:[
-        'Common.core.mixin.data.Store'
+        'Common.core.mixin.data.StoreExtensions'
     ],
 
     remoteSort: true,

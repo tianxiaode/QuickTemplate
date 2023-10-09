@@ -114,7 +114,7 @@ Ext.define('Common.localized.Localized', {
         me.isReady = false;
         url = url || URI.get('localization');
         let request = Http.get(url);
-        request.then(me.loadSuccess.bind(me));
+        request.then(me.loadSuccess.bind(me), Ext.Msg.showAjaxErrors.bind(me,'LoadResources'));
         return request;
     },
 

@@ -1,15 +1,13 @@
-Ext.define('Common.core.mixin.data.Store',{
+Ext.define('Common.core.mixin.data.StoreExtensions',{
     extend: 'Ext.Mixin',
 
-    requires:[
+    requires:[        
         'Common.core.service.Url'
     ],
 
     mixinConfig: {
         config: true,
         before:{
-            applyModel: 'applyModel',
-            updateProxy: 'updateProxy',
             destroy: 'destroy'
         }
     },
@@ -23,27 +21,41 @@ Ext.define('Common.core.mixin.data.Store',{
         entityName: null
     },
 
-    applyModel(model) {
+    /**
+     * messageField: 记录用于显示模型信息的字段
+     * loaclFilter: 记录哪些字段用于本地搜索
+     * allowSort: 记录哪些字段允许排序
+     * langText: 记录字段的本地化文本
+     * @param {Model} model 
+     * @returns 
+     */
+    updateModel(model) {
         let me = this,
-            m = model;
-        if(Ext.isEmpty(m)) return model;
-        m = Ext.data.schema.Schema.lookupEntity(m);
-        me.createEntityName(m.prototype.alias);
-
-        let fields = m.getFields();
-        me.localFilterFields =[];
-        me.sortFields = {};
-        me.langText = {};
+            fields = model.getFields();
+        me.parseEntityName(model.prototype.alias);
+        me.setProxyUrl();
+        me.localFilterFields =new Set();
+        me.sortFields = new Set();
+        me.langText = new Map();
         fields.forEach(field => {
-            if(field.messageField) me.messageField = field.name;
-            if(field.localFilter) me.localFilterFields.push(field.name);
-            if(field.allowSort) me.sortFields[field.name] = true;
-            if(field.langText) me.langText[field.name] = field.langText;
+            let name = field.name;
+            if(field.messageField) me.messageField = name;
+            if(field.localFilter) me.localFilterFields.add(name);
+            if(field.allowSort) me.sortFields.add(name);
+            if(field.langText) me.langText.set(name, field.langText);
         });
-        return model;
     },
 
-    createEntityName(alias){
+    /**
+     * 根据别名解释出entityName
+     * 别名定义以entity.为前缀
+     * 示例：
+     * entity.user: 解释后的entityName的值为['user']
+     * entity.identity.user: 解释后的entityName为['identity', 'user']
+     * @param {Model别名} alias 
+     * @returns 
+     */
+    parseEntityName(alias){
         let me = this;
         alias = (Ext.isArray(alias) && alias.find(m=>m.startsWith('entity.'))) || null;
         if(!alias){
@@ -54,8 +66,18 @@ Ext.define('Common.core.mixin.data.Store',{
         me.setEntityName(names.slice(1));
     },
 
-    updateProxy(proxy){  
+    /**
+     * 根据url为proxy设置url
+     * 如果url为false，则不设置
+     * 如果url为数组，则调用URI获取url
+     * 如果不设置或设置为null，则使用entiyName创建url
+     * @param {Proxy} proxy 
+     * @returns 
+     */
+
+    setProxyUrl(){  
         let me = this,
+            proxy = me.getProxy(),
             url = me.url;
         if(url === false) return;
         if(Ext.isArray(url)){
@@ -75,6 +97,11 @@ Ext.define('Common.core.mixin.data.Store',{
         proxy.setUrl(URI.get(...args));
 
     },
+
+    /**
+     * 设置proxy的参数
+     * @returns 
+     */
 
     setExtraParams(){
         let proxy = this.getProxy();
