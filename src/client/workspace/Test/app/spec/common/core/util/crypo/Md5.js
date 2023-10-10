@@ -1,8 +1,8 @@
-Ext.define('Test.spec.common.core.util.Md5', {
+Ext.define('Test.spec.common.core.util.crypo.Md5', {
     singleton: true,
     
     constructor(){
-        describe('Common.core.util.Md5', () => {
+        describe('Common.core.util.crypo.Md5', () => {
 
             it('验证MD5值', () => {
                 let value = MD5.get('abcd');

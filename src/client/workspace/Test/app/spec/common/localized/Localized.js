@@ -5,27 +5,6 @@ Ext.define('Test.spec.common.localized.Localized', {
         describe('Common.core.localized.Localized', () => {
             let jsonTestData = this.responseData;
 
-            jsonTestData = {
-                "error": {
-                  "code": "string",
-                  "message": "error",
-                  "details": 'details',
-                  "data": {
-                    "additionalProp1": "string",
-                    "additionalProp2": "string",
-                    "additionalProp3": "string"
-                  },
-                  "validationErrors": [
-                    {
-                      "message": "string",
-                      "members": [
-                        "string"
-                      ]
-                    }
-                  ]
-                }
-              };
-
             beforeEach(() => {
                 jasmine.Ajax.install();
 
@@ -33,7 +12,7 @@ Ext.define('Test.spec.common.localized.Localized', {
                     /.*localization/,
                     /.*/
                 ).andReturn({
-                    status: 500,
+                    status: 200,
                     contentType: 'application/json',
                     responseText: JSON.stringify(jsonTestData),
                     

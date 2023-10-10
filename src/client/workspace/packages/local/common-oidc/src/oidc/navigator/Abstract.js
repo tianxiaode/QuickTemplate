@@ -1,9 +1,11 @@
 Ext.define('Common.oidc.navigator.Abstract', {
 
     constructor(config) {
-        let me = this;
         Ext.apply(this, config);
     },
+
+    settings: null,
+    window: null,
 
     prepare(){},
 
