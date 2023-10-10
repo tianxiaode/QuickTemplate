@@ -17,32 +17,15 @@ Ext.define('Common.core.util.crypo.Sha256', {
     alternateClassName: 'SHA256',
     singleton: true,
 
-    requires:[
-        'Ext.util.Base64'
-    ],
-
-    hexcase: 0,  /* hex output format. 0 - lowercase; 1 - uppercase        */
-    b64pad: "", /* base-64 pad character. "=" for strict RFC compliance   */
-    
-    get(string, isUpper) {
-        let me = this,
-            utftext = Ext.util.Base64.utf8Encode(string),
-            bytes = me.getBytes(utftext),
-            block = me.process(bytes, utftext.length * 8),
-            result = me.bytesToUtf8(block);
-        return me.toHexString(result, isUpper);
-
-    },
-
     destroy() {
-        this.destroyMembers('H', 'K');
+        this.destroyMembers('H', 'K', 'hash');
         this.callParent();
     },
 
     privates: {
 
-        blockSize: 16,
-        minBufferSize: 0,
+        // blockSize: 16,
+        // minBufferSize: 0,
 
         H: [1779033703, -1150833019, 1013904242, -1521486534,
             1359893119, -1694144372, 528734635, 1541459225],
@@ -60,45 +43,6 @@ Ext.define('Common.core.util.crypo.Sha256', {
             1537002063, 1747873779, 1955562222, 2024104815, -2067236844, -1933114872,
             -1866530822, -1538233109, -1090935817, -965641998
         ],
-
-        /*
-        * Convert a raw string to a hex string
-        */
-        toHexString(input, isUpper) {
-            let hexTab = isUpper ? "0123456789ABCDEF" : "0123456789abcdef",
-                output = '',
-                x;
-            for (var i = 0; i < input.length; i++) {
-                x = input.charCodeAt(i);
-                output += hexTab.charAt((x >>> 4) & 0x0F)
-                    + hexTab.charAt(x & 0x0F);
-            }
-            return output;
-        },
-
-
-        /*
-        * Convert a raw string to an array of big-endian words
-        * Characters >255 have their high-byte silently ignored.
-        */
-        getBytes(input) {
-            var output = Array(input.length >> 2);
-            for (var i = 0; i < output.length; i++)
-                output[i] = 0;
-            for (var i = 0; i < input.length * 8; i += 8)
-                output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (24 - i % 32);
-            return output;
-        },
-
-        /*
-         * Convert an array of big-endian words to a string
-         */
-        bytesToUtf8(input) {
-            var output = "";
-            for (var i = 0; i < input.length * 32; i += 8)
-                output += String.fromCharCode((input[i >> 5] >>> (24 - i % 32)) & 0xFF);
-            return output;
-        },
 
         /*
         * Main sha256 , with its support s
@@ -148,57 +92,71 @@ Ext.define('Common.core.util.crypo.Sha256', {
             return (me.sha256_S(x, 19) ^ me.sha256_S(x, 61) ^ me.sha256_R(x, 6));
         },
 
-        process(m, l) {
+
+
+        doProcessBlock(data, offset) {
             let me = this,
-                H = me.H.slice(0),
-                K = me.K,
                 W = [],
-                a, b, c, d, e, f, g, h, i, j, T1, T2;
+                K = me.K,
+                H = me.hash,
+                [a, b, c, d, e, f, g, h] = H,
+                T1, T2;
 
-
-            /* append padding */
-            m[l >> 5] |= 0x80 << (24 - l % 32);
-            m[((l + 64 >> 9) << 4) + 15] = l;
-
-            for (i = 0; i < m.length; i += 16) {
-                [a, b, c, d, e, f, g, h] = H;
-
-                for (j = 0; j < 64; j++) {
-                    if (j < 16) {
-                        W[j] = m[j + i];
-                    }
-                    else {
-                        W[j] = me.safeAdd(me.safeAdd(me.safeAdd(me.sha256_Gamma1256(W[j - 2]), W[j - 7]),
-                            me.sha256_Gamma0256(W[j - 15])), W[j - 16]);
-                    }
-
-                    T1 = me.safeAdd(me.safeAdd(me.safeAdd(me.safeAdd(h, me.sha256_Sigma1256(e)), me.sha256_Ch(e, f, g)),
-                        K[j]), W[j]);
-                    T2 = me.safeAdd(me.sha256_Sigma0256(a), me.sha256_Maj(a, b, c));
-                    h = g;
-                    g = f;
-                    f = e;
-                    e = me.safeAdd(d, T1);
-                    d = c;
-                    c = b;
-                    b = a;
-                    a = me.safeAdd(T1, T2);
+            for (j = 0; j < 64; j++) {
+                if (j < 16) {
+                    W[j] = data[j + offset];
+                }
+                else {
+                    W[j] = me.safeAdd(me.safeAdd(me.safeAdd(me.sha256_Gamma1256(W[j - 2]), W[j - 7]),
+                        me.sha256_Gamma0256(W[j - 15])), W[j - 16]);
                 }
 
-                H[0] = me.safeAdd(a, H[0]);
-                H[1] = me.safeAdd(b, H[1]);
-                H[2] = me.safeAdd(c, H[2]);
-                H[3] = me.safeAdd(d, H[3]);
-                H[4] = me.safeAdd(e, H[4]);
-                H[5] = me.safeAdd(f, H[5]);
-                H[6] = me.safeAdd(g, H[6]);
-                H[7] = me.safeAdd(h, H[7]);
+                T1 = me.safeAdd(me.safeAdd(me.safeAdd(me.safeAdd(h, me.sha256_Sigma1256(e)), me.sha256_Ch(e, f, g)),
+                    K[j]), W[j]);
+                T2 = me.safeAdd(me.sha256_Sigma0256(a), me.sha256_Maj(a, b, c));
+                h = g;
+                g = f;
+                f = e;
+                e = me.safeAdd(d, T1);
+                d = c;
+                c = b;
+                b = a;
+                a = me.safeAdd(T1, T2);
             }
-            return H;
+
+            H[0] = me.safeAdd(a, H[0]);
+            H[1] = me.safeAdd(b, H[1]);
+            H[2] = me.safeAdd(c, H[2]);
+            H[3] = me.safeAdd(d, H[3]);
+            H[4] = me.safeAdd(e, H[4]);
+            H[5] = me.safeAdd(f, H[5]);
+            H[6] = me.safeAdd(g, H[6]);
+            H[7] = me.safeAdd(h, H[7]);
         },
 
 
-    
+        doFinalize(string, isUpper) {
+            // Shortcuts
+            let me = this,
+                utftext = Ext.util.Base64.utf8Encode(string),
+                data = me.getBytes(utftext),
+                ln = utftext.length * 8;
+
+            // Add padding
+
+            data[ln >> 5] |= 0x80 << (24 - ln % 32);
+            data[((ln + 64 >> 9) << 4) + 15] = ln;
+
+            // Hash final blocks
+            me.process(data);
+
+            // Return final computed hash
+            return me.toHexString(me.bytesToUtf8(me.hash), isUpper);
+        }
+
+
+
+
     }// end privates
 
 })
