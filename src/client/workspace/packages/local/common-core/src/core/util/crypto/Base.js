@@ -2,11 +2,11 @@
  * 来源：JavaScript library of crypto standards.
  * URL：https://github.com/brix/crypto-js
  */
-Ext.define('Common.core.util.crypo.Base', {
+Ext.define('Common.core.util.crypto.Base', {
 
     requires: [
-        'Common.core.util.crypo.Utf8',
-        'Common.core.util.crypo.WordArray',
+        'Common.core.util.crypto.Utf8',
+        'Common.core.util.crypto.WordArray',
     ],
 
     blockSize: 512 / 32,

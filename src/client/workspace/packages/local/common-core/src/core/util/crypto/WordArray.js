@@ -2,17 +2,17 @@
  * 来源：JavaScript library of crypto standards.
  * URL：https://github.com/brix/crypto-js
  */
-Ext.define('Common.core.util.crypo.WordArray', {
+Ext.define('Common.core.util.crypto.WordArray', {
     alternateClassName: 'WordArray',
 
 
     requires: [
-        'Common.core.util.crypo.Hex'
+        'Common.core.util.crypto.Hex'
     ],
 
     statics: {
         getInstance(words, sigBytes) {
-            let instance = Ext.create('Common.core.util.crypo.WordArray');
+            let instance = Ext.create('Common.core.util.crypto.WordArray');
             instance.init(words, sigBytes);
             return instance;
         }

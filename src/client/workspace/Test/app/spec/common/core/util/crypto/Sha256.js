@@ -1,12 +1,12 @@
-Ext.define('Test.spec.common.core.util.crypo.Sha256', {
+Ext.define('Test.spec.common.core.util.crypto.Sha256', {
     singleton: true,
 
     requires:[
-        'Common.core.util.crypo.Sha256'
+        'Common.core.util.crypto.Sha256'
     ],
     
     constructor(){
-        describe('Common.core.util.crypo.Sha256', () => {
+        describe('Common.core.util.crypto.Sha256', () => {
             let value;
 
             it('验证SHA256', () => {

@@ -2,7 +2,7 @@
  * 来源：JavaScript library of crypto standards.
  * URL：https://github.com/brix/crypto-js
  */
-Ext.define('Common.core.util.crypo.Latin1', {
+Ext.define('Common.core.util.crypto.Latin1', {
     alternateClassName: 'Latin1',
     singleton: true,
 

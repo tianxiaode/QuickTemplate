@@ -2,8 +2,8 @@
  * 来源：JavaScript library of crypto standards.
  * URL：https://github.com/brix/crypto-js
  */
-Ext.define('Common.core.util.crypo.MD5', {
-    extend: 'Common.core.util.crypo.Base',
+Ext.define('Common.core.util.crypto.MD5', {
+    extend: 'Common.core.util.crypto.Base',
     alternateClassName: 'MD5',
     singleton: true,
 
