@@ -1,97 +1,99 @@
+/**
+ * 来源：JavaScript library of crypto standards.
+ * URL：https://github.com/brix/crypto-js
+ */
 Ext.define('Common.core.util.crypo.Base', {
+
+    requires: [
+        'Common.core.util.crypo.Utf8',
+        'Common.core.util.crypo.WordArray',
+    ],
 
     blockSize: 512 / 32,
     minBufferSize: 0,
 
     get(string, isUpper) {
         let me = this;
-        me.hash = me.H.slice(0);
-        return this.doFinalize(string,isUpper);
+        me.reset();
+        let result = me.finalize(string).toString();
+        return isUpper ? result.toUpperCase() : result.toLowerCase();
+    },
+
+    destroy() {
+        this.destroyMembers('H', 'hash', 'data');
+        this.callParent();
     },
 
     privates: {
 
-        /*
-        * Convert a raw string to an array of big-endian words
-        * Characters >255 have their high-byte silently ignored.
-        */
-        parse(hexStr) {
-            let data = [],
-                ln = hexStr.length;
+        reset() {
+            let me = this;
+            me.data = WordArray.getInstance();
+            me.nDataBytes = 0;
+            me.hash = WordArray.getInstance(me.H.slice(0));
 
-            for (let i = 0; i < ln; i += 2) {
-                data[i >>> 3] |= parseInt(hexStr.substr(i, 2), 16) << (24 - (i % 8) * 4);
+        },
+
+        append(data) {
+            // Convert string to WordArray, else assume WordArray already
+            if (typeof data == 'string') {
+                data = Utf8.parse(data);
             }
-            return data;
+            // Append
+            this.data.concat(data);
+            this.nDataBytes += data.sigBytes;
+
         },
 
+        finalize(string) {
+            this.append(string);
+            return this.doFinalize();
+        },
+
+        doFinalize() { },
 
 
-        process(data) {
+        process(doFlush) {
+            let me = this,
+                processedWords,
+                data = me.data,
+                dataWords = data.words,
+                dataSigBytes = data.sigBytes,
+                blockSize = me.blockSize,
+                blockSizeBytes = blockSize * 4,
+                nBlocksReady = dataSigBytes / blockSizeBytes;
 
-            for (i = 0; i < data.length; i += 16){
-                this.doProcessBlock(data, i);
+            if (doFlush) {
+                // Round up to include partial blocks
+                nBlocksReady = Math.ceil(nBlocksReady);
+            } else {
+                // Round down to include only full blocks,
+                // less the number of blocks that must remain in the buffer
+                nBlocksReady = Math.max((nBlocksReady | 0) - me.minBufferSize, 0);
             }
 
-        },
+            // Count words ready
+            let nWordsReady = nBlocksReady * blockSize;
 
+            // Count bytes ready
+            let nBytesReady = Math.min(nWordsReady * 4, dataSigBytes);
 
-        safeAdd(x, y) {
-            let lsw = (x & 0xFFFF) + (y & 0xFFFF),
-                msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-            return (msw << 16) | (lsw & 0xFFFF);
-        },
+            // Process blocks
+            if (nWordsReady) {
+                for (let offset = 0; offset < nWordsReady; offset += blockSize) {
+                    // Perform concrete-algorithm logic
+                    me.doProcessBlock(dataWords, offset);
+                }
 
-        stringify(data) {
-            let latin1Chars = [];
-            for (let i = 0; i < data.length; i++) {
-                let bite = (data[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
-                latin1Chars.push(String.fromCharCode(bite));
+                // Remove processed words
+                processedWords = dataWords.splice(0, nWordsReady);
+                data.sigBytes -= nBytesReady;
             }
-            return latin1Chars.join('');
 
-        },
+            // Return processed words
+            return WordArray.getInstance(processedWords, nBytesReady);
+        }
 
-        /*
-        * Convert a raw string to an array of big-endian words
-        * Characters >255 have their high-byte silently ignored.
-        */
-        getBytes(input) {
-            var output = Array(input.length >> 2);
-            for (var i = 0; i < output.length; i++)
-                output[i] = 0;
-            for (var i = 0; i < input.length * 8; i += 8)
-                output[i >> 5] |= (input.charCodeAt(i / 8) & 0xFF) << (24 - i % 32);
-            return output;
-        },
-
-        /*
-         * Convert an array of big-endian words to a string
-         */
-        bytesToUtf8(input) {
-            var output = "";
-            for (var i = 0; i < input.length * 32; i += 8)
-                output += String.fromCharCode((input[i >> 5] >>> (24 - i % 32)) & 0xFF);
-            return output;
-        },
-        /*
-        * Convert a raw string to a hex string
-        */
-        toHexString(input, isUpper) {
-            let hexTab = isUpper ? "0123456789ABCDEF" : "0123456789abcdef",
-                output = '',
-                x;
-            for (var i = 0; i < input.length; i++) {
-                x = input.charCodeAt(i);
-                output += hexTab.charAt((x >>> 4) & 0x0F)
-                    + hexTab.charAt(x & 0x0F);
-            }
-            return output;
-        },
-
-
-        doProcessBlock() { },
-        doFinalize(){}
 
 
     }

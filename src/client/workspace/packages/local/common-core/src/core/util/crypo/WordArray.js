@@ -1,3 +1,7 @@
+/**
+ * 来源：JavaScript library of crypto standards.
+ * URL：https://github.com/brix/crypto-js
+ */
 Ext.define('Common.core.util.crypo.WordArray', {
     alternateClassName: 'WordArray',
 
@@ -6,9 +10,9 @@ Ext.define('Common.core.util.crypo.WordArray', {
         'Common.core.util.crypo.Hex'
     ],
 
-    statics:{        
-        getInstance(words, sigBytes){
-            let instance = Ext.create('Common.core.util.crypo.Hex');
+    statics: {
+        getInstance(words, sigBytes) {
+            let instance = Ext.create('Common.core.util.crypo.WordArray');
             instance.init(words, sigBytes);
             return instance;
         }
@@ -65,7 +69,7 @@ Ext.define('Common.core.util.crypo.WordArray', {
      *
      *     wordArray1.concat(wordArray2);
      */
-    concat (wordArray) {
+    concat(wordArray) {
         // Shortcuts
         let me = this,
             thisWords = me.words,
@@ -104,8 +108,9 @@ Ext.define('Common.core.util.crypo.WordArray', {
      */
     clamp() {
         // Shortcuts
-        let words = me.words
-            sigBytes = me.sigBytes;
+        let me = this,
+            words = me.words
+        sigBytes = me.sigBytes;
 
         // Clamp
         words[sigBytes >>> 2] &= 0xffffffff << (32 - (sigBytes % 4) * 8);
@@ -139,7 +144,7 @@ Ext.define('Common.core.util.crypo.WordArray', {
      *     var wordArray = CryptoJS.lib.WordArray.random(16);
      */
     random(nBytes) {
-        var words = [];
+        let words = [];
 
         for (let i = 0; i < nBytes; i += 4) {
             words.push(me.cryptoSecureRandomInt());
@@ -154,23 +159,23 @@ Ext.define('Common.core.util.crypo.WordArray', {
     },
 
 
-    privates:{
-        cryptoSecureRandomInt () {
-	        if (!crypto) {
+    privates: {
+        cryptoSecureRandomInt() {
+            if (!crypto) {
                 throw new Error('Native crypto module could not be used to get secure random number.');
             }
             // Use getRandomValues method (Browser)
             if (typeof crypto.getRandomValues === 'function') {
                 try {
                     return crypto.getRandomValues(new Uint32Array(1))[0];
-                } catch (err) {}
+                } catch (err) { }
             }
 
             // Use randomBytes method (NodeJS)
             if (typeof crypto.randomBytes === 'function') {
                 try {
                     return crypto.randomBytes(4).readInt32LE();
-                } catch (err) {}
+                } catch (err) { }
             }
         }
 

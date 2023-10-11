@@ -1,16 +1,6 @@
-/*
- * A JavaScript implementation of the Secure Hash Algorithm, SHA-256, as defined
- * in FIPS 180-2
- * Version 2.2 Copyright Angel Marin, Paul Johnston 2000 - 2009.
- * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
- * Distributed under the BSD License
- * See http://pajhome.org.uk/crypt/md5 for details.
- * Also http://anmar.eu.org/projects/jssha2/
- */
-
-/*
- * Configurable variables. You may need to tweak these to be compatible with
- * the server-side, but the defaults work in most cases.
+/**
+ * 来源：JavaScript library of crypto standards.
+ * URL：https://github.com/brix/crypto-js
  */
 Ext.define('Common.core.util.crypo.Sha256', {
     extend: 'Common.core.util.crypo.Base',
@@ -18,14 +8,11 @@ Ext.define('Common.core.util.crypo.Sha256', {
     singleton: true,
 
     destroy() {
-        this.destroyMembers('H', 'K', 'hash');
+        this.destroyMembers('K');
         this.callParent();
     },
 
     privates: {
-
-        // blockSize: 16,
-        // minBufferSize: 0,
 
         H: [1779033703, -1150833019, 1013904242, -1521486534,
             1359893119, -1694144372, 528734635, 1541459225],
@@ -44,114 +31,82 @@ Ext.define('Common.core.util.crypo.Sha256', {
             -1866530822, -1538233109, -1090935817, -965641998
         ],
 
-        /*
-        * Main sha256 , with its support s
-        */
-        sha256_S(X, n) {
-            return (X >>> n) | (X << (32 - n));
-        },
-        sha256_R(X, n) {
-            return (X >>> n);
-        },
-        sha256_Ch(x, y, z) {
-            return ((x & y) ^ ((~x) & z));
-        },
-        sha256_Maj(x, y, z) {
-            return ((x & y) ^ (x & z) ^ (y & z));
-        },
-        sha256_Sigma0256(x) {
-            let me = this;
-            return (me.sha256_S(x, 2) ^ me.sha256_S(x, 13) ^ me.sha256_S(x, 22));
-        },
-        sha256_Sigma1256(x) {
-            let me = this;
-            return (me.sha256_S(x, 6) ^ me.sha256_S(x, 11) ^ me.sha256_S(x, 25));
-        },
-        sha256_Gamma0256(x) {
-            let me = this;
-            return (me.sha256_S(x, 7) ^ me.sha256_S(x, 18) ^ me.sha256_R(x, 3));
-        },
-        sha256_Gamma1256(x) {
-            let me = this;
-            return (me.sha256_S(x, 17) ^ me.sha256_S(x, 19) ^ me.sha256_R(x, 10));
-        },
-        sha256_Sigma0512(x) {
-            let me = this;
-            return (me.sha256_S(x, 28) ^ me.sha256_S(x, 34) ^ me.sha256_S(x, 39));
-        },
-        sha256_Sigma1512(x) {
-            let me = this;
-            return (me.sha256_S(x, 14) ^ me.sha256_S(x, 18) ^ me.sha256_S(x, 41));
-        },
-        sha256_Gamma0512(x) {
-            let me = this;
-            return (me.sha256_S(x, 1) ^ me.sha256_S(x, 8) ^ me.sha256_R(x, 7));
-        },
-        sha256_Gamma1512(x) {
-            let me = this;
-            return (me.sha256_S(x, 19) ^ me.sha256_S(x, 61) ^ me.sha256_R(x, 6));
-        },
 
-
-
-        doProcessBlock(data, offset) {
+        doProcessBlock(M, offset) {
+            // Shortcut
             let me = this,
                 W = [],
                 K = me.K,
-                H = me.hash,
-                [a, b, c, d, e, f, g, h] = H,
-                T1, T2;
+                H = me.hash.words,
+                [a, b, c, d, e, f, g, h] = H;
 
-            for (j = 0; j < 64; j++) {
-                if (j < 16) {
-                    W[j] = data[j + offset];
-                }
-                else {
-                    W[j] = me.safeAdd(me.safeAdd(me.safeAdd(me.sha256_Gamma1256(W[j - 2]), W[j - 7]),
-                        me.sha256_Gamma0256(W[j - 15])), W[j - 16]);
+            // Computation
+            for (let i = 0; i < 64; i++) {
+                if (i < 16) {
+                    W[i] = M[offset + i] | 0;
+                } else {
+                    let gamma0x = W[i - 15];
+                    let gamma0 = ((gamma0x << 25) | (gamma0x >>> 7)) ^
+                        ((gamma0x << 14) | (gamma0x >>> 18)) ^
+                        (gamma0x >>> 3);
+
+                    let gamma1x = W[i - 2];
+                    let gamma1 = ((gamma1x << 15) | (gamma1x >>> 17)) ^
+                        ((gamma1x << 13) | (gamma1x >>> 19)) ^
+                        (gamma1x >>> 10);
+
+                    W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16];
                 }
 
-                T1 = me.safeAdd(me.safeAdd(me.safeAdd(me.safeAdd(h, me.sha256_Sigma1256(e)), me.sha256_Ch(e, f, g)),
-                    K[j]), W[j]);
-                T2 = me.safeAdd(me.sha256_Sigma0256(a), me.sha256_Maj(a, b, c));
+                let ch = (e & f) ^ (~e & g);
+                let maj = (a & b) ^ (a & c) ^ (b & c);
+
+                let sigma0 = ((a << 30) | (a >>> 2)) ^ ((a << 19) | (a >>> 13)) ^ ((a << 10) | (a >>> 22));
+                let sigma1 = ((e << 26) | (e >>> 6)) ^ ((e << 21) | (e >>> 11)) ^ ((e << 7) | (e >>> 25));
+
+                let t1 = h + sigma1 + ch + K[i] + W[i];
+                let t2 = sigma0 + maj;
+
                 h = g;
                 g = f;
                 f = e;
-                e = me.safeAdd(d, T1);
+                e = (d + t1) | 0;
                 d = c;
                 c = b;
                 b = a;
-                a = me.safeAdd(T1, T2);
+                a = (t1 + t2) | 0;
             }
 
-            H[0] = me.safeAdd(a, H[0]);
-            H[1] = me.safeAdd(b, H[1]);
-            H[2] = me.safeAdd(c, H[2]);
-            H[3] = me.safeAdd(d, H[3]);
-            H[4] = me.safeAdd(e, H[4]);
-            H[5] = me.safeAdd(f, H[5]);
-            H[6] = me.safeAdd(g, H[6]);
-            H[7] = me.safeAdd(h, H[7]);
+            // Intermediate hash value
+            H[0] = (H[0] + a) | 0;
+            H[1] = (H[1] + b) | 0;
+            H[2] = (H[2] + c) | 0;
+            H[3] = (H[3] + d) | 0;
+            H[4] = (H[4] + e) | 0;
+            H[5] = (H[5] + f) | 0;
+            H[6] = (H[6] + g) | 0;
+            H[7] = (H[7] + h) | 0;
         },
 
 
-        doFinalize(string, isUpper) {
+        doFinalize() {
             // Shortcuts
             let me = this,
-                utftext = Ext.util.Base64.utf8Encode(string),
-                data = me.getBytes(utftext),
-                ln = utftext.length * 8;
+                data = me.data,
+                dataWords = data.words,
+                nBitsTotal = me.nDataBytes * 8,
+                nBitsLeft = data.sigBytes * 8;
 
             // Add padding
-
-            data[ln >> 5] |= 0x80 << (24 - ln % 32);
-            data[((ln + 64 >> 9) << 4) + 15] = ln;
-
+            dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
+            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(nBitsTotal / 0x100000000);
+            dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal;
+            data.sigBytes = dataWords.length * 4;
             // Hash final blocks
-            me.process(data);
+            me.process();
 
             // Return final computed hash
-            return me.toHexString(me.bytesToUtf8(me.hash), isUpper);
+            return me.hash;
         }
 
 
