@@ -18,7 +18,7 @@ Ext.define('Common.oidc.util.Event',{
     },
 
     raise(...ev){
-        Ext.debug("raise:", ...ev);
+        Ext.Logger.debug("raise:", ...ev);
         for (const cb of this.callbacks) {
             cb(...ev);
         }

@@ -1,12 +1,20 @@
 Ext.define('Common.oidc.util.Crypto',{
     alternateClassName: 'OidcCrypto',
 
+    requires:[
+        'Ext.data.identifier.Uuid',
+        'Common.core.util.crypto.Sha256',
+        'Common.core.util.crypto.Utf8',
+        'Ext.util.Base64.decode'
+    ],
+
     statics:{
         /**
          * PKCE: Generate a code verifier
          */
         generateCodeVerifier() {
-            return OidcCrypto.generateUUIDv4() + OidcCrypto.generateUUIDv4() + OidcCrypto.generateUUIDv4();
+            let uuid = Ext.data.identifier.Uuid.Global;
+            return uuid.generate() + uuid.generate() + uuid.generate();
         },
 
         /**
@@ -14,11 +22,11 @@ Ext.define('Common.oidc.util.Crypto',{
          */
         generateCodeChallenge(code_verifier) {
             try {
-                let hashed = CryptoJS.SHA256(code_verifier);
-                return CryptoJS.enc.Base64.stringify(hashed).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+                let hashed = SHA256(code_verifier);
+                return Ext.util.Base64.decode(hashed).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
             }
             catch (err) {
-                Ext.log("CryptoUtils.generateCodeChallenge", err);
+                Ext.Logger.log("CryptoUtils.generateCodeChallenge", err);
                 throw err;
             }
         },
@@ -27,8 +35,8 @@ Ext.define('Common.oidc.util.Crypto',{
          * Generates a base64-encoded string for a basic auth header
          */
         generateBasicAuth(client_id, client_secret) {
-            let basicAuth = CryptoJS.enc.Utf8.parse([client_id, client_secret].join(":"));
-            return CryptoJS.enc.Base64.stringify(basicAuth);
+            let basicAuth = Utf8.parse([client_id, client_secret].join(":")).toString();
+            return Ext.util.Base64.encode(basicAuth);
         }
     
     }
