@@ -3,11 +3,14 @@ Ext.define('Common.oidc.window.IFrame', {
     extend: 'Common.oidc.window.Abstract',
     alias: 'oidc.window.iframe',
 
+    timeoutInSeconds: 10,
+
     constructor(config){
         let me = this;
         me.callParent(arguments);
-        me.timeoutInSeconds = config.silentRequestTimeoutInSeconds;
-
+        if(config && config.silentRequestTimeoutInSeconds) {
+            me.timeoutInSeconds = config.silentRequestTimeoutInSeconds;
+        }
         me.frame = me.createHiddenIframe();
         me.window = me.frame.contentWindow;
        
@@ -30,7 +33,7 @@ Ext.define('Common.oidc.window.IFrame', {
 
     async navigate(params) {
         let me = this;
-        Ext.debug("navigate: Using timeout of:", me.timeoutInSeconds);
+        Ext.debug("navigate: Using timeout of:" + me.timeoutInSeconds);
         let timer = setTimeout(() => me.abort.raise("IFrame timed out without a response"), me.timeoutInSeconds * 1000);
         me.disposeHandlers.add(() => clearTimeout(timer));
 

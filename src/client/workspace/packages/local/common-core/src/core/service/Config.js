@@ -12,7 +12,8 @@ Ext.define('Common.core.service.Config', {
         xsrfHeaderName: 'RequestVerificationToken',
         oidc: null,
         server: null,
-        language: null
+        language: null,
+        debug: false
     },
 
 

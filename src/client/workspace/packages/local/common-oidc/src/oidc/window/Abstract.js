@@ -23,7 +23,7 @@ Ext.define('Common.oidc.window.Abstract', {
     async navigate(params) {
         let me = this;
         if (!me.window) {
-            Ext.raise("Attempted to navigate on a disposed window");
+            throw "Attempted to navigate on a disposed window";
         }
 
         Ext.debug("setting URL in window");
@@ -39,8 +39,9 @@ Ext.define('Common.oidc.window.Abstract', {
                 }
                 try {
                     let state = URI.readParams(data.url, params.responseMode).get("state");
+                    console.log('state',state)
                     if (!state) {
-                        Ext.warn("no state found in response url");
+                        Ext.Logger.warn("no state found in response url");
                     }
                     if (e.source !== me.window && state !== params.state) {
                         // MessageEvent source is a relatively modern feature, we can't rely on it
@@ -65,13 +66,15 @@ Ext.define('Common.oidc.window.Abstract', {
         Ext.debug("got response from window");
         me.dispose();
 
+        console.log('cccc', url, keepOpen);
+
         if (!keepOpen) {
             me.close();
         }
 
         return { url };
     },
-
+    
     close: Ext.emptyFn,
 
     notifyParent(parent, url, keepOpen, targetOrigin) {
@@ -91,7 +94,7 @@ Ext.define('Common.oidc.window.Abstract', {
     privates: {
         dispose() {
 
-            for (const dispose of this.disposeHandlers) {
+            for (let dispose of this.disposeHandlers) {
                 dispose();
             }
             this.disposeHandlers.clear();

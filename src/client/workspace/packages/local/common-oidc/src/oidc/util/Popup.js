@@ -1,5 +1,4 @@
 Ext.define('Common.oidc.util.Popup', {
-    alternateClassName: 'OidcPopup',
 
     statics: {
         /**
@@ -23,4 +22,8 @@ Ext.define('Common.oidc.util.Popup', {
                 .join(",");
         }
     }
+},()=>{
+    window.Oidc = window.Oidc || {};
+    Oidc.Popup = Common.oidc.util.Popup;
+
 });

@@ -17,7 +17,7 @@ Ext.define('Common.oidc.window.Popup', {
         let me = this;
         me.callParent(arguments);
         let features = Ext.apply({}, me.defaultFeatures, config.features),
-            centeredPopup = OidcPopup.center(features);
+            centeredPopup = Oidc.Popup.center(features);
 
         me.window = window.open(undefined, config.target, OidcPopup.serialize(centeredPopup));
         if (features.closePopupWindowAfterInSeconds && features.closePopupWindowAfterInSeconds > 0) {

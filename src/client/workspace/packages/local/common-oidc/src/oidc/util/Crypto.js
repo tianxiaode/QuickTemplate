@@ -1,11 +1,10 @@
 Ext.define('Common.oidc.util.Crypto',{
-    alternateClassName: 'OidcCrypto',
 
     requires:[
         'Ext.data.identifier.Uuid',
         'Common.core.util.crypto.Sha256',
         'Common.core.util.crypto.Utf8',
-        'Ext.util.Base64.decode'
+        'Ext.util.Base64'
     ],
 
     statics:{
@@ -41,4 +40,7 @@ Ext.define('Common.oidc.util.Crypto',{
     
     }
 
+}, ()=>{
+    window.Oidc = window.Oidc || {};
+    Oidc.Crypto = Common.oidc.util.Crypto;
 })

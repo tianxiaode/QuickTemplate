@@ -2,6 +2,7 @@ Ext.define('Test.spec.common.core.data.Store', {
     singleton: true,
 
     requires: [
+        'Common.core.data.Store',
         'Test.store.Roles',
         'Test.store.identity.Roles',
     ],

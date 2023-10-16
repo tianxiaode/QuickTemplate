@@ -1,5 +1,8 @@
 Ext.define('Common.oidc.util.Jwt',{
-    alternateClassName: 'OidcJwt',
+
+    requires:[
+        'Ext.util.Base64'
+    ],
 
     statics:{
         // IMPORTANT: doesn't validate the token
@@ -11,9 +14,9 @@ Ext.define('Common.oidc.util.Jwt',{
             options = options || {};
             let pos = options.header === true ? 0 : 1;
             try {
-                return JSON.parse(OidcJwt.base64UrlDecode(token.split(".")[pos]));
+                return JSON.parse(Oidc.Jwt.base64UrlDecode(token.split(".")[pos]));
             } catch (e) {
-                Ext.raise("Invalid token specified: " + e.message);
+                throw "Invalid token specified: " + e.message;
             }
         },
 
@@ -43,9 +46,9 @@ Ext.define('Common.oidc.util.Jwt',{
                 default:
                     throw "Illegal base64url string!";
             }
-    
+  
             try {
-                return OidcJwtUtils.b64DecodeUnicode(output);
+                return Oidc.Jwt.b64DecodeUnicode(output);
             } catch (err) {
                 return atob(output);
             }
@@ -53,4 +56,7 @@ Ext.define('Common.oidc.util.Jwt',{
     
 
     }
+},()=>{
+    window.Oidc = window.Oidc || {};
+    Oidc.Jwt = Common.oidc.util.Jwt;
 });

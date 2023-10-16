@@ -17,7 +17,8 @@
      */
     "requires": [
         "font-awesome",
-        "common-localized"
+        "common-localized",
+        "common-oidc"
     ],
 
     /**

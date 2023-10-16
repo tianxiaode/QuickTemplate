@@ -21,6 +21,18 @@ Ext.define('Test.Application', {
         }
     },
 
+    init(){
+        Ext.debug = function(...args){
+            if(!Config.getDebug()) return;
+            Ext.Logger.log.call(null, args);
+        }
+    },
+
+    launch(){
+        document.body.parentNode.classList = '';
+        document.body.style.overflow = 'auto';
+    },
+
 
     onAppUpdate: function () {
         Ext.Msg.confirm('Application Update', 'This application has an update, reload?',

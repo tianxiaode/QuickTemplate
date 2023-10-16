@@ -11,15 +11,15 @@ Ext.define('Common.oidc.util.Event',{
     },
 
     removeHandler(cb){
-        const idx = this.callbacks.lastIndexOf(cb);
+        let idx = this.callbacks.lastIndexOf(cb);
         if (idx >= 0) {
             this.callbacks.splice(idx, 1);
         }
     },
 
     raise(...ev){
-        Ext.Logger.debug("raise:", ...ev);
-        for (const cb of this.callbacks) {
+        Ext.debug("raise:" +  ev.join(","));
+        for (let cb of this.callbacks) {
             cb(...ev);
         }
     },
