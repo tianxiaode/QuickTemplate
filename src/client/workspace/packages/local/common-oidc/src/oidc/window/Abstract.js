@@ -13,6 +13,12 @@ Ext.define('Common.oidc.window.Abstract', {
 
     messageSource: "oidc-client",
 
+    statics:{
+        getLocationOrigin(){
+            return window.location.origin
+        }
+    },
+
     constructor(config) {
         let me = this;
         Ext.apply(this, config);
@@ -22,17 +28,20 @@ Ext.define('Common.oidc.window.Abstract', {
 
     async navigate(params) {
         let me = this;
+        console.log('super navigate', params, me.window)
         if (!me.window) {
             throw "Attempted to navigate on a disposed window";
         }
 
         Ext.debug("setting URL in window");
         me.window.location.replace(params.url);
+        console.log('location', params.url)
 
         let { url, keepOpen } = await new Promise((resolve, reject) => {
             let listener = (e) => {
                 let data = e.data,
-                    origin = params.scriptOrigin ?? window.location.origin;
+                    origin = params.scriptOrigin ?? Oidc.Window.getLocationOrigin();
+                console.log('listener', e, origin)
                 if (e.origin !== origin || data?.source !== me.messageSource) {
                     // silently discard events not intended for us
                     return;
@@ -103,4 +112,7 @@ Ext.define('Common.oidc.window.Abstract', {
     }
 
 
+}, ()=>{
+    window.Oidc = window.Oidc || {};
+    Oidc.Window = Common.oidc.window.Abstract;
 })

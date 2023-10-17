@@ -12,23 +12,10 @@ Ext.define('Common.oidc.window.IFrame', {
             me.timeoutInSeconds = config.silentRequestTimeoutInSeconds;
         }
         me.frame = me.createHiddenIframe();
+        console.log('constructor', me.frame)
         me.window = me.frame.contentWindow;
+        console.log('constructor', me.frame, me.window)
        
-    },
-
-    createHiddenIframe() {
-        let iframe = window.document.createElement("iframe");
-
-        // shotgun approach
-        iframe.style.visibility = "hidden";
-        iframe.style.position = "fixed";
-        iframe.style.left = "-1000px";
-        iframe.style.top = "0";
-        iframe.width = "0";
-        iframe.height = "0";
-
-        window.document.body.appendChild(iframe);
-        return iframe;
     },
 
     async navigate(params) {
@@ -37,7 +24,7 @@ Ext.define('Common.oidc.window.IFrame', {
         let timer = setTimeout(() => me.abort.raise("IFrame timed out without a response"), me.timeoutInSeconds * 1000);
         me.disposeHandlers.add(() => clearTimeout(timer));
 
-        return await me.callParent(arguments);
+        return await me.callParent(params);
     },
 
     close() {
@@ -63,5 +50,22 @@ Ext.define('Common.oidc.window.IFrame', {
     destroy() {
         this.destroyMembers('frame', 'window');
         this.callParent();
+    },
+
+    privates:{
+        createHiddenIframe() {
+            let iframe = window.document.createElement("iframe");
+    
+            // shotgun approach
+            iframe.style.visibility = "hidden";
+            iframe.style.position = "fixed";
+            iframe.style.left = "-1000px";
+            iframe.style.top = "0";
+            iframe.width = "0";
+            iframe.height = "0";
+    
+            window.document.body.appendChild(iframe);
+            return iframe;
+        }    
     }
 })
