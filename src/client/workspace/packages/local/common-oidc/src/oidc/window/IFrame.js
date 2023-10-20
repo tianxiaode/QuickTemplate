@@ -12,9 +12,7 @@ Ext.define('Common.oidc.window.IFrame', {
             me.timeoutInSeconds = config.silentRequestTimeoutInSeconds;
         }
         me.frame = me.createHiddenIframe();
-        console.log('constructor', me.frame)
         me.window = me.frame.contentWindow;
-        console.log('constructor', me.frame, me.window)
        
     },
 
@@ -24,7 +22,7 @@ Ext.define('Common.oidc.window.IFrame', {
         let timer = setTimeout(() => me.abort.raise("IFrame timed out without a response"), me.timeoutInSeconds * 1000);
         me.disposeHandlers.add(() => clearTimeout(timer));
 
-        return await me.callParent(params);
+        return await me.callParent(arguments);
     },
 
     close() {
@@ -44,7 +42,7 @@ Ext.define('Common.oidc.window.IFrame', {
     },
 
     notifyParent(url, targetOrigin){
-        return this.callParent(window.parent, url, false, targetOrigin);
+        return this.callParent.call(this, window.parent, url, false, targetOrigin);
     },
 
     destroy() {
