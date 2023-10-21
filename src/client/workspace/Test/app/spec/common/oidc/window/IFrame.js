@@ -7,8 +7,7 @@ Ext.define('Test.spec.common.oidc.window.IFrame', {
 
     constructor() {
         describe('Common.oidc.window.IFrame', () => {
-            let postMessageMock = jasmine.createSpy(),
-                fakeWindowOrigin = "https://fake-origin.com",
+            let fakeWindowOrigin = "https://fake-origin.com",
                 fakeUrl = "https://fakeurl.com";
 
             describe("hidden frame", () => {
@@ -93,11 +92,10 @@ Ext.define('Test.spec.common.oidc.window.IFrame', {
                         navigateParamsStub = jasmine.createSpy();
 
 
-                    beforeAll(() => {
-                        spyOn(Common.oidc.window.Abstract.prototype, 'getLocationOrigin').and.returnValue(fakeWindowOrigin);
+                    beforeEach(() => {
+                        spyOn(Common.oidc.window.Abstract, 'getLocationOrigin').and.returnValue(fakeWindowOrigin);
                         spyOn(Common.oidc.window.IFrame.prototype, 'createHiddenIframe').and.returnValue({ contentWindow: fakeContentWindow });
                         spyOn(window, "addEventListener").and.callFake((event, listener) => {
-                            console.log('spy', listener);
                             listener(navigateParamsStub());
 
                         });
@@ -119,28 +117,28 @@ Ext.define('Test.spec.common.oidc.window.IFrame', {
                     });
 
                     describe("and message origin does not match $type should never resolve", () => {
+
                         [
                             { passedOrigin: undefined, type: "window origin" },
                             { passedOrigin: "https://custom-origin.com", type: "passed script origi" },
                         ].forEach((args) => {
                             it(JSON.stringify(args), async () => {
                                 navigateParamsStub.and.returnValue({ ...validNavigateParams, origin: "http://different.com" });
-                                let frameWindow = Ext.create('oidc.window.iframe');
-                                await expectAsync(frameWindow.navigate({ state: fakeState, url: fakeUrl, scriptOrigin: args.passedOrigin })).toBeRejectedWith('Silently discard events not intended for us');
+                                let frameWindow = Ext.create('oidc.window.iframe', { timeoutInSeconds: 1 });
+                                await expectAsync(frameWindow.navigate({ state: fakeState, url: fakeUrl, scriptOrigin: args.passedOrigin })).toBeRejectedWith('IFrame timed out without a response');
                             });
                         })
                     });
 
                     it("and data url parse fails should reject with error", async () => {
                         navigateParamsStub.and.returnValue({ ...validNavigateParams, data: { ...validNavigateParams.data, url: undefined } });
-                        let frameWindow = Ext.create('oidc.window.iframe');
+                        let frameWindow = Ext.create('oidc.window.iframe', { timeoutInSeconds: 1 });
                         await expectAsync(frameWindow.navigate({ state: fakeState, url: fakeUrl })).toBeRejectedWith("Invalid response from window");
                     });
 
                     it("and args source with state do not match contentWindow should never resolve", async () => {
                         navigateParamsStub.and.returnValue({ ...validNavigateParams, source: {} });
-
-                        let frameWindow = Ext.create('oidc.window.iframe');
+                        let frameWindow = Ext.create('oidc.window.iframe', { timeoutInSeconds: 1 });
                         await expectAsync(frameWindow.navigate({ state: 'diff_state', url: fakeUrl })).not.toBeResolved();
                     });
 
@@ -151,19 +149,31 @@ Ext.define('Test.spec.common.oidc.window.IFrame', {
 
 
             describe("notifyParent", () => {
-                let messageData = {
+                let postMessageMock = jasmine.createSpy(),
+                    messageData = {
                     source: "oidc-client",
                     url: fakeUrl,
                     keepOpen: false,
                 };
 
-                it.each([
-                    ["https://parent-domain.com", "https://parent-domain.com"],
-                    [undefined, fakeWindowOrigin],
-                ])("should call postMessage with appropriate parameters", (targetOrigin, expectedOrigin) => {
-                    IFrameWindow.notifyParent(messageData.url, targetOrigin);
-                    expect(postMessageMock).toBeCalledWith(messageData, expectedOrigin);
+                beforeEach(()=>{
+                    spyOn(Common.oidc.window.Abstract, 'getLocationOrigin').and.returnValue(fakeWindowOrigin);
+                    spyOnProperty(window,'parent', 'get').and.returnValue({ postMessage: postMessageMock });
+                })
+
+                describe('should call postMessage with appropriate parameters', ()=>{
+                    [
+                        ["https://parent-domain.com", "https://parent-domain.com"],
+                        [undefined, fakeWindowOrigin]
+                    ].forEach(([targetOrigin, expectedOrigin])=> {
+                        it(`${targetOrigin} - ${expectedOrigin}`, ()=>{
+                            Common.oidc.window.IFrame.notifyParent(messageData.url, targetOrigin);
+                            expect(postMessageMock).toHaveBeenCalledWith(messageData, expectedOrigin);    
+                        })
+                    })
                 });
+
+
             });
         });
 

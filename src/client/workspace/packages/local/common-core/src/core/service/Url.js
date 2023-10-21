@@ -47,7 +47,7 @@
     },
 
     readParams(url, responseMode){
-        if (!url) Ext.raise("Invalid URL");
+        if (!url) throw "Invalid URL";
         // the base URL is irrelevant, it's just here to support relative url arguments
         let parsedUrl = new URL(url, "http://127.0.0.1"),
             params = parsedUrl[responseMode === "fragment" ? "hash" : "search"];

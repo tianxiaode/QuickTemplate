@@ -11,7 +11,30 @@ Ext.define('Common.oidc.window.Abstract', {
     * @internal
     */
 
-    messageSource: "oidc-client",
+
+    statics:{
+        MessageSource: "oidc-client",
+        notifyParent(parent, url, keepOpen, targetOrigin) {
+            console.log(parent.postMessage);
+            targetOrigin = targetOrigin ?? this.getLocationOrigin();
+            parent.postMessage({
+                source: this.MessageSource,
+                url,
+                keepOpen,
+            }, targetOrigin);
+        },
+
+        /**
+         * 测试用
+         */
+        getLocationOrigin() {
+            return window.location.origin;
+        },
+
+        getWindowParent(){
+            return window.parent;
+        }
+    },
 
     constructor(config) {
         let me = this;
@@ -28,21 +51,17 @@ Ext.define('Common.oidc.window.Abstract', {
 
         Ext.debug("setting URL in window");
         me.window.location.replace(params.url);
-        console.log('window', me.window);
 
         let { url, keepOpen } = await new Promise((resolve, reject) => {
             let listener = (e) => {
                 let data = e.data,
-                    origin = params.scriptOrigin ?? me.getLocationOrigin();
-                console.log('listener', e, params, origin)
-                if (e.origin !== origin || data?.source !== me.messageSource) {
+                    origin = params.scriptOrigin ?? Oidc.Window.getLocationOrigin();
+                if (e.origin !== origin || data?.source !== Oidc.Window.MessageSource) {
                     // silently discard events not intended for us
-                    reject(`Silently discard events not intended for us`);
                     return;
                 }
                 try {
                     let state = URI.readParams(data.url, params.responseMode).get("state");
-                    console.log('state', state)
                     if (!state) {
                         Ext.Logger.warn("no state found in response url");
                     }
@@ -50,7 +69,6 @@ Ext.define('Common.oidc.window.Abstract', {
 
                         // MessageEvent source is a relatively modern feature, we can't rely on it
                         // so we also inspect the payload for a matching state key as an alternative
-                        reject(`MessageEvent source is a relatively modern feature, we can't rely on it, so we also inspect the payload for a matching state key as an alternative`);
                         return;
                     }
                 }
@@ -81,13 +99,6 @@ Ext.define('Common.oidc.window.Abstract', {
 
     close: Ext.emptyFn,
 
-    notifyParent(parent, url, keepOpen, targetOrigin) {
-        parent.postMessage({
-            source: this.messageSource,
-            url,
-            keepOpen,
-        }, targetOrigin);
-    },
 
     destroy() {
         this.destroyMembers('disposeHandlers', 'abort');
@@ -103,14 +114,8 @@ Ext.define('Common.oidc.window.Abstract', {
             }
             this.disposeHandlers.clear();
 
-        },
-
-        /**
-         * 测试用
-         */
-        getLocationOrigin() {
-            return window.location.origin;
         }
+
 
     }
 

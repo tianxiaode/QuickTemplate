@@ -5,6 +5,12 @@ Ext.define('Common.oidc.window.IFrame', {
 
     timeoutInSeconds: 10,
 
+    statics:{
+        notifyParent(url, targetOrigin){
+            return Oidc.Window.notifyParent(window.parent, url, false, targetOrigin);
+        }    
+    },
+
     constructor(config){
         let me = this;
         me.callParent(arguments);
@@ -41,9 +47,6 @@ Ext.define('Common.oidc.window.IFrame', {
         me.window = null;
     },
 
-    notifyParent(url, targetOrigin){
-        return this.callParent.call(this, window.parent, url, false, targetOrigin);
-    },
 
     destroy() {
         this.destroyMembers('frame', 'window');
