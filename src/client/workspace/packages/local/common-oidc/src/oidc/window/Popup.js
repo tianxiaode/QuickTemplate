@@ -13,13 +13,23 @@ Ext.define('Common.oidc.window.Popup', {
         closePopupWindowAfterInSeconds: -1
     },
 
+    statics:{
+        notifyOpener(url, keepOpen){
+            if (!window.opener) {
+                Ext.raise("No window.opener. Can't complete notification.");
+            }
+            return this.notifyParent(window.opener, url, keepOpen);
+        }
+    },
+
     constructor(config) {
         let me = this;
-        me.callParent(arguments);
-        let features = Ext.apply({}, me.defaultFeatures, config.features),
+        config = config || {};
+        me.callParent(config);
+        let features = Ext.apply({}, me.defaultFeatures, config && config.features),
             centeredPopup = Oidc.Popup.center(features);
 
-        me.window = window.open(undefined, config.target, OidcPopup.serialize(centeredPopup));
+        me.window = window.open(undefined, config.target, Oidc.Popup.serialize(centeredPopup));
         if (features.closePopupWindowAfterInSeconds && features.closePopupWindowAfterInSeconds > 0) {
             setTimeout(() => {
                 if (!me.window || typeof me.window.closed !== "boolean" || me.window.closed) {
@@ -58,13 +68,6 @@ Ext.define('Common.oidc.window.Popup', {
             }
         }
         me.window = null;
-    },
-
-    notifyOpener(url, keepOpen){
-        if (!window.opener) {
-            Ext.raise("No window.opener. Can't complete notification.");
-        }
-        return this.notifyParent(window.opener, url, keepOpen);
     },
 
 
