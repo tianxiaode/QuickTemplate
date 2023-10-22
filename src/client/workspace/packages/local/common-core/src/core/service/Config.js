@@ -2,18 +2,21 @@ Ext.define('Common.core.service.Config', {
     alternateClassName: 'Config',
     singleton: true,
 
-    mixins:[
-        'Ext.mixin.Observable'
+    requires:[
+        'Common.core.util.Logger'
     ],
 
+    mixins: [
+        'Ext.mixin.Observable',
+    ],
+    
     config:{
         xsrfCookieName: 'XSRF-TOKEN',
         //xsrfHeaderName: 'X-XSRF-TOKEN',
         xsrfHeaderName: 'RequestVerificationToken',
         oidc: null,
         server: null,
-        language: null,
-        debug: false
+        language: null
     },
 
 
@@ -35,6 +38,9 @@ Ext.define('Common.core.service.Config', {
             window.onerror = (msg, url, line, col, error)=>{
                 Http.postScriptError(msg, url, line, col, error);
             }
+        }
+        if(appConfig.loggerLevel){
+            Logger.setLevel(appConfig.loggerLevel);
         }
     },
 

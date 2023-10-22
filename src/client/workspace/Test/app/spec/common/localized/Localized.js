@@ -1,6 +1,10 @@
 Ext.define('Test.spec.common.localized.Localized', {
     singleton: true,
 
+    requires:[
+        'Common.localized.Localized'
+    ],
+
     constructor() {
         describe('Common.core.localized.Localized', () => {
             let jsonTestData = this.responseData;

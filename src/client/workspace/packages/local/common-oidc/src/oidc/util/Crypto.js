@@ -25,8 +25,8 @@ Ext.define('Common.oidc.util.Crypto',{
                 return Ext.util.Base64.decode(hashed).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
             }
             catch (err) {
-                Ext.Logger.log("CryptoUtils.generateCodeChallenge", err);
-                throw err;
+                Logger.log("CryptoUtils.generateCodeChallenge", err);
+                throw new Error(err);
             }
         },
 

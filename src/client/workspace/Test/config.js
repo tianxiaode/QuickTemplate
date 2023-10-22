@@ -1,7 +1,7 @@
 window.AppConfig = {
     server: 'https://localhost:44320/',
     language: '',
-    debug: true,
+    loggerLevel: 'debug',
     oidc: {
         issuer: 'http://localhost:4200',
         redirectUri: "http://localhost:4200/desktop",

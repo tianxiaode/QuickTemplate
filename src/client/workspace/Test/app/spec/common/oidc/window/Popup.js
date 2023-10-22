@@ -6,194 +6,214 @@ Ext.define('Test.spec.common.oidc.window.Popup', {
     ],
 
     constructor() {
+
+
         describe("PopupWindow", () => {
+            let spyWindowOpen,
+                tick = (millis, fn)=>{
+                    jasmine.clock().uninstall();
+                    jasmine.clock().install();
+                    //延迟后续代码执行，等等setTimeout代码执行
+                    jasmine.clock().tick(millis);
+                    fn();
+                    jasmine.clock().uninstall();    
+                };
             beforeEach(() => {
                 spyOn(Common.oidc.window.Abstract, 'getLocationOrigin').and.returnValue( "http://app");
 
                 window.opener = {
                     postMessage: jasmine.createSpy(),
                 };
-                window.open = jasmine.createSpy();
+                spyWindowOpen = spyOn(window, 'open');
+                spyWindowOpen.and.returnValue({
+                    location: { replace: jasmine.createSpy() },
+                    focus: jasmine.createSpy(),
+                    close: jasmine.createSpy(),        
+                })                
             });
-        
-       
+
             it("should open a popup", () => {
-                Ext.create('oidc.window.popup');
-        
+                Ext.create('oidc.window.popup');        
                 expect(window.open).toHaveBeenCalled();
             });
         
-            // it("should resolve when navigate succeeds", async () => {
-            //     const popupWindow = new PopupWindow({});
+            it("should resolve when navigate succeeds", async () => {
+                let popupWindow = Ext.create('oidc.window.popup');
+
+                let promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
         
-            //     const promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
+                window.dispatchEvent(new MessageEvent("message", {
+                    data: { source: "oidc-client", url: "http://app/cb?state=someid" },
+                    origin: "http://app",
+                }));
         
-            //     window.dispatchEvent(new MessageEvent("message", {
-            //         data: { source: "oidc-client", url: "http://app/cb?state=someid" },
-            //         origin: "http://app",
-            //     }));
+                await expectAsync(promise).toBeResolvedTo({ url: "http://app/cb?state=someid"});
+                let popupFromWindowOpen = spyWindowOpen.calls.first().returnValue;
+                expect(popupFromWindowOpen.location.replace).toHaveBeenCalledWith("http://sts/authorize?x=y");
+                expect(popupFromWindowOpen.focus).toHaveBeenCalled();
+                expect(popupFromWindowOpen.close).toHaveBeenCalled();
+            });
         
-            //     await expect(promise).resolves.toHaveProperty("url", "http://app/cb?state=someid");
-            //     const popupFromWindowOpen = firstSuccessfulResult(window.open)!;
-            //     expect(popupFromWindowOpen.location.replace).toHaveBeenCalledWith("http://sts/authorize?x=y");
-            //     expect(popupFromWindowOpen.focus).toHaveBeenCalled();
-            //     expect(popupFromWindowOpen.close).toHaveBeenCalled();
-            //     // assert that timers are cleaned up
-            //     jest.runAllTimers();
-            // });
+            it("should keep the window open after navigate succeeds", async () => {
+                let popupWindow = Ext.create('oidc.window.popup');
         
-            // it("should keep the window open after navigate succeeds", async () => {
-            //     const popupWindow = new PopupWindow({});
+                let promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
         
-            //     const promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
+                window.dispatchEvent(new MessageEvent("message", {
+                    data: { source: "oidc-client", url: "http://app/cb?state=someid", keepOpen: true },
+                    origin: "http://app",
+                }));
         
-            //     window.dispatchEvent(new MessageEvent("message", {
-            //         data: { source: "oidc-client", url: "http://app/cb?state=someid", keepOpen: true },
-            //         origin: "http://app",
-            //     }));
+                await expectAsync(promise).toBeResolvedTo({ url: "http://app/cb?state=someid"});
+                let popupFromWindowOpen = spyWindowOpen.calls.first().returnValue;
+                expect(popupFromWindowOpen.location.replace).toHaveBeenCalledWith("http://sts/authorize?x=y");
+                expect(popupFromWindowOpen.close).not.toHaveBeenCalled();
+            });
         
-            //     await expect(promise).resolves.toHaveProperty("url", "http://app/cb?state=someid");
-            //     const popupFromWindowOpen = firstSuccessfulResult(window.open)!;
-            //     expect(popupFromWindowOpen.location.replace).toHaveBeenCalledWith("http://sts/authorize?x=y");
-            //     expect(popupFromWindowOpen.close).not.toHaveBeenCalled();
-            //     jest.runAllTimers();
-            // });
+            it("should ignore messages from foreign origins", async () => {
+                let popupWindow = Ext.create('oidc.window.popup');
         
-            // it("should ignore messages from foreign origins", async () => {
-            //     const popupWindow = new PopupWindow({});
+                let promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
         
-            //     const promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
+                window.dispatchEvent(new MessageEvent("message", {
+                    data: { source: "oidc-client", url: "http://app/cb?state=someid&code=foreign-origin" },
+                    origin: "http://foreign-origin",
+                }));
+                window.dispatchEvent(new MessageEvent("message", {
+                    data: { source: "foreign-lib", url: "http://app/cb?state=someid&code=foreign-lib" },
+                    origin: "http://app",
+                    source: (new MessageChannel()).port1
+                }));
+                window.dispatchEvent(new MessageEvent("message", {
+                    data: { source: "oidc-client", url: "http://app/cb?state=someid&code=code" },
+                    origin: "http://app",
+                }));
         
-            //     window.dispatchEvent(new MessageEvent("message", {
-            //         data: { source: "oidc-client", url: "http://app/cb?state=someid&code=foreign-origin" },
-            //         origin: "http://foreign-origin",
-            //     }));
-            //     window.dispatchEvent(new MessageEvent("message", {
-            //         data: { source: "foreign-lib", url: "http://app/cb?state=someid&code=foreign-lib" },
-            //         origin: "http://app",
-            //         source: {} as MessageEventSource,
-            //     }));
-            //     window.dispatchEvent(new MessageEvent("message", {
-            //         data: { source: "oidc-client", url: "http://app/cb?state=someid&code=code" },
-            //         origin: "http://app",
-            //     }));
+                await expectAsync(promise).toBeResolvedTo({ url: "http://app/cb?state=someid&code=code"});
+                let popupFromWindowOpen = spyWindowOpen.calls.first().returnValue;
+                expect(popupFromWindowOpen.focus).toHaveBeenCalled();
+                expect(popupFromWindowOpen.close).toHaveBeenCalled();
+            });
         
-            //     await expect(promise).resolves.toHaveProperty("url", "http://app/cb?state=someid&code=code");
-            //     const popupFromWindowOpen = firstSuccessfulResult(window.open)!;
-            //     expect(popupFromWindowOpen.focus).toHaveBeenCalled();
-            //     expect(popupFromWindowOpen.close).toHaveBeenCalled();
-            // });
+            it("should reject when navigate fails", async () => {
+                let popupWindow = Ext.create('oidc.window.popup');
         
-            // it("should reject when navigate fails", async () => {
-            //     const popupWindow = new PopupWindow({});
+                let promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
+                let popupFromWindowOpen = spyWindowOpen.calls.first().returnValue;
+                window.dispatchEvent(new MessageEvent("message", {
+                    data: { source: "oidc-client", url: "" },
+                    origin: "http://app",
+                    source: window,
+                }));
         
-            //     const promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
-            //     const popupFromWindowOpen = firstSuccessfulResult(window.open)!;
-            //     window.dispatchEvent(new MessageEvent("message", {
-            //         data: { source: "oidc-client", url: "" },
-            //         origin: "http://app",
-            //         source: popupFromWindowOpen,
-            //     }));
+                await expectAsync(promise).toBeRejectedWith("Invalid response from window");
+                expect(popupFromWindowOpen.location.replace).toHaveBeenCalledWith("http://sts/authorize?x=y");
+            });
         
-            //     await expect(promise).rejects.toThrow("Invalid response from window");
-            //     expect(popupFromWindowOpen.location.replace).toHaveBeenCalledWith("http://sts/authorize?x=y");
-            //     jest.runAllTimers();
-            // });
+            it("should reject when the window is closed by user", async () => {
+                spyWindowOpen.and.returnValue({
+                    location: { replace: jasmine.createSpy() },
+                    focus: jasmine.createSpy(),
+                    close: jasmine.createSpy(),        
+                    closed: true
+                });
+
+                let popupWindow = Ext.create('oidc.window.popup');
         
-            // it("should reject when the window is closed by user", async () => {
-            //     const popupWindow = new PopupWindow({});
+                let promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
+                await expectAsync(promise).toBeRejectedWith("Popup closed by user");
+            });
         
-            //     const promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
-            //     definePopupWindowClosedProperty(true);
+            it("should reject when the window is closed programmatically", async () => {
+                let popupWindow = Ext.create('oidc.window.popup');
         
-            //     jest.runOnlyPendingTimers();
-            //     await expect(promise).rejects.toThrow("Popup closed by user");
-            //     jest.runAllTimers();
-            // });
+                let promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
+                popupWindow.close();
         
-            // it("should reject when the window is closed programmatically", async () => {
-            //     const popupWindow = new PopupWindow({});
+                await expectAsync(promise).toBeRejectedWith("Popup closed");
+            });
         
-            //     const promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
-            //     popupWindow.close();
+            it("should notify the parent window", async () => {
+                Common.oidc.window.Popup.notifyOpener("http://sts/authorize?x=y", false);
+                expect((window.opener).postMessage).toHaveBeenCalledWith({
+                    source: "oidc-client",
+                    url: "http://sts/authorize?x=y",
+                    keepOpen: false,
+                }, Oidc.Window.getLocationOrigin());
+            });
         
-            //     await expect(promise).rejects.toThrow("Popup closed");
-            //     jest.runAllTimers();
-            // });
+            it("should run setTimeout when closePopupWindowAfterInSeconds is greater than 0", async () => {
+                let spySetTimeout = spyOn(window, 'setTimeout');
+                Ext.create('oidc.window.popup', { features: { closePopupWindowAfterInSeconds: 1 } });
+                tick(1001,()=>{
+                    expect(spySetTimeout).toHaveBeenCalledTimes(1);
+                })
+
+            });
         
-            // it("should notify the parent window", async () => {
-            //     PopupWindow.notifyOpener("http://sts/authorize?x=y", false);
-            //     expect((window.opener as WindowProxy).postMessage).toHaveBeenCalledWith({
-            //         source: "oidc-client",
-            //         url: "http://sts/authorize?x=y",
-            //         keepOpen: false,
-            //     }, window.location.origin);
-            // });
-        
-            // it("should run setTimeout when closePopupWindowAfterInSeconds is greater than 0", async () => {
-            //     jest.spyOn(global, "setTimeout");
+            it("shouldn't run setTimeout when closePopupWindowAfterInSeconds is equal to 0", async () => {
+                let spySetTimeout = spyOn(window, 'setTimeout');
                 
-            //     new PopupWindow({ popupWindowFeatures: { closePopupWindowAfterInSeconds: 1 } });
+                Ext.create('oidc.window.popup', { features: { closePopupWindowAfterInSeconds: 0 } });
+                tick(1,()=>{
+                    expect(spySetTimeout).toHaveBeenCalledTimes(0);
+                })
+
+
+            });
         
-            //     jest.runOnlyPendingTimers();
-            //     expect(setTimeout).toHaveBeenCalledTimes(1);
-            //     jest.runAllTimers();
-            // });
-        
-            // it("shouldn't run setTimeout when closePopupWindowAfterInSeconds is equal to 0", async () => {
-            //     jest.spyOn(global, "setTimeout");
+            it("shouldn't run setTimeout when closePopupWindowAfterInSeconds is less than 0", async () => {
+                let spySetTimeout = spyOn(window, 'setTimeout');
                 
-            //     new PopupWindow({ popupWindowFeatures: { closePopupWindowAfterInSeconds: 0 } });
+                Ext.create('oidc.window.popup', { features: { closePopupWindowAfterInSeconds: -120 } });
+                tick(1,()=>{
+                    expect(spySetTimeout).toHaveBeenCalledTimes(0);
+                })
+
+            });
         
-            //     jest.runOnlyPendingTimers();
-            //     expect(setTimeout).toHaveBeenCalledTimes(0);
-            //     jest.runAllTimers();
-            // });
+            it("should invoke close popup window when closePopupWindowAfterInSeconds is greater than 0 and window is open", (done) => {
+                spyWindowOpen.and.returnValue({
+                    location: { replace: jasmine.createSpy() },
+                    focus: jasmine.createSpy(),
+                    close: jasmine.createSpy(),        
+                    closed: false
+                });
+                let popupWindow = Ext.create('oidc.window.popup', { features: { closePopupWindowAfterInSeconds: 1 } });
+                let closeWindowSpy = spyOn(popupWindow, 'close');
+                setTimeout(()=>{
+                    expect(closeWindowSpy).toHaveBeenCalledTimes(1);
+                    done();
+                },1001)
+            });
         
-            // it("shouldn't run setTimeout when closePopupWindowAfterInSeconds is less than 0", async () => {
-            //     jest.spyOn(global, "setTimeout");
-                
-            //     new PopupWindow({ popupWindowFeatures: { closePopupWindowAfterInSeconds: -120 } });
+            it("shouldn't invoke close popup window when closePopupWindowAfterInSeconds is greater than 0 and window is not open", (done) => {
+                spyWindowOpen.and.returnValue({
+                    location: { replace: jasmine.createSpy() },
+                    focus: jasmine.createSpy(),
+                    close: jasmine.createSpy(),        
+                    closed: true
+                });
+                let popupWindow = Ext.create('oidc.window.popup', { features: { closePopupWindowAfterInSeconds: 1 } });
+                let closeWindowSpy = spyOn(popupWindow, 'close');
+                setTimeout(()=>{
+                    expect(closeWindowSpy).toHaveBeenCalledTimes(0);
+                    done();
+                },1001)
+
+            });
         
-            //     jest.runOnlyPendingTimers();
-            //     expect(setTimeout).toHaveBeenCalledTimes(0);
-            //     jest.runAllTimers();
-            // });
+            it("should show error when closePopupWindowAfterInSeconds is greater than 0 and window is not open", async () => {
+                Logger.setLevel('debug');
+                let popupWindow = Ext.create('oidc.window.popup', { features: { closePopupWindowAfterInSeconds: 1 } });
+                let consoleDebugSpy = spyOn(console, "debug");
+                let promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
         
-            // it("should invoke close popup window when closePopupWindowAfterInSeconds is greater than 0 and window is open", async () => {
-            //     const popupWindow = new PopupWindow({ popupWindowFeatures: { closePopupWindowAfterInSeconds: 1 } });
-            //     definePopupWindowClosedProperty(false);
-            //     const closeWindowSpy = jest.spyOn(popupWindow, "close");
-        
-            //     jest.runOnlyPendingTimers();
-        
-            //     expect(closeWindowSpy).toHaveBeenCalledTimes(1);
-            //     jest.runAllTimers();
-            // });
-        
-            // it("shouldn't invoke close popup window when closePopupWindowAfterInSeconds is greater than 0 and window is not open", async () => {
-            //     const popupWindow = new PopupWindow({ popupWindowFeatures: { closePopupWindowAfterInSeconds: 1 } });
-            //     definePopupWindowClosedProperty(true);
-            //     const closeWindowSpy = jest.spyOn(popupWindow, "close");
-        
-            //     jest.runOnlyPendingTimers();
-        
-            //     expect(closeWindowSpy).not.toBeCalled();
-            //     jest.runAllTimers();
-            // });
-        
-            // it("should show error when closePopupWindowAfterInSeconds is greater than 0 and window is not open", async () => {
-            //     Log.setLevel(Log.DEBUG);
-            //     const popupWindow = new PopupWindow({ popupWindowFeatures: { closePopupWindowAfterInSeconds: 1 } });
-            //     const consoleDebugSpy = jest.spyOn(console, "debug");
-            //     const promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
-        
-            //     jest.runOnlyPendingTimers();
-        
-            //     await expect(promise).rejects.toThrow("Popup blocked by user");
-            //     expect(consoleDebugSpy).toHaveBeenCalled();
-            //     jest.runAllTimers();
-            // });
+       
+                await expectAsync(promise).toBeRejectedWith("Popup blocked by user");
+                expect(consoleDebugSpy).toHaveBeenCalled();
+            });
+
         });
         
     }

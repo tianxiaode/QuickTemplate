@@ -21,13 +21,6 @@ Ext.define('Test.Application', {
         }
     },
 
-    init(){
-        Ext.debug = function(...args){
-            if(!Config.getDebug()) return;
-            Ext.Logger.log.call(null, args);
-        }
-    },
-
     launch(){
         document.body.parentNode.classList = '';
         document.body.style.overflow = 'auto';

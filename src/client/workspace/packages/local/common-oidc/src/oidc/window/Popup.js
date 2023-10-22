@@ -18,7 +18,7 @@ Ext.define('Common.oidc.window.Popup', {
             if (!window.opener) {
                 Ext.raise("No window.opener. Can't complete notification.");
             }
-            return this.notifyParent(window.opener, url, keepOpen);
+            return Oidc.Window.notifyParent(window.opener, url, keepOpen);
         }
     },
 
@@ -26,19 +26,19 @@ Ext.define('Common.oidc.window.Popup', {
         let me = this;
         config = config || {};
         me.callParent(config);
-        let features = Ext.apply({}, me.defaultFeatures, config && config.features),
+        let features = Ext.apply({}, config && config.features, me.defaultFeatures),
             centeredPopup = Oidc.Popup.center(features);
 
         me.window = window.open(undefined, config.target, Oidc.Popup.serialize(centeredPopup));
+        console.log('close', features.closePopupWindowAfterInSeconds, me.window)
         if (features.closePopupWindowAfterInSeconds && features.closePopupWindowAfterInSeconds > 0) {
             setTimeout(() => {
                 if (!me.window || typeof me.window.closed !== "boolean" || me.window.closed) {
                     me.abort.raise("Popup blocked by user");
                     return;
                 }
-
                 me.close();
-            }, features.closePopupWindowAfterInSeconds * second);
+            }, features.closePopupWindowAfterInSeconds * me.second);
         }
 
     },
@@ -61,6 +61,7 @@ Ext.define('Common.oidc.window.Popup', {
     close(){
         let me = this,
             window = me.window;
+        console.log('window', window)
         if (window) {
             if (!window.closed) {
                 window.close();

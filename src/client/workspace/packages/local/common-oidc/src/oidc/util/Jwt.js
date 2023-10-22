@@ -16,7 +16,7 @@ Ext.define('Common.oidc.util.Jwt',{
             try {
                 return JSON.parse(Oidc.Jwt.base64UrlDecode(token.split(".")[pos]));
             } catch (e) {
-                throw "Invalid token specified: " + e.message;
+                throw new Error("Invalid token specified: " + e.message);
             }
         },
 
@@ -44,7 +44,7 @@ Ext.define('Common.oidc.util.Jwt',{
                     output += "=";
                     break;
                 default:
-                    throw "Illegal base64url string!";
+                    throw new Error("Illegal base64url string!");
             }
   
             try {

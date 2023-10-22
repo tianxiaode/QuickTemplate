@@ -76,7 +76,7 @@ Ext.define('Test.spec.common.oidc.window.IFrame', {
                     it('should set null for contentWindow', async () => {
                         let frameWindow = Ext.create('oidc.window.iframe');
                         await expectAsync(frameWindow.navigate({}))
-                            .toBeRejectedWith("Attempted to navigate on a disposed window");
+                            .toBeRejectedWithError("Attempted to navigate on a disposed window");
                     })
 
                 });
@@ -124,7 +124,7 @@ Ext.define('Test.spec.common.oidc.window.IFrame', {
                         ].forEach((args) => {
                             it(JSON.stringify(args), async () => {
                                 navigateParamsStub.and.returnValue({ ...validNavigateParams, origin: "http://different.com" });
-                                let frameWindow = Ext.create('oidc.window.iframe', { timeoutInSeconds: 1 });
+                                let frameWindow = Ext.create('oidc.window.iframe', { timeoutInSeconds: 0.1 });
                                 await expectAsync(frameWindow.navigate({ state: fakeState, url: fakeUrl, scriptOrigin: args.passedOrigin })).toBeRejectedWith('IFrame timed out without a response');
                             });
                         })
@@ -132,7 +132,7 @@ Ext.define('Test.spec.common.oidc.window.IFrame', {
 
                     it("and data url parse fails should reject with error", async () => {
                         navigateParamsStub.and.returnValue({ ...validNavigateParams, data: { ...validNavigateParams.data, url: undefined } });
-                        let frameWindow = Ext.create('oidc.window.iframe', { timeoutInSeconds: 1 });
+                        let frameWindow = Ext.create('oidc.window.iframe', { timeoutInSeconds: 0.1 });
                         await expectAsync(frameWindow.navigate({ state: fakeState, url: fakeUrl })).toBeRejectedWith("Invalid response from window");
                     });
 

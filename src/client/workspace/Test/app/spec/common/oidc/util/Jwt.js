@@ -36,10 +36,10 @@ Ext.define('Test.spec.common.oidc.util.Jwt', {
                 // act
                 try {
                     Oidc.Jwt.decode("junk");
-                    Ext.Logger.error("should not come here");
+                    Logger.error("should not come here");
                 }
                 catch (err) {
-                    expect(err).toContain("Invalid token specified");
+                    expect(err.message).toContain("Invalid token specified");
                 }
             });
         });    

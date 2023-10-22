@@ -1,7 +1,8 @@
 
 Ext.define('Common.oidc.window.Abstract', {
     requires: [
-        'Common.oidc.util.Event'
+        'Common.oidc.util.Event',
+        'Common.core.util.Logger'
     ],
 
     /**
@@ -15,7 +16,6 @@ Ext.define('Common.oidc.window.Abstract', {
     statics:{
         MessageSource: "oidc-client",
         notifyParent(parent, url, keepOpen, targetOrigin) {
-            console.log(parent.postMessage);
             targetOrigin = targetOrigin ?? this.getLocationOrigin();
             parent.postMessage({
                 source: this.MessageSource,
@@ -46,10 +46,10 @@ Ext.define('Common.oidc.window.Abstract', {
     async navigate(params) {
         let me = this;
         if (!me.window) {
-            throw "Attempted to navigate on a disposed window";
+            throw new Error("Attempted to navigate on a disposed window");
         }
 
-        Ext.debug("setting URL in window");
+        Logger.debug("setting URL in window");
         me.window.location.replace(params.url);
 
         let { url, keepOpen } = await new Promise((resolve, reject) => {
@@ -63,7 +63,7 @@ Ext.define('Common.oidc.window.Abstract', {
                 try {
                     let state = URI.readParams(data.url, params.responseMode).get("state");
                     if (!state) {
-                        Ext.Logger.warn("no state found in response url");
+                        Logger.warn("no state found in response url");
                     }
                     if (e.source !== me.window && state !== params.state) {
 
@@ -86,7 +86,7 @@ Ext.define('Common.oidc.window.Abstract', {
             }));
 
         });
-        Ext.debug("got response from window");
+        Logger.debug("got response from window");
         me.dispose();
 
 
