@@ -16,7 +16,7 @@ Ext.define('Common.oidc.navigator.Popup', {
     },
 
     async callback(url, keepOpen){
-        this.window.notifyOpener(url, keepOpen);
+        Common.oidc.window.Popup.notifyOpener(url, keepOpen);
     }    
 
 })

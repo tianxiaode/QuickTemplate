@@ -14,7 +14,7 @@ Ext.define('Common.oidc.navigator.IFrame', {
     },
 
     async callback(url){
-        this.window.notifyParent(url, me.settings.iframeNotifyParentOrigin);
+        Common.oidc.window.IFrame.notifyParent(url, this.settings.iframeNotifyParentOrigin);
     }
 
     

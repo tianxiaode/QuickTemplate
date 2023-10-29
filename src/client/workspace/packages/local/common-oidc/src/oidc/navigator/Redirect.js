@@ -14,7 +14,7 @@ Ext.define('Common.oidc.navigator.Redirect', {
         }
     
         let redirect = targetWindow.location[redirectMethod].bind(targetWindow.location),
-            abort = (reason) => {};
+            abort;
         return {
             navigate: async (params) => {
                 let promise = new Promise((resolve, reject) => {
@@ -24,7 +24,7 @@ Ext.define('Common.oidc.navigator.Redirect', {
                 return await (promise);
             },
             close: () => {
-                abort?.("Redirect aborted");
+                abort?.(new Error("Redirect aborted"));
                 targetWindow.stop();
             },
         };
