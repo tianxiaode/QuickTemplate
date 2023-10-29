@@ -30,7 +30,6 @@ Ext.define('Common.oidc.window.Popup', {
             centeredPopup = Oidc.Popup.center(features);
 
         me.window = window.open(undefined, config.target, Oidc.Popup.serialize(centeredPopup));
-        console.log('close', features.closePopupWindowAfterInSeconds, me.window)
         if (features.closePopupWindowAfterInSeconds && features.closePopupWindowAfterInSeconds > 0) {
             setTimeout(() => {
                 if (!me.window || typeof me.window.closed !== "boolean" || me.window.closed) {
@@ -61,7 +60,6 @@ Ext.define('Common.oidc.window.Popup', {
     close(){
         let me = this,
             window = me.window;
-        console.log('window', window)
         if (window) {
             if (!window.closed) {
                 window.close();

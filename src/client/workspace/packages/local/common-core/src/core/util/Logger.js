@@ -4,18 +4,22 @@ Ext.define('Common.core.util.Logger', {
 
     levelMap:{
         none: 0,
-        verbose: 1,
-        error : 2,
-        warn : 3,
-        info: 4,
-        debug: 5
+        error : 1,
+        warn : 2,
+        info: 3,
+        debug: 4
     },
 
-    levels:['none', 'verbose', 'error', 'warn', 'info', 'debug'],
+    levels:['none', 'error', 'warn', 'info', 'debug'],
 
     config:{
-        level : 'none',
+        level : 0,
         logger: console
+    },
+
+    applyLevel(level){
+        if(Ext.isString(level)) return this.levelMap[level] ?? 3;
+        return level;
     },
 
 
@@ -23,24 +27,32 @@ Ext.define('Common.core.util.Logger', {
         this.initConfig(config);
     },
 
-    log(level, ...args){
+    log(outLevel, ...args){
         let me = this,
-            levelString = me.getLevel(),
-            currentLevel = me.levelMap[levelString],
-            priority = me.levels[level],
-            logger = me.getLogger();
+            level = me.getLevel(),
+            priority = me.levels[outLevel],
+            logger = me.getLogger(),
+            prefix;
         if(!logger){
             Ext.raise(`Invalid logger: ${logger}`);
         }
         if (!priority || !(priority in logger)) {
             priority = 'log';
         }
-        if(level >= currentLevel){
-            logger[priority]('[' + priority.toUpperCase() + '] ', ...args);
+        if(level >= outLevel){
+            prefix = `[${priority.toUpperCase() }]`;
+            let first = args[0];
+            if(Ext.isObject(first) || Ext.isFunction(first)){
+                if(first.name){
+                    return logger[priority](prefix, `[${first.name}]`, ...args);
+                }
+                if(first.$className){
+                    return logger[priority](prefix, `[${first.$className}]`, ...args);
+                }
+            }
+            logger[priority](prefix, ...args);
+
         }
-
-        console.log(priority, ...args);
-
     },
 
     debug(...args){
@@ -57,10 +69,6 @@ Ext.define('Common.core.util.Logger', {
 
     error(...args){
         this.log(this.levelMap.error, ...args);
-    },
-
-    verbose(...args){
-        this.log(this.levelMap.verbose, args);
     },
 
     destroy() {
