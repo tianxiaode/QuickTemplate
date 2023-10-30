@@ -8,7 +8,7 @@ Ext.define('Common.oidc.navigator.IFrame', {
 
     async prepare(){
         let me = this,
-            silentRequestTimeoutInSeconds = me.settings.silentRequestTimeoutInSeconds;
+            silentRequestTimeoutInSeconds = me.silentRequestTimeoutInSeconds;
         me.window = Ext.create('oidc.window.iframe', { silentRequestTimeoutInSeconds });
         return me.window;
     },

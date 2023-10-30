@@ -2,15 +2,14 @@ Ext.define('Common.oidc.navigator.Redirect', {
     extend: 'Common.oidc.navigator.Abstract',
     alias: 'oidc.navigator.redirect',
 
-    async prepare(){
+    async prepare(config){
         let me = this,
-            settings = me.settings,
-            redirectMethod = settings.redirectMethod,
-            redirectTarget = settings.redirectTarget,
-            targetWindow = window.self;
+            redirectMethod = config.redirectMethod ?? me.redirectMethod ,
+            redirectTarget = config.redirectTarget ?? me.redirectTarget,
+            targetWindow = me.getTargetWindow();
 
         if (redirectTarget === "top") {
-            targetWindow = window.top ?? window.self;
+            targetWindow = me.getTargetWindow(true);
         }
     
         let redirect = targetWindow.location[redirectMethod].bind(targetWindow.location),
@@ -28,6 +27,14 @@ Ext.define('Common.oidc.navigator.Redirect', {
                 targetWindow.stop();
             },
         };
+    },
+
+    /**
+     * 测试用
+     * @returns window
+     */
+    getTargetWindow(isTop){
+        return isTop ? window.top ?? window.self : window.self;
     },
 
     async callback(){
