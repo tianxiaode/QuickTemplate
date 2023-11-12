@@ -6,12 +6,8 @@ Ext.define('Common.oidc.navigator.Redirect', {
         let me = this,
             redirectMethod = config.redirectMethod ?? me.redirectMethod ,
             redirectTarget = config.redirectTarget ?? me.redirectTarget,
-            targetWindow = me.getTargetWindow();
+            targetWindow = me.getTargetWindow(redirectTarget);
 
-        if (redirectTarget === "top") {
-            targetWindow = me.getTargetWindow(true);
-        }
-    
         let redirect = targetWindow.location[redirectMethod].bind(targetWindow.location),
             abort;
         return {
@@ -33,8 +29,8 @@ Ext.define('Common.oidc.navigator.Redirect', {
      * 测试用
      * @returns window
      */
-    getTargetWindow(isTop){
-        return isTop ? window.top ?? window.self : window.self;
+    getTargetWindow(redirectTarget){
+        return redirectTarget === 'top' ? window.top ?? window.self : window.self;
     },
 
     async callback(){
