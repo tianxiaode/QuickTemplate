@@ -132,8 +132,6 @@ Ext.define('Test.spec.common.oidc.State', {
                     Common.oidc.State.clearStaleState(100);
                     let keys = AppStorage.getAllKeys(prefix, true, false);
 
-                    console.log('keys', keys);
-        
                     // assert
                     expect(keys).toContain(prefix + "s4");
                     expect(keys).toContain(prefix + "s5");

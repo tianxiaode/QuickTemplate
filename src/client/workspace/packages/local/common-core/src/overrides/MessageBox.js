@@ -16,4 +16,8 @@ Ext.define('Common.overrides.MessageBox',{
         }
         Ext.Msg.alert(title, message);
     }
+}, function(MessageBox) {
+    Ext.onInternalReady(function() {
+        Ext.Msg.showAjaxErrors = Ext.MessageBox.prototype.showAjaxErrors;
+    })
 })
