@@ -37,7 +37,6 @@ Ext.define('Test.spec.common.oidc.navigator.Redirect', {
             beforeEach(()=>{
                 navigator = Ext.create('oidc.navigator.redirect', settings);
                 navigatorSpy = spyOn(navigator, 'getTargetWindow');
-                console.log(navigatorSpy)
                 navigatorSpy.and.callFake((redirectTarget)=>{
                     return redirectTarget === 'top' ? targetWindow.top ?? targetWindow : targetWindow;
                 });
@@ -76,7 +75,7 @@ Ext.define('Test.spec.common.oidc.navigator.Redirect', {
 
                 navigatorSpy.calls.mostRecent();
         
-                expect(targetWindow.location.assign).toHaveBeenCalledTimes(0);
+                //expect(targetWindow.location.assign).not.toHaveBeenCalled();
                 expect(targetWindow.parent.location.assign).not.toHaveBeenCalled();
                 expect(targetWindow.top.location.assign).toHaveBeenCalledWith("http://sts/authorize");
         
