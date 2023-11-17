@@ -23,34 +23,19 @@ Ext.define('Common.oidc.JsonService', {
         }
     },
 
-    async getJson(options) {
+    async getJson(url, token) {
         let me = this,
-            headers = { "Accept": me.contentTypes.join(", ") },
-            response;
-        options = options || {};
-        if (options.token) {
+            headers = { "Accept": me.contentTypes.join(", ") };
+        if (token) {
             Logger.debug(me, "token passed, setting Authorization header");
-            headers["Authorization"] = "Bearer " + options.token;
+            headers["Authorization"] = "Bearer " + token;
         }
         me.appendExtraHeaders(headers);
-        options.headers = headers;
-        // try {
-            Logger.debug(me, "url:", options.url);
-            options.method = 'GET';
-            response = await me.send(options);
-
-            console.log('response', response)
-        // }
-        // catch (err) {
-        //     Logger.error(me, "Network Error", err);
-        //     throw err;
-        // }
-        if (!response) {
-            Logger.error(me, "No response");
-            throw new Error('No response');
-        }
+        Logger.debug(me, "url:", url);
+        response = await Http.get(url, null, {headers: headers});
+        console.log('response', response)
         Logger.debug("HTTP response received, status", response.status);
-        let contentType = response.headers.get("Content-Type");
+        let contentType = response.getResponseHeader("Content-Type");
         if (contentType && !me.contentTypes.find(item => contentType.startsWith(item))) {
             throw new Error(`Invalid response Content-Type: ${(contentType ?? "undefined")}, from URL: ${url}`);
         }
@@ -59,20 +44,21 @@ Ext.define('Common.oidc.JsonService', {
         }
         let json;
         try {
-            json = response.getJson();
+            json = response.request.getJson();
         }
         catch (err) {
             Logger.error("Error parsing JSON response", err);
             if (response.ok) throw err;
             throw new Error(`${response.statusText} (${response.status})`);
         }
-        if (!response.ok) {
+        if (!response.request.success) {
             Logger.error("Error from server:", json);
             if (json.error) {
                 throw new Error(json);
             }
             throw new Error(`${response.statusText} (${response.status}): ${JSON.stringify(json)}`);
         }
+        console.log('json', json)
         return json;
 
     },

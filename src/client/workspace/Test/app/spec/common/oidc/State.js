@@ -3,6 +3,7 @@ Ext.define('Test.spec.common.oidc.State', {
     requires: [
         'Common.oidc.State'
     ],
+    
     statics: {
         run() {
             describe('Common.oidc.State', () => {
