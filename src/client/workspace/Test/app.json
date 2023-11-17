@@ -205,6 +205,17 @@
      *
      */
     "js": [
+        {
+            "path": "config.js",
+            "bundle": true
+        },
+        {
+            "path": "${framework.dir}/build/ext-modern-all-debug.js"
+        },
+        {
+            "path": "app.js",
+            "bundle": true
+        },
         {            
             "path": "resources/jasmine-5.1.1/jasmine.js"
         },
@@ -219,17 +230,6 @@
         },
         {            
             "path": "resources/mock-ajax.js"
-        },
-        {
-            "path": "config.js",
-            "bundle": true
-        },
-        {
-            "path": "${framework.dir}/build/ext-modern-all-debug.js"
-        },
-        {
-            "path": "app.js",
-            "bundle": true
         }
     ],
 

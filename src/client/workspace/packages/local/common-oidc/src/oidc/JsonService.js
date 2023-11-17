@@ -1,42 +1,53 @@
-Ext.define('Common.oidc.JsonService',{
+Ext.define('Common.oidc.JsonService', {
     alias: 'oidc.jsonservice',
+
+    requires: [
+        'Common.core.util.Logger',
+        'Common.core.service.HttpClient'
+    ],
 
     contentTypes: null,
     extraHeaders: null,
 
-    constructor(config){
+    constructor(config) {
         let me = this;
         config = config || {};
         me.extraHeaders = config.extraHeaders || {};
         me.contentTypes = [];
-        if(config.additionalContentTypes){
+        if (config.additionalContentTypes) {
             me.contentTypes.push(...config.additionalContentTypes);
         }
         me.contentTypes.push('application/json');
-        if(config.jwtHandler){
+        if (config.jwtHandler) {
             me.contentTypes.push('application/jwt');
         }
     },
 
-    async getJson(options){
+    async getJson(options) {
         let me = this,
             headers = { "Accept": me.contentTypes.join(", ") },
             response;
         options = options || {};
-        if(options.token){
-            Logger.debug("token passed, setting Authorization header");
-            headers["Authorization"] = "Bearer " + options.token;        
+        if (options.token) {
+            Logger.debug(me, "token passed, setting Authorization header");
+            headers["Authorization"] = "Bearer " + options.token;
         }
         me.appendExtraHeaders(headers);
         options.headers = headers;
-        try {
-            Logger.debug("url:", options.url);
+        // try {
+            Logger.debug(me, "url:", options.url);
             options.method = 'GET';
-            response = await Ext.Ajax.request(options);
-        }
-        catch (err) {
-            Logger.error("Network Error");
-            throw err;
+            response = await me.send(options);
+
+            console.log('response', response)
+        // }
+        // catch (err) {
+        //     Logger.error(me, "Network Error", err);
+        //     throw err;
+        // }
+        if (!response) {
+            Logger.error(me, "No response");
+            throw new Error('No response');
         }
         Logger.debug("HTTP response received, status", response.status);
         let contentType = response.headers.get("Content-Type");
@@ -48,7 +59,7 @@ Ext.define('Common.oidc.JsonService',{
         }
         let json;
         try {
-            json = await response.getJson();
+            json = response.getJson();
         }
         catch (err) {
             Logger.error("Error parsing JSON response", err);
@@ -66,12 +77,12 @@ Ext.define('Common.oidc.JsonService',{
 
     },
 
-    async postForm(options){
+    async postForm(options) {
         let me = this,
-             headers = {
-            "Accept": me.contentTypes.join(", "),
-            "Content-Type": "application/x-www-form-urlencoded"
-        };
+            headers = {
+                "Accept": me.contentTypes.join(", "),
+                "Content-Type": "application/x-www-form-urlencoded"
+            };
         if (options.basicAuth !== undefined) {
             headers["Authorization"] = "Basic " + options.basicAuth;
         }
@@ -85,32 +96,32 @@ Ext.define('Common.oidc.JsonService',{
             response = Ext.Ajax.request(options);
         }
         catch (err) {
-            Logger.error("Network error");
+            Logger.error(me, "Network error");
             throw err;
         }
 
-        Logger.debug("HTTP response received, status", response.status);
+        Logger.debug(me, "HTTP response received, status", response.status);
         let contentType = response.headers.get("Content-Type");
         if (contentType && !me.contentTypes.find(item => contentType.startsWith(item))) {
             throw new Error(`Invalid response Content-Type: ${(contentType ?? "undefined")}, from URL: ${options.url}`);
         }
 
-        let responseText = await response.responseText;
+        let responseText = response.responseText;
 
-        let json= {};
+        let json = {};
         if (responseText) {
             try {
                 json = JSON.parse(responseText);
             }
             catch (err) {
-                Logger.error("Error parsing JSON response", err);
+                Logger.error(me, "Error parsing JSON response", err);
                 if (response.ok) throw err;
                 throw new Error(`${response.statusText} (${response.status})`);
             }
         }
 
         if (!response.ok) {
-            Logger.error("Error from server:", json);
+            Logger.error(me, "Error from server:", json);
             if (json.error) {
                 throw new ErrorResponse(json, body);
             }
@@ -126,9 +137,22 @@ Ext.define('Common.oidc.JsonService',{
     },
 
 
-    privates:{
+    privates: {
 
-        appendExtraHeaders(headers){
+        async send(options) {
+            options.success =function(response) {
+                console.log('re-resolve', response)
+                Promise.resolve( response)
+            }
+            options.failure = function(response) {
+                console.log('re-failure', response)
+                Promise.reject(response)
+            }
+            console.log('re-options', options)
+            Ext.Ajax.request(options);
+        },
+
+        appendExtraHeaders(headers) {
             let me = this,
                 customKeys = Object.keys(me.extraHeaders);
             let protectedHeaders = [
@@ -141,7 +165,7 @@ Ext.define('Common.oidc.JsonService',{
             }
             customKeys.forEach((headerName) => {
                 if (protectedHeaders.includes(headerName.toLocaleLowerCase())) {
-                    Logger.warn("Protected header could not be overridden", headerName, protectedHeaders);
+                    Logger.warn(me, "Protected header could not be overridden", headerName, protectedHeaders);
                     return;
                 }
                 let content = (typeof me.extraHeaders[headerName] === "function") ?
@@ -151,7 +175,7 @@ Ext.define('Common.oidc.JsonService',{
                     headers[headerName] = content;
                 }
             });
-    
+
         }
     }
 

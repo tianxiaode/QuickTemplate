@@ -122,11 +122,24 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
      */
     const currentWindowOnload = window.onload;
     window.jasmine.htmlReporter = htmlReporter;
-    window.onload = function () {
+    const findClass = (root)=>{
+        Object.keys(root).forEach(m=>{
+            let sub = root[m];
+            if(typeof sub === 'function'){
+                sub.run && sub.run();
+            }else{
+                findClass(sub);
+            }
+        })
+    }
+    Ext.onReady = function () {
         if (currentWindowOnload) {
             currentWindowOnload();
         }
         htmlReporter.initialize();
+        let classList = Ext.ClassManager.lookupName('Test.spec');
+        findClass(classList);
         env.execute();
     };
+
 })();
