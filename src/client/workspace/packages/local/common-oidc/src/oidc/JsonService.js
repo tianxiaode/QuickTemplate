@@ -19,6 +19,7 @@ Ext.define('Common.oidc.JsonService', {
         }
         me.contentTypes.push('application/json');
         if (config.jwtHandler) {
+            me.jwtHandler = config.jwtHandler;
             me.contentTypes.push('application/jwt');
         }
     },
@@ -32,33 +33,28 @@ Ext.define('Common.oidc.JsonService', {
         }
         me.appendExtraHeaders(headers);
         Logger.debug(me, "url:", url);
-        response = await Http.get(url, null, {headers: headers});
-        console.log('response', response)
-        Logger.debug("HTTP response received, status", response.status);
+        try {
+            response = await Http.get(url, null, {headers: headers});        
+            console.log('response', response)
+                
+        } catch (error) {
+            Logger.debug(me, 'Error from server:', error) 
+            throw new Error(`${error.statusText} (${error.status})`);
+        }
         let contentType = response.getResponseHeader("Content-Type");
         if (contentType && !me.contentTypes.find(item => contentType.startsWith(item))) {
             throw new Error(`Invalid response Content-Type: ${(contentType ?? "undefined")}, from URL: ${url}`);
         }
-        if (response.ok && me.jwtHandler && contentType?.startsWith("application/jwt")) {
-            return await me.jwtHandler(response.responseText);
+        console.log('response', response.request.success, me.jwtHandler, contentType)
+        if (response.request.success && me.jwtHandler && contentType?.startsWith("application/jwt")) {
+            return me.jwtHandler(response.responseText);
         }
-        let json;
-        try {
-            json = response.request.getJson();
-        }
-        catch (err) {
-            Logger.error("Error parsing JSON response", err);
-            if (response.ok) throw err;
-            throw new Error(`${response.statusText} (${response.status})`);
-        }
-        if (!response.request.success) {
-            Logger.error("Error from server:", json);
-            if (json.error) {
-                throw new Error(json);
-            }
-            throw new Error(`${response.statusText} (${response.status}): ${JSON.stringify(json)}`);
-        }
+        let json = response.request.getJson();
         console.log('json', json)
+        if(!json) {
+            Logger.error(me, "Error parsing JSON response", response);
+            throw new Error(`${response.responseText}`);
+        }
         return json;
 
     },
@@ -118,7 +114,7 @@ Ext.define('Common.oidc.JsonService', {
     },
 
     destroy() {
-        this.destroyMembers('contentTypes', 'extraHeaders');
+        this.destroyMembers('contentTypes', 'extraHeaders', 'jwtHandler');
         this.callParent();
     },
 

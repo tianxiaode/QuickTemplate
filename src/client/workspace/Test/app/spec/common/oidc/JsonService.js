@@ -211,10 +211,6 @@ Ext.define('Test.spec.common.oidc.JsonService', {
                         it('验证返回数据', async () => {
                             request.respondWith({
                                 status: 200,
-                                ok: true,
-                                headers: new Headers({
-                                    "Content-Type": "application/json",
-                                }),
                                 responseText: JSON.stringify(json)
                             });
 
@@ -224,8 +220,109 @@ Ext.define('Test.spec.common.oidc.JsonService', {
 
                 });
 
+                describe("should reject promise when http response is 200 and json is not able to parse", () => {
+                    let error = new SyntaxError("Unexpected token a in JSON");
 
+                    beforeEach(() => {
+                        result = subject.getJson(url);
+                        request = jasmine.Ajax.requests.mostRecent();
+                    })
 
+                    it('测试', async () => {
+                        request.respondWith({
+                            status: 200,
+                            responseText: error
+                        });
+
+                        await expectAsync(result).toBeRejectedWith(new Error(error));
+                    });
+
+                });
+
+                describe("should reject promise when http response is not 200", () => {
+                    beforeEach(() => {
+                        result = subject.getJson(url);
+                        request = jasmine.Ajax.requests.mostRecent();
+                    })
+
+                    it('测试', async () => {
+                        request.respondWith({
+                            status: 500,
+                            statusText: "server error",
+                            responseText: null
+                        });
+
+                        await expectAsync(result).toBeRejectedWith(new Error('server error (500)'));
+                    });
+
+                });
+
+                describe("should reject promise when http response content type is not json", () => {
+                    let json = { foo: 1, bar: "test" };
+
+                    beforeEach(() => {
+                        result = subject.getJson(url);
+                        request = jasmine.Ajax.requests.mostRecent();
+                    })
+
+                    it('测试', async () => {
+                        request.respondWith({
+                            status: 200,
+                            contentType: "text/html",
+                            responseText: JSON.stringify(json)
+                        });
+
+                        await expectAsync(result).toBeRejectedWith(new Error(`Invalid response Content-Type: text/html, from URL: ${url}`));
+                    });
+                });
+        
+                describe("should accept custom content type in response", () => {
+                    let json = { foo: 1, bar: "test" };
+                    let subject2;
+
+                    beforeEach(() => {
+                        subject2 = Ext.create('oidc.jsonservice', {additionalContentTypes: ["foo/bar"]});
+                        result = subject2.getJson(url);
+                        request = jasmine.Ajax.requests.mostRecent();
+                    })
+
+                    it('测试', async () => {
+                        request.respondWith({
+                            status: 200,
+                            contentType: "foo/bar",
+                            responseText: JSON.stringify(json)
+                        });
+
+                        await expectAsync(result).toBeResolvedTo(json);
+                    });
+
+                });
+        
+                describe("should work with custom jwtHandler", () => {
+                    let text = 'text';
+                    let subject3;
+
+                    beforeEach(() => {
+                        subject3 = Ext.create('oidc.jsonservice', {jwtHandler: ()=>{}});
+                        result = subject3.getJson(url);
+                        request = jasmine.Ajax.requests.mostRecent();
+                        spyOn(subject3, 'jwtHandler');
+                    })
+
+                    it('测试', async () => {
+                        request.respondWith({
+                            status: 200,
+                            contentType: "application/jwt",
+                            responseText: text
+                        });
+
+                        await result;
+
+                        expect(subject3.jwtHandler).toHaveBeenCalledWith(text);
+                    });
+
+                });
+                
             });
 
         }

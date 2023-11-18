@@ -41,8 +41,9 @@ Ext.define('Common.core.util.Logger', {
         }
         if(level >= outLevel){
             prefix = `[${priority.toUpperCase() }]`;
-            let first = args[0];
+            let first = args[0];            
             if(Ext.isObject(first) || Ext.isFunction(first)){
+                args = args.slice(1);
                 if(first.name){
                     return logger[priority](prefix, `[${first.name}]`, ...args);
                 }
