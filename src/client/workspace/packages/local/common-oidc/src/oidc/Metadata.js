@@ -1,5 +1,5 @@
-Ext.define('Common.odic.Metadata',{
-    alias: 'odic.metadata',
+Ext.define('Common.oidc.Metadata',{
+    alias: 'oidc.metadata',
 
     statics:{
            /**

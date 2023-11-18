@@ -33,8 +33,8 @@ Ext.define('Common.oidc.util.Crypto',{
         /**
          * Generates a base64-encoded string for a basic auth header
          */
-        generateBasicAuth(client_id, client_secret) {
-            let basicAuth = Utf8.parse([client_id, client_secret].join(":")).toString();
+        generateBasicAuth(clientId, clientSecret) {
+            let basicAuth = Utf8.parse([clientId, clientSecret].join(":")).toString();
             return Ext.util.Base64.encode(basicAuth);
         }
     

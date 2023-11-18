@@ -24,13 +24,17 @@ Ext.define('Common.oidc.JsonService', {
         }
     },
 
-    async getJson(url, token) {
+    async getJson(url, token, withCredentials) {
         let me = this,
             headers = me.getHeaders(token),
             response;
         Logger.debug(me, "url:", url);
         try {
-            response = await Http.get(url, null, {headers: headers});        
+            let options = {headers: headers};
+            if(withCredentials) {
+                options.withCredentials = true;
+            }
+            response = await Http.get(url, null, options);        
                 
         } catch (error) {
             Logger.debug(me, 'Error from server:', error) 
@@ -52,13 +56,17 @@ Ext.define('Common.oidc.JsonService', {
 
     },
 
-    async postForm(url, data,  token) {
+    async postForm(url, data,  token, withCredentials) {
         let me = this,
             headers = me.getHeaders(token, true),
             response;
         Logger.debug("url:", url);
         try {
-            response = await Http.post(url, null, { data: data, headers: headers});
+            let options = { data: data, headers: headers};
+            if(withCredentials) {
+                options.withCredentials = true;
+            }
+            response = await Http.post(url, null, options);
         }
         catch (error) {
             Logger.debug(me, 'Error from server:', error) 
