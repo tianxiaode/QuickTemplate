@@ -26,16 +26,11 @@ Ext.define('Common.oidc.JsonService', {
 
     async getJson(url, token) {
         let me = this,
-            headers = { "Accept": me.contentTypes.join(", ") };
-        if (token) {
-            Logger.debug(me, "token passed, setting Authorization header");
-            headers["Authorization"] = "Bearer " + token;
-        }
-        me.appendExtraHeaders(headers);
+            headers = me.getHeaders(token),
+            response;
         Logger.debug(me, "url:", url);
         try {
             response = await Http.get(url, null, {headers: headers});        
-            console.log('response', response)
                 
         } catch (error) {
             Logger.debug(me, 'Error from server:', error) 
@@ -45,12 +40,10 @@ Ext.define('Common.oidc.JsonService', {
         if (contentType && !me.contentTypes.find(item => contentType.startsWith(item))) {
             throw new Error(`Invalid response Content-Type: ${(contentType ?? "undefined")}, from URL: ${url}`);
         }
-        console.log('response', response.request.success, me.jwtHandler, contentType)
         if (response.request.success && me.jwtHandler && contentType?.startsWith("application/jwt")) {
             return me.jwtHandler(response.responseText);
         }
         let json = response.request.getJson();
-        console.log('json', json)
         if(!json) {
             Logger.error(me, "Error parsing JSON response", response);
             throw new Error(`${response.responseText}`);
@@ -59,57 +52,29 @@ Ext.define('Common.oidc.JsonService', {
 
     },
 
-    async postForm(options) {
+    async postForm(url, data,  token) {
         let me = this,
-            headers = {
-                "Accept": me.contentTypes.join(", "),
-                "Content-Type": "application/x-www-form-urlencoded"
-            };
-        if (options.basicAuth !== undefined) {
-            headers["Authorization"] = "Basic " + options.basicAuth;
-        }
-
-        me.appendExtraHeaders(headers);
-
-        let response;
+            headers = me.getHeaders(token, true),
+            response;
+        Logger.debug("url:", url);
         try {
-            Logger.debug("url:", url);
-            options.method = 'POST';
-            response = Ext.Ajax.request(options);
+            response = await Http.post(url, null, { data: data, headers: headers});
         }
-        catch (err) {
-            Logger.error(me, "Network error");
-            throw err;
+        catch (error) {
+            Logger.debug(me, 'Error from server:', error) 
+            throw new Error(`${error.statusText} (${error.status})`);
         }
 
         Logger.debug(me, "HTTP response received, status", response.status);
-        let contentType = response.headers.get("Content-Type");
+        let contentType = response.getResponseHeader("Content-Type");
         if (contentType && !me.contentTypes.find(item => contentType.startsWith(item))) {
-            throw new Error(`Invalid response Content-Type: ${(contentType ?? "undefined")}, from URL: ${options.url}`);
+            throw new Error(`Invalid response Content-Type: ${(contentType ?? "undefined")}, from URL: ${url}`);
         }
-
-        let responseText = response.responseText;
-
-        let json = {};
-        if (responseText) {
-            try {
-                json = JSON.parse(responseText);
-            }
-            catch (err) {
-                Logger.error(me, "Error parsing JSON response", err);
-                if (response.ok) throw err;
-                throw new Error(`${response.statusText} (${response.status})`);
-            }
+        let json = response.request.getJson();
+        if(!json) {
+            Logger.error(me, "Error parsing JSON response", response);
+            throw new Error(`${response.responseText}`);
         }
-
-        if (!response.ok) {
-            Logger.error(me, "Error from server:", json);
-            if (json.error) {
-                throw new ErrorResponse(json, body);
-            }
-            throw new Error(`${response.statusText} (${response.status}): ${JSON.stringify(json)}`);
-        }
-
         return json;
     },
 
@@ -119,7 +84,7 @@ Ext.define('Common.oidc.JsonService', {
     },
 
 
-    privates: {
+    privates: {        
 
         async send(options) {
             options.success =function(response) {
@@ -132,6 +97,21 @@ Ext.define('Common.oidc.JsonService', {
             }
             console.log('re-options', options)
             Ext.Ajax.request(options);
+        },
+
+        getHeaders(token, isPost){
+            let me = this,
+                headers = { "Accept": me.contentTypes.join(", ") };
+            if(isPost){
+                headers["Content-Type"] = "application/x-www-form-urlencoded";
+            }
+            if (token) {
+                Logger.debug(me, "token passed, setting Authorization header");
+                let authorizationPrefix = isPost ? 'Basic' : 'Bearer';
+                headers["Authorization"] = `${authorizationPrefix} ${token}`;
+            }
+            me.appendExtraHeaders(headers);
+            return headers;
         },
 
         appendExtraHeaders(headers) {

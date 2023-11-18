@@ -12,7 +12,7 @@ Ext.define('Test.spec.common.oidc.JsonService', {
                 let request, result;
                 let rejectResponse = {
                     status: 500,
-                    statusText: "server error"    
+                    statusText: "server error"
                 };
 
                 let staticExtraHeaders = {
@@ -52,8 +52,8 @@ Ext.define('Test.spec.common.oidc.JsonService', {
                             result = subject.getJson(url);
                             request = jasmine.Ajax.requests.mostRecent();
                         })
-                        
-                        it("测试", async() =>{
+
+                        it("测试", async () => {
                             expect(Ext.Ajax.request).toHaveBeenCalledWith({
                                 url: url,
                                 method: 'GET',
@@ -62,9 +62,9 @@ Ext.define('Test.spec.common.oidc.JsonService', {
                             });
 
                             request.respondWith(rejectResponse);
-                            await expectAsync(result).toBeRejected();    
-    
-                        } )
+                            await expectAsync(result).toBeRejected();
+
+                        })
 
                     });
 
@@ -76,12 +76,12 @@ Ext.define('Test.spec.common.oidc.JsonService', {
                             request = jasmine.Ajax.requests.mostRecent();
                         })
 
-                        it("测试", async() =>{
+                        it("测试", async () => {
                             expect(Ext.Ajax.request).toHaveBeenCalledWith({
                                 url: url,
                                 method: 'GET',
                                 params: null,
-                                headers: { 
+                                headers: {
                                     Accept: "application/json",
                                     "Custom-Header-1": "this-is-header-1",
                                     "Custom-Header-2": "this-is-header-2"
@@ -89,8 +89,8 @@ Ext.define('Test.spec.common.oidc.JsonService', {
                             });
 
                             request.respondWith(rejectResponse);
-                            await expectAsync(result).toBeRejected();    
-    
+                            await expectAsync(result).toBeRejected();
+
                         });
                     });
 
@@ -102,21 +102,21 @@ Ext.define('Test.spec.common.oidc.JsonService', {
                             request = jasmine.Ajax.requests.mostRecent();
                         })
 
-                        it("测试", async() =>{
+                        it("测试", async () => {
                             expect(Ext.Ajax.request).toHaveBeenCalledWith({
                                 url: url,
                                 method: 'GET',
                                 params: null,
-                                headers: { 
+                                headers: {
                                     Accept: "application/json",
                                     "Custom-Header-1": "my-name-is-header-1",
                                     "Custom-Header-2": "my-name-is-header-2"
-                                    }
+                                }
                             });
 
                             request.respondWith(rejectResponse);
-                            await expectAsync(result).toBeRejected();    
-    
+                            await expectAsync(result).toBeRejected();
+
                         });
                     });
 
@@ -128,7 +128,7 @@ Ext.define('Test.spec.common.oidc.JsonService', {
                             request = jasmine.Ajax.requests.mostRecent();
                         })
 
-                        it("测试", async() =>{
+                        it("测试", async () => {
                             expect(Ext.Ajax.request).toHaveBeenCalledWith({
                                 url: url,
                                 headers: { Accept: "application/json", Authorization: "Bearer token" },
@@ -137,11 +137,11 @@ Ext.define('Test.spec.common.oidc.JsonService', {
                             });
 
                             request.respondWith(rejectResponse);
-                            await expectAsync(result).toBeRejected();    
-    
+                            await expectAsync(result).toBeRejected();
+
                         });
 
-                    });        
+                    });
 
                     describe("should set token as authorization header with static custom headers", () => {
 
@@ -151,22 +151,22 @@ Ext.define('Test.spec.common.oidc.JsonService', {
                             request = jasmine.Ajax.requests.mostRecent();
                         })
 
-                        it("测试", async() =>{
+                        it("测试", async () => {
                             expect(Ext.Ajax.request).toHaveBeenCalledWith({
                                 url: url,
-                                headers: { 
+                                headers: {
                                     Accept: "application/json",
                                     Authorization: "Bearer token",
                                     "Custom-Header-1": "this-is-header-1",
                                     "Custom-Header-2": "this-is-header-2"
                                 },
-                                    method: "GET",
+                                method: "GET",
                                 params: null
                             });
 
                             request.respondWith(rejectResponse);
-                            await expectAsync(result).toBeRejected();    
-    
+                            await expectAsync(result).toBeRejected();
+
                         });
 
                     });
@@ -178,29 +178,29 @@ Ext.define('Test.spec.common.oidc.JsonService', {
                             request = jasmine.Ajax.requests.mostRecent();
                         })
 
-                        it("测试", async() =>{
+                        it("测试", async () => {
                             expect(Ext.Ajax.request).toHaveBeenCalledWith({
                                 url: url,
-                                headers: { 
-                                    Accept: "application/json", 
+                                headers: {
+                                    Accept: "application/json",
                                     Authorization: "Bearer token",
                                     "Custom-Header-1": "my-name-is-header-1",
                                     "Custom-Header-2": "my-name-is-header-2"
                                 },
-                                    method: "GET",
+                                method: "GET",
                                 params: null
                             });
 
                             request.respondWith(rejectResponse);
-                            await expectAsync(result).toBeRejected();    
-    
+                            await expectAsync(result).toBeRejected();
+
                         });
 
                     });
 
                     describe("should fulfill promise when http response is 200", () => {
                         let json = { foo: 1, bar: "test" };
-   
+
                         beforeEach(() => {
                             result = subject.getJson(url);
                             request = jasmine.Ajax.requests.mostRecent();
@@ -218,111 +218,364 @@ Ext.define('Test.spec.common.oidc.JsonService', {
                         });
                     });
 
-                });
+                    describe("should reject promise when http response is 200 and json is not able to parse", () => {
+                        let error = new SyntaxError("Unexpected token a in JSON");
 
-                describe("should reject promise when http response is 200 and json is not able to parse", () => {
-                    let error = new SyntaxError("Unexpected token a in JSON");
+                        beforeEach(() => {
+                            result = subject.getJson(url);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
 
-                    beforeEach(() => {
-                        result = subject.getJson(url);
-                        request = jasmine.Ajax.requests.mostRecent();
-                    })
+                        it('测试', async () => {
+                            request.respondWith({
+                                status: 200,
+                                responseText: error
+                            });
 
-                    it('测试', async () => {
-                        request.respondWith({
-                            status: 200,
-                            responseText: error
+                            await expectAsync(result).toBeRejectedWith(new Error(error));
                         });
 
-                        await expectAsync(result).toBeRejectedWith(new Error(error));
+                    });
+
+                    describe("should reject promise when http response is not 200", () => {
+                        beforeEach(() => {
+                            result = subject.getJson(url);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it('测试', async () => {
+                            request.respondWith({
+                                status: 500,
+                                statusText: "server error",
+                                responseText: null
+                            });
+
+                            await expectAsync(result).toBeRejectedWith(new Error('server error (500)'));
+                        });
+
+                    });
+
+                    describe("should reject promise when http response content type is not json", () => {
+                        let json = { foo: 1, bar: "test" };
+
+                        beforeEach(() => {
+                            result = subject.getJson(url);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it('测试', async () => {
+                            request.respondWith({
+                                status: 200,
+                                contentType: "text/html",
+                                responseText: JSON.stringify(json)
+                            });
+
+                            await expectAsync(result).toBeRejectedWith(new Error(`Invalid response Content-Type: text/html, from URL: ${url}`));
+                        });
+                    });
+
+                    describe("should accept custom content type in response", () => {
+                        let json = { foo: 1, bar: "test" };
+                        let subject2;
+
+                        beforeEach(() => {
+                            subject2 = Ext.create('oidc.jsonservice', { additionalContentTypes: ["foo/bar"] });
+                            result = subject2.getJson(url);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it('测试', async () => {
+                            request.respondWith({
+                                status: 200,
+                                contentType: "foo/bar",
+                                responseText: JSON.stringify(json)
+                            });
+
+                            await expectAsync(result).toBeResolvedTo(json);
+                        });
+
+                    });
+
+                    describe("should work with custom jwtHandler", () => {
+                        let text = 'text';
+                        let subject3;
+
+                        beforeEach(() => {
+                            subject3 = Ext.create('oidc.jsonservice', { jwtHandler: () => { } });
+                            result = subject3.getJson(url);
+                            request = jasmine.Ajax.requests.mostRecent();
+                            spyOn(subject3, 'jwtHandler');
+                        })
+
+                        it('测试', async () => {
+                            request.respondWith({
+                                status: 200,
+                                contentType: "application/jwt",
+                                responseText: text
+                            });
+
+                            await result;
+
+                            expect(subject3.jwtHandler).toHaveBeenCalledWith(text);
+                        });
+
                     });
 
                 });
 
-                describe("should reject promise when http response is not 200", () => {
-                    beforeEach(() => {
-                        result = subject.getJson(url);
-                        request = jasmine.Ajax.requests.mostRecent();
-                    })
+                describe("postForm", () => {
 
-                    it('测试', async () => {
-                        request.respondWith({
-                            status: 500,
-                            statusText: "server error",
-                            responseText: null
+                    describe("should make POST request to url", () => {
+                        let data = new URLSearchParams("a=b");
+                        beforeEach(() => {
+                            spyOn(Ext.Ajax, 'request').and.callThrough();
+                            result = subject.postForm(url, data);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it("测试", async () => {
+                            expect(Ext.Ajax.request).toHaveBeenCalledWith({
+                                url: url,
+                                method: 'POST',
+                                data: data,
+                                rawData: '',
+                                headers: { Accept: "application/json", "Content-Type": "application/x-www-form-urlencoded" }
+                            });
+
+                            request.respondWith(rejectResponse);
+                            await expectAsync(result).toBeRejected();
+
+                        })
+
+                    });
+
+                    describe("should make POST request to url with custom static headers", () => {
+                        let data = new URLSearchParams("a=b");
+                        beforeEach(() => {
+                            spyOn(Ext.Ajax, 'request').and.callThrough();
+                            result = customStaticHeaderSubject.postForm(url, data);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it("测试", async () => {
+                            expect(Ext.Ajax.request).toHaveBeenCalledWith({
+                                url: url,
+                                method: 'POST',
+                                data: data,
+                                rawData: '',
+                                headers: {
+                                    Accept: "application/json",
+                                    "Content-Type": "application/x-www-form-urlencoded",
+                                    "Custom-Header-1": "this-is-header-1",
+                                    "Custom-Header-2": "this-is-header-2"
+                                }
+                            });
+
+                            request.respondWith(rejectResponse);
+                            await expectAsync(result).toBeRejected();
+
+                        })
+
+                    });
+
+                    describe("should make POST request to url with custom dynamic headers", () => {
+                        let data = new URLSearchParams("a=b");
+                        beforeEach(() => {
+                            spyOn(Ext.Ajax, 'request').and.callThrough();
+                            result = customDynamicHeaderSubject.postForm(url, data);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it("测试", async () => {
+                            expect(Ext.Ajax.request).toHaveBeenCalledWith({
+                                url: url,
+                                method: 'POST',
+                                data: data,
+                                rawData: '',
+                                headers: {
+                                    Accept: "application/json",
+                                    "Content-Type": "application/x-www-form-urlencoded",
+                                    "Custom-Header-1": "my-name-is-header-1",
+                                    "Custom-Header-2": "my-name-is-header-2"
+                                }
+                            });
+
+                            request.respondWith(rejectResponse);
+                            await expectAsync(result).toBeRejected();
+
+                        })
+
+                    });
+
+                    describe("should set basicAuth as authorization header", () => {
+                        let data = new URLSearchParams("payload=dummy");
+                        beforeEach(() => {
+                            spyOn(Ext.Ajax, 'request').and.callThrough();
+                            result = subject.postForm(url, data, 'basicAuth');
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it("测试", async () => {
+                            expect(Ext.Ajax.request).toHaveBeenCalledWith({
+                                url: url,
+                                method: 'POST',
+                                data: data,
+                                rawData: '',
+                                headers: {
+                                    Accept: "application/json",
+                                    Authorization: "Basic basicAuth",
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                }
+                            });
+
+                            request.respondWith(rejectResponse);
+                            await expectAsync(result).toBeRejected();
+
+                        })
+
+                    });
+
+                    describe("should set payload as body", () => {
+                        let data = new URLSearchParams("payload=dummy");
+                        beforeEach(() => {
+                            spyOn(Ext.Ajax, 'request').and.callThrough();
+                            result = subject.postForm(url, data);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it("测试", async () => {
+                            expect(Ext.Ajax.request).toHaveBeenCalledWith({
+                                url: url,
+                                method: 'POST',
+                                data: data,
+                                rawData: '',
+                                headers: {
+                                    Accept: "application/json",
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                }
+                            });
+
+                            request.respondWith(rejectResponse);
+                            await expectAsync(result).toBeRejected();
+
+                        })
+
+                    });
+
+                    describe("should fulfill promise when http response is 200", () => {
+                        let data = new URLSearchParams("payload=dummy");
+                        let json = { foo: 1, bar: "test" };
+                        beforeEach(() => {
+                            result = subject.postForm(url, data);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it("测试", async () => {
+                            request.respondWith({
+                                status: 200,
+                                responseHeaders:{
+                                    Accept: "application/json",
+                                    "Content-Type": "application/json"                
+                                },
+                                responseText: JSON.stringify(json)
+                            });
+                            await expectAsync(result).toBeResolvedTo(json);
+
+                        })
+
+                    });
+
+                    describe("should reject promise when http response is 200 and json is not able to parse", () => {
+                        let error = new SyntaxError("Unexpected token a in JSON");
+                        let data = new URLSearchParams("payload=dummy");
+
+                        beforeEach(() => {
+                            result = subject.postForm(url, data);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it('测试', async () => {
+                            request.respondWith({
+                                status: 200,
+                                responseText: error
+                            });
+
+                            await expectAsync(result).toBeRejectedWith(new Error(error));
                         });
 
-                        await expectAsync(result).toBeRejectedWith(new Error('server error (500)'));
                     });
+
+                    describe("should reject promise when http response is 200 and content type is not json", () => {
+                        let data = new URLSearchParams("payload=dummy");
+                        let json ={ foo: 1, bar: "test" };
+
+                        beforeEach(() => {
+                            result = subject.postForm(url, data);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it('测试', async () => {
+                            request.respondWith({
+                                status: 200,
+                                contentType: 'text/html',
+                                responseText: JSON.stringify(json)
+                            });
+
+                            await expectAsync(result).toBeRejectedWith(new Error(`Invalid response Content-Type: text/html, from URL: ${url}`));
+                        });
+
+                    });
+
+                    describe("should reject promise when http response is 400 and json has error field", () => {
+                        let data = new URLSearchParams("payload=dummy");
+                        let json ={ error: 'error' };
+
+                        beforeEach(() => {
+                            result = subject.postForm(url, data);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it('测试', async () => {
+                            request.respondWith({
+                                status: 400,
+                                responseHeaders: {
+                                    Accept: "application/json",
+                                    "Content-Type": "application/json"                
+                                },
+                                statusText: 'Bad Request',
+                                responseText: JSON.stringify(json)
+                            });
+
+                            await expectAsync(result).toBeRejectedWith(new Error(`Bad Request (400)`));
+                        });
+
+                    });
+
+                    describe("should accept custom content type in response", () => {
+                        let json = { foo: 1, bar: "test" };
+                        let subject2;
+
+                        beforeEach(() => {
+                            subject2 = Ext.create('oidc.jsonservice', { additionalContentTypes: ["foo/bar"] });
+                            result = subject2.getJson(url);
+                            request = jasmine.Ajax.requests.mostRecent();
+                        })
+
+                        it('测试', async () => {
+                            request.respondWith({
+                                status: 200,
+                                contentType: "foo/bar",
+                                responseText: JSON.stringify(json)
+                            });
+
+                            await expectAsync(result).toBeResolvedTo(json);
+                        });
+
+                    });
+
 
                 });
 
-                describe("should reject promise when http response content type is not json", () => {
-                    let json = { foo: 1, bar: "test" };
-
-                    beforeEach(() => {
-                        result = subject.getJson(url);
-                        request = jasmine.Ajax.requests.mostRecent();
-                    })
-
-                    it('测试', async () => {
-                        request.respondWith({
-                            status: 200,
-                            contentType: "text/html",
-                            responseText: JSON.stringify(json)
-                        });
-
-                        await expectAsync(result).toBeRejectedWith(new Error(`Invalid response Content-Type: text/html, from URL: ${url}`));
-                    });
-                });
-        
-                describe("should accept custom content type in response", () => {
-                    let json = { foo: 1, bar: "test" };
-                    let subject2;
-
-                    beforeEach(() => {
-                        subject2 = Ext.create('oidc.jsonservice', {additionalContentTypes: ["foo/bar"]});
-                        result = subject2.getJson(url);
-                        request = jasmine.Ajax.requests.mostRecent();
-                    })
-
-                    it('测试', async () => {
-                        request.respondWith({
-                            status: 200,
-                            contentType: "foo/bar",
-                            responseText: JSON.stringify(json)
-                        });
-
-                        await expectAsync(result).toBeResolvedTo(json);
-                    });
-
-                });
-        
-                describe("should work with custom jwtHandler", () => {
-                    let text = 'text';
-                    let subject3;
-
-                    beforeEach(() => {
-                        subject3 = Ext.create('oidc.jsonservice', {jwtHandler: ()=>{}});
-                        result = subject3.getJson(url);
-                        request = jasmine.Ajax.requests.mostRecent();
-                        spyOn(subject3, 'jwtHandler');
-                    })
-
-                    it('测试', async () => {
-                        request.respondWith({
-                            status: 200,
-                            contentType: "application/jwt",
-                            responseText: text
-                        });
-
-                        await result;
-
-                        expect(subject3.jwtHandler).toHaveBeenCalledWith(text);
-                    });
-
-                });
-                
             });
 
         }
