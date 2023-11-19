@@ -1,36 +1,38 @@
-Ext.define('Common.oidc.TokenClient',{
+Ext.define('Common.oidc.TokenClient', {
     alias: 'oidc.tokenclient',
 
-    requires:[
+    requires: [
+        'Common.oidc.util.Crypto',
         'Common.oidc.JsonService',
+        'Common.oidc.MetadataService',
+        'Common.oidc.ClientSettingsStore'
     ],
 
     jsonService: null,
 
-    grantType: null,
+    grantType: 'authorization_code',
     redirectUri: null,
     clientId: null,
     clientSecret: null,
     clientAuthentication: null,
 
-    constructor(config){
-        let me = this;
-        me.jsonService = Ext.create('oidc.jsonservice',{ additionalContentTypes: config.additionalContentTypes, extraHeaders: config.extraHeaders });
-        me.grantType = config.grantType; 
-        me.redirectUri = config.redirectUri;
-        me.clientId = config.clientId;
-        me.clientSecret = config.clientSecret;
-        me.clientAuthentication = config.clientAuthentication;
+    constructor(config) {
+        let me = this,
+            settings;
+        settings = me.settings = config.settings;
+        me.metadataService = config.metadataService;
+        me.jsonService = Ext.create('oidc.jsonservice', { additionalContentTypes: settings.additionalContentTypes, extraHeaders: settings.extraHeaders });
 
     },
 
-    async exchangeCode(options){
-        let me = this;
-        options = options || {};
-        grantType = options.grantType || me.grantType;
-        redirectUri = options.redirectUri || me.redirectUri;
-        clientId = options.clientId || me.clientId;
-        clientSecret = options.clientSecret || me.clientSecret;
+    async exchangeCode(options) {
+        let me = this,
+            { grantType, redirectUri, clientId, clientSecret, ...args } = options,
+            settings = me.settings;
+        grantType = grantType || me.grantType;
+        redirectUri = redirectUri || settings.redirectUri;
+        clientId = clientId || settings.clientId;
+        clientSecret = clientSecret || settings.clientSecret;
         if (!clientId) {
             throw new Error("A client_id is required");
         }
@@ -40,21 +42,17 @@ Ext.define('Common.oidc.TokenClient',{
         if (!options.code) {
             throw new Error("A code is required");
         }
-        delete options.grantType;
-        delete options.redirectUri;
-        delete options.clientId;
-        delete options.clientSecret;
 
-        let params = new URLSearchParams({ grantType, redirectUri });
+        let params = new URLSearchParams({ grant_ype: grantType, redirect_uri: redirectUri });
         for (let [key, value] of Object.entries(args)) {
             if (value != null) {
-                params.set(key, value);
+                params.set(Format.splitCamelCase(key, '_'), value);
             }
         }
         let basicAuth;
-        switch (me.clientAuthentication) {
+        switch (settings.clientAuthentication) {
             case "client_secret_basic":
-                if (!client_secret) {
+                if (!clientSecret) {
                     throw new Error("A client_secret is required");
                 }
                 basicAuth = Oidc.Crypto.generateBasicAuth(clientId, clientSecret);
@@ -67,18 +65,151 @@ Ext.define('Common.oidc.TokenClient',{
                 break;
         }
 
-        let url = await this._metadataService.getTokenEndpoint(false);
-        logger.debug("got token endpoint");
+        let url = await me.metadataService.getTokenEndpoint(false);
+        Logger.debug(me, "got token endpoint");
 
-        const response = await this._jsonService.postForm(url, { body: params, basicAuth, initCredentials: this._settings.fetchRequestCredentials });
-        logger.debug("got response");
+        const response = await me.jsonService.postForm(url, params, basicAuth, settings.fetchRequestCredentials);
+        Logger.debug(me, "got response");
 
         return response;
 
     },
 
+    async exchangeCredentials(options) {
+        let me = this,
+            { grantType, clientId, clientSecret, scope, ...args } = options,
+            settings = me.settings;
+        grantType = grantType || 'password';
+        clientId = clientId || settings.clientId;
+        clientSecret = clientSecret || settings.clientSecret;
+        scope = scope || settings.scope;
+
+        if (!clientId) {
+            throw new Error("A client_id is required");
+        }
+
+        let params = new URLSearchParams({ grant_type: grantType, scope });
+        for (let [key, value] of Object.entries(args)) {
+            if (value != null) {
+                params.set(Format.splitCamelCase(key, '_'), value);
+            }
+        }
+
+        let basicAuth;
+        switch (settings.clientAuthentication) {
+            case "client_secret_basic":
+                if (!clientSecret) {
+                    throw new Error("A client_secret is required");
+                }
+                basicAuth = Oidc.Crypto.generateBasicAuth(clientId, clientSecret);
+                break;
+            case "client_secret_post":
+                params.append("client_id", clientId);
+                if (clientSecret) {
+                    params.append("client_secret", clientSecret);
+                }
+                break;
+        }
+
+        let url = await me.metadataService.getTokenEndpoint(false);
+        Logger.debug(me, "got token endpoint");
+
+        let response = await me.jsonService.postForm(url, params, basicAuth, settings.fetchRequestCredentials);
+        Logger.debug(me, "got response");
+
+        return response;
+    },
+
+    /**
+ * Exchange a refresh token.
+ *
+ * @see https://www.rfc-editor.org/rfc/rfc6749#section-6
+ */
+    async exchangeRefreshToken(options) {
+
+        let me = this,
+            { grantType, clientId, clientSecret, ...args } = options,
+            settings = me.settings;
+        grantType = grantType || 'refresh_token';
+        clientId = clientId || settings.clientId;
+        clientSecret = clientSecret || settings.clientSecret;
+
+        if (!clientId) {
+            throw new Error("A client_id is required");
+        }
+        if (!args.refreshToken) {
+            throw new Error("A refresh_token is required");
+        }
+
+        let params = new URLSearchParams({ grant_type: grantType });
+        for (let [key, value] of Object.entries(args)) {
+            if (Array.isArray(value)) {
+                value.forEach(param => params.append(Format.splitCamelCase(key, '_'), param));
+            }
+            else if (value != null) {
+                params.set(Format.splitCamelCase(key, '_'), value);
+            }
+        }
+        let basicAuth;
+        switch (settings.clientAuthentication) {
+            case "client_secret_basic":
+                if (!clientSecret) {
+                    throw new Error("A client_secret is required");
+                }
+                basicAuth = Oidc.Crypto.generateBasicAuth(clientId, clientSecret);
+                break;
+            case "client_secret_post":
+                params.append("client_id", clientId);
+                if (clientSecret) {
+                    params.append("client_secret", clientSecret);
+                }
+                break;
+        }
+
+        let url = await me.metadataService.getTokenEndpoint(false);
+        Logger.debug(me, "got token endpoint");
+
+        let response = await me.jsonService.postForm(url, params, basicAuth, settings.fetchRequestCredentials);
+        Logger.debug("got response");
+
+        return response;
+    },
+
+    /**
+ * Revoke an access or refresh token.
+ *
+ * @see https://datatracker.ietf.org/doc/html/rfc7009#section-2.1
+ */
+    async revoke(args) {
+        let me = this,
+            settings = me.settings;
+
+        if (!args.token) {
+            throw new Error("A token is required");
+        }
+
+        let url = await me.metadataService.getRevocationEndpoint(false);
+
+        Logger.debug(me, `got revocation endpoint, revoking ${args.tokenTypeHint ?? "default token type"}`);
+
+        let params = new URLSearchParams();
+        for (let [key, value] of Object.entries(args)) {
+            if (value != null) {
+                params.set(Format.splitCamelCase(key, '_'), value);
+            }
+        }
+        params.set("client_id", settings.clientId);
+        if (settings.clientSecret) {
+            params.set("client_secret", settings.clientSecret);
+        }
+
+        await me.jsonService.postForm(url, params);
+        Logger.debug(me, "got response");
+    },
+
+
     destroy() {
-        this.destroyMembers('jsonService');
+        this.destroyMembers('jsonService', 'settings', 'metadataService');
         this.callParent();
     }
 

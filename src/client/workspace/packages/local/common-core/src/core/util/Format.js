@@ -28,11 +28,12 @@ Ext.define('Common.core.util.Format', {
         date2(v) {
             return Format.date(v, Format.defaultDateFormat);
         },
-        splitCamelCase(str) {
+        splitCamelCase(str, replace) {
             if (Ext.isEmpty(str)) return '';
-            return str.replace(/::/g, '-')
-                .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
-                .replace(/([a-z\d])([A-Z])/g, '$1-$2')
+            replace = replace ?? '-';
+            return str.replace(/::/g, replace)
+                .replace(/([A-Z]+)([A-Z][a-z])/g, `$1${replace}$2`)
+                .replace(/([a-z\d])([A-Z])/g, `$1${replace}$2`)
                 .toLowerCase();
         },
         nullValueAndEditMessage(v) {
