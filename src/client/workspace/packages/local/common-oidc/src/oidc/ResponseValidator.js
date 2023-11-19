@@ -166,11 +166,11 @@ Ext.define('Common.oidc.ResponseValidator',{
             if (response.code) {
                 Logger.debug(me, "Validating code");
                 let tokenResponse = await me.tokenClient.exchangeCode({
-                    clientId: state.client_id,
-                    clientSecret: state.client_secret,
+                    clientId: state.clientId,
+                    clientSecret: state.clientSecret,
                     code: response.code,
-                    redirectUri: state.redirect_uri,
-                    codeVerifier: state.code_verifier,
+                    redirectUri: state.redirectUri,
+                    codeVerifier: state.codeVerifier,
                     ...state.extraTokenParams,
                 });
                 Object.assign(response, tokenResponse);
