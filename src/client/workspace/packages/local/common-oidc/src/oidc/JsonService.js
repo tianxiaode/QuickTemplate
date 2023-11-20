@@ -52,7 +52,7 @@ Ext.define('Common.oidc.JsonService', {
             Logger.error(me, "Error parsing JSON response", response);
             throw new Error(`${response.responseText}`);
         }
-        return json;
+        return me.normalizedJson(json);
 
     },
 
@@ -83,8 +83,9 @@ Ext.define('Common.oidc.JsonService', {
             Logger.error(me, "Error parsing JSON response", response);
             throw new Error(`${response.responseText}`);
         }
-        return json;
+        return me.normalizedJson(json);
     },
+
 
     destroy() {
         this.destroyMembers('contentTypes', 'extraHeaders', 'jwtHandler');
@@ -92,7 +93,15 @@ Ext.define('Common.oidc.JsonService', {
     },
 
 
-    privates: {        
+    privates: {
+
+        normalizedJson(json){
+            let result = {};
+            Ext.each(Object.keys(json),(k)=>{
+                result[Format.toCamelCase(k, '_')] = json[k];
+            })
+            return result;
+        },
 
         async send(options) {
             options.success =function(response) {

@@ -88,12 +88,13 @@ Ext.define('Common.core.service.HttpClient', {
 
         setOptions(url, method, data, opts){
             let me = this;
+            if(!Ext.isString(url)) url = url.toString() || '';
             opts = Object.assign({}, opts);
             opts.url = url;
             opts.method = method;
 
             // Add xsrf header
-            if(url.startsWith(window.location.href)){
+            if(url.startsWith && url.startsWith(window.location.href)){
                 let xsrfValue = Ext.util.Cookies.get(me.xsrfCookieName);
                 opts.headers = opts.headers || {};
                 if (xsrfValue) {

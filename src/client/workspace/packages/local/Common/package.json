@@ -79,33 +79,7 @@
          */
         "format": "1",
 
-        "js": [
-            {
-            "path": "resources/js/crypto-js/core.js",
-            "requiresSdk": false,
-            "compress": true
-          },
-          {
-            "path": "resources/js/crypto-js/enc-base64.js",
-              "requiresSdk": false,
-              "compress": true
-          },
-          {
-            "path": "resources/js/crypto-js/enc-utf8.js",
-              "requiresSdk": false,
-              "compress": true
-          },
-          {
-            "path": "resources/js/crypto-js/md5.js",
-              "requiresSdk": false,
-              "compress": true
-          },
-          {
-            "path": "resources/js/crypto-js/sha256.js",
-              "requiresSdk": false,
-              "compress": true
-          }
-      ],
+        "js": [],
 
         /**
          * Additional resources used during theme slicing operations

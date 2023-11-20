@@ -85,6 +85,6 @@ Ext.define('Common.oidc.ClaimsService',{
     destroy() {
         this.destroyMembers('settings', 'defaultProtocolClaims', 'internalRequiredProtocolClaims');
         this.callParent();
-    },
+    }
 
 });

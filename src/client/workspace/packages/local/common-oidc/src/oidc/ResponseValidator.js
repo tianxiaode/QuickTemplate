@@ -3,19 +3,29 @@ Ext.define('Common.oidc.ResponseValidator',{
 
     requires:[
         'Common.oidc.util.Jwt',
+        'Common.oidc.ClientSettingsStore',
+        'Common.oidc.MetadataService',
+        'Common.oidc.ClaimsService',
+        'Common.oidc.UserInfoService',
+        'Common.oidc.TokenClient'
     ],
 
     tokenClient: null,
+    userInfoService: null,
 
     constructor(config){
         let me = this;
         me.settings = config.settings;
         me.metadataService = config.metadataService;
         me.claimsService = config.claimsService;
+        me.userInfoService = Ext.create('oidc.userinfoservice',{ settings: me.settings, metadataService: me.metadataService });
+        me.tokenClient = Ext.create('oidc.tokenclient', { settings: me.settings, metadataService: me.metadataService })
     },
 
     async validateSigninResponse(response, state){
         let me = this;
+
+        console.trace('validateSigninResponse', Ext.clone(response), Ext.clone(state))
 
         me.processSigninState(response, state);
         Logger.debug(me , "state processed");
@@ -49,25 +59,25 @@ Ext.define('Common.oidc.ResponseValidator',{
 
         response.userState = state.data;
         // if there's no session_state on the response, copy over session_state from original request
-        response.session_state ??= state.session_state;
+        response.sessionState ??= state.sessionState;
         // if there's no scope on the response, then assume all scopes granted (per-spec) and copy over scopes from original request
         response.scope ??= state.scope;
 
         // OpenID Connect Core 1.0 says that id_token is optional in refresh response:
         // https://openid.net/specs/openid-connect-core-1_0.html#RefreshTokenResponse
-        if (response.isOpenId && !!response.id_token) {
-            me.validateIdTokenAttributes(response, state.id_token);
+        if (response.isOpenId && !!response.idToken) {
+            me.validateIdTokenAttributes(response, state.idToken);
             Logger.debug(me , "ID Token validated");
         }
 
-        if (!response.id_token) {
+        if (!response.idToken) {
             // if there's no id_token on the response, copy over id_token from original request
-            response.id_token = state.id_token;
+            response.idToken = state.idToken;
             // and decoded part too
             response.profile = state.profile;
         }
 
-        let hasIdToken = response.isOpenId && !!response.id_token;
+        let hasIdToken = response.isOpenId && !!response.idToken;
         await me.processClaims(response, false, hasIdToken);
         Logger.debug(me , "claims processed");
     },
@@ -86,7 +96,7 @@ Ext.define('Common.oidc.ResponseValidator',{
 
         if (response.error) {
             Logger.warn(me, "Response was error", response.error);
-            throw new Error(response);
+            throw new Error(response.error);
         }
     },
 
@@ -104,7 +114,7 @@ Ext.define('Common.oidc.ResponseValidator',{
                 throw new Error("State does not match");
             }
     
-            if (!state.client_id) {
+            if (!state.clientId) {
                 throw new Error("No client_id on state");
             }
     
@@ -116,7 +126,8 @@ Ext.define('Common.oidc.ResponseValidator',{
             if (settings.authority !== state.authority) {
                 throw new Error("authority mismatch on settings vs. signin state");
             }
-            if (settings.clientId && settings.clientId !== state.client_id) {
+
+            if (settings.clientId && settings.clientId !== state.clientId) {
                 throw new Error("client_id mismatch on settings vs. signin state");
             }
     
@@ -130,27 +141,28 @@ Ext.define('Common.oidc.ResponseValidator',{
     
             if (response.error) {
                 Logger.warn(me, "Response was error", response.error);
-                throw new Error(response);
+                throw new Error(response.error);
             }
     
-            if (state.code_verifier && !response.code) {
+            if (state.codeVerifier && !response.code) {
                 throw new Error("Expected code in response");
             }
     
         },
 
         async processClaims(response, skipUserInfo, validateSub){
+
             let me = this,
                 settings = me.settings;
             response.profile = me.claimsService.filterProtocolClaims(response.profile);
     
-            if (skipUserInfo || !settings.loadUserInfo || !response.access_token) {
+            if (skipUserInfo || !settings.loadUserInfo || !response.accessToken) {
                 Logger.debug(me , "not loading user info");
                 return;
             }
     
             Logger.debug(me, "loading user info");
-            let claims = await me.userInfoService.getClaims(response.access_token);
+            let claims = await me.userInfoService.getClaims(response.accessToken);
             Logger.debug(me, "user info claims received from user info endpoint");
     
             if (validateSub && claims.sub !== response.profile.sub) {
@@ -183,7 +195,7 @@ Ext.define('Common.oidc.ResponseValidator',{
             let me = this;
     
             Logger.debug(me, "decoding ID Token JWT");
-            let incoming = Oidc.Jwt.decode(response.id_token ?? "");
+            let incoming = Oidc.Jwt.decode(response.idToken ?? "");
     
             if (!incoming.sub) {
                 throw new Error("ID Token is missing a subject claim");

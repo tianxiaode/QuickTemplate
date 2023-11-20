@@ -13,6 +13,8 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                 let metadataService;
                 let claimsService;
                 let subject;
+                let exchangeCodeSpy;
+                let getClaimsSpy;
             
                 beforeEach(() => {
                     stubState = {
@@ -28,28 +30,31 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                     };
                     settings = {
                         authority: "op",
-                        client_id: "client",
+                        clientId: "client",
                         loadUserInfo: true
                     };
                     metadataService = Ext.create('oidc.metadataservice',{settings});
             
                     claimsService = Ext.create('oidc.claimsservice', {settings});
                     subject = Ext.create('oidc.responsevalidator', {settings, metadataService, claimsService});
-                    spyOn(subject["tokenClient"], "exchangeCode").and.returnValue({});
-                    spyOn(subject["userInfoService"], "getClaims").and.returnValue({nickname: "Nick"});
+                    exchangeCodeSpy = spyOn(subject["tokenClient"], "exchangeCode").and.resolveTo({});
+                    getClaimsSpy = spyOn(subject["userInfoService"], "getClaims").and.resolveTo({nickname: "Nick"});
                 });
+
+                afterEach(()=>{
+                    getClaimsSpy.calls.reset();
+                    exchangeCodeSpy.calls.reset();
+                })
             
                 describe("validateSignoutResponse", () => {
                     it("should validate that the client state matches response state", () => {
                         // arrange
                         Object.assign(stubResponse, { state: "not_the_id" });
-            
+
                         // act
-                        expect(() =>
-                            subject.validateSignoutResponse(stubResponse, stubState),
-                        )
+                        expect(()=>subject.validateSignoutResponse(stubResponse, stubState))
                             // assert
-                            .toThrow("State does not match");
+                            .toThrowError("State does not match");
                     });
             
                     it("should fail on error response", () => {
@@ -61,7 +66,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             subject.validateSignoutResponse(stubResponse, stubState),
                         )
                             // assert
-                            .toThrow(ErrorResponse);
+                            .toThrowError(Error);
                     });
             
                     it("should return data for successful responses", () => {
@@ -77,30 +82,29 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                     it("should process a valid signin response", async () => {
                         // arrange
                         Object.assign(stubResponse, { code: "foo" });
-                        Object.assign(stubState, { code_verifier: "secret" });
+                        Object.assign(stubState, { codeVerifier: "secret" });
             
                         // act
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(subject["_tokenClient"].exchangeCode).toHaveBeenCalled();
-                        expect(stubResponse).toHaveProperty("userState", stubState.data);
-                        expect(stubResponse).toHaveProperty("scope", stubState.scope);
+                        expect(subject["tokenClient"].exchangeCode).toHaveBeenCalled();
+                        expect(stubResponse.userState).toEqual(stubState.data);
+                        expect(stubResponse.scope).toEqual(stubState.scope);
                     });
+
             
                     it("should not process code if state fails", async () => {
                         // arrange
                         Object.assign(stubResponse, { code: "code", state: "not_the_id" });
-                        const exchangeCodeSpy = jest
-                            .spyOn(subject["_tokenClient"], "exchangeCode")
-                            .mockRejectedValue(new Error("should not come here"));
+                        exchangeCodeSpy.and.rejectWith(new Error("should not come here"));
             
                         // act
-                        await expect(
+                        await expectAsync(
                             subject.validateSigninResponse(stubResponse, stubState),
                         )
                             // assert
-                            .rejects.toThrow("State does not match");
+                            .toBeRejectedWithError("State does not match");
                         expect(exchangeCodeSpy).not.toHaveBeenCalled();
                     });
             
@@ -108,11 +112,11 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         // arrange
                         Object.assign(stubResponse, {
                             isOpenId: true,
-                            access_token: "access_token",
-                            id_token: "id_token",
+                            accessToken: "access_token",
+                            idToken: "id_token",
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({ sub: "sub" });
-                        mocked(subject["_userInfoService"].getClaims).mockResolvedValue({
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "sub" });
+                        getClaimsSpy.and.resolveTo({
                             sub: "sub",
                         });
             
@@ -120,7 +124,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(subject["_userInfoService"].getClaims).toHaveBeenCalledWith(
+                        expect(getClaimsSpy).toHaveBeenCalledWith(
                             "access_token",
                         );
                     });
@@ -129,19 +133,17 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         // arrange
                         Object.assign(stubResponse, {
                             state: "not_the_id",
-                            access_token: "access_token",
+                            accessToken: "access_token",
                             isOpenId: true,
                         });
             
                         // act
-                        await expect(
+                        await expectAsync(
                             subject.validateSigninResponse(stubResponse, stubState),
                         )
                             // assert
-                            .rejects.toThrow("State does not match");
-                        expect(
-                            subject["_userInfoService"].getClaims,
-                        ).not.toHaveBeenCalled();
+                            .toBeRejectedWithError("State does not match");
+                        expect(getClaimsSpy).not.toHaveBeenCalled();
                     });
             
                     it("should validate that the client state matches response state", async () => {
@@ -149,23 +151,23 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         Object.assign(stubResponse, { state: "not_the_id" });
             
                         // act
-                        await expect(
+                        await expectAsync(
                             subject.validateSigninResponse(stubResponse, stubState),
                         )
                             // assert
-                            .rejects.toThrow("State does not match");
+                            .toBeRejectedWithError("State does not match");
                     });
             
                     it("should fail if no client_id on state", async () => {
                         // arrange
-                        Object.assign(stubState, { client_id: undefined });
+                        Object.assign(stubState, { clientId: undefined });
             
                         // act
-                        await expect(
+                        await expectAsync(
                             subject.validateSigninResponse(stubResponse, stubState),
                         )
                             // assert
-                            .rejects.toThrow("No client_id on state");
+                            .toBeRejectedWithError("No client_id on state");
                     });
             
                     it("should fail if no authority on state", async () => {
@@ -173,11 +175,11 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         Object.assign(stubState, { authority: undefined });
             
                         // act
-                        await expect(
+                        await expectAsync(
                             subject.validateSigninResponse(stubResponse, stubState),
                         )
                             // assert
-                            .rejects.toThrow("No authority on state");
+                            .toBeRejectedWithError("No authority on state");
                     });
             
                     it("should fail if the authority on the state is not the same as the settings", async () => {
@@ -185,23 +187,23 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         Object.assign(stubState, { authority: "something different" });
             
                         // act
-                        await expect(
+                        await expectAsync(
                             subject.validateSigninResponse(stubResponse, stubState),
                         )
                             // assert
-                            .rejects.toThrow(/authority mismatch/);
+                            .toBeRejectedWithError(/authority mismatch/);
                     });
             
                     it("should fail if the client_id on the state is not the same as the settings", async () => {
                         // arrange
-                        Object.assign(stubState, { client_id: "something different" });
+                        Object.assign(stubState, { clientId: "something different" });
             
                         // act
-                        await expect(
+                        await expectAsync(
                             subject.validateSigninResponse(stubResponse, stubState),
                         )
                             // assert
-                            .rejects.toThrow(/client_id mismatch/);
+                            .toBeRejectedWithError(/client_id mismatch/);
                     });
             
                     it("should return data for error responses", async () => {
@@ -209,29 +211,29 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         Object.assign(stubResponse, { error: "some_error" });
             
                         // act
-                        await expect(
+                        await expectAsync(
                             subject.validateSigninResponse(stubResponse, stubState),
                         )
                             // assert
-                            .rejects.toThrow(ErrorResponse);
+                            .toBeRejectedWithError('some_error');
                     });
             
                     it("should fail if request was code flow but no code in response", async () => {
                         // arrange
-                        Object.assign(stubState, { code_verifier: "secret" });
+                        Object.assign(stubState, { codeVerifier: "secret" });
                         Object.assign(stubResponse, { code: undefined });
             
                         // act
-                        await expect(
+                        await expectAsync(
                             subject.validateSigninResponse(stubResponse, stubState),
                         )
                             // assert
-                            .rejects.toThrow("Expected code in response");
+                            .toBeRejectedWithError("Expected code in response");
                     });
             
                     it("should return data for successful responses", async () => {
                         // arrange
-                        Object.assign(stubState, { code_verifier: "secret" });
+                        Object.assign(stubState, { codeVerifier: "secret" });
                         Object.assign(stubResponse, { code: "code" });
             
                         // act
@@ -247,7 +249,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             isOpenId: true,
                             id_token: "id_token",
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({
                             sub: "sub",
                             iss: "iss",
                             acr: "acr",
@@ -260,7 +262,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(stubResponse.profile).not.toHaveProperty("acr");
+                        expect(stubResponse.profile).not.toEqual("acr");
                     });
             
                     it("should not filter protocol claims if not OIDC", async () => {
@@ -274,7 +276,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(stubResponse.profile).toHaveProperty("iss", "foo");
+                        expect(stubResponse.profile?.iss).toEqual("foo");
                     });
             
                     it("should fail if sub from user info endpoint does not match sub in id_token", async () => {
@@ -282,24 +284,24 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         Object.assign(settings, { loadUserInfo: true });
                         Object.assign(stubResponse, {
                             isOpenId: true,
-                            access_token: "access_token",
-                            id_token: "id_token",
+                            accessToken: "access_token",
+                            idToken: "id_token",
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({
                             sub: "sub",
                             a: "apple",
                             b: "banana",
                         });
-                        mocked(subject["_userInfoService"].getClaims).mockResolvedValue({
+                        getClaimsSpy.and.resolveTo({
                             sub: "sub different",
                         });
             
                         // act
-                        await expect(
+                        await expectAsync(
                             subject.validateSigninResponse(stubResponse, stubState),
                         )
                             // assert
-                            .rejects.toThrow(
+                            .toBeRejectedWithError(
                                 "subject from UserInfo response does not match subject in ID Token",
                             );
                     });
@@ -309,15 +311,15 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         Object.assign(settings, { loadUserInfo: true });
                         Object.assign(stubResponse, {
                             isOpenId: true,
-                            access_token: "access_token",
-                            id_token: "id_token",
+                            accessToken: "access_token",
+                            idToken: "id_token",
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({
                             sub: "sub",
                             a: "apple",
                             b: "banana",
                         });
-                        mocked(subject["_userInfoService"].getClaims).mockResolvedValue({
+                        getClaimsSpy.and.resolveTo({
                             sub: "sub",
                             c: "carrot",
                         });
@@ -326,7 +328,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(subject["_userInfoService"].getClaims).toHaveBeenCalledWith(
+                        expect(getClaimsSpy).toHaveBeenCalledWith(
                             "access_token",
                         );
                         expect(stubResponse.profile).toEqual({
@@ -336,20 +338,20 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             c: "carrot",
                         });
                     });
-            
+
                     it("should run if request was not openid", async () => {
                         // arrange
                         Object.assign(settings, { loadUserInfo: true });
                         Object.assign(stubResponse, {
                             isOpenId: false,
-                            access_token: "access_token",
+                            accessToken: "access_token",
                         });
             
                         // act
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(subject["_userInfoService"].getClaims).toHaveBeenCalled();
+                        expect(getClaimsSpy).toHaveBeenCalled();
                     });
             
                     it("should not load and merge user info claims when loadUserInfo not configured", async () => {
@@ -357,10 +359,10 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         Object.assign(settings, { loadUserInfo: false });
                         Object.assign(stubResponse, {
                             isOpenId: true,
-                            access_token: "access_token",
-                            id_token: "id_token",
+                            accessToken: "access_token",
+                            idToken: "id_token",
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({
                             sub: "sub",
                             a: "apple",
                             b: "banana",
@@ -370,9 +372,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(
-                            subject["_userInfoService"].getClaims,
-                        ).not.toHaveBeenCalled();
+                        expect(getClaimsSpy).not.toHaveBeenCalled();
                     });
             
                     it("should not load user info claims if no access token", async () => {
@@ -380,9 +380,9 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         Object.assign(settings, { loadUserInfo: true });
                         Object.assign(stubResponse, {
                             isOpenId: true,
-                            id_token: "id_token",
+                            idToken: "id_token",
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({
                             sub: "sub",
                             a: "apple",
                             b: "banana",
@@ -392,9 +392,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(
-                            subject["_userInfoService"].getClaims,
-                        ).not.toHaveBeenCalled();
+                        expect(getClaimsSpy).not.toHaveBeenCalled();
                     });
             
                     it("should not process code if response has no code", async () => {
@@ -405,30 +403,27 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(subject["_tokenClient"].exchangeCode).not.toHaveBeenCalled();
+                        expect(exchangeCodeSpy).not.toHaveBeenCalled();
                     });
             
                     it("should include the code in the token request", async () => {
                         // arrange
                         Object.assign(stubResponse, { code: "code" });
-                        Object.assign(stubState, { code_verifier: "code_verifier" });
+                        Object.assign(stubState, { codeVerifier: "codeVerifier" });
             
                         // act
                         await subject.validateSigninResponse(stubResponse, stubState);
             
-                        // assert
-                        expect(subject["_tokenClient"].exchangeCode).toHaveBeenCalledWith(
-                            expect.objectContaining({ code: stubResponse.code }),
-                        );
+                        expect(exchangeCodeSpy).toHaveBeenCalledWith(jasmine.objectContaining({ code: stubResponse.code }));
                     });
             
                     it("should include data from state in the token request", async () => {
                         // arrange
                         Object.assign(stubResponse, { code: "code" });
                         Object.assign(stubState, {
-                            client_secret: "client_secret",
-                            redirect_uri: "redirect_uri",
-                            code_verifier: "code_verifier",
+                            clientSecret: "client_secret",
+                            redirectUri: "redirect_uri",
+                            codeVerifier: "codeVerifier",
                             extraTokenParams: { a: "a" },
                         });
             
@@ -436,93 +431,91 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(subject["_tokenClient"].exchangeCode).toHaveBeenCalledWith({
+                        expect(exchangeCodeSpy).toHaveBeenCalledWith({
                             code: stubResponse.code,
-                            client_id: stubState.client_id,
-                            client_secret: stubState.client_secret,
-                            redirect_uri: stubState.redirect_uri,
-                            code_verifier: stubState.code_verifier,
+                            clientId: stubState.clientId,
+                            clientSecret: stubState.clientSecret,
+                            redirectUri: stubState.redirectUri,
+                            codeVerifier: stubState.codeVerifier,
                             ...stubState.extraTokenParams,
                         });
                     });
-            
+
                     it("should map token response data to response", async () => {
                         // arrange
                         Object.assign(stubResponse, { code: "code" });
-                        Object.assign(stubState, { code_verifier: "code_verifier" });
+                        Object.assign(stubState, { codeVerifier: "codeVerifier" });
                         const tokenResponse = {
                             error: "error",
-                            error_description: "error_description",
-                            error_uri: "error_uri",
-                            id_token: "id_token",
-                            session_state: "session_state",
-                            access_token: "access_token",
-                            refresh_token: "refresh_token",
-                            token_type: "token_type",
+                            errorDescription: "error_description",
+                            errorUri: "error_uri",
+                            idToken: "id_token",
+                            sessionState: "session_state",
+                            accessToken: "access_token",
+                            refreshToken: "refresh_token",
+                            tokenType: "token_type",
                             scope: "scope",
-                            expires_at: "expires_at",
+                            expiresAt: "expires_at",
                         };
-                        mocked(subject["_tokenClient"].exchangeCode).mockResolvedValue(
+                        exchangeCodeSpy.and.resolveTo(
                             tokenResponse,
                         );
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({ sub: "sub" });
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "sub" });
             
                         // act
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(stubResponse).toMatchObject(tokenResponse);
+                        expect(stubResponse).toEqual(jasmine.objectContaining(tokenResponse));
                     });
             
                     it("should map token response expires_in to response", async () => {
                         // arrange
                         Object.assign(stubResponse, { code: "code" });
-                        Object.assign(stubState, { code_verifier: "code_verifier" });
-                        const tokenResponse = { expires_in: 42 };
-                        mocked(subject["_tokenClient"].exchangeCode).mockResolvedValue(
-                            tokenResponse,
-                        );
+                        Object.assign(stubState, { codeVerifier: "code_verifier" });
+                        let tokenResponse = { expiresIn: 42 };
+                        exchangeCodeSpy.and.resolveTo(tokenResponse);
             
                         // act
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(stubResponse).toMatchObject({ expires_in: 42 });
+                        expect(stubResponse).toEqual(jasmine.objectContaining({ expiresIn: 42 }));
                     });
             
                     it("should validate and decode id_token if response has id_token", async () => {
                         // arrange
                         Object.assign(stubResponse, {
-                            id_token: "id_token",
+                            idToken: "id_token",
                             isOpenId: true,
                         });
-                        const profile = { sub: "sub" };
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue(profile);
+                        let profile = { sub: "sub" };
+                        spyOn(Oidc.Jwt, "decode").and.returnValue(profile);
             
                         // act
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(JwtUtils.decode).toHaveBeenCalledWith("id_token");
+                        expect(Oidc.Jwt.decode).toHaveBeenCalledWith("id_token");
                         expect(stubResponse.profile).toEqual(profile);
                     });
             
                     it("should fail if id_token does not contain sub", async () => {
                         // arrange
                         Object.assign(stubResponse, {
-                            id_token: "id_token",
+                            idToken: "id_token",
                             isOpenId: true,
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({ a: "a" });
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ a: "a" });
             
                         // act
-                        await expect(
-                            subject.validateSigninResponse(stubResponse, stubState),
+                        await expectAsync(
+                            subject.validateSigninResponse(stubResponse, stubState)
                         )
                             // assert
-                            .rejects.toThrow("ID Token is missing a subject claim");
-                        expect(JwtUtils.decode).toHaveBeenCalledWith("id_token");
-                        expect(stubResponse).not.toHaveProperty("profile");
+                            .toBeRejectedWithError("ID Token is missing a subject claim");
+                        expect(Oidc.Jwt.decode).toHaveBeenCalledWith("id_token");
+                        expect(stubResponse.profile).toBeUndefined();
                     });
                 });
             
@@ -530,117 +523,108 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                     it("should process a valid openid signin response (skipping userInfo)", async () => {
                         // arrange
                         Object.assign(stubResponse, {
-                            id_token: "id_token",
+                            idToken: "id_token",
                             isOpenId: true,
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({ sub: "subsub" });
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
             
                         // act
                         await subject.validateCredentialsResponse(stubResponse, true);
             
                         // assert
-                        expect(JwtUtils.decode).toHaveBeenCalledWith("id_token");
-                        expect(
-                            subject["_userInfoService"].getClaims,
-                        ).not.toHaveBeenCalledWith();
-                        expect(stubResponse).toHaveProperty("profile", { sub: "subsub" });
+                        expect(Oidc.Jwt.decode).toHaveBeenCalledWith("id_token");
+                        expect(getClaimsSpy).not.toHaveBeenCalledWith();
+                        expect(stubResponse.profile).toEqual({ sub: "subsub" });
                     });
-            
                     it("should not process an invalid openid signin response", async () => {
                         // arrange
                         Object.assign(stubResponse, {
-                            id_token: "id_token",
+                            idToken: "id_token",
                             isOpenId: true,
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({ sub: undefined });
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: undefined });
             
                         // act
-                        await expect(
+                        await expectAsync(
                             subject.validateCredentialsResponse(stubResponse, true),
                         )
                             // assert
-                            .rejects.toThrow(Error);
-                        expect(JwtUtils.decode).toHaveBeenCalledWith("id_token");
-                        expect(stubResponse).not.toHaveProperty("profile");
+                            .toBeRejectedWithError(Error);
+                        expect(Oidc.Jwt.decode).toHaveBeenCalledWith("id_token");
+                        expect(stubResponse.profile).toBeUndefined();
                     });
             
                     it("should process a valid non-openid signin response skipping userInfo", async () => {
                         // arrange
                         Object.assign(stubResponse, {
-                            id_token: "id_token",
+                            idToken: "id_token",
                             isOpenId: false,
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({ sub: "subsub" });
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
             
                         // act
                         await subject.validateCredentialsResponse(stubResponse, true);
             
                         // assert
-                        expect(JwtUtils.decode).not.toHaveBeenCalledWith("id_token");
-                        expect(
-                            subject["_userInfoService"].getClaims,
-                        ).not.toHaveBeenCalledWith();
-                        expect(stubResponse).toHaveProperty("profile", {});
+                        expect(Oidc.Jwt.decode).not.toHaveBeenCalledWith("id_token");
+                        expect(getClaimsSpy).not.toHaveBeenCalledWith();
+                        expect(stubResponse.profile).toEqual({});
                     });
             
                     it("should process a valid non-openid signin response (not loading userInfo)", async () => {
                         // arrange
                         Object.assign(settings, { loadUserInfo: false });
                         Object.assign(stubResponse, {
-                            id_token: "id_token",
+                            idToken: "id_token",
                             isOpenId: false,
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({ sub: "subsub" });
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
             
                         // act
                         await subject.validateCredentialsResponse(stubResponse, false);
             
                         // assert
-                        expect(JwtUtils.decode).not.toHaveBeenCalledWith("id_token");
-                        expect(
-                            subject["_userInfoService"].getClaims,
-                        ).not.toHaveBeenCalledWith();
-                        expect(stubResponse).toHaveProperty("profile", {});
+                        expect(Oidc.Jwt.decode).not.toHaveBeenCalledWith("id_token");
+                        expect(getClaimsSpy).not.toHaveBeenCalledWith();
+                        expect(stubResponse.profile).toEqual({});
                     });
             
                     it("should process a valid non-openid signin response without access_token", async () => {
                         // arrange
                         Object.assign(stubResponse, {
-                            id_token: "id_token",
+                            idToken: "id_token",
                             isOpenId: false,
-                            access_token: "",
+                            accessToken: "",
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({ sub: "subsub" });
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
             
                         // act
                         await subject.validateCredentialsResponse(stubResponse, false);
             
                         // assert
-                        expect(JwtUtils.decode).not.toHaveBeenCalledWith("id_token");
-                        expect(
-                            subject["_userInfoService"].getClaims,
-                        ).not.toHaveBeenCalledWith();
-                        expect(stubResponse).toHaveProperty("profile", {});
+                        expect(Oidc.Jwt.decode).not.toHaveBeenCalledWith("id_token");
+                        expect(getClaimsSpy).not.toHaveBeenCalledWith();
+                        expect(stubResponse.profile).toEqual({});
                     });
             
                     it("should process a valid non-openid signin response with userInfo", async () => {
                         // arrange
                         Object.assign(stubResponse, {
-                            id_token: "id_token",
+                            idToken: "id_token",
                             isOpenId: false,
-                            access_token: "access_token",
+                            accessToken: "access_token",
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({ sub: "subsub" });
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
             
                         // act
                         await subject.validateCredentialsResponse(stubResponse, false);
             
                         // assert
-                        expect(JwtUtils.decode).not.toHaveBeenCalledWith("id_token");
-                        expect(subject["_userInfoService"].getClaims).toHaveBeenCalledWith(
+                        expect(Oidc.Jwt.decode).not.toHaveBeenCalledWith("id_token");
+                        expect(getClaimsSpy).toHaveBeenCalledWith(
                             "access_token",
                         );
-                        expect(stubResponse).toHaveProperty("profile", {
+                        expect(stubResponse.profile).toEqual({
                             nickname: "Nick",
                         });
                     });
@@ -648,53 +632,47 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                     it("should not process a valid openid signin response with wrong userInfo", async () => {
                         // arrange
                         Object.assign(stubResponse, {
-                            id_token: "id_token",
+                            idToken: "id_token",
                             isOpenId: true,
-                            access_token: "access_token",
+                            accessToken: "access_token",
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({ sub: "subsub" });
-                        jest.spyOn(
-                            subject["_userInfoService"],
-                            "getClaims",
-                        ).mockResolvedValue({ sub: "anotherSub", nickname: "Nick" });
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
+                        getClaimsSpy.and.resolveTo({ sub: "anotherSub", nickname: "Nick" });
             
                         // act
-                        await expect(
+                        await expectAsync(
                             subject.validateCredentialsResponse(stubResponse, false),
                         )
                             // assert
-                            .rejects.toThrow(Error);
-                        expect(JwtUtils.decode).toHaveBeenCalledWith("id_token");
-                        expect(subject["_userInfoService"].getClaims).toHaveBeenCalledWith(
+                            .toBeRejectedWithError(Error);
+                        expect(Oidc.Jwt.decode).toHaveBeenCalledWith("id_token");
+                        expect(getClaimsSpy).toHaveBeenCalledWith(
                             "access_token",
                         );
-                        expect(stubResponse).toHaveProperty("profile", { sub: "subsub" });
+                        expect(stubResponse.profile).toEqual({ sub: "subsub" });
                     });
             
                     it("should process a valid openid signin response with correct userInfo", async () => {
                         // arrange
                         Object.assign(stubResponse, {
-                            id_token: "id_token",
+                            idToken: "id_token",
                             isOpenId: true,
-                            access_token: "access_token",
+                            accessToken: "access_token",
                         });
-                        jest.spyOn(JwtUtils, "decode").mockReturnValue({ sub: "subsub" });
-                        jest.spyOn(
-                            subject["_userInfoService"],
-                            "getClaims",
-                        ).mockResolvedValue({ sub: "subsub", nickname: "Nick" });
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
+                        getClaimsSpy.and.resolveTo({ sub: "subsub", nickname: "Nick" });
             
                         // act
                         await subject.validateCredentialsResponse(stubResponse, false);
             
                         // assert
-                        expect(JwtUtils.decode).toHaveBeenCalledWith("id_token");
-                        expect(subject["_userInfoService"].getClaims).toHaveBeenCalledWith(
+                        expect(Oidc.Jwt.decode).toHaveBeenCalledWith("id_token");
+                        expect(getClaimsSpy).toHaveBeenCalledWith(
                             "access_token",
                         );
-                        expect(stubResponse).toHaveProperty("profile", {
+                        expect(stubResponse.profile).toEqual({
                             sub: "subsub",
-                            nickname: "Nick",
+                            nickname: "Nick"
                         });
                     });
                 });

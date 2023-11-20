@@ -576,6 +576,37 @@ Ext.define('Test.spec.common.oidc.JsonService', {
 
                 });
 
+                describe("测试规范化返回结果", () => {
+                    let json =  {
+                        "access_token": "SlAV32hkKG",
+                        "token_type": "Bearer",
+                        "refresh_token": "8xLOxBtZp8",
+                        "expires_in": 3600,
+                        "id_token": `id_token`
+                       };
+
+                    beforeEach(() => {
+                        result = subject.getJson(url);
+                        request = jasmine.Ajax.requests.mostRecent();
+                    })
+
+                    it('测试', async () => {
+                        request.respondWith({
+                            status: 200,
+                            responseText: JSON.stringify(json)
+                        });
+
+                        await expectAsync(result).toBeResolvedTo({
+                            "accessToken": "SlAV32hkKG",
+                            "tokenType": "Bearer",
+                            "refreshToken": "8xLOxBtZp8",
+                            "expiresIn": 3600,
+                            "idToken": `id_token`
+    
+                        });
+                    });
+                });
+
             });
 
         }

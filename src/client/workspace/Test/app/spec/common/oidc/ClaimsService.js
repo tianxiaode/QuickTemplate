@@ -129,7 +129,6 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                     it("should filter only protocol claims defined by default by the library", () => {
                         // arrange
                         Object.assign(settings, { filterProtocolClaims: true });
-                        console.log('re-settings', settings)
                         subject = Ext.create('oidc.claimsservice', {settings});
                         let defaultProtocolClaims = {
                             nbf: 3,
@@ -166,7 +165,6 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                     it("should not filter protocol claims that are required by the library", () => {
                         // arrange
                         Object.assign(settings, { filterProtocolClaims: true });
-                        console.log('re-settings', settings)
                         subject = Ext.create('oidc.claimsservice', {settings});
                         let internalRequiredProtocolClaims = {
                             sub: "sub",

@@ -36,6 +36,19 @@ Ext.define('Common.core.util.Format', {
                 .replace(/([a-z\d])([A-Z])/g, `$1${replace}$2`)
                 .toLowerCase();
         },
+        toCamelCase(str, split){
+            if (Ext.isEmpty(str)) return '';
+            let words = str.split(split),
+                result = '';
+            Ext.each(words, (w)=>{
+                if(Ext.isEmpty(result)){
+                    result = w;
+                }else{
+                    result += Ext.String.capitalize(w);
+                }
+            })
+            return result;
+        },
         nullValueAndEditMessage(v) {
             let emptyText = I18N.get('NullValueAndEditMessage', 'ProductExtraFields');
             return Ext.isEmpty(v)

@@ -3,7 +3,6 @@ Ext.define('Common.oidc.util.Crypto',{
     requires:[
         'Ext.data.identifier.Uuid',
         'Common.core.util.crypto.Sha256',
-        'Common.core.util.crypto.Utf8',
         'Ext.util.Base64'
     ],
 
@@ -19,9 +18,9 @@ Ext.define('Common.oidc.util.Crypto',{
         /**
          * PKCE: Generate a code challenge
          */
-        generateCodeChallenge(code_verifier) {
+        generateCodeChallenge(codeVerifier) {
             try {
-                let hashed = SHA256(code_verifier);
+                let hashed = SHA256(codeVerifier);
                 return Ext.util.Base64.decode(hashed).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
             }
             catch (err) {
