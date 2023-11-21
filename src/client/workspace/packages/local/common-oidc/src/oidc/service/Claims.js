@@ -1,10 +1,19 @@
-Ext.define('Common.oidc.ClaimsService',{
-    alias: 'oidc.claimsservice',
+Ext.define('Common.oidc.service.Claim', {
+    alias: 'oidc.service.claim',
 
-    requires:[
-        'Common.oidc.JsonService',
+    requires: [
+        'Common.oidc.setting.Client'
     ],
 
+    /**
+     * Protocol claims that could be removed by default from profile.
+     * Derived from the following sets of claims:
+     * - {@link https://datatracker.ietf.org/doc/html/rfc7519.html#section-4.1}
+     * - {@link https://openid.net/specs/openid-connect-core-1_0.html#IDToken}
+     * - {@link https://openid.net/specs/openid-connect-core-1_0.html#CodeIDToken}
+     *
+     * @internal
+     */
     defaultProtocolClaims: [
         "nbf",
         "jti",
@@ -16,14 +25,19 @@ Ext.define('Common.oidc.ClaimsService',{
         "at_hash", // https://openid.net/specs/openid-connect-core-1_0.html#CodeIDToken
     ],
 
+    /**
+     * Protocol claims that should never be removed from profile.
+     * "sub" is needed internally and others should remain required as per the OIDC specs.
+     *
+     * @internal
+     */
     internalRequiredProtocolClaims: ["sub", "iss", "aud", "exp", "iat"],
 
-    constructor(config){
-        let me = this;
-        me.settings = config.settings;
+    constructor(clientSettings) {
+        this.settings = clientSettings.isInstance ? clientSettings : Ext.create('oidc.setting.client', clientSettings);
     },
 
-    filterProtocolClaims(claims){
+    filterProtocolClaims(claims) {
         let me = this,
             settings = me.settings,
             result = { ...claims };
@@ -33,7 +47,7 @@ Ext.define('Common.oidc.ClaimsService',{
             if (Array.isArray(settings.filterProtocolClaims)) {
                 protocolClaims = settings.filterProtocolClaims;
             } else {
-                protocolClaims = me.defaultProtocolClaims;
+                protocolClaims = Ext.clone(me.defaultProtocolClaims);
             }
 
             for (let claim of protocolClaims) {
@@ -48,10 +62,10 @@ Ext.define('Common.oidc.ClaimsService',{
 
     mergeClaims(claims1, claims2) {
         let me = this;
-            settings = me.settings,
+        settings = me.settings,
             result = { ...claims1 };
 
-        if(settings.mergeClaims){
+        if (settings.mergeClaims) {
             return Ext.Object.merge(claims1, claims2);
         }
 

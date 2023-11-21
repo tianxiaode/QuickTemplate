@@ -1,25 +1,25 @@
-Ext.define('Common.oidc.ResponseValidator',{
-    alias: 'oidc.responsevalidator',
+Ext.define('Common.oidc.response.Validator',{
+    alias: 'oidc.response.validator',
 
     requires:[
         'Common.oidc.util.Jwt',
-        'Common.oidc.ClientSettingsStore',
-        'Common.oidc.MetadataService',
-        'Common.oidc.ClaimsService',
-        'Common.oidc.UserInfoService',
+        'Common.oidc.setting.Client',
+        'Common.oidc.service.Metadata',
+        'Common.oidc.service.Claim',
+        'Common.oidc.service.UserInfo',
         'Common.oidc.TokenClient'
     ],
 
     tokenClient: null,
     userInfoService: null,
 
-    constructor(config){
+    constructor(clientSettings, metadataService, claimsService){
         let me = this;
-        me.settings = config.settings;
-        me.metadataService = config.metadataService;
-        me.claimsService = config.claimsService;
-        me.userInfoService = Ext.create('oidc.userinfoservice',{ settings: me.settings, metadataService: me.metadataService });
-        me.tokenClient = Ext.create('oidc.tokenclient', { settings: me.settings, metadataService: me.metadataService })
+        me.settings = clientSettings;
+        me.metadataService = metadataService;
+        me.claimsService = claimsService;
+        me.userInfoService = Ext.create('oidc.userinfoservice', me.settings, me.metadataService);
+        me.tokenClient = Ext.create('oidc.tokenclient', me.settings, me.metadataService);
     },
 
     async validateSigninResponse(response, state){

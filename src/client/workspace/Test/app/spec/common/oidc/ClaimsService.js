@@ -22,7 +22,7 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                     it("should filter protocol claims if enabled on settings", () => {
                         // arrange
                         Object.assign(settings, { filterProtocolClaims: true });
-                        subject = Ext.create('oidc.claimsservice', {settings});
+                        subject = Ext.create('oidc.claimsservice', settings);
 
                         let claims = {
                             foo: 1,
@@ -58,7 +58,7 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                     it("should not filter protocol claims if not enabled on settings", () => {
                         // arrange
                         Object.assign(settings, { filterProtocolClaims: false });
-                        subject = Ext.create('oidc.claimsservice', {settings});
+                        subject = Ext.create('oidc.claimsservice', settings);
                         let claims = {
                             foo: 1,
                             bar: "test",
@@ -97,7 +97,7 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                         Object.assign(settings, {
                             filterProtocolClaims: ["foo", "bar", "role", "nbf", "email"],
                         });
-                        subject = Ext.create('oidc.claimsservice', {settings});
+                        subject = Ext.create('oidc.claimsservice', settings);
                         let claims = {
                             foo: 1,
                             bar: "test",
@@ -129,7 +129,7 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                     it("should filter only protocol claims defined by default by the library", () => {
                         // arrange
                         Object.assign(settings, { filterProtocolClaims: true });
-                        subject = Ext.create('oidc.claimsservice', {settings});
+                        subject = Ext.create('oidc.claimsservice', settings);
                         let defaultProtocolClaims = {
                             nbf: 3,
                             jti: "jti",
@@ -165,7 +165,7 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                     it("should not filter protocol claims that are required by the library", () => {
                         // arrange
                         Object.assign(settings, { filterProtocolClaims: true });
-                        subject = Ext.create('oidc.claimsservice', {settings});
+                        subject = Ext.create('oidc.claimsservice', settings);
                         let internalRequiredProtocolClaims = {
                             sub: "sub",
                             iss: "issuer",
@@ -208,7 +208,7 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
             
                 describe("mergeClaims", () => {
                     it("should merge claims", () => {
-                        subject = Ext.create('oidc.claimsservice', {settings});
+                        subject = Ext.create('oidc.claimsservice', settings);
 
                         // arrange
                         let c1 = { a: "apple", b: "banana" };
@@ -222,7 +222,7 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                     });
             
                     it("should not merge claims when claim types are objects", () => {
-                        subject = Ext.create('oidc.claimsservice', {settings});
+                        subject = Ext.create('oidc.claimsservice', settings);
 
                         // arrange
                         let c1 = {
@@ -249,7 +249,7 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                     it("should merge claims when claim types are objects when mergeClaims settings is true", () => {
                         // arrange
                         Object.assign(settings, { mergeClaims: true });
-                        subject = Ext.create('oidc.claimsservice', {settings});
+                        subject = Ext.create('oidc.claimsservice', settings);
 
                         let c1 = {
                             custom: { apple: "foo", pear: "bar" }
@@ -270,7 +270,7 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                     });
             
                     it("should merge same claim types into array", () => {
-                        subject = Ext.create('oidc.claimsservice', {settings});
+                        subject = Ext.create('oidc.claimsservice', settings);
 
                         // arrange
                         let c1 = { a: "apple", b: "banana" };
@@ -284,7 +284,7 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                     });
             
                     it("should merge arrays of same claim types into array", () => {
-                        subject = Ext.create('oidc.claimsservice', {settings});
+                        subject = Ext.create('oidc.claimsservice', settings);
 
                         // arrange
                         let c1 = { a: "apple", b: "banana" };
@@ -333,7 +333,7 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                     });
             
                     it("should remove duplicates when producing arrays", () => {
-                        subject = Ext.create('oidc.claimsservice', {settings});
+                        subject = Ext.create('oidc.claimsservice', settings);
 
                         // arrange
                         let c1 = { a: "apple", b: "banana" };
@@ -347,7 +347,7 @@ Ext.define('Test.spec.common.oidc.ClaimsService', {
                     });
             
                     it("should not add if already present in array", () => {
-                        subject = Ext.create('oidc.claimsservice', {settings});
+                        subject = Ext.create('oidc.claimsservice', settings);
                         // arrange
                         let c1 = {
                             a: ["apple", "durian"],

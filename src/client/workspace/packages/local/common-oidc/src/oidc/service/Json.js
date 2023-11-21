@@ -1,5 +1,5 @@
-Ext.define('Common.oidc.JsonService', {
-    alias: 'oidc.jsonservice',
+Ext.define('Common.oidc.service.Json', {
+    alias: 'oidc.service.json',
 
     requires: [
         'Common.core.util.Logger',
@@ -9,16 +9,15 @@ Ext.define('Common.oidc.JsonService', {
     contentTypes: null,
     extraHeaders: null,
 
-    constructor(config) {
+    constructor(additionalContentTypes, jwtHandler, extraHeaders) {
         let me = this;
-        config = config || {};
-        me.extraHeaders = config.extraHeaders || {};
+        me.extraHeaders = extraHeaders || {};
         me.contentTypes = [];
-        if (config.additionalContentTypes) {
+        if (additionalContentTypes) {
             me.contentTypes.push(...config.additionalContentTypes);
         }
         me.contentTypes.push('application/json');
-        if (config.jwtHandler) {
+        if (jwtHandler) {
             me.jwtHandler = config.jwtHandler;
             me.contentTypes.push('application/jwt');
         }
@@ -133,7 +132,8 @@ Ext.define('Common.oidc.JsonService', {
 
         appendExtraHeaders(headers) {
             let me = this,
-                customKeys = Object.keys(me.extraHeaders);
+                extraHeaders = me.extraHeaders,
+                customKeys = Object.keys(extraHeaders);
             let protectedHeaders = [
                 "authorization",
                 "accept",
@@ -147,9 +147,9 @@ Ext.define('Common.oidc.JsonService', {
                     Logger.warn(me, "Protected header could not be overridden", headerName, protectedHeaders);
                     return;
                 }
-                let content = (typeof me.extraHeaders[headerName] === "function") ?
-                    me.extraHeaders[headerName]() :
-                    me.extraHeaders[headerName];
+                let content = (typeof extraHeaders[headerName] === "function") ?
+                    extraHeaders[headerName]() :
+                    extraHeaders[headerName];
                 if (content && content !== "") {
                     headers[headerName] = content;
                 }

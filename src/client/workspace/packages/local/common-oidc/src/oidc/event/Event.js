@@ -1,13 +1,19 @@
-Ext.define('Common.oidc.util.Event',{
-    alias: 'oidc.event',
+Ext.define('Common.oidc.event.Event',{
+    alias: 'oidc.event.event',
 
-    constructor(){
-        this.callbacks = [];
+    name: null,
+
+    constructor(name){
+        let me = this;
+        me.name = name;
+        me.callbacks = [];
     },
 
     addHandler(cb){
-        this.callbacks.push(cb);
-        return () => this.removeHandler(cb);    
+        return ()=>{
+            this.callbacks.push(cb);
+            return () => this.removeHandler(cb);        
+        }
     },
 
     removeHandler(cb){

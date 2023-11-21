@@ -16,12 +16,12 @@ Ext.define('Common.oidc.TokenClient', {
     clientSecret: null,
     clientAuthentication: null,
 
-    constructor(config) {
+    constructor(clientSettings, metadataService) {
         let me = this,
             settings;
-        settings = me.settings = config.settings;
-        me.metadataService = config.metadataService;
-        me.jsonService = Ext.create('oidc.jsonservice', { additionalContentTypes: settings.additionalContentTypes, extraHeaders: settings.extraHeaders });
+        settings = me.settings = clientSettings.isInstance ? clientSettings : Ext.create('oidc.setting.client', clientSettings);
+        me.metadataService = metadataService;
+        me.jsonService = Ext.create('oidc.service.json', settings.additionalContentTypes, null, settings.extraHeaders);
 
     },
 

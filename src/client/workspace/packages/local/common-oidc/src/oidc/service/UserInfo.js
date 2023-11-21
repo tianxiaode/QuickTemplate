@@ -1,20 +1,20 @@
-Ext.define('Common.oidc.UserInfoService', {
-    alias: 'oidc.userinfoservice',
+Ext.define('Common.oidc.service.UserInfo', {
+    alias: 'oidc.service.userinfo',
 
     requires: [
         'Common.core.util.Logger',
         'Common.core.service.HttpClient',
-        'Common.oidc.JsonService',
-        'Common.oidc.MetadataService',
-        'Common.oidc.ClientSettingsStore',
+        'Common.oidc.service.Json',
+        'Common.oidc.service.Metadata',
         'Common.oidc.util.Jwt'
     ],
 
-    constructor(config) {
-        let me = this;
-        me.settings = config.settings;
-        me.metadataService = config.metadataService;
-        me.jsonService = Ext.create('oidc.jsonservice', { extraHeaders: me.settings.extraHeaders, jwtHandler: me.getClaimsFromJwt })
+    constructor(clientSettings, metadataService) {
+        let me = this, 
+            settings;
+        settings = me.settings = clientSettings.isInstance ? clientSettings : Ext.create('oidc.setting.client', clientSettings);
+        me.metadataService = metadataService;
+        me.jsonService = Ext.create('oidc.service.json', null, me.getClaimsFromJwt, settings.extraHeaders);
     },
 
     async getClaims(token) {

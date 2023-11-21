@@ -15,6 +15,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                 let subject;
                 let exchangeCodeSpy;
                 let getClaimsSpy;
+                let jwtDecodeSpy;
             
                 beforeEach(() => {
                     stubState = {
@@ -39,11 +40,13 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                     subject = Ext.create('oidc.responsevalidator', {settings, metadataService, claimsService});
                     exchangeCodeSpy = spyOn(subject["tokenClient"], "exchangeCode").and.resolveTo({});
                     getClaimsSpy = spyOn(subject["userInfoService"], "getClaims").and.resolveTo({nickname: "Nick"});
+                    jwtDecodeSpy = spyOn(Oidc.Jwt, 'decode');
                 });
 
                 afterEach(()=>{
                     getClaimsSpy.calls.reset();
                     exchangeCodeSpy.calls.reset();
+                    jwtDecodeSpy.calls.reset();
                 })
             
                 describe("validateSignoutResponse", () => {
@@ -115,7 +118,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             accessToken: "access_token",
                             idToken: "id_token",
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "sub" });
+                        jwtDecodeSpy.and.returnValue({ sub: "sub" });
                         getClaimsSpy.and.resolveTo({
                             sub: "sub",
                         });
@@ -249,7 +252,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             isOpenId: true,
                             id_token: "id_token",
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({
+                        jwtDecodeSpy.and.returnValue({
                             sub: "sub",
                             iss: "iss",
                             acr: "acr",
@@ -287,7 +290,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             accessToken: "access_token",
                             idToken: "id_token",
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({
+                        jwtDecodeSpy.and.returnValue({
                             sub: "sub",
                             a: "apple",
                             b: "banana",
@@ -314,7 +317,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             accessToken: "access_token",
                             idToken: "id_token",
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({
+                        jwtDecodeSpy.and.returnValue({
                             sub: "sub",
                             a: "apple",
                             b: "banana",
@@ -362,7 +365,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             accessToken: "access_token",
                             idToken: "id_token",
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({
+                        jwtDecodeSpy.and.returnValue({
                             sub: "sub",
                             a: "apple",
                             b: "banana",
@@ -382,7 +385,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             isOpenId: true,
                             idToken: "id_token",
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({
+                        jwtDecodeSpy.and.returnValue({
                             sub: "sub",
                             a: "apple",
                             b: "banana",
@@ -460,7 +463,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                         exchangeCodeSpy.and.resolveTo(
                             tokenResponse,
                         );
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "sub" });
+                        jwtDecodeSpy.and.returnValue({ sub: "sub" });
             
                         // act
                         await subject.validateSigninResponse(stubResponse, stubState);
@@ -490,7 +493,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             isOpenId: true,
                         });
                         let profile = { sub: "sub" };
-                        spyOn(Oidc.Jwt, "decode").and.returnValue(profile);
+                        jwtDecodeSpy.and.returnValue(profile);
             
                         // act
                         await subject.validateSigninResponse(stubResponse, stubState);
@@ -506,7 +509,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             idToken: "id_token",
                             isOpenId: true,
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({ a: "a" });
+                        jwtDecodeSpy.and.returnValue({ a: "a" });
             
                         // act
                         await expectAsync(
@@ -526,7 +529,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             idToken: "id_token",
                             isOpenId: true,
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
+                        jwtDecodeSpy.and.returnValue({ sub: "subsub" });
             
                         // act
                         await subject.validateCredentialsResponse(stubResponse, true);
@@ -542,7 +545,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             idToken: "id_token",
                             isOpenId: true,
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: undefined });
+                        jwtDecodeSpy.and.returnValue({ sub: undefined });
             
                         // act
                         await expectAsync(
@@ -560,7 +563,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             idToken: "id_token",
                             isOpenId: false,
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
+                        jwtDecodeSpy.and.returnValue({ sub: "subsub" });
             
                         // act
                         await subject.validateCredentialsResponse(stubResponse, true);
@@ -578,7 +581,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             idToken: "id_token",
                             isOpenId: false,
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
+                        jwtDecodeSpy.and.returnValue({ sub: "subsub" });
             
                         // act
                         await subject.validateCredentialsResponse(stubResponse, false);
@@ -596,7 +599,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             isOpenId: false,
                             accessToken: "",
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
+                        jwtDecodeSpy.and.returnValue({ sub: "subsub" });
             
                         // act
                         await subject.validateCredentialsResponse(stubResponse, false);
@@ -614,7 +617,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             isOpenId: false,
                             accessToken: "access_token",
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
+                        jwtDecodeSpy.and.returnValue({ sub: "subsub" });
             
                         // act
                         await subject.validateCredentialsResponse(stubResponse, false);
@@ -636,7 +639,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             isOpenId: true,
                             accessToken: "access_token",
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
+                        jwtDecodeSpy.and.returnValue({ sub: "subsub" });
                         getClaimsSpy.and.resolveTo({ sub: "anotherSub", nickname: "Nick" });
             
                         // act
@@ -659,7 +662,7 @@ Ext.define('Test.spec.common.oidc.ResponseValidator', {
                             isOpenId: true,
                             accessToken: "access_token",
                         });
-                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "subsub" });
+                        jwtDecodeSpy.and.returnValue({ sub: "subsub" });
                         getClaimsSpy.and.resolveTo({ sub: "subsub", nickname: "Nick" });
             
                         // act
