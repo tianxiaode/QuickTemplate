@@ -26,10 +26,12 @@ Ext.define('Common.oidc.window.Popup', {
         let me = this;
         config = config || {};
         me.callParent(config);
+    
         let features = Ext.apply({}, config && config.features, me.defaultFeatures),
-            centeredPopup = Oidc.Popup.center(features);
+            centeredPopup = Oidc.Popup.center(features),
+            target = config.target || '_blank';
 
-        me.window = window.open(undefined, config.target, Oidc.Popup.serialize(centeredPopup));
+        me.window = window.open(undefined, target, Oidc.Popup.serialize(centeredPopup));
         if (features.closePopupWindowAfterInSeconds && features.closePopupWindowAfterInSeconds > 0) {
             setTimeout(() => {
                 if (!me.window || typeof me.window.closed !== "boolean" || me.window.closed) {

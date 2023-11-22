@@ -4,7 +4,7 @@ Ext.define('Test.spec.common.oidc.util.Popup', {
         'Common.oidc.util.Popup'
     ],
     statics: {
-        run() {
+        run1() {
             describe('Common.oidc.util.Popup', () => {
                 describe("center", () => {
                     it("should center a window to integer offsets", () => {

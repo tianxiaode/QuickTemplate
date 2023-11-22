@@ -5,7 +5,7 @@ Ext.define('Common.oidc.response.Validator',{
         'Common.oidc.util.Jwt',
         'Common.oidc.setting.Client',
         'Common.oidc.service.Metadata',
-        'Common.oidc.service.Claim',
+        'Common.oidc.service.Claims',
         'Common.oidc.service.UserInfo',
         'Common.oidc.TokenClient'
     ],

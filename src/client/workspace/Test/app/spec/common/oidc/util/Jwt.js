@@ -12,7 +12,7 @@ Ext.define('Test.spec.common.oidc.util.Jwt', {
 
                 it("should decode a jwt", () => {
                     // act
-                    const result = Oidc.Jwt.decode(jwt);
+                    let result = Oidc.Jwt.decode(jwt);
 
                     // assert
                     expect(result).toEqual({
@@ -37,7 +37,6 @@ Ext.define('Test.spec.common.oidc.util.Jwt', {
                     // act
                     try {
                         Oidc.Jwt.decode("junk");
-                        Logger.error("should not come here");
                     }
                     catch (err) {
                         expect(err.message).toContain("Invalid token specified");

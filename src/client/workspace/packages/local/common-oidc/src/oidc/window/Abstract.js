@@ -1,7 +1,7 @@
 
 Ext.define('Common.oidc.window.Abstract', {
     requires: [
-        'Common.oidc.util.Event',
+        'Common.oidc.event.Event',
         'Common.core.util.Logger'
     ],
 
@@ -40,7 +40,7 @@ Ext.define('Common.oidc.window.Abstract', {
         let me = this;
         Ext.apply(this, config);
         me.disposeHandlers = new Set();
-        me.abort = Ext.create('oidc.event');
+        me.abort = Ext.create('oidc.event.event');
     },
 
     async navigate(params) {
@@ -49,7 +49,7 @@ Ext.define('Common.oidc.window.Abstract', {
             throw new Error("Attempted to navigate on a disposed window");
         }
 
-        Logger.debug("setting URL in window");
+        Logger.debug(me.navigate, "setting URL in window");
         me.window.location.replace(params.url);
 
         let { url, keepOpen } = await new Promise((resolve, reject) => {
@@ -63,7 +63,7 @@ Ext.define('Common.oidc.window.Abstract', {
                 try {
                     let state = URI.readParams(data.url, params.responseMode).get("state");
                     if (!state) {
-                        Logger.warn("no state found in response url");
+                        Logger.warn(me.navigate, "no state found in response url");
                     }
                     if (e.source !== me.window && state !== params.state) {
 
@@ -86,7 +86,7 @@ Ext.define('Common.oidc.window.Abstract', {
             }));
 
         });
-        Logger.debug("got response from window");
+        Logger.debug(me.navigate, "got response from window");
         me.dispose();
 
 

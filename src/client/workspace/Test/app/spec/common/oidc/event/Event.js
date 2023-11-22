@@ -1,43 +1,41 @@
-Ext.define('Test.spec.common.oidc.util.Event', {
+Ext.define('Test.spec.common.oidc.event.Event', {
 
     requires: [
-        'Common.oidc.util.Event'
+        'Common.oidc.event.Event'
     ],
 
     statics: {
 
         run() {
-            describe('Common.oidc.util.Event', () => {
-                let subject = Ext.create('Common.oidc.util.Event');
-
-                beforeEach(() => {
-                    spyOn(Ext, 'id');
-                    spyOn(Ext, 'isEmpty');
-                })
+            describe('Common.oidc.event.Event', () => {
+                let subject = Ext.create('oidc.event.event');
 
                 describe('addHandler', () => {
                     it("should allow callback to be invoked", () => {
                         // arrange
+                        let cb = jasmine.createSpy();
 
                         // act
-                        subject.addHandler(Ext.id);
+                        subject.addHandler(cb);
                         subject.raise();
 
                         // assert
-                        expect(Ext.id).toHaveBeenCalled();
+                        expect(cb).toHaveBeenCalled();
                     });
 
                     it("should allow multiple callbacks", () => {
+                        // arrange
+                        let cb = jasmine.createSpy();
 
                         // act
-                        subject.addHandler(Ext.id);
-                        subject.addHandler(Ext.id);
-                        subject.addHandler(Ext.id);
-                        subject.addHandler(Ext.id);
+                        subject.addHandler(cb);
+                        subject.addHandler(cb);
+                        subject.addHandler(cb);
+                        subject.addHandler(cb);
                         subject.raise();
 
                         // assert
-                        expect(Ext.id).toHaveBeenCalledTimes(4);
+                        expect(cb).toHaveBeenCalledTimes(4);
                     });
 
                 })
@@ -46,31 +44,35 @@ Ext.define('Test.spec.common.oidc.util.Event', {
                 describe("removeHandler", () => {
 
                     it("should remove callback from being invoked", () => {
+                        // arrange
+                        let cb = jasmine.createSpy();
 
                         // act
-                        subject.addHandler(Ext.id);
-                        subject.removeHandler(Ext.id);
+                        subject.addHandler(cb);
+                        subject.removeHandler(cb);
                         subject.raise();
 
                         // assert
-                        expect(Ext.id).toHaveBeenCalledTimes(0);
+                        expect(cb).toHaveBeenCalledTimes(0);
                     });
 
                     it("should remove individual callback", () => {
                         // arrange
+                        let cb1 = jasmine.createSpy();
+                        let cb2 = jasmine.createSpy();
 
                         // act
-                        subject.addHandler(Ext.id);
-                        subject.addHandler(Ext.isEmpty);
-                        subject.addHandler(Ext.id);
-                        subject.removeHandler(Ext.id);
-                        subject.removeHandler(Ext.id);
+                        subject.addHandler(cb1);
+                        subject.addHandler(cb2);
+                        subject.addHandler(cb1);
+                        subject.removeHandler(cb1);
+                        subject.removeHandler(cb1);
 
                         subject.raise();
 
                         // assert
-                        expect(Ext.id).toHaveBeenCalledTimes(0);
-                        expect(Ext.isEmpty).toHaveBeenCalledTimes(1);
+                        expect(cb1).toHaveBeenCalledTimes(0);
+                        expect(cb2).toHaveBeenCalledTimes(1);
                     });
 
                 });

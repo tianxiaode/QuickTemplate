@@ -1,5 +1,5 @@
 Ext.define('Common.core.util.MimeType', {
-    alternateClassName: 'MimeTypeExt',
+    alternateClassName: 'Ext.MimeType',
     singleton: true,
 
 

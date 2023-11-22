@@ -1,8 +1,6 @@
 Ext.define('Common.oidc.util.Crypto',{
 
     requires:[
-        'Ext.data.identifier.Uuid',
-        'Common.core.util.crypto.Sha256',
         'Ext.util.Base64'
     ],
 
@@ -11,21 +9,23 @@ Ext.define('Common.oidc.util.Crypto',{
          * PKCE: Generate a code verifier
          */
         generateCodeVerifier() {
-            let uuid = Ext.data.identifier.Uuid.Global;
-            return uuid.generate() + uuid.generate() + uuid.generate();
+            let uuid = window.crypto.randomUUID;
+            return uuid() + uuid() + uuid();
         },
 
         /**
          * PKCE: Generate a code challenge
          */
-        generateCodeChallenge(codeVerifier) {
+        async generateCodeChallenge(codeVerifier) {
             try {
-                let hashed = SHA256(codeVerifier);
+                let encoder = new TextEncoder(),
+                    data = encoder.encode(codeVerifier),
+                    hashed = await window.crypto.subtle.digest('SHA-256', data);
                 return Ext.util.Base64.decode(hashed).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
             }
-            catch (err) {
-                Logger.log("CryptoUtils.generateCodeChallenge", err);
-                throw new Error(err);
+            catch (error) {
+                Logger.log(this, 'generateCodeChallenge', "CryptoUtils.generateCodeChallenge", error);
+                throw new Error(error);
             }
         },
 

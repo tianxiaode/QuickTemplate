@@ -10,6 +10,7 @@ Ext.define('Test.spec.common.core.util.Logger', {
             describe('Common.core.util.Logger', () => {
                 describe('setLevel', () => {
                     let logger = {};
+                    let oldLevel = Logger.getLevel();
 
                     beforeEach(() => {
                         Logger.levels.forEach(level => {
@@ -22,6 +23,9 @@ Ext.define('Test.spec.common.core.util.Logger', {
                         Logger.setLogger(console);
                     })
 
+                    afterAll(()=>{
+                        Logger.setLevel(oldLevel);
+                    })
 
                     it("should not log when set to NONE", () => {
                         // arrange
@@ -110,18 +114,6 @@ Ext.define('Test.spec.common.core.util.Logger', {
                     });
 
                 })
-
-                // describe("should log to show instance name", () => {
-                //     let logger = Logger.getLogger();
-
-                //     beforeEach(()=>{
-                //         spyOn(logger, 'debug');
-                //     })
-
-                //     Logger.debug(this, 'test sender');
-                //     //expect(logger.debug).toHaveBeenCalledWith('[DEBGU]', `[${this.$className}]`, 'test sender');
-                // });
-
 
             });
 

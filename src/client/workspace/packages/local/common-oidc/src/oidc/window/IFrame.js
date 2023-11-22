@@ -24,7 +24,7 @@ Ext.define('Common.oidc.window.IFrame', {
 
     async navigate(params) {
         let me = this;
-        Logger.debug(me, "navigate: Using timeout of:" + me.timeoutInSeconds);
+        Logger.debug(me.navigate, "navigate: Using timeout of:" + me.timeoutInSeconds);
         let timer = setTimeout(() => me.abort.raise("IFrame timed out without a response"), me.timeoutInSeconds * 1000);
         me.disposeHandlers.add(() => clearTimeout(timer));
 

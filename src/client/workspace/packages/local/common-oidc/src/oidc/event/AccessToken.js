@@ -18,10 +18,11 @@ Ext.define('Common.oidc.event.AccessToken', {
 
     load(container) {
         let me = this;
+        Logger.debug(me.load);
         // only register events if there's an access token and it has an expiration
         if (container.accessToken && container.expiresIn !== undefined) {
             let duration = container.expiresIn;
-            Logger.debug(me, "access token present, remaining duration:", duration);
+            Logger.debug(me.load, "access token present, remaining duration:", duration);
 
             if (duration > 0) {
                 // only register expiring if we still have time
@@ -30,17 +31,17 @@ Ext.define('Common.oidc.event.AccessToken', {
                     expiring = 1;
                 }
 
-                Logger.debug(me, "registering expiring timer, raising in", expiring, "seconds");
+                Logger.debug(me.load, "registering expiring timer, raising in", expiring, "seconds");
                 me.expiringTimer.init(expiring);
             }
             else {
-                Logger.debug(me, "canceling existing expiring timer because we're past expiration.");
+                Logger.debug(me.load, "canceling existing expiring timer because we're past expiration.");
                 me.expiringTimer.cancel();
             }
 
             // if it's negative, it will still fire
             let expired = duration + 1;
-            Logger.debug(me, "registering expired timer, raising in", expired, "seconds");
+            Logger.debug(me.load, "registering expired timer, raising in", expired, "seconds");
             me.expiredTimer.init(expired);
         }
         else {

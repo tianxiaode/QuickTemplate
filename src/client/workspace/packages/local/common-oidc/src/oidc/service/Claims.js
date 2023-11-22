@@ -1,5 +1,5 @@
-Ext.define('Common.oidc.service.Claim', {
-    alias: 'oidc.service.claim',
+Ext.define('Common.oidc.service.Claims', {
+    alias: 'oidc.service.claims',
 
     requires: [
         'Common.oidc.setting.Client'

@@ -14,7 +14,7 @@ Ext.define('Common.core.util.Logger', {
 
     config:{
         level : 0,
-        logger: console
+        logger: console,
     },
 
     applyLevel(level){
@@ -24,7 +24,7 @@ Ext.define('Common.core.util.Logger', {
 
 
     constructor(config){
-        this.initConfig(config);
+        this.initConfig(config);        
     },
 
     log(outLevel, ...args){
@@ -41,15 +41,15 @@ Ext.define('Common.core.util.Logger', {
         }
         if(level >= outLevel){
             prefix = `[${priority.toUpperCase() }]`;
-            let first = args[0];            
-            if(Ext.isObject(first) || Ext.isFunction(first)){
+
+            let first = args[0];
+            if(Ext.isFunction(first)){
                 args = args.slice(1);
-                if(first.name){
-                    return logger[priority](prefix, `[${first.name}]`, ...args);
+                let owner = first.$owner;
+                if(owner && owner.$className){
+                    prefix += `[${owner.$className}] `;
                 }
-                if(first.$className){
-                    return logger[priority](prefix, `[${first.$className}]`, ...args);
-                }
+                prefix += `[${first.name}]`;
             }
             logger[priority](prefix, ...args);
 
@@ -72,9 +72,18 @@ Ext.define('Common.core.util.Logger', {
         this.log(this.levelMap.error, ...args);
     },
 
+    getCaller(){
+        let me = this;
+        if(me.currentClass && me.cureentMethodName){
+            return `[${me.currentClass.$className}] [${me.cureentMethodName}] `;
+        }
+        return '';
+
+    },
+
     destroy() {
         let me = this;
-        me.destroyMembers('levelMap', 'levels');
+        me.destroyMembers('levelMap', 'levels', 'currentClass');
         me.setLogger(null);
         me.callParent();
     }
