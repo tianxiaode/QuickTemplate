@@ -21,17 +21,17 @@ Ext.define('Common.oidc.service.Metadata', {
         me.jsonService = Ext.create('oidc.service.json', ["application/jwk-set+json"], null, settings.extraHeaders);
 
         if (settings.signingKeys) {
-            Logger.debug(me, "using signingKeys from settings");
+            Logger.debug(me.constructor, "using signingKeys from settings");
             me.signingKeys = settings.signingKeys;
         }
 
         if (settings.metadata) {
-            Logger.debug(me, "using metadata from settings");
+            Logger.debug(me.constructor, "using metadata from settings");
             me.metadata = settings.metadata;
         }
 
         if (settings.fetchRequestCredentials) {
-            Logger.debug(me, "using fetchRequestCredentials from settings");
+            Logger.debug(me.constructor, "using fetchRequestCredentials from settings");
             me.fetchRequestCredentials = settings.fetchRequestCredentials;
         }
 
@@ -44,7 +44,7 @@ Ext.define('Common.oidc.service.Metadata', {
     async getMetadata() {
         let me = this;
         if (me.metadata) {
-            Logger.debug(me, "using cached values");
+            Logger.debug(me.getMetadata, "using cached values");
             return me.metadata;
         }
 
@@ -52,10 +52,10 @@ Ext.define('Common.oidc.service.Metadata', {
             throw new Error("No authority or metadataUrl configured on settings");
         }
 
-        Logger.debug(me, "getting metadata from", me.metadataUrl);
+        Logger.debug(me.getMetadata, "getting metadata from", me.metadataUrl);
         let metadata = await me.jsonService.getJson(me.metadataUrl, null, me.fetchRequestCredentials);
 
-        Logger.debug(me, "merging remote JSON with seed metadata");
+        Logger.debug(me.getMetadata, "merging remote JSON with seed metadata");
         me.metadata = Object.assign({}, me.metadataSeed, metadata);
         return me.metadata;
     },
@@ -98,15 +98,15 @@ Ext.define('Common.oidc.service.Metadata', {
     async getSigningKeys() {
         let me = this;
         if (me.signingKeys) {
-            Logger.debug(me, "returning signingKeys from cache");
+            Logger.debug(me.getSigningKeys, "returning signingKeys from cache");
             return me.signingKeys;
         }
 
         let jwksUri = await me.getKeysEndpoint(false);
-        Logger.debug(me, "got jwks_uri", jwksUri);
+        Logger.debug(me.getSigningKeys, "got jwks_uri", jwksUri);
 
         let keySet = await me.jsonService.getJson(jwksUri);
-        Logger.debug(me, "got key set", keySet);
+        Logger.debug(me.getSigningKeys, "got key set", keySet);
 
         if (!Array.isArray(keySet.keys)) {
             throw new Error("Missing keys on keyset");
@@ -127,11 +127,11 @@ Ext.define('Common.oidc.service.Metadata', {
 
             let me = this,
                 metadata = await me.getMetadata();
-            Logger.debug(me, 'getMetadataProperty', "resolved");
+            Logger.debug(me.getMetadataProperty, 'getMetadataProperty', "resolved");
 
             if (metadata[name] === undefined) {
                 if (optional === true) {
-                    Logger.warn(me, "Metadata does not contain optional property");
+                    Logger.warn(me.getMetadataProperty, "Metadata does not contain optional property");
                     return undefined;
                 }
 

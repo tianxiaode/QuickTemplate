@@ -15,7 +15,7 @@ Ext.define('Test.spec.common.oidc.event.Timer', {
                     jasmine.clock().uninstall();
                     jasmine.clock().install();
                     subject = Ext.create('oidc.event.timer', "test name");
-                    formatSpy = spyOn(Format, "getEpochTime").and.callFake(()=>now);
+                    formatSpy = spyOn(Common.oidc.event.Timer, "getEpochTime").and.callFake(()=>now);
                     spyOn(globalThis, "clearInterval").and.callThrough();
                     spyOn(globalThis, "setInterval").and.callThrough();
                 });

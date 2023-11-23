@@ -10,23 +10,26 @@ Ext.define('Common.oidc.state.Store',{
     },
 
     async set(key, value){
-        let me = this,
-            key = me.prefix + key;
-        await me.store.set(key, value);
+        let me = this;
+        key = me.prefix + key;
+        Logger.debug(me.set, `set('${key}')`);
+        await me.store.setItem(key, value);
     },
 
     async get(key){
-        let me = this,
-            key = me.prefix + key;
-        return await me.store.get(key, value);
+        let me = this;
+        key = me.prefix + key;
+        Logger.debug(me.get, `get('${key}')`);
+        return await me.store.getItem(key);
     },
 
 
-    async remove(){
-        let me = this,
-            key = me.prefix + key,
-            item = await me.store.get(key);
-        await me.store.remove(key);
+    async remove(key){
+        let me = this;
+        key = me.prefix + key;
+        Logger.debug(me.remove, `remove('${key}')`);
+        let item = await me.store.getItem(key);
+        await me.store.removeItem(key);
         return item;
     
     },
@@ -37,10 +40,11 @@ Ext.define('Common.oidc.state.Store',{
             store = me.store,
             len = await store.length,
             keys = [];
+        Logger.debug(me.getAllKeys, `getAllKeys')`);
         for (let index = 0; index < len; index++) {
             let key = await store.key(index);
-            if (key && key.indexOf(prefix) === 0) {
-                keys.push(key.substr(prefix.length));
+            if (key && key.startsWith(prefix)) {
+                keys.push(key.replace(prefix, ''));
             }
         }
         return keys;

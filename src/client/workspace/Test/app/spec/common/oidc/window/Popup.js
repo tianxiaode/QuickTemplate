@@ -8,16 +8,11 @@ Ext.define('Test.spec.common.oidc.window.Popup', {
 
 
             describe("PopupWindow", () => {
-                let spyWindowOpen,
-                    tick = (millis, fn) => {
-                        jasmine.clock().uninstall();
-                        jasmine.clock().install();
-                        //延迟后续代码执行，等等setTimeout代码执行
-                        jasmine.clock().tick(millis);
-                        fn();
-                        jasmine.clock().uninstall();
-                    };
+                let spyWindowOpen;
+
                 beforeEach(() => {
+                    jasmine.clock().uninstall();
+                    jasmine.clock().install();
                     spyOn(Common.oidc.window.Abstract, 'getLocationOrigin').and.returnValue("http://app");
 
                     window.opener = {
@@ -30,6 +25,11 @@ Ext.define('Test.spec.common.oidc.window.Popup', {
                         close: jasmine.createSpy(),
                     })
                 });
+
+                afterEach(()=>{
+                    jasmine.clock().uninstall();
+                })
+
 
                 it("should open a popup", () => {
                     Ext.create('oidc.window.popup');
@@ -120,6 +120,7 @@ Ext.define('Test.spec.common.oidc.window.Popup', {
                     let popupWindow = Ext.create('oidc.window.popup');
 
                     let promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
+                    jasmine.clock().tick(501);
                     await expectAsync(promise).toBeRejectedWith("Popup closed by user");
                 });
 
@@ -144,9 +145,8 @@ Ext.define('Test.spec.common.oidc.window.Popup', {
                 it("should run setTimeout when closePopupWindowAfterInSeconds is greater than 0", async () => {
                     let spySetTimeout = spyOn(window, 'setTimeout');
                     Ext.create('oidc.window.popup', { features: { closePopupWindowAfterInSeconds: 1 } });
-                    tick(1001, () => {
-                        expect(spySetTimeout).toHaveBeenCalledTimes(1);
-                    })
+                    jasmine.clock().tick(1001);
+                    expect(spySetTimeout).toHaveBeenCalledTimes(1);
 
                 });
 
@@ -154,9 +154,8 @@ Ext.define('Test.spec.common.oidc.window.Popup', {
                     let spySetTimeout = spyOn(window, 'setTimeout');
 
                     Ext.create('oidc.window.popup', { features: { closePopupWindowAfterInSeconds: 0 } });
-                    tick(1, () => {
-                        expect(spySetTimeout).toHaveBeenCalledTimes(0);
-                    })
+                    jasmine.clock().tick(1);
+                    expect(spySetTimeout).toHaveBeenCalledTimes(0);
 
 
                 });
@@ -165,13 +164,11 @@ Ext.define('Test.spec.common.oidc.window.Popup', {
                     let spySetTimeout = spyOn(window, 'setTimeout');
 
                     Ext.create('oidc.window.popup', { features: { closePopupWindowAfterInSeconds: -120 } });
-                    tick(1, () => {
-                        expect(spySetTimeout).toHaveBeenCalledTimes(0);
-                    })
-
+                    jasmine.clock().tick(1);
+                    expect(spySetTimeout).toHaveBeenCalledTimes(0);
                 });
 
-                it("should invoke close popup window when closePopupWindowAfterInSeconds is greater than 0 and window is open", (done) => {
+                it("should invoke close popup window when closePopupWindowAfterInSeconds is greater than 0 and window is open", async () => {
                     spyWindowOpen.and.returnValue({
                         location: { replace: jasmine.createSpy() },
                         focus: jasmine.createSpy(),
@@ -180,13 +177,11 @@ Ext.define('Test.spec.common.oidc.window.Popup', {
                     });
                     let popupWindow = Ext.create('oidc.window.popup', { features: { closePopupWindowAfterInSeconds: 1 } });
                     let closeWindowSpy = spyOn(popupWindow, 'close');
-                    setTimeout(() => {
-                        expect(closeWindowSpy).toHaveBeenCalledTimes(1);
-                        done();
-                    }, 1001)
+                    jasmine.clock().tick(1001);
+                    expect(closeWindowSpy).toHaveBeenCalledTimes(1);
                 });
 
-                it("shouldn't invoke close popup window when closePopupWindowAfterInSeconds is greater than 0 and window is not open", (done) => {
+                it("shouldn't invoke close popup window when closePopupWindowAfterInSeconds is greater than 0 and window is not open", async () => {
                     spyWindowOpen.and.returnValue({
                         location: { replace: jasmine.createSpy() },
                         focus: jasmine.createSpy(),
@@ -195,10 +190,8 @@ Ext.define('Test.spec.common.oidc.window.Popup', {
                     });
                     let popupWindow = Ext.create('oidc.window.popup', { features: { closePopupWindowAfterInSeconds: 1 } });
                     let closeWindowSpy = spyOn(popupWindow, 'close');
-                    setTimeout(() => {
-                        expect(closeWindowSpy).toHaveBeenCalledTimes(0);
-                        done();
-                    }, 1001)
+                    jasmine.clock().tick(1001);
+                    expect(closeWindowSpy).toHaveBeenCalledTimes(0);
 
                 });
 
@@ -207,7 +200,7 @@ Ext.define('Test.spec.common.oidc.window.Popup', {
                     let popupWindow = Ext.create('oidc.window.popup', { features: { closePopupWindowAfterInSeconds: 1 } });
                     let consoleDebugSpy = spyOn(console, "debug");
                     let promise = popupWindow.navigate({ url: "http://sts/authorize?x=y", state: "someid" });
-
+                    jasmine.clock().tick(1001);                    
 
                     await expectAsync(promise).toBeRejectedWith("Popup blocked by user");
                     expect(consoleDebugSpy).toHaveBeenCalled();

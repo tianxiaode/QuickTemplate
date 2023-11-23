@@ -3,6 +3,10 @@ Ext.define('Common.oidc.window.Popup', {
     extend: 'Common.oidc.window.Abstract',
     alias: 'oidc.window.popup',
 
+    requires:[
+        'Common.oidc.util.Popup',
+    ],
+
     checkForPopupClosedInterval: 500,
     second: 1000,
 
@@ -25,7 +29,7 @@ Ext.define('Common.oidc.window.Popup', {
     constructor(config) {
         let me = this;
         config = config || {};
-        me.callParent(config);
+        me.callParent(arguments);
     
         let features = Ext.apply({}, config && config.features, me.defaultFeatures),
             centeredPopup = Oidc.Popup.center(features),

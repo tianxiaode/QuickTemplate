@@ -14,11 +14,11 @@ Ext.define('Common.oidc.service.Json', {
         me.extraHeaders = extraHeaders || {};
         me.contentTypes = [];
         if (additionalContentTypes) {
-            me.contentTypes.push(...config.additionalContentTypes);
+            me.contentTypes.push(...additionalContentTypes);
         }
         me.contentTypes.push('application/json');
         if (jwtHandler) {
-            me.jwtHandler = config.jwtHandler;
+            me.jwtHandler = jwtHandler;
             me.contentTypes.push('application/jwt');
         }
     },
@@ -27,7 +27,7 @@ Ext.define('Common.oidc.service.Json', {
         let me = this,
             headers = me.getHeaders(token),
             response;
-        Logger.debug(me, "url:", url);
+        Logger.debug(me.getJson, "url:", url);
         try {
             let options = {headers: headers};
             if(withCredentials) {
@@ -36,7 +36,7 @@ Ext.define('Common.oidc.service.Json', {
             response = await Http.get(url, null, options);        
                 
         } catch (error) {
-            Logger.debug(me, 'Error from server:', error) 
+            Logger.debug(me.getJson, 'Error from server:', error) 
             throw new Error(`${error.statusText} (${error.status})`);
         }
         let contentType = response.getResponseHeader("Content-Type");
@@ -48,7 +48,7 @@ Ext.define('Common.oidc.service.Json', {
         }
         let json = response.request.getJson();
         if(!json) {
-            Logger.error(me, "Error parsing JSON response", response);
+            Logger.error(me.getJson, "Error parsing JSON response", response);
             throw new Error(`${response.responseText}`);
         }
         return me.normalizedJson(json);
@@ -59,7 +59,7 @@ Ext.define('Common.oidc.service.Json', {
         let me = this,
             headers = me.getHeaders(token, true),
             response;
-        Logger.debug("url:", url);
+        Logger.debug(me.postForm, "url:", url);
         try {
             let options = { data: data, headers: headers};
             if(withCredentials) {
@@ -68,18 +68,18 @@ Ext.define('Common.oidc.service.Json', {
             response = await Http.post(url, null, options);
         }
         catch (error) {
-            Logger.debug(me, 'Error from server:', error) 
+            Logger.debug(me.postForm, 'Error from server:', error) 
             throw new Error(`${error.statusText} (${error.status})`);
         }
 
-        Logger.debug(me, "HTTP response received, status", response.status);
+        Logger.debug(me.postForm, "HTTP response received, status", response.status);
         let contentType = response.getResponseHeader("Content-Type");
         if (contentType && !me.contentTypes.find(item => contentType.startsWith(item))) {
             throw new Error(`Invalid response Content-Type: ${(contentType ?? "undefined")}, from URL: ${url}`);
         }
         let json = response.request.getJson();
         if(!json) {
-            Logger.error(me, "Error parsing JSON response", response);
+            Logger.error(me.postForm, "Error parsing JSON response", response);
             throw new Error(`${response.responseText}`);
         }
         return me.normalizedJson(json);
@@ -122,7 +122,7 @@ Ext.define('Common.oidc.service.Json', {
                 headers["Content-Type"] = "application/x-www-form-urlencoded";
             }
             if (token) {
-                Logger.debug(me, "token passed, setting Authorization header");
+                Logger.debug(me.getHeaders, "token passed, setting Authorization header");
                 let authorizationPrefix = isPost ? 'Basic' : 'Bearer';
                 headers["Authorization"] = `${authorizationPrefix} ${token}`;
             }
@@ -144,7 +144,7 @@ Ext.define('Common.oidc.service.Json', {
             }
             customKeys.forEach((headerName) => {
                 if (protectedHeaders.includes(headerName.toLocaleLowerCase())) {
-                    Logger.warn(me, "Protected header could not be overridden", headerName, protectedHeaders);
+                    Logger.warn(me.appendExtraHeaders, "Protected header could not be overridden", headerName, protectedHeaders);
                     return;
                 }
                 let content = (typeof extraHeaders[headerName] === "function") ?

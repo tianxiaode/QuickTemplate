@@ -37,7 +37,7 @@ Ext.define('Common.oidc.response.Signin', {
     /** @see {@link User.scope} */
     scope: null,
     /** @see {@link User.expires_at} */
-    expiresAt: null,
+    expiresAt: undefined,
 
     /** custom state data set during the initial signin request */
     userState: null,
@@ -46,9 +46,18 @@ Ext.define('Common.oidc.response.Signin', {
      profile: null,
 
     constructor(params) {
-        let me = this;
+        let me = this,
+            delimiter = Oidc.Url.URL_STATE_DELIMITER;
         me.state = params.get("state");
         me.sessionState = params.get("session_state");
+
+        if (me.state) {
+            let splitState = decodeURIComponent(me.state).split(delimiter);
+            me.state = splitState[0];
+            if (splitState.length > 1) {
+                me.urlState = splitState.slice(1).join(delimiter);
+            }
+        }
 
         me.error = params.get("error");
         me.errorDescription = params.get("error_description");
@@ -62,18 +71,19 @@ Ext.define('Common.oidc.response.Signin', {
         if (!this.expiresAt) {
             return undefined;
         }
-        return this.expiresAt - Format.getEpochTime();
+        return this.expiresAt -  Oidc.Timer.getEpochTime();
 
     },
 
     setExpiresIn(value){
         if (typeof value === "string") value = Number(value);
         if (value !== undefined && value >= 0) {
-            this.expiresAt = Math.floor(value) + Format.getEpochTime();
+            this.expiresAt = Math.floor(value) +  Oidc.Timer.getEpochTime();
         }
     },
 
-    isOpenId(){
+    isOpenId()
+    {
         return this.scope?.split(" ").includes(this.oidcScope) || !!this.idToken;
     },
 

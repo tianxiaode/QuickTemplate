@@ -24,10 +24,10 @@ Ext.define('Common.oidc.service.UserInfo', {
         }
 
         let url = await me.metadataService.getUserInfoEndpoint();
-        Logger.debug(me, "got userinfo url", url);    
+        Logger.debug(me.getClaims, "got userinfo url", url);    
 
         let claims = await me.jsonService.getJson(url, token, me.settings.fetchRequestCredentials);
-        Logger.debug(me, "got claims", claims);
+        Logger.debug(me.getClaims, "got claims", claims);
 
         return claims;
 
@@ -44,11 +44,11 @@ Ext.define('Common.oidc.service.UserInfo', {
         async getClaimsFromJwt(responseText) {
             try {
                 let payload = Oidc.Jwt.decode(responseText);
-                Logger.debug("JWT decoding successful");
+                Logger.debug(this.getClaimsFromJwt, "JWT decoding successful");
 
                 return payload;
             } catch (err) {
-                Logger.error("Error parsing JWT response");
+                Logger.error(this.getClaimsFromJwt,"Error parsing JWT response");
                 throw err;
             }
         }

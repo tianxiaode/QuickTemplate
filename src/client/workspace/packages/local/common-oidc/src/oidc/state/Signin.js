@@ -2,6 +2,10 @@ Ext.define('Common.oidc.state.Signin',{
     extend: 'Common.oidc.state.State',
     alias: 'oidc.state.signin',
 
+    requires:[
+        'Common.oidc.util.Crypto'
+    ],
+
      codeVerifier: null,
     /** Used to secure authorization code grants via Proof Key for Code Exchange (PKCE). */
      codeChallenge: null,
@@ -25,22 +29,25 @@ Ext.define('Common.oidc.state.Signin',{
      skipUserInfo: false,
 
      statics:{
+
+        async create(settings){
+            let codeVerifier = settings.codeVerifier === true ? Oidc.Crypto.generateCodeVerifier() : (settings.codeVerifier || undefined);
+            let codeChallenge = codeVerifier ? await Oidc.Crypto.generateCodeChallenge(codeVerifier) : undefined;
+            return Ext.create('oidc.state.signin',settings, codeVerifier, codeChallenge);
+
+        },
+
         fromStorageString(storageString){
             let data = JSON.parse(storageString);
             return Ext.create('oidc.state.signin', data);
         }
      },
 
-     constructor(config){
+     constructor(config, codeVerifier, codeChallenge){
         let me = this;
         me.callParent(arguments);
-        if(me.codeVerifier === true){
-            me.codeVerifier = Oidc.Crypto.generateCodeVerifier();
-        }
-
-        if(me.codeVerifier){
-            me.codeChallenge = Oidc.Crypto.generateCodeChallenge(me.codeVerifier);
-        }
+        me.codeVerifier = codeVerifier;
+        me.codeChallenge = codeChallenge;
      },
 
      toStorageString() {

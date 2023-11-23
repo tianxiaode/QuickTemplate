@@ -1,6 +1,10 @@
 Ext.define('Common.oidc.setting.Client', {
     alias: 'oidc.setting.client',
 
+    requires:[
+        'Common.oidc.storage.Memory',
+        'Common.oidc.state.Store'
+    ],
     // metadata
     /** The URL of the OIDC/OAuth2 provider */
     authority: null,
@@ -107,7 +111,7 @@ Ext.define('Common.oidc.setting.Client', {
     /**
      * Only scopes in this list will be passed in the token refresh request.
      */
-    refreshTokenAllowedScope: null,
+    refreshTokenAllowedScope: undefined,
     /**
      * Will disable pkce validation, changing to true will not append to sign in request code_challenge and code_challenge_method. (default: false)
      */

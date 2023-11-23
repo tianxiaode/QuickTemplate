@@ -5,10 +5,16 @@ Ext.define('Common.oidc.event.Timer',{
     timerHandle: null,
     expiration: 0,
 
+    statics:{
+        getEpochTime() {
+            return Math.floor(Date.now() / 1000);
+        }
+    },
+
     init(durationInSeconds) {
         let me = this;
         durationInSeconds = Math.max(Math.floor(durationInSeconds), 1);
-        let expiration = Format.getEpochTime() + durationInSeconds;
+        let expiration = Oidc.Timer.getEpochTime() + durationInSeconds;
         if (me.expiration === expiration && me.timerHandle) {
             // no need to reinitialize to same expiration, so bail out
             Logger.debug(me.init ,  "skipping since already initialized for expiration at", me.expiration);
@@ -42,10 +48,10 @@ Ext.define('Common.oidc.event.Timer',{
 
     callback(){
         let me = this,
-            diff = me.expiration - Format.getEpochTime();
+            diff = me.expiration -  Oidc.Timer.getEpochTime();
         Logger.debug(me.callback,  "timer completes in", diff);
 
-        if (me.expiration <= Format.getEpochTime()) {
+        if (me.expiration <=  Oidc.Timer.getEpochTime()) {
             me.cancel();
             me.raise();
         }
@@ -56,4 +62,7 @@ Ext.define('Common.oidc.event.Timer',{
         this.callParent();
     }
 
+},()=>{
+    window.Oidc = window.Oidc || {};
+    Oidc.Timer = Common.oidc.event.Timer;
 })

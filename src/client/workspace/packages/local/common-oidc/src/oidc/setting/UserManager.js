@@ -2,6 +2,12 @@ Ext.define('Common.oidc.setting.UserManager', {
     extend: 'Common.oidc.setting.Client',
     alias: 'oidc.setting.usermanager',
 
+    requires:[
+        'Common.oidc.storage.Memory',
+        'Common.oidc.state.Store'
+    ],
+
+
     /** The URL for the page containing the call to signinPopupCallback to handle the callback from the OIDC/OAuth2 */
     popupRedirectUri: null,
     popupPostLogoutRedirectUri: null,

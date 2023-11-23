@@ -2,6 +2,7 @@
 Ext.define('Common.oidc.window.Abstract', {
     requires: [
         'Common.oidc.event.Event',
+        'Common.oidc.util.Url',
         'Common.core.util.Logger'
     ],
 
@@ -61,7 +62,7 @@ Ext.define('Common.oidc.window.Abstract', {
                     return;
                 }
                 try {
-                    let state = URI.readParams(data.url, params.responseMode).get("state");
+                    let state = Oidc.Url.readParams(data.url, params.responseMode).get("state");
                     if (!state) {
                         Logger.warn(me.navigate, "no state found in response url");
                     }

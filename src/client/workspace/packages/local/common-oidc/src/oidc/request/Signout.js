@@ -1,6 +1,10 @@
 Ext.define('Common.oidc.request.Signout', {
     alias: 'oidc.request.signout',
 
+    requires:[
+        'Common.oidc.state.State'
+    ],
+
     /**
      * @public
      * @see https://openid.net/specs/openid-connect-rpinitiated-1_0.html#RPLogout
@@ -26,7 +30,7 @@ Ext.define('Common.oidc.request.Signout', {
             { url, stateData, idTokenHint, postLogoutRedirectUri, extraQueryParams, requestType, clientId } = config;
 
         if (!url) {
-            Logger.error(me, "ctor: No url passed");
+            Logger.error(me.constructor, "ctor: No url passed");
             throw new Error("url");
         }
 
@@ -51,7 +55,7 @@ Ext.define('Common.oidc.request.Signout', {
 
         for (const [key, value] of Object.entries({ ...extraQueryParams })) {
             if (value != null) {
-                parsedUrl.searchParams.append(Format.splitCamelCase(key, '_'), value.toString());
+                parsedUrl.searchParams.append(key, value.toString());
             }
         }
 
