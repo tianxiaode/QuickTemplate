@@ -534,7 +534,7 @@ Ext.define('Test.spec.common.oidc.Client', {
             
                         // assert
                         expect(request.state).toBeDefined();
-                        expect(request.state?.data).toEqual("foo");
+                        expect(request.state.data).toEqual("foo");
                         let url = request.url;
                         expect(url).toContain("http://sts/signout");
                         expect(url).toContain("post_logout_redirect_uri=bar");
@@ -554,7 +554,7 @@ Ext.define('Test.spec.common.oidc.Client', {
             
                         // assert
                         expect(request.state).toBeDefined();
-                        expect(request.state?.data).toEqual("foo");
+                        expect(request.state.data).toEqual("foo");
                         let url = request.url;
                         expect(url).toContain("http://sts/signout");
                         expect(url).toContain("post_logout_redirect_uri=bar");
@@ -573,7 +573,7 @@ Ext.define('Test.spec.common.oidc.Client', {
             
                         // assert
                         expect(request.state).toBeDefined();
-                        expect(request.state?.data).toEqual("foo");
+                        expect(request.state.data).toEqual("foo");
                         let url = request.url;
                         expect(url).toContain("http://sts/signout");
                         expect(url).toContain("post_logout_redirect_uri=bar");
@@ -593,7 +593,7 @@ Ext.define('Test.spec.common.oidc.Client', {
             
                         // assert
                         expect(request.state).toBeDefined();
-                        expect(request.state?.data).toEqual("foo");
+                        expect(request.state.data).toEqual("foo");
                         let url = request.url;
                         expect(url).toContain("http://sts/signout");
                         expect(url).toContain("post_logout_redirect_uri=bar");
@@ -664,8 +664,6 @@ Ext.define('Test.spec.common.oidc.Client', {
             
                         // assert
                         expect(p).toBeInstanceOf(Promise);
-                        // eslint-disable-next-line no-empty
-                        try { await p; } catch {}
                     });
             
                     it("should return result if no state on response", async () => {
@@ -713,8 +711,8 @@ Ext.define('Test.spec.common.oidc.Client', {
             
                         // assert
                         expect(state).toBeDefined();
-                        expect(state?.id).toEqual("1");
-                        expect(state?.requestType).toEqual("type");
+                        expect(state.id).toEqual("1");
+                        expect(state.requestType).toEqual("type");
                         expect(response.state).toEqual("1");
                     });
             
@@ -743,8 +741,6 @@ Ext.define('Test.spec.common.oidc.Client', {
             
                         // assert
                         expect(p).toBeInstanceOf(Promise);
-                        // eslint-disable-next-line no-empty
-                        try { await p; } catch {}
                     });
             
                     it("should return result if no state on response", async () => {
@@ -841,7 +837,7 @@ Ext.define('Test.spec.common.oidc.Client', {
                         // assert
                         expect(revokeSpy).toHaveBeenCalledWith({
                             token: "token",
-                            tokenTypeHint: "access_token",
+                            tokenTypeHint: "access_token"
                         });
                     });
                 });

@@ -190,7 +190,7 @@ Ext.define('Common.oidc.TokenClient', {
 
         let url = await me.metadataService.getRevocationEndpoint(false);
 
-        Logger.debug(me.revoke, `got revocation endpoint, revoking ${args.tokenTypeHint ?? "default token type"}`);
+        Logger.debug(me.revoke, `got revocation endpoint, revoking ${args.tokenTypeHint || "default token type"}`);
 
         let params = new URLSearchParams();
         for (let [key, value] of Object.entries(args)) {

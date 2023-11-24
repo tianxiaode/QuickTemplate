@@ -41,9 +41,9 @@ Ext.define('Common.oidc.service.Json', {
         }
         let contentType = response.getResponseHeader("Content-Type");
         if (contentType && !me.contentTypes.find(item => contentType.startsWith(item))) {
-            throw new Error(`Invalid response Content-Type: ${(contentType ?? "undefined")}, from URL: ${url}`);
+            throw new Error(`Invalid response Content-Type: ${(contentType || "undefined")}, from URL: ${url}`);
         }
-        if (response.request.success && me.jwtHandler && contentType?.startsWith("application/jwt")) {
+        if (response.request.success && me.jwtHandler && (contentType && contentType.startsWith("application/jwt"))) {
             return me.jwtHandler(response.responseText);
         }
         let json = response.request.getJson();
@@ -75,7 +75,7 @@ Ext.define('Common.oidc.service.Json', {
         Logger.debug(me.postForm, "HTTP response received, status", response.status);
         let contentType = response.getResponseHeader("Content-Type");
         if (contentType && !me.contentTypes.find(item => contentType.startsWith(item))) {
-            throw new Error(`Invalid response Content-Type: ${(contentType ?? "undefined")}, from URL: ${url}`);
+            throw new Error(`Invalid response Content-Type: ${(contentType || "undefined")}, from URL: ${url}`);
         }
         let json = response.request.getJson();
         if(!json) {

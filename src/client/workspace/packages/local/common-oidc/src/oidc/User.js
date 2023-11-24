@@ -88,7 +88,8 @@ Ext.define('Common.oidc.User',{
 
     /** Array representing the parsed values from the `scope`. */
     getScopes(){
-        return this.scope?.split(" ") ?? [];
+        let scope = this.scope;
+        return scope ? scope.split(" ") : [];
     },
 
 

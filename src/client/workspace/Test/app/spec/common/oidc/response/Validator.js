@@ -271,14 +271,14 @@
                         // arrange
                         Object.assign(stubResponse, {
                             isOpenId: false,
-                            profile: { a: "apple", b: "banana", iss: "foo" },
+                            profile: { a: "apple", b: "banana", iss: "foo" }
                         });
             
                         // act
                         await subject.validateSigninResponse(stubResponse, stubState);
             
                         // assert
-                        expect(stubResponse.profile?.iss).toEqual("foo");
+                        expect(stubResponse.profile.iss).toEqual("foo");
                     });
             
                     it("should fail if sub from user info endpoint does not match sub in id_token", async () => {
@@ -670,7 +670,7 @@
                         // assert
                         expect(Oidc.Jwt.decode).toHaveBeenCalledWith("id_token");
                         expect(getClaimsSpy).toHaveBeenCalledWith(
-                            "access_token",
+                            "access_token"
                         );
                         expect(stubResponse.profile).toEqual({
                             sub: "subsub",

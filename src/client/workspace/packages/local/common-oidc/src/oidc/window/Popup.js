@@ -51,7 +51,7 @@ Ext.define('Common.oidc.window.Popup', {
     async navigate(params) {
         let me = this,
             window = me.window;
-        window?.focus();
+        window && window.focus();
 
         let popupClosedInterval = setInterval(() => {
             if (!window || window.closed) {

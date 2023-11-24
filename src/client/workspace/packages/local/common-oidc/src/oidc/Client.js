@@ -33,7 +33,7 @@ Ext.define('Common.oidc.Client', {
         let me = this,
             settings;
         settings = me.settings = clientSettings.isInstance ? clientSettings : Ext.create('oidc.setting.client', clientSettings);
-        me.metadataService = metadataService ?? Ext.create('oidc.service.metadata', settings);
+        me.metadataService = metadataService || Ext.create('oidc.service.metadata', settings);
         me.claimsService = Ext.create('oidc.service.claims', settings);
         me.validator = Ext.create('oidc.response.validator', settings, me.metadataService, me.claimsService);
         me.tokenClient = Ext.create('oidc.tokenclient', settings, me.metadataService);
@@ -147,7 +147,7 @@ Ext.define('Common.oidc.Client', {
         extraTokenParams
         }){
         let me = this;
-        skipUserInfo = skipUserInfo ?? false;
+        skipUserInfo = skipUserInfo ? skipUserInfo : false;
         extraTokenParams = extraTokenParams || {};
         let tokenResponse = await me.tokenClient.exchangeCredentials({ username, password, ...extraTokenParams });
         let signinResponse = Ext.create('oidc.response.signin', new URLSearchParams());
@@ -172,7 +172,7 @@ Ext.define('Common.oidc.Client', {
             scope = state.scope;
         } else {
             let allowableScopes = settings.refreshTokenAllowedScope.split(" ");
-            let providedScopes = state.scope?.split(" ") || [];
+            let providedScopes = state.scope ?  state.scope.split(" ") : [];
 
             scope = providedScopes.filter(s => allowableScopes.includes(s)).join(" ");
         }

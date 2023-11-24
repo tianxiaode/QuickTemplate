@@ -84,7 +84,8 @@ Ext.define('Common.oidc.response.Signin', {
 
     isOpenId()
     {
-        return this.scope?.split(" ").includes(this.oidcScope) || !!this.idToken;
+        let scope = this.scope ?  this.scope.split(" ") : [];
+        return scope.includes(this.oidcScope) || !!this.idToken;
     },
 
     destroy() {

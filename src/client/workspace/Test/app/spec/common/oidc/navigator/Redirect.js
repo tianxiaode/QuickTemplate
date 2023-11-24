@@ -37,7 +37,7 @@ Ext.define('Test.spec.common.oidc.navigator.Redirect', {
                     navigator = Ext.create('oidc.navigator.redirect', settings);
                     navigatorSpy = spyOn(navigator, 'getTargetWindow');
                     navigatorSpy.and.callFake((redirectTarget) => {
-                        return redirectTarget === 'top' ? targetWindow.top ?? targetWindow : targetWindow;
+                        return redirectTarget === 'top' ? targetWindow.top || targetWindow : targetWindow;
                     });
                 })
 

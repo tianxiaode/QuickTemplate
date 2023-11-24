@@ -17,7 +17,7 @@ Ext.define('Common.oidc.window.Abstract', {
     statics:{
         MessageSource: "oidc-client",
         notifyParent(parent, url, keepOpen, targetOrigin) {
-            targetOrigin = targetOrigin ?? this.getLocationOrigin();
+            targetOrigin = targetOrigin || this.getLocationOrigin();
             parent.postMessage({
                 source: this.MessageSource,
                 url,
@@ -56,8 +56,8 @@ Ext.define('Common.oidc.window.Abstract', {
         let { url, keepOpen } = await new Promise((resolve, reject) => {
             let listener = (e) => {
                 let data = e.data,
-                    origin = params.scriptOrigin ?? Oidc.Window.getLocationOrigin();
-                if (e.origin !== origin || data?.source !== Oidc.Window.MessageSource) {
+                    origin = params.scriptOrigin || Oidc.Window.getLocationOrigin();
+                if (e.origin !== origin || (data && data.source !== Oidc.Window.MessageSource)) {
                     // silently discard events not intended for us
                     return;
                 }

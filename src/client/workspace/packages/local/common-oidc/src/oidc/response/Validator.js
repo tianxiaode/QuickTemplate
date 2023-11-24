@@ -38,7 +38,7 @@ Ext.define('Common.oidc.response.Validator',{
         }
         Logger.debug(me.validateSigninResponse , "tokens validated");
 
-        await this.processClaims(response, state?.skipUserInfo, response.isOpenId);
+        await this.processClaims(response, state && state.skipUserInfo, response.isOpenId);
         Logger.debug(me.validateSigninResponse, "claims processed");
     },
 
@@ -59,9 +59,9 @@ Ext.define('Common.oidc.response.Validator',{
 
         response.userState = state.data;
         // if there's no session_state on the response, copy over session_state from original request
-        response.sessionState ??= state.sessionState;
+        response.sessionState = response.sessionState || state.sessionState;
         // if there's no scope on the response, then assume all scopes granted (per-spec) and copy over scopes from original request
-        response.scope ??= state.scope;
+        response.scope = response.scope || state.scope;
 
         // OpenID Connect Core 1.0 says that id_token is optional in refresh response:
         // https://openid.net/specs/openid-connect-core-1_0.html#RefreshTokenResponse
@@ -137,7 +137,7 @@ Ext.define('Common.oidc.response.Validator',{
             Logger.debug(me.processSigninState , "state validated");
             response.userState = state.data;
             // if there's no scope on the response, then assume all scopes granted (per-spec) and copy over scopes from original request
-            response.scope ??= state.scope;
+            response.scope = response.scope || state.scope;
     
             if (response.error) {
                 Logger.warn(me.processSigninState, "Response was error", response.error);
@@ -195,7 +195,7 @@ Ext.define('Common.oidc.response.Validator',{
             let me = this;
     
             Logger.debug(me.processClaims, "decoding ID Token JWT");
-            let incoming = Oidc.Jwt.decode(response.idToken ?? "");
+            let incoming = Oidc.Jwt.decode(response.idToken || "");
     
             if (!incoming.sub) {
                 throw new Error("ID Token is missing a subject claim");

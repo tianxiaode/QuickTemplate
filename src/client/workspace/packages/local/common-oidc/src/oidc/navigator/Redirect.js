@@ -4,8 +4,8 @@ Ext.define('Common.oidc.navigator.Redirect', {
 
     async prepare(config){
         let me = this,
-            redirectMethod = config.redirectMethod ?? me.redirectMethod ,
-            redirectTarget = config.redirectTarget ?? me.redirectTarget,
+            redirectMethod = config.redirectMethod || me.redirectMethod ,
+            redirectTarget = config.redirectTarget || me.redirectTarget,
             targetWindow = me.getTargetWindow(redirectTarget);
 
         let redirect = targetWindow.location[redirectMethod].bind(targetWindow.location),
@@ -19,7 +19,7 @@ Ext.define('Common.oidc.navigator.Redirect', {
                 return await (promise);
             },
             close: () => {
-                abort?.(new Error("Redirect aborted"));
+                abort && abort(new Error("Redirect aborted"));
                 targetWindow.stop();
             },
         };
@@ -30,7 +30,7 @@ Ext.define('Common.oidc.navigator.Redirect', {
      * @returns window
      */
     getTargetWindow(redirectTarget){
-        return redirectTarget === 'top' ? window.top ?? window.self : window.self;
+        return redirectTarget === 'top' ? window.top || window.self : window.self;
     },
 
     async callback(){

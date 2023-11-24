@@ -37,10 +37,10 @@ Ext.define('Common.oidc.window.IFrame', {
             if (me.frame.parentNode) {
                 me.frame.addEventListener("load", (ev) => {
                     let frame = ev.target;
-                    frame.parentNode?.removeChild(frame);
+                    frame.parentNode && frame.parentNode.removeChild(frame);
                     me.abort.raise("IFrame removed from DOM");
                 }, true);
-                me.frame.contentWindow?.location.replace("about:blank");
+                me.frame.contentWindow && me.frame.contentWindow.location.replace("about:blank");
             }
             me.frame = null;
         }

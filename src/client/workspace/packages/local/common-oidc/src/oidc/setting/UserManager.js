@@ -89,19 +89,19 @@ Ext.define('Common.oidc.setting.UserManager', {
         me.redirectMethod = me.redirectMethod || 'assign';
         me.redirectTarget = me.redirectTarget || 'self';
         me.silentRedirectUri = me.silentRedirectUri || me.redirectUri;
-        me.silentRequestTimeoutInSeconds = me.silentRequestTimeoutInSeconds ?? me.defaultSilentRequestTimeoutInSeconds;
-        me.automaticSilentRenew = me.automaticSilentRenew ?? true;
-        me.validateSubOnSilentRenew = me.validateSubOnSilentRenew ?? true;
-        me.includeIdTokenInSilentRenew = me.includeIdTokenInSilentRenew ?? false;
-        me.monitorSession = me.monitorSession ?? false;
-        me.monitorAnonymousSession = me.monitorAnonymousSession ?? false;
-        me.checkSessionIntervalInSeconds = me.checkSessionIntervalInSeconds ?? me.defaultCheckSessionIntervalInSeconds;
+        me.silentRequestTimeoutInSeconds = me.silentRequestTimeoutInSeconds || me.defaultSilentRequestTimeoutInSeconds;
+        me.automaticSilentRenew = me.automaticSilentRenew || true;
+        me.validateSubOnSilentRenew = me.validateSubOnSilentRenew || true;
+        me.includeIdTokenInSilentRenew = me.includeIdTokenInSilentRenew || false;
+        me.monitorSession = me.monitorSession || false;
+        me.monitorAnonymousSession = me.monitorAnonymousSession || false;
+        me.checkSessionIntervalInSeconds = me.checkSessionIntervalInSeconds || me.defaultCheckSessionIntervalInSeconds;
         me.queryStatusResponseType = me.queryStatusResponseType || 'code';
-        me.stopCheckSessionOnError = me.stopCheckSessionOnError ?? true;
+        me.stopCheckSessionOnError = me.stopCheckSessionOnError || true;
         me.revokeTokenTypes = me.revokeTokenTypes || ['access_token', 'refresh_token'];
-        me.revokeTokensOnSignout = me.revokeTokensOnSignout ?? false;
-        me.includeIdTokenInSilentSignout = me.includeIdTokenInSilentSignout ?? false;
-        me.accessTokenExpiringNotificationTimeInSeconds = me.accessTokenExpiringNotificationTimeInSeconds ?? me.defaultAccessTokenExpiringNotificationTimeInSeconds;
+        me.revokeTokensOnSignout = me.revokeTokensOnSignout || false;
+        me.includeIdTokenInSilentSignout = me.includeIdTokenInSilentSignout || false;
+        me.accessTokenExpiringNotificationTimeInSeconds = me.accessTokenExpiringNotificationTimeInSeconds || me.defaultAccessTokenExpiringNotificationTimeInSeconds;
 
         if (!me.userStore) {
             let store = typeof window !== "undefined" ? window.sessionStorage : Ext.create('oidc.storage.memory');
