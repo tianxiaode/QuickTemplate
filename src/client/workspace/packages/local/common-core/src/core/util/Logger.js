@@ -20,6 +20,7 @@ Ext.define('Common.core.util.Logger', {
     applyLevel(level){
         if(Ext.isString(level)) {
             let l = this.levelMap[level];
+            if(l === 0) return 0;
             return l ? l : 3;
         }
         return level;

@@ -664,6 +664,11 @@ Ext.define('Test.spec.common.oidc.Client', {
             
                         // assert
                         expect(p).toBeInstanceOf(Promise);
+                        try { 
+                            let a = await p; 
+                        } catch(error) {
+
+                        }
                     });
             
                     it("should return result if no state on response", async () => {

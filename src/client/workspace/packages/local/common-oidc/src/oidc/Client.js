@@ -248,6 +248,7 @@ Ext.define('Common.oidc.Client', {
             settings = me.settings,
             response = Ext.create('oidc.response.signout', Oidc.Url.readParams(url, settings.responseMode));
         Logger.debug(me.readSignoutResponseState, 'readSignoutResponseState');
+        console.log('state-state', response, response.state);
         if (!response.state) {
             Logger.debug(me.readSignoutResponseState, "No state in response");
 

@@ -47,7 +47,7 @@ Ext.define('Common.oidc.setting.UserManager', {
     /** Interval in seconds to check the user's session (default: 2) */
     checkSessionIntervalInSeconds: 2,
     queryStatusResponseType: null,
-    stopCheckSessionOnError: false,
+    stopCheckSessionOnError: true,
 
     /**
      * The `token_type_hint`s to pass to the authority server by default (default: ["access_token", "refresh_token"])
@@ -90,14 +90,14 @@ Ext.define('Common.oidc.setting.UserManager', {
         me.redirectTarget = me.redirectTarget || 'self';
         me.silentRedirectUri = me.silentRedirectUri || me.redirectUri;
         me.silentRequestTimeoutInSeconds = me.silentRequestTimeoutInSeconds || me.defaultSilentRequestTimeoutInSeconds;
-        me.automaticSilentRenew = me.automaticSilentRenew || true;
-        me.validateSubOnSilentRenew = me.validateSubOnSilentRenew || true;
+        me.automaticSilentRenew = Ext.isEmpty(me.automaticSilentRenew) ? true : me.automaticSilentRenew;
+        me.validateSubOnSilentRenew = Ext.isEmpty(me.validateSubOnSilentRenew) ? true : me.validateSubOnSilentRenew;
         me.includeIdTokenInSilentRenew = me.includeIdTokenInSilentRenew || false;
         me.monitorSession = me.monitorSession || false;
         me.monitorAnonymousSession = me.monitorAnonymousSession || false;
         me.checkSessionIntervalInSeconds = me.checkSessionIntervalInSeconds || me.defaultCheckSessionIntervalInSeconds;
         me.queryStatusResponseType = me.queryStatusResponseType || 'code';
-        me.stopCheckSessionOnError = me.stopCheckSessionOnError || true;
+        me.stopCheckSessionOnError = Ext.isEmpty(me.stopCheckSessionOnError) ? true : me.stopCheckSessionOnError;
         me.revokeTokenTypes = me.revokeTokenTypes || ['access_token', 'refresh_token'];
         me.revokeTokensOnSignout = me.revokeTokensOnSignout || false;
         me.includeIdTokenInSilentSignout = me.includeIdTokenInSilentSignout || false;
