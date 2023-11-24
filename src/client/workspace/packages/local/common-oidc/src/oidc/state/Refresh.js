@@ -11,14 +11,14 @@ Ext.define('Common.oidc.state.Refresh',{
      resource: null,
 
 
-    constructor(config){
+    constructor(config, resource){
         let me = this;        
         me.refreshToken = config.refreshToken;
         me.idToken = config.idToken;
         me.sessionState = config.sessionState;
         me.scope = config.scope;
         me.profile = config.profile;
-        me.resource = config.resource;
+        me.resource = resource;
 
         me.data = config.state;
 

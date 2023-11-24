@@ -141,6 +141,7 @@ Ext.define('Common.oidc.Client', {
     },
 
     async processResourceOwnerPasswordCredentials({
+        username,
         password,
         skipUserInfo,
         extraTokenParams
@@ -245,7 +246,7 @@ Ext.define('Common.oidc.Client', {
     async readSignoutResponseState(url, removeState) {
         let me = this,
             settings = me.settings,
-            response = Ext.create('oidc.request.signout', Oidc.Url.readParams(url, settings.responseMode));
+            response = Ext.create('oidc.response.signout', Oidc.Url.readParams(url, settings.responseMode));
         Logger.debug(me.readSignoutResponseState, 'readSignoutResponseState');
         if (!response.state) {
             Logger.debug(me.readSignoutResponseState, "No state in response");
@@ -255,7 +256,7 @@ Ext.define('Common.oidc.Client', {
                 throw new Error(response.error);
             }
 
-            return { state, response };
+            return { state: undefined, response };
         }
 
         let storedStateString = await settings.stateStore[removeState ? "remove" : "get"](response.state);

@@ -1,6 +1,8 @@
 Ext.define('Test.spec.common.oidc.Client', {
     requires: [
-        'Common.oidc.Client'
+        'Common.oidc.Client',
+        'Common.oidc.state.Refresh'
+
     ],
 
     statics:{
@@ -141,7 +143,7 @@ Ext.define('Test.spec.common.oidc.Client', {
                     it("should fail if implicit flow requested", async () => {
                         // arrange
                         let args = {
-                            redirect_uri: "redirect",
+                            redirectUri: "redirect",
                             scope: "scope",
                             responseType: "id_token",
                         };
@@ -216,635 +218,633 @@ Ext.define('Test.spec.common.oidc.Client', {
                     });
                 });
             
-                // describe("readSigninResponseState", () => {
-            
-                //     it("should fail if no state on response", async () => {
-                //         // arrange
-                //         spyOn(subject.settings.stateStore, "get").and.resolveTo("state");
-            
-                //         // act
-                //         try {
-                //             await subject.readSigninResponseState("http://app/cb");
-                //             fail("should not come here");
-                //         }
-                //         catch (err) {
-                //             expect(err).toBeInstanceOf(Error);
-                //             expect((err).message).toContain("state");
-                //         }
-                //     });
-            
-                //     it("should fail if storage fails", async () => {
-                //         // arrange
-                //         spyOn(subject.settings.stateStore, "get").and.rejectWith(new Error("fail"));
-            
-                //         // act
-                //         try {
-                //             await subject.readSigninResponseState("http://app/cb?state=state");
-                //             fail("should not come here");
-                //         }
-                //         catch (err) {
-                //             expect(err).toBeInstanceOf(Error);
-                //             expect((err).message).toContain("fail");
-                //         }
-                //     });
-            
-                //     it("should deserialize stored state and return state and response", async () => {
-                //         // arrange
-                //         let item = await Common.oidc.state.Signin.create({
-                //             id: "1",
-                //             authority: "authority",
-                //             clientId: "client",
-                //             redirectUri: "http://app/cb",
-                //             scope: "scope",
-                //             requestType: "type",
-                //         });
-                //         spyOn(subject.settings.stateStore, "get").and.resolveTo(item.toStorageString());
-            
-                //         // act
-                //         let { state, response } = await subject.readSigninResponseState("http://app/cb?state=1");
-            
-                //         // assert
-                //         expect(state.id).toEqual("1");
-                //         expect(state.authority).toEqual("authority");
-                //         expect(state.client_id).toEqual("client");
-                //         expect(state.request_type).toEqual("type");
-                //         expect(response.state).toEqual("1");
-                //     });
-                // });
-            
-                // describe("processSigninResponse", () => {
-                //     it("should fail if no state on response", async () => {
-                //         // arrange
-                //         spyOn(subject.settings.stateStore, "get").and.resolveTo("state");
-            
-                //         // act
-                //         try {
-                //             await subject.processSigninResponse("http://app/cb");
-                //             fail("should not come here");
-                //         }
-                //         catch (err) {
-                //             expect(err).toBeInstanceOf(Error);
-                //             expect((err).message).toContain("state");
-                //         }
-                //     });
-            
-                //     it("should fail if storage fails", async () => {
-                //         // arrange
-                //         spyOn(subject.settings.stateStore, "remove").and.rejectWith(new Error("fail"));
-            
-                //         // act
-                //         try {
-                //             await subject.processSigninResponse("http://app/cb?state=state");
-                //             fail("should not come here");
-                //         }
-                //         catch (err) {
-                //             expect(err).toBeInstanceOf(Error);
-                //             expect((err).message).toContain("fail");
-                //         }
-                //     });
-            
-                //     it("should deserialize stored state and call validator", async () => {
-                //         // arrange
-                //         let item = await Common.oidc.state.Signin.create({
-                //             id: "1",
-                //             authority: "authority",
-                //             clientId: "client",
-                //             redirectUri: "http://app/cb",
-                //             scope: "scope",
-                //             requestType: "type",
-                //         });
-                //         spyOn(subject.settings.stateStore, "remove")
-                //             .and.callFake(async () => item.toStorageString());
-                //         let validateSigninResponseMock = spyOn(subject["validator"], "validateSigninResponse")
-                //             .and.resolveTo();
-            
-                //         // act
-                //         let response = await subject.processSigninResponse("http://app/cb?state=1");
-            
-                //         // assert
-                //         expect(validateSigninResponseMock).toHaveBeenCalledWith(response, item);
-                //     });
-                // });
-            
-                // describe("processResourceOwnerPasswordCredentials", () => {
-            
-                //     it("should fail on wrong credentials", async () => {
-                //         // arrange
-                //         jest.spyOn(subject["_tokenClient"], "exchangeCredentials").mockRejectedValue(new Error("Wrong credentials"));
-            
-                //         // act
-                //         await expect(subject.processResourceOwnerPasswordCredentials({ username: "u", password: "p", skipUserInfo: false }))
-                //             // assert
-                //             .rejects.toThrow(Error);
-                //     });
-            
-                //     it("should fail on invalid response", async () => {
-                //         // arrange
-                //         jest.spyOn(subject["_tokenClient"], "exchangeCredentials").mockResolvedValue({});
-                //         jest.spyOn(subject["_validator"], "validateCredentialsResponse").mockRejectedValue(new Error("Wrong response"));
-            
-                //         // act
-                //         await expect(subject.processResourceOwnerPasswordCredentials({ username: "u", password: "p", skipUserInfo: false }))
-                //             // assert
-                //             .rejects.toThrow(Error);
-                //     });
-            
-                //     it("should return response on success", async () => {
-                //         // arrange
-                //         jest.spyOn(subject["_tokenClient"], "exchangeCredentials").mockResolvedValue({
-                //             access_token: "access_token",
-                //             id_token: "id_token",
-                //             scope: "openid profile email",
-                //         });
-                //         jest.spyOn(subject["_validator"], "validateCredentialsResponse").mockImplementation(
-                //             async (response: SigninResponse): Promise<void> => {
-                //                 Object.assign(response, { profile: { sub: "subsub" } });
-                //             },
-                //         );
-            
-                //         // act
-                //         let signinResponse: SigninResponse = await subject.processResourceOwnerPasswordCredentials({ username: "u", password: "p", skipUserInfo: false });
-            
-                //         // assert
-                //         expect(signinResponse).toHaveProperty("access_token", "access_token");
-                //         expect(signinResponse).toHaveProperty("id_token", "id_token");
-                //         expect(signinResponse).toHaveProperty("scope", "openid profile email");
-                //         expect(signinResponse).toHaveProperty("profile", { sub: "subsub" });
-                //     });
-            
-                // });
-            
-                // describe("useRefreshToken", () => {
-                //     it("should return a SigninResponse", async () => {
-                //         // arrange
-                //         let tokenResponse = {
-                //             access_token: "new_access_token",
-                //             scope: "replacement scope",
-                //         };
-                //         jest.spyOn(subject["_tokenClient"], "exchangeRefreshToken").mockResolvedValue(tokenResponse);
-                //         let state = new RefreshState({
-                //             refresh_token: "refresh_token",
-                //             id_token: "id_token",
-                //             session_state: "session_state",
-                //             scope: "openid",
-                //             profile: {} as UserProfile,
-                //         });
-            
-                //         // act
-                //         let response = await subject.useRefreshToken({ state });
-            
-                //         // assert
-                //         expect(response).toBeInstanceOf(SigninResponse);
-                //         expect(response).toMatchObject(tokenResponse);
-                //     });
-            
-                //     it("should preserve the session_state and scope", async () => {
-                //         // arrange
-                //         let tokenResponse = {
-                //             access_token: "new_access_token",
-                //         };
-                //         let exchangeRefreshTokenMock =
-                //             jest.spyOn(subject["_tokenClient"], "exchangeRefreshToken")
-                //                 .mockResolvedValue(tokenResponse);
-                //         jest.spyOn(JwtUtils, "decode").mockReturnValue({ sub: "sub" });
-                //         let state = new RefreshState({
-                //             refresh_token: "refresh_token",
-                //             id_token: "id_token",
-                //             session_state: "session_state",
-                //             scope: "openid",
-                //             profile: {} as UserProfile,
-                //         }, "resource");
-            
-                //         // act
-                //         let response = await subject.useRefreshToken({ state });
-            
-                //         // assert
-                //         expect(exchangeRefreshTokenMock).toHaveBeenCalledWith( {
-                //             refresh_token: "refresh_token",
-                //             scope: "openid",
-                //             timeoutInSeconds: undefined,
-                //             resource: "resource",
-                //         });
-                //         expect(response).toBeInstanceOf(SigninResponse);
-                //         expect(response).toMatchObject(tokenResponse);
-                //         expect(response).toHaveProperty("session_state", state.session_state);
-                //         expect(response).toHaveProperty("scope", state.scope);
-                //     });
-            
-                //     it("should filter allowable scopes", async () => {
-                //         // arrange
-                //         let settings: OidcClientSettings = {
-                //             authority: "authority",
-                //             client_id: "client",
-                //             redirect_uri: "redirect",
-                //             post_logout_redirect_uri: "http://app",
-                //             refreshTokenAllowedScope: "allowed_scope",
-                //         };
-                //         subject = new OidcClient(settings);
-            
-                //         let tokenResponse = {
-                //             access_token: "new_access_token",
-                //         };
-                //         let exchangeRefreshTokenMock =
-                //             jest.spyOn(subject["_tokenClient"], "exchangeRefreshToken")
-                //                 .mockResolvedValue(tokenResponse);
-                //         jest.spyOn(JwtUtils, "decode").mockReturnValue({ sub: "sub" });
-                //         let state = new RefreshState({
-                //             refresh_token: "refresh_token",
-                //             id_token: "id_token",
-                //             session_state: "session_state",
-                //             scope: "unallowed_scope allowed_scope unallowed_scope_2",
-                //             profile: {} as UserProfile,
-                //         });
-            
-                //         // act
-                //         let response = await subject.useRefreshToken({ state });
-            
-                //         // assert
-                //         expect(exchangeRefreshTokenMock).toHaveBeenCalledWith( {
-                //             refresh_token: "refresh_token",
-                //             scope: "allowed_scope",
-                //             timeoutInSeconds: undefined,
-                //         });
-                //         expect(response).toBeInstanceOf(SigninResponse);
-                //         expect(response).toMatchObject(tokenResponse);
-                //         expect(response).toHaveProperty("session_state", state.session_state);
-                //         expect(response).toHaveProperty("scope", "allowed_scope");
-                //     });
-            
-                //     it("should enforce a matching sub claim", async () => {
-                //         // arrange
-                //         let profiles: Record<string, JwtClaims> = {
-                //             id_token: {
-                //                 sub: "current_sub",
-                //             },
-                //             new_id_token: {
-                //                 sub: "new_sub",
-                //             },
-                //         };
-                //         let tokenResponse = {
-                //             access_token: "new_access_token",
-                //             id_token: "new_id_token",
-                //         };
-                //         jest.spyOn(subject["_tokenClient"], "exchangeRefreshToken").mockResolvedValue(tokenResponse);
-                //         jest.spyOn(JwtUtils, "decode").mockImplementation((token) => profiles[token]);
-                //         let state = new RefreshState({
-                //             refresh_token: "refresh_token",
-                //             id_token: "id_token",
-                //             session_state: "session_state",
-                //             scope: "openid",
-                //             profile: {} as UserProfile,
-                //         });
-            
-                //         // act
-                //         await expect(subject.useRefreshToken({ state }))
-                //             // assert
-                //             .rejects.toThrow("sub in id_token does not match current sub");
-                //     });
-                // });
-            
-                // describe("createSignoutRequest", () => {
-                //     it("should return SignoutRequest", async () => {
-                //         // arrange
-                //         jest.spyOn(subject.metadataService, "getEndSessionEndpoint").mockImplementation(() => Promise.resolve("http://sts/signout"));
-            
-                //         // act
-                //         let request = await subject.createSignoutRequest();
-            
-                //         // assert
-                //         expect(request).toBeInstanceOf(SignoutRequest);
-                //     });
-            
-                //     it("should pass state in place of data to SignoutRequest", async () => {
-                //         // arrange
-                //         jest.spyOn(subject.metadataService, "getEndSessionEndpoint").mockImplementation(() => Promise.resolve("http://sts/signout"));
-            
-                //         // act
-                //         let request = await subject.createSignoutRequest({
-                //             state: "foo",
-                //             post_logout_redirect_uri: "bar",
-                //             id_token_hint: "baz",
-                //         });
-            
-                //         // assert
-                //         expect(request.state).toBeDefined();
-                //         expect(request.state?.data).toEqual("foo");
-                //         let url = request.url;
-                //         expect(url).toContain("http://sts/signout");
-                //         expect(url).toContain("post_logout_redirect_uri=bar");
-                //         expect(url).toContain("id_token_hint=baz");
-                //     });
-            
-                //     it("should pass params to SignoutRequest", async () => {
-                //         // arrange
-                //         jest.spyOn(subject.metadataService, "getEndSessionEndpoint").mockImplementation(() => Promise.resolve("http://sts/signout"));
-            
-                //         // act
-                //         let request = await subject.createSignoutRequest({
-                //             state: "foo",
-                //             post_logout_redirect_uri: "bar",
-                //             id_token_hint: "baz",
-                //         });
-            
-                //         // assert
-                //         expect(request.state).toBeDefined();
-                //         expect(request.state?.data).toEqual("foo");
-                //         let url = request.url;
-                //         expect(url).toContain("http://sts/signout");
-                //         expect(url).toContain("post_logout_redirect_uri=bar");
-                //         expect(url).toContain("id_token_hint=baz");
-                //     });
-            
-                //     it("should pass params to SignoutRequest w/o id_token_hint and client_id", async () => {
-                //         // arrange
-                //         jest.spyOn(subject.metadataService, "getEndSessionEndpoint").mockImplementation(() => Promise.resolve("http://sts/signout"));
-            
-                //         // act
-                //         let request = await subject.createSignoutRequest({
-                //             state: "foo",
-                //             post_logout_redirect_uri: "bar",
-                //         });
-            
-                //         // assert
-                //         expect(request.state).toBeDefined();
-                //         expect(request.state?.data).toEqual("foo");
-                //         let url = request.url;
-                //         expect(url).toContain("http://sts/signout");
-                //         expect(url).toContain("post_logout_redirect_uri=bar");
-                //         expect(url).toContain("client_id=client");
-                //     });
-            
-                //     it("should pass params to SignoutRequest with client_id", async () => {
-                //         // arrange
-                //         jest.spyOn(subject.metadataService, "getEndSessionEndpoint").mockImplementation(() => Promise.resolve("http://sts/signout"));
-            
-                //         // act
-                //         let request = await subject.createSignoutRequest({
-                //             state: "foo",
-                //             post_logout_redirect_uri: "bar",
-                //             client_id: "baz",
-                //         });
-            
-                //         // assert
-                //         expect(request.state).toBeDefined();
-                //         expect(request.state?.data).toEqual("foo");
-                //         let url = request.url;
-                //         expect(url).toContain("http://sts/signout");
-                //         expect(url).toContain("post_logout_redirect_uri=bar");
-                //         expect(url).toContain("client_id=baz");
-                //     });
-            
-                //     it("should fail if metadata fails", async () => {
-                //         // arrange
-                //         jest.spyOn(subject.metadataService, "getEndSessionEndpoint").mockRejectedValue(new Error("test"));
-            
-                //         // act
-                //         try {
-                //             await subject.createSignoutRequest();
-                //             fail("should not come here");
-                //         }
-                //         catch (err) {
-                //             expect(err).toBeInstanceOf(Error);
-                //             expect((err as Error).message).toContain("test");
-                //         }
-                //     });
-            
-                //     it("should fail if no signout endpoint on metadata", async () => {
-                //         // arrange
-                //         jest.spyOn(subject.metadataService, "getEndSessionEndpoint").mockImplementation(() => Promise.resolve(undefined));
-            
-                //         // act
-                //         try {
-                //             await subject.createSignoutRequest();
-                //             fail("should not come here");
-                //         }
-                //         catch (err) {
-                //             expect(err).toBeInstanceOf(Error);
-                //             expect((err as Error).message).toContain("No end session endpoint");
-                //         }
-                //     });
-            
-                //     it("should store state", async () => {
-                //         // arrange
-                //         jest.spyOn(subject.metadataService, "getEndSessionEndpoint").mockImplementation(() => Promise.resolve("http://sts/signout"));
-                //         let setMock = jest.spyOn(subject.settings.stateStore, "set").mockImplementation(() => Promise.resolve());
-            
-                //         // act
-                //         await subject.createSignoutRequest({
-                //             state: "foo",
-                //         });
-            
-                //         // assert
-                //         expect(setMock).toBeCalled();
-                //     });
-            
-                //     it("should not generate state if no data", async () => {
-                //         // arrange
-                //         jest.spyOn(subject.metadataService, "getEndSessionEndpoint").mockImplementation(() => Promise.resolve("http://sts/signout"));
-                //         let setMock = jest.spyOn(subject.settings.stateStore, "set").mockImplementation(() => Promise.resolve());
-            
-                //         // act
-                //         await subject.createSignoutRequest();
-            
-                //         // assert
-                //         expect(setMock).not.toBeCalled();
-                //     });
-                // });
-            
-                // describe("readSignoutResponseState", () => {
-                //     it("should return a promise", async () => {
-                //         // act
-                //         let p = subject.readSignoutResponseState("http://app/cb?state=state");
-            
-                //         // assert
-                //         expect(p).toBeInstanceOf(Promise);
-                //         // eslint-disable-next-line no-empty
-                //         try { await p; } catch {}
-                //     });
-            
-                //     it("should return result if no state on response", async () => {
-                //         // act
-                //         let { response } = await subject.readSignoutResponseState("http://app/cb");
-            
-                //         // assert
-                //         expect(response).toBeInstanceOf(SignoutResponse);
-                //     });
-            
-                //     it("should return error", async () => {
-                //         // act
-                //         try {
-                //             await subject.readSignoutResponseState("http://app/cb?error=foo");
-                //             fail("should not come here");
-                //         }
-                //         catch (err) {
-                //             expect(err).toBeInstanceOf(Error);
-                //             expect((err as ErrorResponse).error).toEqual("foo");
-                //         }
-                //     });
-            
-                //     it("should fail if storage fails", async () => {
-                //         // arrange
-                //         jest.spyOn(subject.settings.stateStore, "get").mockRejectedValue(new Error("fail"));
-            
-                //         // act
-                //         try {
-                //             await subject.readSignoutResponseState("http://app/cb?state=state");
-                //             fail("should not come here");
-                //         }
-                //         catch (err) {
-                //             expect(err).toBeInstanceOf(Error);
-                //             expect((err as Error).message).toContain("fail");
-                //         }
-                //     });
-            
-                //     it("should deserialize stored state and return state and response", async () => {
-                //         // arrange
-                //         let item = new State({ id: "1", request_type: "type" }).toStorageString();
-                //         jest.spyOn(subject.settings.stateStore, "get").mockImplementation(() => Promise.resolve(item));
-            
-                //         // act
-                //         let { state, response } = await subject.readSignoutResponseState("http://app/cb?state=1");
-            
-                //         // assert
-                //         expect(state).toBeDefined();
-                //         expect(state?.id).toEqual("1");
-                //         expect(state?.request_type).toEqual("type");
-                //         expect(response.state).toEqual("1");
-                //     });
-            
-                //     it("should call validator with state even if error in response", async () => {
-                //         // arrange
-                //         let item = new State({
-                //             id: "1",
-                //             data: "bar",
-                //             request_type: "type",
-                //         });
-                //         jest.spyOn(subject.settings.stateStore, "remove")
-                //             .mockImplementation(() => Promise.resolve(item.toStorageString()));
-                //         let validateSignoutResponse = jest.spyOn(subject["_validator"], "validateSignoutResponse")
-                //             .mockReturnValue();
-            
-                //         // act
-                //         let response = await subject.processSignoutResponse("http://app/cb?state=1&error=foo");
-            
-                //         // assert
-                //         expect(validateSignoutResponse).toBeCalledWith(response, item);
-                //     });
-                // });
-            
-                // describe("processSignoutResponse", () => {
-                //     it("should return a promise", async () => {
-                //         // act
-                //         let p = subject.processSignoutResponse("state=state");
-            
-                //         // assert
-                //         expect(p).toBeInstanceOf(Promise);
-                //         // eslint-disable-next-line no-empty
-                //         try { await p; } catch {}
-                //     });
-            
-                //     it("should return result if no state on response", async () => {
-                //         // act
-                //         let response = await subject.processSignoutResponse("http://app/cb");
-            
-                //         // assert
-                //         expect(response).toBeInstanceOf(SignoutResponse);
-                //     });
-            
-                //     it("should return error", async () => {
-                //         // act
-                //         try {
-                //             await subject.processSignoutResponse("http://app/cb?error=foo");
-                //             fail("should not come here");
-                //         }
-                //         catch (err) {
-                //             expect(err).toBeInstanceOf(Error);
-                //             expect((err as ErrorResponse).error).toEqual("foo");
-                //         }
-                //     });
-            
-                //     it("should fail if storage fails", async () => {
-                //         // arrange
-                //         jest.spyOn(subject.settings.stateStore, "remove").mockRejectedValue(new Error("fail"));
-            
-                //         // act
-                //         try {
-                //             await subject.processSignoutResponse("http://app/cb?state=state");
-                //             fail("should not come here");
-                //         }
-                //         catch (err) {
-                //             expect(err).toBeInstanceOf(Error);
-                //             expect((err as Error).message).toContain("fail");
-                //         }
-                //     });
-            
-                //     it("should deserialize stored state and call validator", async () => {
-                //         // arrange
-                //         let item = new State({
-                //             id: "1",
-                //             request_type: "type",
-                //         });
-                //         jest.spyOn(subject.settings.stateStore, "remove")
-                //             .mockImplementation(async () => item.toStorageString());
-                //         let validateSignoutResponse = jest.spyOn(subject["_validator"], "validateSignoutResponse")
-                //             .mockReturnValue();
-            
-                //         // act
-                //         let response = await subject.processSignoutResponse("http://app/cb?state=1");
-            
-                //         // assert
-                //         expect(validateSignoutResponse).toBeCalledWith(response, item);
-                //     });
-            
-                //     it("should call validator with state even if error in response", async () => {
-                //         // arrange
-                //         let item = new State({
-                //             id: "1",
-                //             data: "bar",
-                //             request_type: "type",
-                //         });
-                //         jest.spyOn(subject.settings.stateStore, "remove")
-                //             .mockImplementation(async () => item.toStorageString());
-                //         let validateSignoutResponse = jest.spyOn(subject["_validator"], "validateSignoutResponse")
-                //             .mockReturnValue();
-            
-                //         // act
-                //         let response = await subject.processSignoutResponse("http://app/cb?state=1&error=foo");
-            
-                //         // assert
-                //         expect(validateSignoutResponse).toBeCalledWith(response, item);
-                //     });
-                // });
-            
-                // describe("clearStaleState", () => {
-            
-                //     it("should call State.clearStaleState", async () => {
-                //         // arrange
-                //         let clearStaleState = jest.spyOn(State, "clearStaleState");
-            
-                //         // act
-                //         await subject.clearStaleState();
-            
-                //         // assert
-                //         expect(clearStaleState).toBeCalled();
-                //     });
-                // });
-            
-                // describe("revokeToken", () => {
-                //     it("revokes a token type", async () => {
-                //         // arrange
-                //         let revokeSpy = jest.spyOn(subject["_tokenClient"], "revoke").mockResolvedValue();
-            
-                //         // act
-                //         await subject.revokeToken("token", "access_token");
-            
-                //         // assert
-                //         expect(revokeSpy).toHaveBeenCalledWith({
-                //             token: "token",
-                //             token_type_hint: "access_token",
-                //         });
-                //     });
-                // });
+                describe("readSigninResponseState", () => {
+            
+                    it("should fail if no state on response", async () => {
+                        // arrange
+                        spyOn(subject.settings.stateStore, "get").and.resolveTo("state");
+            
+                        // act
+                        try {
+                            await subject.readSigninResponseState("http://app/cb");
+                            fail("should not come here");
+                        }
+                        catch (err) {
+                            expect(err).toBeInstanceOf(Error);
+                            expect((err).message).toContain("state");
+                        }
+                    });
+            
+                    it("should fail if storage fails", async () => {
+                        // arrange
+                        spyOn(subject.settings.stateStore, "get").and.rejectWith(new Error("fail"));
+            
+                        // act
+                        try {
+                            await subject.readSigninResponseState("http://app/cb?state=state");
+                            fail("should not come here");
+                        }
+                        catch (err) {
+                            expect(err).toBeInstanceOf(Error);
+                            expect((err).message).toContain("fail");
+                        }
+                    });
+            
+                    it("should deserialize stored state and return state and response", async () => {
+                        // arrange
+                        let item = await Common.oidc.state.Signin.create({
+                            id: "1",
+                            authority: "authority",
+                            clientId: "client",
+                            redirectUri: "http://app/cb",
+                            scope: "scope",
+                            requestType: "type",
+                        });
+                        spyOn(subject.settings.stateStore, "get").and.resolveTo(item.toStorageString());
+            
+                        // act
+                        let { state, response } = await subject.readSigninResponseState("http://app/cb?state=1");
+            
+                        // assert
+                        expect(state.id).toEqual("1");
+                        expect(state.authority).toEqual("authority");
+                        expect(state.clientId).toEqual("client");
+                        expect(state.requestType).toEqual("type");
+                        expect(response.state).toEqual("1");
+                    });
+                });
+            
+                describe("processSigninResponse", () => {
+                    it("should fail if no state on response", async () => {
+                        // arrange
+                        spyOn(subject.settings.stateStore, "get").and.resolveTo("state");
+            
+                        // act
+                        try {
+                            await subject.processSigninResponse("http://app/cb");
+                            fail("should not come here");
+                        }
+                        catch (err) {
+                            expect(err).toBeInstanceOf(Error);
+                            expect((err).message).toContain("state");
+                        }
+                    });
+            
+                    it("should fail if storage fails", async () => {
+                        // arrange
+                        spyOn(subject.settings.stateStore, "remove").and.rejectWith(new Error("fail"));
+            
+                        // act
+                        try {
+                            await subject.processSigninResponse("http://app/cb?state=state");
+                            fail("should not come here");
+                        }
+                        catch (err) {
+                            expect(err).toBeInstanceOf(Error);
+                            expect((err).message).toContain("fail");
+                        }
+                    });
+            
+                    it("should deserialize stored state and call validator", async () => {
+                        // arrange
+                        let item = await Common.oidc.state.Signin.create({
+                            id: "1",
+                            authority: "authority",
+                            clientId: "client",
+                            redirectUri: "http://app/cb",
+                            scope: "scope",
+                            requestType: "type",
+                        });
+                        spyOn(subject.settings.stateStore, "remove").and.callFake(async () => item.toStorageString());
+                        let validateSigninResponseMock = spyOn(subject["validator"], "validateSigninResponse");
+            
+                        // act
+                        let response = await subject.processSigninResponse("http://app/cb?state=1");
+            
+                        // assert
+                        expect(validateSigninResponseMock).toHaveBeenCalled();
+                        let recent = validateSigninResponseMock.calls.mostRecent();
+                        expect(recent.args[0]).toEqual(response);
+                        expect(recent.args[1]).toBeInstanceOf(Common.oidc.state.Signin);
+                        expect(recent.args[1].id).toEqual(item.id);
+                        expect(recent.args[1].authority).toEqual(item.authority);
+                        expect(recent.args[1].clientId).toEqual(item.clientId);
+                        expect(recent.args[1].redirectUri).toEqual(item.redirectUri);
+                        expect(recent.args[1].scope).toEqual(item.scope);
+                        expect(recent.args[1].requestType).toEqual(item.requestType);
+                    });
+                });
+            
+                describe("processResourceOwnerPasswordCredentials", () => {
+            
+                    it("should fail on wrong credentials", async () => {
+                        // arrange
+                        spyOn(subject["tokenClient"], "exchangeCredentials").and.rejectWith(new Error("Wrong credentials"));
+            
+                        // act
+                        await expectAsync(subject.processResourceOwnerPasswordCredentials({ username: "u", password: "p", skipUserInfo: false }))
+                            // assert
+                            .toBeRejectedWithError('Wrong credentials');
+                    });
+            
+                    it("should fail on invalid response", async () => {
+                        // arrange
+                        spyOn(subject["tokenClient"], "exchangeCredentials").and.resolveTo({});
+                        spyOn(subject["validator"], "validateCredentialsResponse").and.rejectWith(new Error("Wrong response"));
+            
+                        // act
+                        await expectAsync(subject.processResourceOwnerPasswordCredentials({ username: "u", password: "p", skipUserInfo: false }))
+                            // assert
+                            .toBeRejectedWithError('Wrong response');
+                    });
+            
+                    it("should return response on success", async () => {
+                        // arrange
+                        spyOn(subject["tokenClient"], "exchangeCredentials").and.resolveTo({
+                            accessToken: "access_token",
+                            idToken: "id_token",
+                            scope: "openid profile email",
+                        });
+                        spyOn(subject["validator"], "validateCredentialsResponse").and.callFake(
+                            async (response) => {
+                                Object.assign(response, { profile: { sub: "subsub" } });
+                            },
+                        );
+            
+                        // act
+                        let signinResponse = await subject.processResourceOwnerPasswordCredentials({ username: "u", password: "p", skipUserInfo: false });
+            
+                        // assert
+                        expect(signinResponse.accessToken).toEqual( "access_token");
+                        expect(signinResponse.idToken).toEqual("id_token");
+                        expect(signinResponse.scope).toEqual("openid profile email");
+                        expect(signinResponse.profile).toEqual({ sub: "subsub" });
+                    });
+            
+                });
+            
+                describe("useRefreshToken", () => {
+                    it("should return a SigninResponse", async () => {
+                        // arrange
+                        let tokenResponse = {
+                            accessToken: "new_access_token",
+                            scope: "replacement scope",
+                        };
+                        spyOn(subject["tokenClient"], "exchangeRefreshToken").and.resolveTo(tokenResponse);
+                        let state = Ext.create('oidc.state.refresh', {
+                            refreshToken: "refresh_token",
+                            idToken: "id_token",
+                            sessionState: "session_state",
+                            scope: "openid",
+                            profile: {}
+                        });
+            
+                        // act
+                        let response = await subject.useRefreshToken({ state });
+            
+                        // assert
+                        expect(response).toBeInstanceOf(Common.oidc.response.Signin);
+                        expect(response).toEqual(jasmine.objectContaining(tokenResponse));
+                    });
+            
+                    it("should preserve the session_state and scope", async () => {
+                        // arrange
+                        let tokenResponse = {
+                            accessToken: "new_access_token",
+                        };
+                        let exchangeRefreshTokenMock = spyOn(subject["tokenClient"], "exchangeRefreshToken").and.resolveTo(tokenResponse);
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "sub" });
+                        let state = Ext.create('oidc.state.refresh',{
+                            refreshToken: "refresh_token",
+                            idToken: "id_token",
+                            sessionState: "session_state",
+                            scope: "openid",
+                            profile: {},
+                        }, "resource");
+            
+                        // act
+                        let response = await subject.useRefreshToken({ state });
+            
+                        // assert
+                        expect(exchangeRefreshTokenMock).toHaveBeenCalledWith( {
+                            refreshToken: "refresh_token",
+                            scope: "openid",
+                            timeoutInSeconds: undefined,
+                            resource: "resource",
+                        });
+                        expect(response).toBeInstanceOf(Common.oidc.response.Signin);
+                        expect(response).toEqual(jasmine.objectContaining(tokenResponse));
+                        expect(response.sessionState).toEqual(state.sessionState);
+                        expect(response.scope).toEqual(state.scope);
+                    });
+            
+                    it("should filter allowable scopes", async () => {
+                        // arrange
+                        let settings = {
+                            authority: "authority",
+                            clientId: "client",
+                            redirectUri: "redirect",
+                            postLogoutRedirectUri: "http://app",
+                            refreshTokenAllowedScope: "allowed_scope",
+                        };
+                        subject = Ext.create('oidc.client', settings);
+            
+                        let tokenResponse = {
+                            accessToken: "new_access_token",
+                        };
+                        let exchangeRefreshTokenMock = spyOn(subject["tokenClient"], "exchangeRefreshToken").and.resolveTo(tokenResponse);
+                        spyOn(Oidc.Jwt, "decode").and.returnValue({ sub: "sub" });
+                        let state = Ext.create('oidc.state.refresh', {
+                            refreshToken: "refresh_token",
+                            idToken: "id_token",
+                            sessionState: "session_state",
+                            scope: "unallowed_scope allowed_scope unallowed_scope_2",
+                            profile: {} 
+                        });
+            
+                        // act
+                        let response = await subject.useRefreshToken({ state });
+            
+                        // assert
+                        expect(exchangeRefreshTokenMock).toHaveBeenCalledWith( {
+                            refreshToken: "refresh_token",
+                            scope: "allowed_scope",
+                            resource: undefined,
+                            timeoutInSeconds: undefined,
+                        });
+                        expect(response).toBeInstanceOf(Common.oidc.response.Signin);
+                        expect(response).toEqual(jasmine.objectContaining(tokenResponse));
+                        expect(response.sessionState).toEqual(state.sessionState);
+                        expect(response.scope).toEqual("allowed_scope");
+                    });
+            
+                    it("should enforce a matching sub claim", async () => {
+                        // arrange
+                        let profiles = {
+                            id_token: {
+                                sub: "current_sub",
+                            },
+                            new_id_token: {
+                                sub: "new_sub",
+                            },
+                        };
+                        let tokenResponse = {
+                            accessToken: "new_access_token",
+                            idToken: "new_id_token",
+                        };
+                        spyOn(subject["tokenClient"], "exchangeRefreshToken").and.resolveTo(tokenResponse);
+                        spyOn(Oidc.Jwt, "decode").and.callFake((token) =>{ console.log('Oidc.Jwt.decode', token); return profiles[token] });
+                        let state = Ext.create('oidc.state.refresh', {
+                            refreshToken: "refresh_token",
+                            idToken: "id_token",
+                            sessionState: "session_state",
+                            scope: "openid",
+                            profile: {}
+                        });
+            
+                        // act
+                        await expectAsync(subject.useRefreshToken({ state }))
+                            // assert
+                            .toBeRejectedWithError("sub in id_token does not match current sub");
+                    });
+                });
+            
+                describe("createSignoutRequest", () => {
+                    it("should return SignoutRequest", async () => {
+                        // arrange
+                        spyOn(subject.metadataService, "getEndSessionEndpoint").and.callFake(() => Promise.resolve("http://sts/signout"));
+            
+                        // act
+                        let request = await subject.createSignoutRequest({});
+            
+                        // assert
+                        expect(request).toBeInstanceOf(Common.oidc.request.Signout);
+                    });
+            
+                    it("should pass state in place of data to SignoutRequest", async () => {
+                        // arrange
+                        spyOn(subject.metadataService, "getEndSessionEndpoint").and.callFake(() => Promise.resolve("http://sts/signout"));
+            
+                        // act
+                        let request = await subject.createSignoutRequest({
+                            state: "foo",
+                            postLogoutRedirectUri: "bar",
+                            idTokenHint: "baz",
+                        });
+            
+                        // assert
+                        expect(request.state).toBeDefined();
+                        expect(request.state?.data).toEqual("foo");
+                        let url = request.url;
+                        expect(url).toContain("http://sts/signout");
+                        expect(url).toContain("post_logout_redirect_uri=bar");
+                        expect(url).toContain("id_token_hint=baz");
+                    });
+            
+                    it("should pass params to SignoutRequest", async () => {
+                        // arrange
+                        spyOn(subject.metadataService, "getEndSessionEndpoint").and.callFake(() => Promise.resolve("http://sts/signout"));
+            
+                        // act
+                        let request = await subject.createSignoutRequest({
+                            state: "foo",
+                            postLogoutRedirectUri: "bar",
+                            idTokenHint: "baz",
+                        });
+            
+                        // assert
+                        expect(request.state).toBeDefined();
+                        expect(request.state?.data).toEqual("foo");
+                        let url = request.url;
+                        expect(url).toContain("http://sts/signout");
+                        expect(url).toContain("post_logout_redirect_uri=bar");
+                        expect(url).toContain("id_token_hint=baz");
+                    });
+            
+                    it("should pass params to SignoutRequest w/o id_token_hint and client_id", async () => {
+                        // arrange
+                        spyOn(subject.metadataService, "getEndSessionEndpoint").and.callFake(() => Promise.resolve("http://sts/signout"));
+            
+                        // act
+                        let request = await subject.createSignoutRequest({
+                            state: "foo",
+                            postLogoutRedirectUri: "bar",
+                        });
+            
+                        // assert
+                        expect(request.state).toBeDefined();
+                        expect(request.state?.data).toEqual("foo");
+                        let url = request.url;
+                        expect(url).toContain("http://sts/signout");
+                        expect(url).toContain("post_logout_redirect_uri=bar");
+                        expect(url).toContain("client_id=client");
+                    });
+            
+                    it("should pass params to SignoutRequest with client_id", async () => {
+                        // arrange
+                        spyOn(subject.metadataService, "getEndSessionEndpoint").and.callFake(() => Promise.resolve("http://sts/signout"));
+            
+                        // act
+                        let request = await subject.createSignoutRequest({
+                            state: "foo",
+                            postLogoutRedirectUri: "bar",
+                            clientId: "baz",
+                        });
+            
+                        // assert
+                        expect(request.state).toBeDefined();
+                        expect(request.state?.data).toEqual("foo");
+                        let url = request.url;
+                        expect(url).toContain("http://sts/signout");
+                        expect(url).toContain("post_logout_redirect_uri=bar");
+                        expect(url).toContain("client_id=baz");
+                    });
+            
+                    it("should fail if metadata fails", async () => {
+                        // arrange
+                        spyOn(subject.metadataService, "getEndSessionEndpoint").and.rejectWith(new Error("test"));
+            
+                        // act
+                        try {
+                            await subject.createSignoutRequest({});
+                            fail("should not come here");
+                        }
+                        catch (err) {
+                            expect(err).toBeInstanceOf(Error);
+                            expect(err.message).toContain("test");
+                        }
+                    });
+            
+                    it("should fail if no signout endpoint on metadata", async () => {
+                        // arrange
+                        spyOn(subject.metadataService, "getEndSessionEndpoint").and.callFake(() => Promise.resolve(undefined));
+            
+                        // act
+                        try {
+                            await subject.createSignoutRequest({});
+                            fail("should not come here");
+                        }
+                        catch (err) {
+                            expect(err).toBeInstanceOf(Error);
+                            expect(err.message).toContain("No end session endpoint");
+                        }
+                    });
+            
+                    it("should store state", async () => {
+                        // arrange
+                        spyOn(subject.metadataService, "getEndSessionEndpoint").and.callFake(() => Promise.resolve("http://sts/signout"));
+                        let setMock = spyOn(subject.settings.stateStore, "set").and.callFake(() => Promise.resolve());
+            
+                        // act
+                        await subject.createSignoutRequest({
+                            state: "foo",
+                        });
+            
+                        // assert
+                        expect(setMock).toHaveBeenCalled();
+                    });
+            
+                    it("should not generate state if no data", async () => {
+                        // arrange
+                        spyOn(subject.metadataService, "getEndSessionEndpoint").and.callFake(() => Promise.resolve("http://sts/signout"));
+                        let setMock = spyOn(subject.settings.stateStore, "set").and.callFake(() => Promise.resolve());
+            
+                        // act
+                        await subject.createSignoutRequest({});
+            
+                        // assert
+                        expect(setMock).not.toHaveBeenCalled();
+                    });
+                });
+            
+                describe("readSignoutResponseState", () => {
+                    it("should return a promise", async () => {
+                        // act
+                        let p = subject.readSignoutResponseState("http://app/cb?state=state");
+            
+                        // assert
+                        expect(p).toBeInstanceOf(Promise);
+                        // eslint-disable-next-line no-empty
+                        try { await p; } catch {}
+                    });
+            
+                    it("should return result if no state on response", async () => {
+                        // act
+                        let { response } = await subject.readSignoutResponseState("http://app/cb");
+            
+                        // assert
+                        expect(response).toBeInstanceOf(Common.oidc.response.Signout);
+                    });
+            
+                    it("should return error", async () => {
+                        // act
+                        try {
+                            await subject.readSignoutResponseState("http://app/cb?error=foo");
+                            fail("should not come here");
+                        }
+                        catch (err) {
+                            expect(err).toBeInstanceOf(Error);
+                            expect(err.message).toEqual("foo");
+                        }
+                    });
+            
+                    it("should fail if storage fails", async () => {
+                        // arrange
+                        spyOn(subject.settings.stateStore, "get").and.rejectWith(new Error("fail"));
+            
+                        // act
+                        try {
+                            await subject.readSignoutResponseState("http://app/cb?state=state");
+                            fail("should not come here");
+                        }
+                        catch (err) {
+                            expect(err).toBeInstanceOf(Error);
+                            expect(err.message).toContain("fail");
+                        }
+                    });
+            
+                    it("should deserialize stored state and return state and response", async () => {
+                        // arrange
+                        let item = Ext.create('oidc.state.state', { id: "1", requestType: "type" }).toStorageString();
+                        spyOn(subject.settings.stateStore, "get").and.callFake(() => Promise.resolve(item));
+            
+                        // act
+                        let { state, response } = await subject.readSignoutResponseState("http://app/cb?state=1");
+            
+                        // assert
+                        expect(state).toBeDefined();
+                        expect(state?.id).toEqual("1");
+                        expect(state?.requestType).toEqual("type");
+                        expect(response.state).toEqual("1");
+                    });
+            
+                    it("should call validator with state even if error in response", async () => {
+                        // arrange
+                        let item = Ext.create('oidc.state.state', {
+                            id: "1",
+                            data: "bar",
+                            requestType: "type",
+                        });
+                        spyOn(subject.settings.stateStore, "remove").and.callFake(() => Promise.resolve(item.toStorageString()));
+                        let validateSignoutResponse = spyOn(subject["validator"], "validateSignoutResponse").and.returnValue(null);
+            
+                        // act
+                        let response = await subject.processSignoutResponse("http://app/cb?state=1&error=foo");
+            
+                        // assert
+                        expect(validateSignoutResponse).toHaveBeenCalledWith(response, item);
+                    });
+                });
+            
+                describe("processSignoutResponse", () => {
+                    it("should return a promise", async () => {
+                        // act
+                        let p = subject.processSignoutResponse("state=state");
+            
+                        // assert
+                        expect(p).toBeInstanceOf(Promise);
+                        // eslint-disable-next-line no-empty
+                        try { await p; } catch {}
+                    });
+            
+                    it("should return result if no state on response", async () => {
+                        // act
+                        let response = await subject.processSignoutResponse("http://app/cb");
+            
+                        // assert
+                        expect(response).toBeInstanceOf(Common.oidc.response.Signout);
+                    });
+            
+                    it("should return error", async () => {
+                        // act
+                        try {
+                            await subject.processSignoutResponse("http://app/cb?error=foo");
+                            fail("should not come here");
+                        }
+                        catch (err) {
+                            expect(err).toBeInstanceOf(Error);
+                            expect(err.message).toEqual("foo");
+                        }
+                    });
+            
+                    it("should fail if storage fails", async () => {
+                        // arrange
+                        spyOn(subject.settings.stateStore, "remove").and.rejectWith(new Error("fail"));
+            
+                        // act
+                        try {
+                            await subject.processSignoutResponse("http://app/cb?state=state");
+                            fail("should not come here");
+                        }
+                        catch (err) {
+                            expect(err).toBeInstanceOf(Error);
+                            expect(err.message).toContain("fail");
+                        }
+                    });
+            
+                    it("should deserialize stored state and call validator", async () => {
+                        // arrange
+                        let item = Ext.create('oidc.state.state', {
+                            id: "1",
+                            requestType: "type",
+                        });
+                        spyOn(subject.settings.stateStore, "remove").and.callFake(async () => item.toStorageString());
+                        let validateSignoutResponse = spyOn(subject["validator"], "validateSignoutResponse");
+            
+                        // act
+                        let response = await subject.processSignoutResponse("http://app/cb?state=1");
+            
+                        // assert
+                        expect(validateSignoutResponse).toHaveBeenCalledWith(response, item);
+                    });
+            
+                    it("should call validator with state even if error in response", async () => {
+                        // arrange
+                        let item = Ext.create('oidc.state.state', {
+                            id: "1",
+                            data: "bar",
+                            requestType: "type",
+                        });
+                        spyOn(subject.settings.stateStore, "remove").and.callFake(async () => item.toStorageString());
+                        let validateSignoutResponse = spyOn(subject["validator"], "validateSignoutResponse");
+            
+                        // act
+                        let response = await subject.processSignoutResponse("http://app/cb?state=1&error=foo");
+            
+                        // assert
+                        expect(validateSignoutResponse).toHaveBeenCalledWith(response, item);
+                    });
+                });
+            
+                describe("clearStaleState", () => {
+            
+                    it("should call State.clearStaleState", async () => {
+                        // arrange
+                        let clearStaleState = spyOn(Common.oidc.state.State, "clearStaleState");
+            
+                        // act
+                        await subject.clearStaleState();
+            
+                        // assert
+                        expect(clearStaleState).toHaveBeenCalled();
+                    });
+                });
+            
+                describe("revokeToken", () => {
+                    it("revokes a token type", async () => {
+                        // arrange
+                        let revokeSpy = spyOn(subject["tokenClient"], "revoke").and.resolveTo();
+            
+                        // act
+                        await subject.revokeToken("token", "access_token");
+            
+                        // assert
+                        expect(revokeSpy).toHaveBeenCalledWith({
+                            token: "token",
+                            tokenTypeHint: "access_token",
+                        });
+                    });
+                });
             });
             
         }

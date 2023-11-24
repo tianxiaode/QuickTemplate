@@ -8,13 +8,13 @@ Ext.define('Common.oidc.state.State', {
 
     id: null,
     created: null,
-    requetType: null,
+    requestType: null,
 
 
     statics: {
 
         fromStorageString(storageString) {
-            return Ext.create('oidc.state', JSON.parse(storageString));
+            return Ext.create('oidc.state.state', JSON.parse(storageString));
         },
 
         async clearStaleState(storage, age) {
@@ -66,7 +66,7 @@ Ext.define('Common.oidc.state.State', {
         } else {
             me.created = Oidc.Timer.getEpochTime();
         }
-        me.requetType = config.requetType;
+        me.requestType = config.requestType;
     },
 
     toStorageString() {
@@ -75,7 +75,7 @@ Ext.define('Common.oidc.state.State', {
             id: me.id,
             data: me.data,
             created: me.created,
-            requetType: me.requetType
+            requestType: me.requestType
         });
     }
 
