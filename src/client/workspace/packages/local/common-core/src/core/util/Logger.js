@@ -18,7 +18,10 @@ Ext.define('Common.core.util.Logger', {
     },
 
     applyLevel(level){
-        if(Ext.isString(level)) return this.levelMap[level] ?? 3;
+        if(Ext.isString(level)) {
+            let l = this.levelMap[level];
+            return l ? l : 3;
+        }
         return level;
     },
 
@@ -70,15 +73,6 @@ Ext.define('Common.core.util.Logger', {
 
     error(...args){
         this.log(this.levelMap.error, ...args);
-    },
-
-    getCaller(){
-        let me = this;
-        if(me.currentClass && me.cureentMethodName){
-            return `[${me.currentClass.$className}] [${me.cureentMethodName}] `;
-        }
-        return '';
-
     },
 
     destroy() {
