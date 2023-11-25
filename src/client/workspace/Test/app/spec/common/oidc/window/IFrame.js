@@ -124,7 +124,7 @@ Ext.define('Test.spec.common.oidc.window.IFrame', {
                                 it(JSON.stringify(args), async () => {
                                     navigateParamsStub.and.returnValue({ ...validNavigateParams, origin: "http://different.com" });
                                     let frameWindow = Ext.create('oidc.window.iframe', { timeoutInSeconds: 0.1 });
-                                    await expectAsync(frameWindow.navigate({ state: fakeState, url: fakeUrl, scriptOrigin: args.passedOrigin })).toBeRejectedWith('IFrame timed out without a response');
+                                    await expectAsync(frameWindow.navigate({ state: fakeState, url: fakeUrl, scriptOrigin: args.passedOrigin })).toBeRejectedWith(Oidc.ErrorTimeout.create('IFrame timed out without a response'));
                                 });
                             })
                         });

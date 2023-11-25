@@ -7,7 +7,8 @@ Ext.define('Common.oidc.response.Validator',{
         'Common.oidc.service.Metadata',
         'Common.oidc.service.Claims',
         'Common.oidc.service.UserInfo',
-        'Common.oidc.TokenClient'
+        'Common.oidc.TokenClient',
+        'Common.oidc.error.Response'
     ],
 
     tokenClient: null,
@@ -24,8 +25,6 @@ Ext.define('Common.oidc.response.Validator',{
 
     async validateSigninResponse(response, state){
         let me = this;
-
-        console.trace('validateSigninResponse', Ext.clone(response), Ext.clone(state))
 
         me.processSigninState(response, state);
         Logger.debug(me.validateSigninResponse , "state processed");
@@ -96,7 +95,7 @@ Ext.define('Common.oidc.response.Validator',{
 
         if (response.error) {
             Logger.warn(me.validateSignoutResponse, "Response was error", response.error);
-            throw new Error(response.error);
+            throw Oidc.ErrorResponse.create(response);
         }
     },
 
@@ -141,7 +140,7 @@ Ext.define('Common.oidc.response.Validator',{
     
             if (response.error) {
                 Logger.warn(me.processSigninState, "Response was error", response.error);
-                throw new Error(response.error);
+                throw Oidc.ErrorResponse.create(response);
             }
     
             if (state.codeVerifier && !response.code) {

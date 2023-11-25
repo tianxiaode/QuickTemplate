@@ -19,7 +19,8 @@ Ext.define('Common.oidc.Client', {
         'Common.oidc.request.Signin',
         'Common.oidc.request.Signout',
         'Common.oidc.response.Signin',
-        'Common.oidc.response.Signout'
+        'Common.oidc.response.Signout',
+        'Common.oidc.error.Response'
     ],
 
     settings: null,
@@ -254,7 +255,7 @@ Ext.define('Common.oidc.Client', {
 
             if (response.error) {
                 Logger.warn(me.readSignoutResponseState, "Response was error:", response.error);
-                throw new Error(response.error);
+                throw Oidc.ErrorResponse.create(response);
             }
 
             return { state: undefined, response };
@@ -294,7 +295,7 @@ Ext.define('Common.oidc.Client', {
         Logger.debug(this.revokeToken, 'revokeToken')
         return await this.tokenClient.revoke({
             token,
-            tokenTypeHint: type,
+            tokenTypeHint: Format.splitCamelCase(type, '_'),
         });
     },
 

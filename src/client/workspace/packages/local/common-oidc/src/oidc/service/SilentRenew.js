@@ -1,12 +1,16 @@
 Ext.define('Common.oidc.service.SilentRenew', {
     alias: 'oidc.service.silentrenew',
 
+    requires:[
+        'Common.oidc.event.Timer'
+    ],
+
     isStarted: false,
 
     constructor(userManager){
         let me = this;
         me.userManager = userManager;
-        me.retryTimer = Ext.create('oidc.timer', 'Retry Silent Renew');
+        me.retryTimer = Ext.create('oidc.event.timer', 'Retry Silent Renew');
     },
 
     async start(){

@@ -68,9 +68,9 @@ Ext.define('Test.spec.common.oidc.navigator.Redirect', {
                 });
 
                 it("should redirect to the authority server from window top", async () => {
-                    const handle = await navigator.prepare({ redirectTarget: "top" });
-                    const spy = jasmine.createSpy();
-                    void handle.navigate({ url: "http://sts/authorize" }).finally(spy);
+                    let handle = await navigator.prepare({ redirectTarget: "top" });
+                    let spy = jasmine.createSpy();
+                    handle.navigate({ url: "http://sts/authorize" }).finally(spy);
 
                     navigatorSpy.calls.mostRecent();
 
@@ -86,8 +86,8 @@ Ext.define('Test.spec.common.oidc.navigator.Redirect', {
 
                 it("should reject when the navigation is stopped programmatically", async () => {
                     targetWindow.location.assign.and.returnValue(undefined);
-                    const handle = await navigator.prepare({});
-                    const promise = handle.navigate({ url: "http://sts/authorize" });
+                    let handle = await navigator.prepare({});
+                    let promise = handle.navigate({ url: "http://sts/authorize" });
 
                     handle.close();
                     await expectAsync(promise).toBeRejectedWithError("Redirect aborted");

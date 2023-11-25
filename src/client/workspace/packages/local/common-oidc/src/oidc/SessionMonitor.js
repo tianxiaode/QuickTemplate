@@ -5,15 +5,15 @@ Ext.define('Common.oidc.SessionMonitor',{
         'Common.oidc.CheckSessionIFrame'
     ],
 
-    constructor(config){
+    constructor(userManager){
         let me = this;
-        if(!config.userManager){
+        if(!userManager){
             throw new Error('No user manager passed');
         }
 
-        me.userManager = config.userManager;
-        me.userManager.events.addUserLoaded(me.start.bind(me));
-        me.userManager.events.addUserUnloaded(me.stop.bind(me));
+        me.userManager = userManager;
+        userManager.events.addUserLoaded(me.start.bind(me));
+        userManager.events.addUserUnloaded(me.stop.bind(me));
         me.init().catch((err)=>{
             Logger.error(me, err)
         })

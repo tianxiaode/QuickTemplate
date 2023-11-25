@@ -274,7 +274,7 @@ Ext.define('Test.spec.common.oidc.service.Metadata', {
                             clientId: "client",
                             redirectUri: "redirect",
                             metadata: {
-                                authorization_endpoint: "http://sts/authorize",
+                                authorizationEndpoint: "http://sts/authorize",
                             },
                         };
                         subject = Ext.create('oidc.service.metadata', settings);
@@ -295,7 +295,7 @@ Ext.define('Test.spec.common.oidc.service.Metadata', {
                             clientId: "client",
                             redirectUri: "redirect",
                             metadata: {
-                                userinfo_endpoint: "http://sts/userinfo",
+                                userinfoEndpoint: "http://sts/userinfo",
                             },
                         };
                         subject = Ext.create('oidc.service.metadata', settings);
@@ -316,7 +316,7 @@ Ext.define('Test.spec.common.oidc.service.Metadata', {
                             clientId: "client",
                             redirectUri: "redirect",
                             metadata: {
-                                token_endpoint: "http://sts/tokeninfo",
+                                tokenEndpoint: "http://sts/tokeninfo",
                             },
                         };
                         subject = Ext.create('oidc.service.metadata', settings);
@@ -337,7 +337,7 @@ Ext.define('Test.spec.common.oidc.service.Metadata', {
                             clientId: "client",
                             redirectUri: "redirect",
                             metadata: {
-                                check_session_iframe: "http://sts/check_session",
+                                checkSessionIframe: "http://sts/check_session",
                             },
                         };
                         subject = Ext.create('oidc.service.metadata', settings);
@@ -376,7 +376,7 @@ Ext.define('Test.spec.common.oidc.service.Metadata', {
                             clientId: "client",
                             redirectUri: "redirect",
                             metadata: {
-                                end_session_endpoint: "http://sts/signout",
+                                endSessionEndpoint: "http://sts/signout",
                             },
                         };
                         subject = Ext.create('oidc.service.metadata', settings);
@@ -415,7 +415,7 @@ Ext.define('Test.spec.common.oidc.service.Metadata', {
                             clientId: "client",
                             redirectUri: "redirect",
                             metadata: {
-                                revocation_endpoint: "http://sts/revocation",
+                                revocationEndpoint: "http://sts/revocation",
                             },
                         };
                         subject = Ext.create('oidc.service.metadata', settings);
@@ -475,7 +475,7 @@ Ext.define('Test.spec.common.oidc.service.Metadata', {
                         subject = Ext.create('oidc.service.metadata', settings);
 
                         // act
-                        await expectAsync(subject.getSigningKeys()).toBeRejectedWith(new Error("Metadata does not contain property jwks_uri"));
+                        await expectAsync(subject.getSigningKeys()).toBeRejectedWith(new Error("Metadata does not contain property jwksUri"));
                     });
 
                     it("should fail if keys missing on keyset from jwks_uri", async () => {
@@ -485,7 +485,7 @@ Ext.define('Test.spec.common.oidc.service.Metadata', {
                             clientId: "client",
                             redirectUri: "redirect",
                             metadata: {
-                                jwks_uri: "http://sts/metadata/keys",
+                                jwksUri: "http://sts/metadata/keys",
                             },
                         };
                         subject = Ext.create('oidc.service.metadata', settings);
@@ -503,7 +503,7 @@ Ext.define('Test.spec.common.oidc.service.Metadata', {
                             clientId: "client",
                             redirectUri: "redirect",
                             metadata: {
-                                jwks_uri: "http://sts/metadata/keys",
+                                jwksUri: "http://sts/metadata/keys",
                             },
                         };
                         subject = Ext.create('oidc.service.metadata', settings);
@@ -530,7 +530,7 @@ Ext.define('Test.spec.common.oidc.service.Metadata', {
                             clientId: "client",
                             redirectUri: "redirect",
                             metadata: {
-                                jwks_uri: "http://sts/metadata/keys",
+                                jwksUri: "http://sts/metadata/keys",
                             },
                         };
                         subject = Ext.create('oidc.service.metadata', settings);
@@ -558,7 +558,7 @@ Ext.define('Test.spec.common.oidc.service.Metadata', {
                             clientId: "client",
                             redirectUri: "redirect",
                             metadata: {
-                                jwks_uri: "http://sts/metadata/keys",
+                                jwksUri: "http://sts/metadata/keys",
                             },
                         };
                         subject = Ext.create('oidc.service.metadata', settings);

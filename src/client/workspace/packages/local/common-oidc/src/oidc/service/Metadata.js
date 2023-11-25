@@ -65,34 +65,34 @@ Ext.define('Common.oidc.service.Metadata', {
     },
 
     getAuthorizationEndpoint() {
-        return this.getMetadataProperty("authorization_endpoint");
+        return this.getMetadataProperty("authorizationEndpoint");
     },
 
     getUserInfoEndpoint() {
-        return this.getMetadataProperty("userinfo_endpoint");
+        return this.getMetadataProperty("userinfoEndpoint");
     },
 
     getTokenEndpoint(optional) {
         if (optional === undefined) optional = true;
-        return this.getMetadataProperty("token_endpoint", optional);
+        return this.getMetadataProperty("tokenEndpoint", optional);
     },
 
     getCheckSessionIframe() {
-        return this.getMetadataProperty("check_session_iframe", true);
+        return this.getMetadataProperty("checkSessionIframe", true);
     },
 
     getEndSessionEndpoint() {
-        return this.getMetadataProperty("end_session_endpoint", true);
+        return this.getMetadataProperty("endSessionEndpoint", true);
     },
 
     getRevocationEndpoint(optional) {
         if (optional === undefined) optional = true;
-        return this.getMetadataProperty("revocation_endpoint", optional);
+        return this.getMetadataProperty("revocationEndpoint", optional);
     },
 
     getKeysEndpoint(optional = true) {
         if (optional === undefined) optional = true;
-        return this.getMetadataProperty("jwks_uri", optional);
+        return this.getMetadataProperty("jwksUri", optional);
     },
 
     async getSigningKeys() {

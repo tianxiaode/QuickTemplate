@@ -25,12 +25,12 @@ Ext.define('Common.oidc.state.State', {
             Logger.debug(State.clearStaleState, 'got keys', keys);
             for (let i = 0; i < ln; i++) {
                 let key = keys[i];
-                let item = storage.get(key);
+                let item = await storage.get(key);
                 let remove = false;
 
                 if (item) {
                     try {
-                        let state = State.fromStorageString(item);
+                        let state = await State.fromStorageString(item);
 
                         Logger.debug(State.clearStaleState, "got item from key:", key, state.created);
                         if (state.created <= cutoff) {
