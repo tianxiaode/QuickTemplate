@@ -8,21 +8,6 @@
   */
   $enable-font-awesome: dynamic(true);
  
- /**
-   * Admin模版的样式
-   */
- 
-   $circle-border-radius: 50%;
-   $base-border-color: #ddd;
-   $lightest-color: #fff;
-   $font-weight: 400;
-   $font-weight-bold: 500;
-   
-  
-    
-    //Form and Toolbar Button UI colors
-    
-  
    
 .message-tips {
     list-style: none;
@@ -93,60 +78,3 @@
 .x-menu{
    z-index: 15;
 }
-.lh-60{
-  line-height: 60px;
-}
-.lh-50{
-  line-height: 50px;
-}
-.lh-40{
-  line-height: 40px;
-}
-.lh-36{
-  line-height: 36px;
-}
-.lh-32{
-  line-height: 32px;
-}
-
-.lh-30{
-  line-height: 30px;
-}
-.lh-24{
-  line-height: 24px;
-}
-.lh-20{
-  line-height: 20px;
-}
-.lh-16{
-  line-height: 16px;
-}
-
-  
-  /**
-  *  缩进2个字符
-  */
- 
- .text-indent{
-   text-indent: 2em;
- }
- 
- .error-code{
-  font-size: 150px;
-  line-height: 150px;
-}
-.error-text{
-  font-size: 18px;
-}
-.text-reset {
-  color: inherit !important;
-}
-.bg-transparent {
-  background-color: transparent !important;
-}
-.text-highlight{
-  color: var(--highlight-color);
-  font-size: 14px;
-  font-weight: 400;
-}
-

@@ -318,7 +318,6 @@ $material-foreground-colors: (
 
 @mixin output-color($color-name, $color){
     @each $color-variant, $hex-value in $color {
-        @warn $color-name + ' - ' + $color-variant;
         .color-#{$color-name}-#{$color-variant} {
           color: #{$hex-value}
         }
@@ -332,3 +331,4 @@ $material-foreground-colors: (
 @each $color-name, $color-variants in $text-colors {
     @include output-color($color-name, $color-variants);
   }
+
