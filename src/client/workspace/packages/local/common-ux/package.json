@@ -264,6 +264,10 @@
          *          }
          *      }
          */
-        "requires": []
+        "requires": [
+            "common-core",
+            "common-localized",
+            "Common-oidc"
+        ]
     }
 }

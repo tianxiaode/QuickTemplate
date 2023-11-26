@@ -1,0 +1,51 @@
+.h1, h1 {
+    font-weight: 100;
+    font-size: 48px;
+}
+
+.h2, h2 {
+    font-weight: 400;
+    font-size: 32px;
+}
+
+.h3, h3 {
+    font-weight: 500;
+    font-size: 28px;
+}
+
+.h4, h4 {
+    font-weight: 500;
+    font-size: 24px;
+}
+
+.h5, h5 {
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.h6, h6 {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.h1, h1,
+.h2, h2,
+.h3, h3,
+.h4, h4,
+.h5, h5,
+.h6, h6 {
+    color: inherit;
+    margin: 0 0 1rem 0;
+    line-height: 1.1;
+
+    & > small, & > .small {
+        font-weight: 400;
+        font-size: .7em;
+        line-height: 1;
+    }
+
+    &:nth-child(1) {
+        margin-top: 0;
+    }
+}
+
