@@ -8,8 +8,9 @@ Ext.define('Common.oidc.navigator.Popup', {
 
     async prepare(){
         let me = this,
-            popupWindowFeatures = me.popupWindowFeatures,
-            popupWindowTarget = me.popupWindowTarget;
+            settings = me.settings,
+            popupWindowFeatures = settings.popupWindowFeatures,
+            popupWindowTarget = settings.popupWindowTarget;
         me.window = Ext.create('oidc.window.popup', { popupWindowFeatures,  popupWindowTarget});
         return me.window;
     },

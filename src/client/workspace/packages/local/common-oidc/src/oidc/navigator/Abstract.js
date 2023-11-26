@@ -1,7 +1,7 @@
 Ext.define('Common.oidc.navigator.Abstract', {
 
-    constructor(config) {
-        Ext.apply(this, config);
+    constructor(settings) {
+        this.settings = settings;
     },
 
     settings: null,

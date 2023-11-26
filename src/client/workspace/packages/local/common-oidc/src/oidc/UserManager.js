@@ -236,6 +236,7 @@ Ext.define('Common.oidc.UserManager', {
             resource,
             ...requestArgs
         } = args;
+
         // first determine if we have a refresh token, or need to use iframe
         let user = await me.loadUser();
         if (user && user.refreshToken) {
@@ -505,6 +506,7 @@ Ext.define('Common.oidc.UserManager', {
         let me = this,
             settings = me.settings;
         Logger.debug(me.signoutSilent, "signoutSilent");
+        args = args || {};
         let {
             silentRequestTimeoutInSeconds,
             ...requestArgs

@@ -4,8 +4,9 @@ Ext.define('Common.oidc.navigator.Redirect', {
 
     async prepare(config){
         let me = this,
-            redirectMethod = config.redirectMethod || me.redirectMethod || 'assign',
-            redirectTarget = config.redirectTarget || me.redirectTarget,
+            settings = me.settings,
+            redirectMethod = config.redirectMethod || settings.redirectMethod,
+            redirectTarget = config.redirectTarget || settings.redirectTarget,
             targetWindow = me.getTargetWindow(redirectTarget);
 
         let redirect = targetWindow.location[redirectMethod].bind(targetWindow.location),

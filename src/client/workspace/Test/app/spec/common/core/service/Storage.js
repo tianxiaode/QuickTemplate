@@ -10,20 +10,23 @@ Ext.define('Test.spec.common.core.service.Storage', {
             describe('Common.core.service.Storage', () => {
                 let store = window.localStorage,
                     cookies = Ext.util.Cookies;
-                store.setItem('a1', 'a1');
-                store.setItem('a2', 'a2');
-                store.setItem('a3', 'a3');
-                store.setItem('aa1', 'aa1');
-                store.setItem('aa2', 'aa2');
-                store.setItem('b1', 'b1');
-                store.setItem('A1', 'A1');
-                cookies.set('a1', 'a1');
-                cookies.set('a2', 'a2');
-                cookies.set('a3', 'a3');
-                cookies.set('aa1', 'aa1');
-                cookies.set('aa2', 'aa2');
-                cookies.set('b1', 'b1');
-                cookies.set('A1', 'A1');
+
+                beforeEach(()=>{
+                    store.setItem('a1', 'a1');
+                    store.setItem('a2', 'a2');
+                    store.setItem('a3', 'a3');
+                    store.setItem('aa1', 'aa1');
+                    store.setItem('aa2', 'aa2');
+                    store.setItem('b1', 'b1');
+                    store.setItem('A1', 'A1');
+                    cookies.set('a1', 'a1');
+                    cookies.set('a2', 'a2');
+                    cookies.set('a3', 'a3');
+                    cookies.set('aa1', 'aa1');
+                    cookies.set('aa2', 'aa2');
+                    cookies.set('b1', 'b1');
+                    cookies.set('A1', 'A1');    
+                })
 
 
                 describe("验证localStorage", () => {

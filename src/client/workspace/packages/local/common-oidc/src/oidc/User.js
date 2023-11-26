@@ -39,20 +39,6 @@ Ext.define('Common.oidc.User',{
     state: null,
 
     statics:{
-        toStorageString() {
-            let me = this;
-            return JSON.stringify({
-                idToken: me.idToken,
-                sessionState: me.sessionState,
-                accessToken: me.accessToken,
-                refreshToken: me.refreshToken,
-                tokenType: me.tokenType,
-                scope: me.scope,
-                profile: me.profile,
-                expiresAt: me.expiresAt,
-            });
-        },
-    
         fromStorageString(storageString){
             return Ext.create('oidc.user', JSON.parse(storageString));
         }    
@@ -92,6 +78,19 @@ Ext.define('Common.oidc.User',{
         return scope ? scope.split(" ") : [];
     },
 
+    toStorageString() {
+        let me = this;
+        return JSON.stringify({
+            idToken: me.idToken,
+            sessionState: me.sessionState,
+            accessToken: me.accessToken,
+            refreshToken: me.refreshToken,
+            tokenType: me.tokenType,
+            scope: me.scope,
+            profile: me.profile,
+            expiresAt: me.expiresAt,
+        });
+    },
 
     destroy() {
         this.destroyMembers('defaultProtocolClaims', 'internalRequiredProtocolClaims', 'settings');
