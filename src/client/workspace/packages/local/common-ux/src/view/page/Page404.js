@@ -7,7 +7,7 @@ Ext.define('Common.view.page.Page404',{
     items:[
         {
             xtype: 'component',
-            html: '<p class="text-center m-0 p-0 error-code text-secondary">404</p>'
+            html: '<p class="text-center m-0 p-0 text-bold display4 text-alert">404</p>'
         },
         {
             xtype: 'component',

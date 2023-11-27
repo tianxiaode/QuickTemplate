@@ -1,4 +1,4 @@
-Ext.define('Common.view.Base', {
+Ext.define('Common.view.page.Base', {
     extend: 'Ext.Panel',
     alias: 'page.base',
     
@@ -14,9 +14,8 @@ Ext.define('Common.view.Base', {
             </div>
         `,
         bottomBar:{
-            xtype: 'container',
+            xtype: 'component',
             docked: 'bottom',
-            itemId: 'bottomBar',
             height: 60,
             userCls: 'bg-dark text-center text-light p-2'
         },
@@ -44,38 +43,35 @@ Ext.define('Common.view.Base', {
         align:'center'
     },        
 
-
-    applyBottomBar (newCmp, oldCmp) {
-        return Ext.updateWidget(oldCmp, newCmp, this, 'createBottomBar');
-    },
-
-    updateBottomBar (cmp) {
-        if (cmp) {
-            this.add(cmp);
-        }
-    },
-
     createBottomBar(config) {
-        let me = this;
         return Ext.apply({}, config);
     },
-    
+
+    applyBottomBar (config, old) {
+        return Ext.updateWidget(old, config, this, 'createBottomBar');
+    },
+
+    updateBottomBar (config) {
+        config && this.add(config);
+    },
+
     onLocalized(){
         let me = this,
-            bar = me.down('#bottomBar'),
+            bar = me.getBottomBar(),
             currentYear = new Date().getFullYear(),
             startYear = parseInt(I18N.get('CopyrightStartValue')),
-            desktop = Ext.platformTags.desktop;
+            isDesktop = Ext.platformTags.desktop;
         me.callParent();
+        console.log(bar)
         if(!bar) return;
-        bar.setHtml(Ext.String.format(me.getBottomMessage(), 
+        bar.update(Ext.String.format(me.getBottomMessage(), 
             currentYear == startYear ? '' : startYear + '-',
             currentYear,
-            I18N.get('CompanyUrl'),
-            I18N.get('CompanyFullName'),
-            desktop ? '' : '<br/>',
-            I18N.get('Icp'),
-            desktop ? 'lh-50': 'lh-24'
+            I18N.get('CompanyUrl') || '快速模板',
+            I18N.get('CompanyFullName') || '快速模板',
+            isDesktop ? '' : '<br/>',
+            I18N.get('Icp') || 'ICP1000000-0000',
+            isDesktop ? 'lh-50': 'lh-24'
          ))
 
     },

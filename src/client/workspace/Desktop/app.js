@@ -3,14 +3,14 @@
  * and launch() the Application class.
  */
 Ext.application({
-    extend: 'Common.ux.app.Application',
+    extend: 'Common.app.Application',
 
     name: 'Desktop',
 
     defaultToken: 'dashboardview',
 
     requires:[
-        'Desktop.view.home.HomeView'
+        //'Desktop.view.home.HomeView'
     ],
 
 

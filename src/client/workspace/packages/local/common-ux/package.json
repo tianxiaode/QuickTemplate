@@ -267,7 +267,7 @@
         "requires": [
             "common-core",
             "common-localized",
-            "Common-oidc"
+            "common-oidc"
         ]
     }
 }
