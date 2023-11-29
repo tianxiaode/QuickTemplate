@@ -1,17 +1,32 @@
 
-@mixin output-color($color-name, $color){
-    @each $color-variant, $hex-value in $color {
-        .color-#{$color-name}-#{$color-variant} {
-          color: #{$hex-value}
-        }
-        .bg-color-#{$color-name}-#{$color-variant} {
-          background-color: #{$hex-value}
-        }
-      }
-    
-}
 
 @each $color-name, $color-variants in $material-colors {
-    @include output-color($color-name, $color-variants);
+    @each $color-variant, $hex-value in $color-variants {
+        @warn $color-name + ' - ' + $color-variant;
+      .color-#{$color-name}-#{$color-variant} {
+        color: #{$hex-value}
+      }
+      .bg-color-#{$color-name}-#{$color-variant} {
+        background-color: #{$hex-value}
+      }
+    }
   }
+
+
+// @mixin output-color($color-name, $color){
+//     @each $color-variant, $hex-value in $color {
+//         @warn $color-name + ' - ' + $color-variant;
+//         .color-#{$color-name}-#{$color-variant} {
+//           color: #{$hex-value}
+//         }
+//         .bg-color-#{$color-name}-#{$color-variant} {
+//           background-color: #{$hex-value}
+//         }
+//       }
+    
+// }
+
+// @each $color-name, $color-variants in $material-colors {
+//     @include output-color($color-name, $color-variants);
+//   }
 
