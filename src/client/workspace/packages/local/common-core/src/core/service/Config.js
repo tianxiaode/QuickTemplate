@@ -10,16 +10,6 @@ Ext.define('Common.core.service.Config', {
         'Ext.mixin.Observable',
     ],
     
-    config:{
-        xsrfCookieName: 'XSRF-TOKEN',
-        //xsrfHeaderName: 'X-XSRF-TOKEN',
-        xsrfHeaderName: 'RequestVerificationToken',
-        oidc: null,
-        server: null,
-        language: null,
-        useLocalStorage: true
-    },
-
 
     isReady: false,
 
@@ -28,21 +18,6 @@ Ext.define('Common.core.service.Config', {
             appConfig = window.AppConfig;
         me.initConfig(config)
         me.mixins.observable.constructor.call(me, config);
-        let configs = me.self.getConfigurator().configs;
-        Object.keys(configs).forEach(k=>{
-            let value = appConfig[k];
-            if(!value) return;
-            let cfg = configs[k];
-            cfg && cfg.setter.call(me, value);
-        });
-        if(appConfig.isLogScriptError){
-            window.onerror = (msg, url, line, col, error)=>{
-                Http.postScriptError(msg, url, line, col, error);
-            }
-        }
-        if(appConfig.loggerLevel){
-            Logger.setLevel(appConfig.loggerLevel);
-        }
     },
 
     getAppName(){
@@ -63,7 +38,9 @@ Ext.define('Common.core.service.Config', {
     },
 
     getCurrentLanguage(){
-        return AppStorage.get('lang') || this.getLanguage();
+        let locale  = window.location.href.match(/lang=([\w-]+)/),
+        currentLang = navigator.language || navigator.browserLanguage;
+        return (locale && locale[1]) || currentLang;
     },
 
     getPasswordSetting(){
@@ -114,6 +91,7 @@ Ext.define('Common.core.service.Config', {
             me.isReady = true;
             Ext.defer(me.fireEvent, 10, me,  ['ready',me]);
         }
+
     
     }// end privates
 

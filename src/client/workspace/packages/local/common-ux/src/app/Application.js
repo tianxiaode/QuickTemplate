@@ -4,6 +4,7 @@ Ext.define('Common.app.Application', {
     name: 'CommonShared',
 
     requires:[
+        'Common.setting.Setting',
         'Common.overrides.*',
         'Common.core.*',
         'Common.localized.*',
@@ -37,8 +38,8 @@ Ext.define('Common.app.Application', {
     },
 
     onAppUpdate() {
-        let title = AppConfig.applicationUpdate[AppConfig.lang] || AppConfig.applicationUpdate["en"],
-            message = AppConfig.applicationUpdateMessage[AppConfig.lang] || AppConfig.applicationUpdateMessage["en"];
+        let title = I18N.getLocalText('applicationUpdate'),
+            message = I18N.getLocalText('applicationUpdateMessage');
         MsgBox.confirm(title, message,
             function (choice) {
                 if (choice === 'yes') {

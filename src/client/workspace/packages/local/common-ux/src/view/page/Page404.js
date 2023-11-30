@@ -2,8 +2,8 @@ Ext.define('Common.view.page.Page404',{
     extend: 'Common.view.page.Base',
     xtype: 'page404',
 
-    langTitle: 'CompanyShortName',
-    
+    bodyCls: 'bg-lock-screen',
+
     items:[
         {
             xtype: 'component',

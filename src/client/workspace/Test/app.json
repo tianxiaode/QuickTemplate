@@ -207,10 +207,6 @@
      */
     "js": [
         {
-            "path": "config.js",
-            "bundle": true
-        },
-        {
             "path": "${framework.dir}/build/ext-modern-all-debug.js"
         },
         {

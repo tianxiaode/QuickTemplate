@@ -28,7 +28,7 @@ Ext.define('Common.localized.Localized', {
 
     initLanguages() {
         let me = this,
-            lang = Config.getLanguage(),
+            lang = Config.getCurrentLanguage(),
             current = AppStorage.get('lang');
         if (!current) {
             current = lang === 'zh-CN' ? 'zh-Hans'
@@ -127,6 +127,14 @@ Ext.define('Common.localized.Localized', {
     privates: {
         remoteRawValue: {},
         localText: {
+            applicationUpdate: {
+                "en": 'Application Update',
+                "zh-CN": '更新应用程序'
+            },
+            applicationUpdateMessage:{
+                "en": 'This application has an update, reload?',
+                "zh-CN": '应用程序已更新，是否重新加载？'
+            },
             'LoadingOrganizationUnit': {
                 'en': 'Loading the organization...',
                 'zh-Hans': '正在加载组织...'

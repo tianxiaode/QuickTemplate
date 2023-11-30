@@ -3,6 +3,8 @@ Ext.define('Common.view.page.Base', {
     alias: 'page.base',
     
     requires: [
+        'Common.core.service.Config',
+        'Common.setting.Setting',
         'Ext.Responsive'
     ],
 
@@ -55,22 +57,22 @@ Ext.define('Common.view.page.Base', {
         config && this.add(config);
     },
 
-    onLocalized(){
+    initialize(){
         let me = this,
             bar = me.getBottomBar(),
             currentYear = new Date().getFullYear(),
-            startYear = parseInt(I18N.get('CopyrightStartValue')),
-            isDesktop = Ext.platformTags.desktop;
+            startYear = AppSetting['copyrightStartValue'],
+            isDesktop = Ext.platformTags.desktop,
+            lang = Config.getCurrentLanguage();
         me.callParent();
-        console.log(bar)
-        if(!bar) return;
-        bar.update(Ext.String.format(me.getBottomMessage(), 
+        me.setTitle(AppSetting['companyShortName'][lang]);
+        bar.setHtml(Ext.String.format(me.getBottomMessage(), 
             currentYear == startYear ? '' : startYear + '-',
             currentYear,
-            I18N.get('CompanyUrl') || '快速模板',
-            I18N.get('CompanyFullName') || '快速模板',
+            AppSetting['companyUrl'],
+            AppSetting['companyFullName'][lang],
             isDesktop ? '' : '<br/>',
-            I18N.get('Icp') || 'ICP1000000-0000',
+            AppSetting['icp'],
             isDesktop ? 'lh-50': 'lh-24'
          ))
 

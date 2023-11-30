@@ -7,18 +7,16 @@ Ext.define('Common.core.service.Storage', {
         'Ext.util.Cookies'
     ],
 
-    isLocalStorage: true,
     store: null,
 
     constructor(){
         let me = this;
-        me.isLocalStorage = Config.getUseLocalStorage();
-        me.store = me.isLocalStorage ? window.localStorage : Ext.util.Cookies;
+        me.store = window.localStorage || Ext.util.Cookies;
     },
 
     get(key){    
         let store = this.store;
-        if(this.isLocalStorage){
+        if(store.getItem){
             return store.getItem(key);
         }
         return store.get(key);
@@ -26,7 +24,7 @@ Ext.define('Common.core.service.Storage', {
 
     set(key, value){
         let store = this.store;
-        if(this.isLocalStorage){
+        if(store.setItem){
             store.setItem(key, value);
             return;
         }
@@ -35,7 +33,7 @@ Ext.define('Common.core.service.Storage', {
 
     remove(key){
         let store = this.store;
-        if(this.isLocalStorage){
+        if(store.removeItem){
             store.removeItem(key);
             return;
         }
@@ -48,7 +46,7 @@ Ext.define('Common.core.service.Storage', {
             keys = [],
             regex = value ? Ext.String.createRegex(value, startsWith, endsWith, ignoreCase) : null,
             ln;
-        if(me.isLocalStorage){
+        if(store.getItem){
             ln = store.length;
             for(let i = 0; i < ln; i++){
                 let key  = store.key(i);

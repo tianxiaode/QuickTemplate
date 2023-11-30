@@ -37,7 +37,7 @@
          *
          *    "toolkit": "classic",
          */
-        "toolkit": "",
+        "toolkit": "modern",
 
          /**
           * The author of the package.
@@ -108,6 +108,17 @@
          *
          *     "theme": "ext-theme-classic",
          */
+
+         "theme": "ext-theme-material",
+
+         "js": [
+            {
+              "path": "resources/config.js",
+              "requiresSdk": false,
+              "compress": false
+            }
+          ],
+
 
         /**
          * Sass configuration properties.
