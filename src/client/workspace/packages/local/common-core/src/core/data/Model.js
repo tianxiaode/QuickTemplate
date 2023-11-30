@@ -26,7 +26,7 @@ Ext.define('Common.core.data.Model', {
                     {
                         name: 'translation',
                         convert(value, record) {
-                            let current = Config.getCurrentLanguage();
+                            let current = I18N.getLanguage();
                             return (record.get('translations') || []).find(t => t.language === current);
                         },
                         depends: ['translations']

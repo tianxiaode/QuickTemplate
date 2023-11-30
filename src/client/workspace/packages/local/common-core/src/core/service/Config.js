@@ -14,8 +14,7 @@ Ext.define('Common.core.service.Config', {
     isReady: false,
 
     constructor(config){
-        let me = this,
-            appConfig = window.AppConfig;
+        let me = this;
         me.initConfig(config)
         me.mixins.observable.constructor.call(me, config);
     },

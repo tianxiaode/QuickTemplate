@@ -1,7 +1,7 @@
 ﻿<Project>
   <PropertyGroup>
 
-    <AbpVersion>7.0.0</AbpVersion>
+    <AbpVersion>7.3.2</AbpVersion>
     <GenericAbpVersion>1.0.4</GenericAbpVersion>
     <QuickTemplateVersion>0.0.1</QuickTemplateVersion>
     <JetBrainsAnnotationsVersion>2021.3.3</JetBrainsAnnotationsVersion>

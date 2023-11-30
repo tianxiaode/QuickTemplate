@@ -16,7 +16,9 @@ Ext.define('Common.setting.Setting',{
     logError: false,
     loggerLevel: null,
 
-    //功能设置
+    //服务器设置
+    //预防验证服务器与api服务器是分离的
+    server: 'https://localhost:44320/',
     xsrfCookieName: 'XSRF-TOKEN',
     //xsrfHeaderName: 'X-XSRF-TOKEN',
     xsrfHeaderName: 'RequestVerificationToken',
