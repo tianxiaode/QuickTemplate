@@ -18,16 +18,17 @@ Ext.define('Common.overrides.Component',{
 
 
     initialize(){
-        let me = this;
+        let me = this,
+            i18n = window.I18N;
         me.callParent(arguments);
-        if(!I18N){
+        if(!i18n){
             Ext.defer(me.initialize, 50, me );
             return;
         }
-        if(I18N.isReady){
+        if(i18n.isReady){
             me.onLocalized();
         }
-        I18N.on('ready', me.onLocalized, me);
+        i18n.on('ready', me.onLocalized, me);
     },
 
     onLocalized(){

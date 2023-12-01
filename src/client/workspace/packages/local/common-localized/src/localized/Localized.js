@@ -3,7 +3,8 @@ Ext.define('Common.localized.Localized', {
     singleton: true,
 
     requires:[
-        'Common.core.service.Config',
+        'Common.core.service.HttpClient',
+        'Common.core.service.Url',
         'Common.core.service.Storage'
     ],
 

@@ -19,7 +19,7 @@
 
     get(isUseDefaultPath, ...args) {
         let me = this,
-            url = me.ensureNotSlash(AppSetting.server)
+            url = me.ensureNotSlash(AppConfig.server)
             defaultPath = me.ensureNotSlash(me.defaultPath);
         if(isUseDefaultPath !== false){
             url = url + (defaultPath.startsWith('/') ? '' : '/') + defaultPath;

@@ -4,7 +4,7 @@ Ext.define('Common.view.page.Base', {
     
     requires: [
         'Common.core.service.Config',
-        'Common.setting.Setting',
+        'Common.localized.Localized',
         'Ext.Responsive'
     ],
 
@@ -57,22 +57,22 @@ Ext.define('Common.view.page.Base', {
         config && this.add(config);
     },
 
-    initialize(){
+    onLocalized(){
         let me = this,
             bar = me.getBottomBar(),
             currentYear = new Date().getFullYear(),
-            startYear = AppSetting['copyrightStartValue'],
+            startYear = AppConfig['copyrightStartValue'],
             isDesktop = Ext.platformTags.desktop,
             lang = Config.getCurrentLanguage();
         me.callParent();
-        me.setTitle(AppSetting['companyShortName'][lang]);
+        me.setTitle(AppConfig['companyShortName'][lang]);
         bar.setHtml(Ext.String.format(me.getBottomMessage(), 
             currentYear == startYear ? '' : startYear + '-',
             currentYear,
-            AppSetting['companyUrl'],
-            AppSetting['companyFullName'][lang],
+            AppConfig['companyUrl'],
+            AppConfig['companyFullName'][lang],
             isDesktop ? '' : '<br/>',
-            AppSetting['icp'],
+            AppConfig['icp'],
             isDesktop ? 'lh-50': 'lh-24'
          ))
 

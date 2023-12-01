@@ -2,7 +2,7 @@ Ext.define('Common.core.data.Model', {
     extend: 'Ext.data.Model',
 
     requires: [
-        'Common.core.service.Config',
+        'Common.localized.Localized',
         'Ext.data.identifier.Uuid'
     ],
 

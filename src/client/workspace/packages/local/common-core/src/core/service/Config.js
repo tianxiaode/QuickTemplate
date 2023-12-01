@@ -17,6 +17,13 @@ Ext.define('Common.core.service.Config', {
         let me = this;
         me.initConfig(config)
         me.mixins.observable.constructor.call(me, config);
+        if(AppConfig.isLogScriptError){
+            window.addEventListener('error', me.onScriptError);
+        }
+        if(AppConfig.loggerLevel){
+            Logger.setLevel(AppConfig.loggerLevel);
+        }
+
     },
 
     getAppName(){
@@ -76,6 +83,9 @@ Ext.define('Common.core.service.Config', {
     
     destroy() {
         let me = this;
+        if(AppConfig.isLogScriptError){
+            window.removeEventListener('error', me.onScriptError);
+        }
         me.destroyMembers('oAuthConfig', 'data');
         me.callParent();
     },
@@ -89,6 +99,10 @@ Ext.define('Common.core.service.Config', {
             me.data = Object.assign({}, data);
             me.isReady = true;
             Ext.defer(me.fireEvent, 10, me,  ['ready',me]);
+        },
+
+        onScriptError(event){
+            Http.postScriptError(event.error.message, event.filename, event.lineno, event.colno, event.error.stack);
         }
 
     

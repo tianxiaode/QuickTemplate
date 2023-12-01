@@ -1,6 +1,5 @@
-Ext.define('Common.setting.Setting',{
-    alternateClassName: 'AppSetting',
-    singleton: true,
+window.AppConfig = {
+    currentLoadingText: '',
 
     //oidc设置
     authority: 'https://localhost:44320/',
@@ -27,6 +26,7 @@ Ext.define('Common.setting.Setting',{
     isLogScriptError: false,
 
     //应用设置
+    loggerLevel: 'debug',
     companyUrl: 'http://localhost:44320',
     copyrightStartValue: '2020',
     icp: '粤ICP备2022031812号',
@@ -38,34 +38,32 @@ Ext.define('Common.setting.Setting',{
         "en": 'Quick Template',
         "zh-CN": '快速模板'
     },
+    appName:{
+        en: 'Quick Template',
+        "zh-CN": '快速模板'
+    },
+    loadingText:{
+        "en": 'Loading...',
+        "zh-CN": '加载中...'
+    },
     desktop:{
 
     },
     phone:{
 
-    },
+    }
 
+};
 
-    constructor(){
-        let me = this;
-        if(me.isLogScriptError){
-            window.onerror = (msg, url, line, col, error)=>{
-                Http.postScriptError(msg, url, line, col, error);
-            }
-        }
-        if(me.loggerLevel){
-            Logger.setLevel(appConfig.loggerLevel);
-        }
-    
-    },
+//加载语言
+let locale  = window.location.href.match(/lang=([\w-]+)/),
+    currentLang = navigator.language || navigator.browserLanguage,
+    lang = (locale && locale[1]) || currentLang; 
+AppConfig.lang = lang;
+let appName = AppConfig.appName[lang] || AppConfig.appName["en"];
+document.title = appName;
 
-
-    destroy() {
-        let me = this;
-        me.destroyMembers('desktop', 'phone', 'companyFullName');        
-        me.callParent();
-    },
-
-
-
-})
+window.onload = () =>{
+    let el = document.getElementById('loadingText');
+    if(el) el.innerHTML = AppConfig.loadingText[AppConfig.lang] || AppConfig.loadingText["en"];
+}

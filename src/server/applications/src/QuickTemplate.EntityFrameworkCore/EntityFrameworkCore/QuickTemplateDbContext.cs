@@ -46,6 +46,8 @@ public class QuickTemplateDbContext :
 
     #endregion
 
+    public DbSet<IdentityUserDelegation> UserDelegations { get; }
+
     public QuickTemplateDbContext(DbContextOptions<QuickTemplateDbContext> options)
         : base(options)
     {

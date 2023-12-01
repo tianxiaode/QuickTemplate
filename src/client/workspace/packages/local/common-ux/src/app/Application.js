@@ -4,8 +4,6 @@ Ext.define('Common.app.Application', {
     name: 'CommonShared',
 
     requires:[
-        'Common.setting.Setting',
-        'Common.overrides.*',
         'Common.core.*',
         'Common.localized.*',
         'Common.view.page.Page404'
@@ -27,6 +25,7 @@ Ext.define('Common.app.Application', {
     },
 
     init() {
+        I18N.loadResources();
         //桌面应用允许用户选择文字
         if(Ext.platformTags.desktop){
             Ext.Viewport.setUserSelectable({

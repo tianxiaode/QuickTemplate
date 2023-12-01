@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Generic.Abp.Enumeration.Application.Contracts" Version="1.0.2" />
+    <PackageReference Include="Generic.Abp.Enumeration.Application.Contracts" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Volo.Abp.ObjectExtending" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.Account.Application.Contracts" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.PermissionManagement.Application.Contracts" Version="$(AbpVersion)" />
