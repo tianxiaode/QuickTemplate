@@ -19,7 +19,7 @@ Ext.define('Common.app.Application', {
     viewport:{
         items:[
             {
-                xtype: 'page404'
+                xtype: 'homeview'
             }
         ]
     },

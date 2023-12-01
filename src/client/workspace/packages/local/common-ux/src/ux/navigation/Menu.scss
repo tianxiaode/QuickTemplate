@@ -1,0 +1,12 @@
+.navigation-menu .point{
+    display: none;
+  }
+  
+  .navigation-menu .x-dataview-item:hover .point{
+    display: inline;
+    color: #6c757d ;
+  }
+  .navigation-menu .x-selected .point{
+    display: inline !important;
+    color: #4caf50 !important;
+  }

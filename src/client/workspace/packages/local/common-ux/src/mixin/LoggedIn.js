@@ -10,8 +10,8 @@ Ext.define('Common.mixin.LoggedIn', {
 
     initialize(){
         let me = this;
-        Auth.isAuthenticated() && me.onLoggedIn();
-        Auth.on('loggedin', me.onLoggedIn, me);
+        // Auth.isAuthenticated() && me.onLoggedIn();
+        // Auth.on('loggedin', me.onLoggedIn, me);
     },
 
     onLoggedIn: Ext.emptyFn

@@ -10,7 +10,7 @@ Ext.application({
     defaultToken: 'dashboardview',
 
     requires:[
-        //'Desktop.view.home.HomeView'
+        'Desktop.view.home.HomeView'
     ],
 
 

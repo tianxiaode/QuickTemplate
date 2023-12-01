@@ -64,10 +64,12 @@ Ext.define('Common.localized.Localized', {
             }
         }
         if (extResource.hasOwnProperty(key)) return extResource[key];
-        if (defaultResource.hasOwnProperty(key)) return defaultResource[key];
         if (extResource.hasOwnProperty(entityKey)) return extResource[entityKey];
-        if (defaultResource.hasOwnProperty(entityKey)) return defaultResource[entityKey];
         if (extResource.hasOwnProperty(displayNameKey)) return extResource[displayNameKey];
+
+        if(!defaultResource) return key;
+        if (defaultResource.hasOwnProperty(key)) return defaultResource[key];
+        if (defaultResource.hasOwnProperty(entityKey)) return defaultResource[entityKey];
         if (defaultResource.hasOwnProperty(displayNameKey)) return defaultResource[displayNameKey];
         return key;
     },

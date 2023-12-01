@@ -1,0 +1,35 @@
+  .logo {
+    font-size: 16px;
+    color: #fff;
+    display: flex;
+    flex-wrap: nowrap;    
+
+    .logo-img {
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        border-radius: 50%;
+        position: relative;
+        top: 0px;
+        left: 0px;
+    }
+
+    .company-name{
+        font-size: 24px;
+        margin-left: 10px;
+        display: inline-block;
+        line-height: 40px;
+    }  
+}
+
+.logo.desktop{
+    background-color: $base-color;
+    height: 65px;
+    padding: 12px 8px;
+    line-height: 65px;
+}
+
+.logo.phone{
+    height: 40px;
+    padding-left: 8px;
+}
