@@ -4,9 +4,15 @@ Ext.define('Common.overrides.data.request.Base',{
     getJson(){
         let me = this,
             result = me.result,
-            text = result.responseText,
-            data = Ext.decode(text, true);
-        return data;
+            text = result.responseText;
+        if(Ext.isEmpty(text)) return {};
+        try {
+            let data = Ext.decode(text, true);
+            return data;            
+        } catch (error) {
+            Logger.debug(me.getJson, error);
+            return {};
+        }
     },
 
     download(filename, mimeType){
@@ -49,12 +55,13 @@ Ext.define('Common.overrides.data.request.Base',{
 
     getError() {
         let me  = this,
-            status = me.status,
+            status = me.result.status,
             data = me.getJson(),
             result = Ext.apply({code: null,  message:  null, details: null, data: null, validationErrors: null }, data && data.error);
 
         if(status === 0){
-            result.message = response.statusText;
+            let message = me.result.statusText;
+            result.message = Ext.isEmpty(message) ? I18N.getLocalText('NetworkError') : message;
             return result;
         }
 

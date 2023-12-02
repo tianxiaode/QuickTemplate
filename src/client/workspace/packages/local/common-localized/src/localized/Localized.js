@@ -117,7 +117,7 @@ Ext.define('Common.localized.Localized', {
         me.isReady = false;
         url = url || URI.get('localization');
         let request = Http.get(url);
-        request.then(me.loadSuccess.bind(me), Ext.Msg.showAjaxErrors.bind(me,'LoadResources'));
+        request.then(me.loadSuccess.bind(me), Ext.Msg.showAjaxErrors.bind(me,I18N.getLocalText('LoadingLocalizedError')));
         return request;
     },
 
@@ -146,6 +146,10 @@ Ext.define('Common.localized.Localized', {
                 'en': 'Information',
                 'zh-Hans': '信息'
             },
+            'NetworkError':{
+                'en': 'Network Error!',
+                'zh-Hans': '网络错误'
+            },
             'UnknownError': {
                 'en': 'Unknown error!',
                 'zh-Hans': '未知错误'
@@ -157,6 +161,10 @@ Ext.define('Common.localized.Localized', {
             'LoadingLocalized': {
                 'en': 'Loading localized text...',
                 'zh-Hans': '正在加载本地化文本...'
+            },
+            'LoadingLocalizedError':{
+                'en': 'Load localized text',
+                'zh-Hans': '加载本地化文本'
             },
             'Error401': {
                 'en': 'There is no permission to do this.',

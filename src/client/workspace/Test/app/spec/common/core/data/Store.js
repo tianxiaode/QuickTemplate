@@ -39,11 +39,11 @@ Ext.define('Test.spec.common.core.data.Store', {
                         identityRoleProxy = identityRoleStore.getProxy();
 
                     it('测试模型别名为entity.role时由entiyName生成的url', () => {
-                        expect(proxy.getUrl()).toEqual(`${Config.getServer()}api/roles`);
+                        expect(proxy.getUrl()).toEqual(`${AppConfig.authority}api/roles`);
                     })
 
                     it('测试模型别名为 entity.identity.role 时由entiyName生成的url', () => {
-                        expect(identityRoleProxy.getUrl()).toEqual(`${Config.getServer()}api/identity/roles`);
+                        expect(identityRoleProxy.getUrl()).toEqual(`${AppConfig.authority}api/identity/roles`);
                     })
 
                     it('测试模型是否包含id和concurrencyStamp字段', () => {

@@ -30,10 +30,10 @@ Ext.define('Common.oidc.UserManager', {
         let me = this,
             settings;
         settings = me.settings = userManagerSettings.isInstance ? userManagerSettings : Ext.create('oidc.setting.usermanager', userManagerSettings);
-        me.client = Ext.create('oidc.client', settings);
-        me.redirectNavigator = redirectNavigator || Ext.create('oidc.navigator.redirect', settings);
-        me.popupNavigator = popupNavigator || Ext.create('oidc.navigator.popup', settings);
-        me.iframeNavigator = iframeNavigator || Ext.create('oidc.navigator.iframe', settings);
+        //me.client = Ext.create('oidc.client', settings);
+        me.redirectNavigator = redirectNavigator;
+        me.popupNavigator = popupNavigator ;
+        me.iframeNavigator = iframeNavigator;;
         me.events = Ext.create('oidc.event.usermanager', settings);
         me.silentRenewService = Ext.create('oidc.service.silentrenew', me);
 
@@ -47,6 +47,38 @@ Ext.define('Common.oidc.UserManager', {
         }
     },
 
+    getClient(){
+        let me = this,
+            client = me.client;
+        if(client) return client;
+        client = me.client = Ext.create('oidc.client', me.settings);
+        return client;        
+    },
+
+    getRedirectNavigator(){
+        let me = this,
+            navigator = me.redirectNavigator;
+        if(navigator) return navigator;
+        navigator = me.redirectNavigator = Ext.create('oidc.navigator.redirect', me.settings);
+        return navigator;
+    },
+
+    getPopupNavigator(){
+        let me = this,
+            navigator = me.popupNavigator;
+        if(navigator) return navigator;
+        navigator = me.popupNavigator = Ext.create('oidc.navigator.popup', me.settings);
+        return navigator;
+    },
+
+    getIframeNavigator(){
+        let me = this,
+            navigator = me.iframeNavigator;
+        if(navigator) return navigator;
+        navigator = me.iframeNavigator = Ext.create('oidc.navigator.iframe', me.settings);
+        return navigator;
+    },
+
     /**
      * Get object used to register for events raised by the `UserManager`.
      */
@@ -58,7 +90,7 @@ Ext.define('Common.oidc.UserManager', {
      * Get object used to access the metadata configuration of the identity provider.
      */
     getMmetadataService() {
-        return this.client.metadataService;
+        return this.getClient().metadataService;
     },
 
     /**
@@ -108,7 +140,7 @@ Ext.define('Common.oidc.UserManager', {
             redirectMethod,
             ...requestArgs
         } = args;
-        let handle = await me.redirectNavigator.prepare({ redirectMethod });
+        let handle = await me.getRedirectNavigator().prepare({ redirectMethod });
         await me.signinStart({
             requestType: "si:r",
             ...requestArgs,
@@ -154,7 +186,7 @@ Ext.define('Common.oidc.UserManager', {
         skipUserInfo = Ext.isEmpty(skipUserInfo) ? false : skipUserInfo;
         Logger.debug(me.signinResourceOwnerCredentials, "signinResourceOwnerCredentials");
 
-        let signinResponse = await me.client.processResourceOwnerPasswordCredentials({ username, password, skipUserInfo, extraTokenParams: me.settings.extraTokenParams });
+        let signinResponse = await me.getClient().processResourceOwnerPasswordCredentials({ username, password, skipUserInfo, extraTokenParams: me.settings.extraTokenParams });
         Logger.debug(me.signinResourceOwnerCredentials, "got signin response");
 
         let user = await me.buildUser(signinResponse);
@@ -186,7 +218,7 @@ Ext.define('Common.oidc.UserManager', {
             throw new Error("No popup_redirect_uri configured");
         }
 
-        let handle = await me.popupNavigator.prepare({ popupWindowFeatures, popupWindowTarget });
+        let handle = await me.getPopupNavigator().prepare({ popupWindowFeatures, popupWindowTarget });
         const user = await me.signin({
             requestType: "si:p",
             redirectUri: url,
@@ -217,7 +249,7 @@ Ext.define('Common.oidc.UserManager', {
         let me = this;
         Logger.debug(me.signinPopupCallback, "signinPopupCallback");
         url = url || window.location.href;
-        await me.popupNavigator.callback(url, { keepOpen });
+        await me.getPopupNavigator().callback(url, { keepOpen });
         Logger.info(me.signinPopupCallback, "success");
     },
 
@@ -256,7 +288,7 @@ Ext.define('Common.oidc.UserManager', {
             verifySub = user.profile.sub;
         }
 
-        let handle = await me.iframeNavigator.prepare({ silentRequestTimeoutInSeconds });
+        let handle = await me.getIframeNavigator().prepare({ silentRequestTimeoutInSeconds });
         user = await me.signin({
             requestType: "si:s",
             redirectUri: url,
@@ -289,7 +321,7 @@ Ext.define('Common.oidc.UserManager', {
         let me = this;
         Logger.debug(me.signinSilentCallback, "signinSilentCallback");
         url = url || window.location.href;
-        await me.iframeNavigator.callback(url);
+        await me.getIframeNavigator().callback(url);
         Logger.info(me.signinSilentCallback, "success");
     },
 
@@ -305,7 +337,7 @@ Ext.define('Common.oidc.UserManager', {
     async signinCallback(url) {
         let me = this;
         url = url || window.location.href;
-        let { state } = await me.client.readSigninResponseState(url);
+        let { state } = await me.getClient().readSigninResponseState(url);
         switch (state.requestType) {
             case "si:r":
                 return await me.signinRedirectCallback(url);
@@ -330,7 +362,7 @@ Ext.define('Common.oidc.UserManager', {
     async signoutCallback(url, keepOpen) {
         let me = this;
         url = url || window.location.href;
-        let { state } = await me.client.readSignoutResponseState(url);
+        let { state } = await me.getClient().readSignoutResponseState(url);
         if (!state) {
             return;
         }
@@ -369,7 +401,7 @@ Ext.define('Common.oidc.UserManager', {
         }
 
         let user = await me.loadUser();
-        let handle = await me.iframeNavigator.prepare({ silentRequestTimeoutInSeconds });
+        let handle = await me.getIframeNavigator().prepare({ silentRequestTimeoutInSeconds });
         let navResponse = await me.signinStart({
             requestType: "si:s", // this acts like a signin silent
             redirectUri: url,
@@ -381,7 +413,7 @@ Ext.define('Common.oidc.UserManager', {
             ...requestArgs,
         }, handle);
         try {
-            let signinResponse = await me.client.processSigninResponse(navResponse.url);
+            let signinResponse = await me.getClient().processSigninResponse(navResponse.url);
             Logger.debug(me.querySessionStatus, "got signin response");
 
             if (signinResponse.sessionState && signinResponse.profile.sub) {
@@ -425,7 +457,7 @@ Ext.define('Common.oidc.UserManager', {
             redirectMethod,
             ...requestArgs
         } = args;
-        let handle = await me.redirectNavigator.prepare({ redirectMethod });
+        let handle = await me.getRedirectNavigator().prepare({ redirectMethod });
         await me.signoutStart({
             requestType: "so:r",
             postLogoutRedirectUri: me.settings.postLogoutRedirectUri,
@@ -466,7 +498,7 @@ Ext.define('Common.oidc.UserManager', {
         } = args;
         let url = me.settings.popupPostLogoutRedirectUri;
 
-        let handle = await me.popupNavigator.prepare({ popupWindowFeatures, popupWindowTarget });
+        let handle = await me.getPopupNavigator().prepare({ popupWindowFeatures, popupWindowTarget });
         await me.signout({
             requestType: "so:p",
             postLogoutRedirectUri: url,
@@ -493,7 +525,7 @@ Ext.define('Common.oidc.UserManager', {
         let me = this;
         Logger.debug(me.signoutPopupCallback, "signoutPopupCallback");
         url = url || window.location.href;
-        await me.popupNavigator.callback(url, { keepOpen });
+        await me.getPopupNavigator().callback(url, { keepOpen });
         Logger.info(me.signoutPopupCallback, "success");
     },
 
@@ -521,7 +553,7 @@ Ext.define('Common.oidc.UserManager', {
         }
 
         let url = settings.popupPostLogoutRedirectUri;
-        let handle = await me.iframeNavigator.prepare({ silentRequestTimeoutInSeconds });
+        let handle = await me.getIframeNavigator().prepare({ silentRequestTimeoutInSeconds });
         await me.signout({
             requestType: "so:s",
             popupPostLogoutRedirectUri: url,
@@ -544,7 +576,7 @@ Ext.define('Common.oidc.UserManager', {
         let me = this;
         url = url || window.location.href;
         Logger.debug(me.signoutSilentCallback, "signoutSilentCallback");
-        await me.iframeNavigator.callback(url);
+        await me.getIframeNavigator().callback(url);
         Logger.info(me.signoutSilentCallback, "success");
     },
 
@@ -588,7 +620,7 @@ Ext.define('Common.oidc.UserManager', {
      * Removes stale state entries in storage for incomplete authorize requests.
      */
     async clearStaleState() {
-        await this.client.clearStaleState();
+        await this.getClient().clearStaleState();
     },
 
     destroy() {
@@ -599,7 +631,7 @@ Ext.define('Common.oidc.UserManager', {
     privates: {
         async useRefreshToken(state) {
             let me = this,
-                response = await me.client.useRefreshToken({
+                response = await me.getClient().useRefreshToken({
                     state,
                     timeoutInSeconds: me.settings.silentRequestTimeoutInSeconds,
                 });
@@ -621,7 +653,7 @@ Ext.define('Common.oidc.UserManager', {
             Logger.debug(me.signinStart, "signinStart")
 
             try {
-                let signinRequest = await me.client.createSigninRequest(args);
+                let signinRequest = await me.getClient().createSigninRequest(args);
                 Logger.debug(me.signinStart, "got signin request", handle);
 
                 return await handle.navigate({
@@ -641,7 +673,7 @@ Ext.define('Common.oidc.UserManager', {
         async signinEnd(url, verifySub) {
             let me = this;
             Logger.debug(me.signinEnd, "signinEnd")
-            let signinResponse = await me.client.processSigninResponse(url);
+            let signinResponse = await me.getClient().processSigninResponse(url);
             Logger.debug(me.signinEnd, "got signin response");
 
             let user = await me.buildUser(signinResponse, verifySub);
@@ -693,7 +725,7 @@ Ext.define('Common.oidc.UserManager', {
                 await me.removeUser();
                 Logger.debug(me.signoutStart, "user removed, creating signout request");
 
-                let signoutRequest = await me.client.createSignoutRequest(args);
+                let signoutRequest = await me.getClient().createSignoutRequest(args);
                 Logger.debug(me.signoutStart, "got signout request");
 
                 return await handle.navigate({
@@ -712,7 +744,7 @@ Ext.define('Common.oidc.UserManager', {
         async signoutEnd(url) {
             let me = this;
             Logger.debug(me.signoutEnd, "signoutEnd")
-            let signoutResponse = await me.client.processSignoutResponse(url);
+            let signoutResponse = await me.getClient().processSignoutResponse(url);
             Logger.debug(me.signoutEnd, "got signout response");
 
             return signoutResponse;
@@ -735,7 +767,7 @@ Ext.define('Common.oidc.UserManager', {
 
             // don't Promise.all, order matters
             for (let type of typesPresent) {
-                await me.client.revokeToken(
+                await me.getClient().revokeToken(
                     user[type], // eslint-disable-line @typescript-eslint/no-non-null-assertion
                     type,
                 );

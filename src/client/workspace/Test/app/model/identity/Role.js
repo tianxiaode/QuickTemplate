@@ -1,5 +1,5 @@
 Ext.define('Test.model.identity.Role', {
-    extend: 'Common.core.data.Model',
+    extend: 'Common.data.Model',
     alias: 'entity.identity.role',
 
     hasTranslation: true,

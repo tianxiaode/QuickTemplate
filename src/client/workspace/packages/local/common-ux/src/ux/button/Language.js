@@ -9,6 +9,8 @@ Ext.define('Common.ux.button.Language',{
         'Ext.menu.RadioItem'
     ],
 
+    hidden: true,
+
     responsiveConfig:{
         'desktop && !cancel':{
             iconCls: 'x-fa fa-globe',
@@ -45,6 +47,7 @@ Ext.define('Common.ux.button.Language',{
             });
         });
         me.setMenu(menu);
+        me.setHidden(false);
         
     },
 

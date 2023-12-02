@@ -29,14 +29,6 @@ Ext.define('Test.spec.common.core.service.Config', {
 
 
                 describe("验证获取本地化资源", () => {
-                    it('验证应用设置', () => {
-                        let appConfig = window.AppConfig;
-                        expect(Config.getServer()).toEqual(appConfig.server);
-                        expect(Config.getXsrfCookieName()).toEqual('XSRF-TOKEN');
-                        expect(Config.getXsrfHeaderName()).toEqual('RequestVerificationToken');
-                        expect(Config.getLanguage()).toEqual(appConfig.language);
-                        expect(Config.getOidc()).toEqual(appConfig.oidc);
-                    });
 
                     it('验证返回数据', (done) => {
                         Config.loadConfiguration().then((response) => {

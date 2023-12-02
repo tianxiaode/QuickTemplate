@@ -4,6 +4,7 @@ Ext.define('Common.overrides.MessageBox',{
     showAjaxErrors(title, response){
         let error = response.request.getError(),
             message = `<h5 class="m-0 p-2">${error.message}</h5>`;
+        Logger.debug(this.showAjaxErrors, error)
         if(error.details){
             message += `<p class="m-0 p-2">${error.details}</p>`;
         }

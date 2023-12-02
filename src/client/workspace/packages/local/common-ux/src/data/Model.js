@@ -1,4 +1,4 @@
-Ext.define('Common.core.data.Model', {
+Ext.define('Common.data.Model', {
     extend: 'Ext.data.Model',
 
     requires: [

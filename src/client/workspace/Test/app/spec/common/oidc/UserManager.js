@@ -49,11 +49,10 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                         }
                     });
 
-                    redirectNavigatorSpy = spyOn(subject.redirectNavigator, 'getTargetWindow');
+                    redirectNavigatorSpy = spyOn(subject.getRedirectNavigator(), 'getTargetWindow');
                     redirectNavigatorSpy.and.callFake((redirectTarget) => {
-                        console.log('location-location-call', targetWindow)
                         return redirectTarget === 'top' ? targetWindow.top || targetWindow : targetWindow;
-                    });
+                    });    
 
                 });
 
@@ -177,7 +176,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             refreshToken: "bar",
                         };
                         subject["loadUser"] = jasmine.createSpy().and.returnValue(user);
-                        let revokeSpy = spyOn(subject["client"], "revokeToken").and.resolveTo(undefined);
+                        let revokeSpy = spyOn(subject.getClient(), "revokeToken").and.resolveTo(undefined);
                         let storeUserSpy = spyOn(subject, "storeUser").and.resolveTo(undefined);
             
                         // act
@@ -199,7 +198,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                         subject["loadUser"] = jasmine.createSpy().and.returnValue({
                             accessToken: "foo",
                         });
-                        let revokeSpy = spyOn(subject["client"], "revokeToken").and.resolveTo(undefined);
+                        let revokeSpy = spyOn(subject.getClient(), "revokeToken").and.resolveTo(undefined);
                         spyOn(subject, "storeUser").and.resolveTo(undefined);
             
                         // act
@@ -219,6 +218,8 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                 });
 
                 describe("signinRedirect", () => {
+
+
                     it("should redirect the browser to the authorize url", async () => {
                         // act
                         let spy = jasmine.createSpy();
@@ -237,7 +238,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
             
                     it("should pass navigator params to navigator", async () => {
                         // arrange
-                        let prepareMock = spyOn(subject["redirectNavigator"], "prepare");
+                        let prepareMock = spyOn(subject.getRedirectNavigator(), "prepare");
                         subject["signinStart"] = jasmine.createSpy();
                         let navParams = {
                             redirectMethod: "assign",
@@ -252,7 +253,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
             
                     it("should pass extra args to _signinStart", async () => {
                         // arrange
-                        spyOn(subject["redirectNavigator"], "prepare").and.callThrough();
+                        spyOn(subject.getRedirectNavigator(), "prepare").and.callThrough();
                         subject["signinStart"] = jasmine.createSpy();
                         let extraArgs = {
                             extraQueryParams: { q : "q" },
@@ -284,7 +285,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                 describe("signinRedirectCallback", () => {
                     it("should return a user", async () => {
                         // arrange
-                        let spy = spyOn(subject["client"], "processSigninResponse").and.resolveTo({});
+                        let spy = spyOn(subject.getClient(), "processSigninResponse").and.resolveTo({});
             
                         // act
                         let user = await subject.signinRedirectCallback("http://app/cb?state=test&code=code");
@@ -297,7 +298,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                 describe("signinResourceOwnerCredentials", () => {
                     it("should fail on wrong credentials", async () => {
                         // arrange
-                        spyOn(subject["client"], "processResourceOwnerPasswordCredentials").and.rejectWith(new Error("Wrong credentials"));
+                        spyOn(subject.getClient(), "processResourceOwnerPasswordCredentials").and.rejectWith(new Error("Wrong credentials"));
             
                         // act
                         await expectAsync(subject.signinResourceOwnerCredentials({ username: "u", password: "p" }))
@@ -324,7 +325,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             idToken: "id_token",
                             scope: "openid profile email",
                         };
-                        spyOn(subject["client"], "processResourceOwnerPasswordCredentials").and.resolveTo(mockUser);
+                        spyOn(subject.getClient(), "processResourceOwnerPasswordCredentials").and.resolveTo(mockUser);
                         spyOn(subject["events"], "load").and.returnValue({});
             
                         // act
@@ -347,7 +348,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                     it("should pass navigator params to navigator", async () => {
                         // arrange
                         let handle = { } ;
-                        let prepareMock = spyOn(subject["popupNavigator"], "prepare").and.callFake(() => Promise.resolve(handle));
+                        let prepareMock = spyOn(subject.getPopupNavigator(), "prepare").and.callFake(() => Promise.resolve(handle));
                         subject["signin"] = jasmine.createSpy();
                         let navParams = {
                             popupWindowFeatures: {
@@ -373,7 +374,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             profile: {},
                         });
                         let handle = { };
-                        spyOn(subject["popupNavigator"], "prepare")
+                        spyOn(subject.getPopupNavigator(), "prepare")
                             .and.callFake(() => Promise.resolve(handle));
                         subject["signin"] = jasmine.createSpy().and.resolveTo(user);
                         let extraArgs = {
@@ -403,7 +404,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                 describe("signinPopupCallback", () => {
                     it("should call navigator callback", async () => {
                         // arrange
-                        let callbackMock = spyOn(subject["popupNavigator"], "callback").and.resolveTo();
+                        let callbackMock = spyOn(subject.getPopupNavigator(), "callback").and.resolveTo();
                         let url = "http://app/cb?state=test&code=code";
                         let keepOpen = true;
             
@@ -442,7 +443,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
             
                     it("should pass navigator params to navigator", async () => {
                         // arrange
-                        let prepareMock = spyOn(subject["iframeNavigator"], "prepare");
+                        let prepareMock = spyOn(subject.getIframeNavigator(), "prepare");
                         subject["signin"] = jasmine.createSpy();
                         let navParams = {
                             silentRequestTimeoutInSeconds: 234,
@@ -462,7 +463,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             tokenType: "token_type",
                             profile: {},
                         });
-                        spyOn(subject["popupNavigator"], "prepare");
+                        spyOn(subject.getPopupNavigator(), "prepare");
                         subject["signin"] = jasmine.createSpy().and.resolveTo(user);
                         let extraArgs = {
                             extraQueryParams: { q : "q" },
@@ -519,7 +520,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             },
                         });
             
-                        let useRefreshTokenSpy = spyOn(subject["client"], "useRefreshToken").and.resolveTo({
+                        let useRefreshTokenSpy = spyOn(subject.getClient(), "useRefreshToken").and.resolveTo({
                             accessToken: "new_access_token",
                             profile: {
                                 sub: "sub",
@@ -550,7 +551,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             },
                         });
             
-                        let useRefreshTokenSpy = spyOn(subject["client"], "useRefreshToken").and.resolveTo({
+                        let useRefreshTokenSpy = spyOn(subject.getClient(), "useRefreshToken").and.resolveTo({
                             accessTtoken: "new_access_token",
                             profile: {
                                 sub: "sub",
@@ -572,7 +573,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                 describe("signinSilentCallback", () => {
                     it("should call navigator callback", async () => {
                         // arrange
-                        let callbackMock = spyOn(subject["iframeNavigator"], "callback");
+                        let callbackMock = spyOn(subject.getIframeNavigator(), "callback");
                         let url = "http://app/cb?state=test&code=code";
             
                         // act
@@ -595,7 +596,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             state: { requestType: "si:r" },
                             response: { },
                         };
-                        spyOn(subject["client"], "readSigninResponseState")
+                        spyOn(subject.getClient(), "readSigninResponseState")
                             .and.callFake(() => Promise.resolve(responseState));
                         let signinRedirectCallbackMock = spyOn(subject, "signinRedirectCallback")
                             .and.callFake(() => Promise.resolve(user));
@@ -615,7 +616,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             state: { requestType: "si:p" },
                             response: { } ,
                         };
-                        spyOn(subject["client"], "readSigninResponseState")
+                        spyOn(subject.getClient(), "readSigninResponseState")
                             .and.callFake(() => Promise.resolve(responseState));
                         let signinPopupCallbackMock = spyOn(subject, "signinPopupCallback").and.resolveTo();
                         let url = "http://app/cb?state=test&code=code";
@@ -634,7 +635,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             state: { requestType: "si:s" },
                             response: { }
                         };
-                        spyOn(subject["client"], "readSigninResponseState")
+                        spyOn(subject.getClient(), "readSigninResponseState")
                             .and.callFake(() => Promise.resolve(responseState));
                         let signinRedirectCallbackMock = spyOn(subject, "signinSilentCallback").and.resolveTo();
                         let url = "http://app/cb?state=test&code=code";
@@ -653,7 +654,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             state: { requestType: "dummy" } ,
                             response: { } ,
                         };
-                        spyOn(subject["client"], "readSigninResponseState")
+                        spyOn(subject.getClient(), "readSigninResponseState")
                             .and.callFake(() => Promise.resolve(responseState));
             
                         // act
@@ -670,7 +671,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             state: { requestType: "so:r" },
                             response: { } 
                         };
-                        spyOn(subject["client"], "readSignoutResponseState")
+                        spyOn(subject.getClient(), "readSignoutResponseState")
                             .and.callFake(() => Promise.resolve(responseState));
                         let signoutRedirectCallbackMock = spyOn(subject, "signoutRedirectCallback")
                             .and.callThrough();
@@ -689,7 +690,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             state: { requestType: "so:p" },
                             response: { } 
                         };
-                        spyOn(subject["client"], "readSignoutResponseState")
+                        spyOn(subject.getClient(), "readSignoutResponseState")
                             .and.callFake(() => Promise.resolve(responseState));
                         let signoutPopupCallbackMock = spyOn(subject, "signoutPopupCallback")
                             .and.resolveTo();
@@ -709,7 +710,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                             state: { requestType: "dummy" },
                             response: { } 
                         };
-                        spyOn(subject["client"], "readSignoutResponseState")
+                        spyOn(subject.getClient(), "readSignoutResponseState")
                             .and.callFake(() => Promise.resolve(responseState));
             
                         // act
@@ -736,7 +737,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
             
                     it("should pass navigator params to navigator", async () => {
                         // arrange
-                        let prepareMock = spyOn(subject["iframeNavigator"], "prepare");
+                        let prepareMock = spyOn(subject.getIframeNavigator(), "prepare");
                         subject["signout"] = jasmine.createSpy();
                         let navParams = {
                             silentRequestTimeoutInSeconds: 234,
@@ -751,7 +752,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
             
                     it("should pass extra args to _signoutStart", async () => {
                         // arrange
-                        spyOn(subject["popupNavigator"], "prepare");
+                        spyOn(subject.getPopupNavigator(), "prepare");
                         subject["signout"] = jasmine.createSpy();
                         let extraArgs = {
                             extraQueryParams: { q : "q" },
@@ -844,7 +845,7 @@ Ext.define('Test.spec.common.oidc.UserManager', {
                 describe("signoutSilentCallback", () => {
                     it("should call navigator callback", async () => {
                         // arrange
-                        let callbackMock = spyOn(subject["iframeNavigator"], "callback");
+                        let callbackMock = spyOn(subject.getIframeNavigator(), "callback");
                         let url = "http://app/cb?state=test&code=code";
             
                         // act
