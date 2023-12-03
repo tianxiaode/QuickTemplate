@@ -30,7 +30,7 @@ Ext.define('Common.localized.Localized', {
 
     initLanguages() {
         let me = this,
-            lang = Config.getCurrentLanguage(),
+            lang = AppConfig.lang,
             current = AppStorage.get('lang');
         if (!current) {
             current = lang === 'zh-CN' ? 'zh-Hans'

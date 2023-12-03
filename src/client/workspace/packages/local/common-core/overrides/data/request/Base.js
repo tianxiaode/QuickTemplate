@@ -1,6 +1,10 @@
 Ext.define('Common.overrides.data.request.Base',{
     override: 'Ext.data.request.Base',
 
+    requires:[
+        'Common.core.util.HttpStatusCode'
+    ],
+
     getJson(){
         let me = this,
             result = me.result,
@@ -65,6 +69,12 @@ Ext.define('Common.overrides.data.request.Base',{
             return result;
         }
 
+        if(status >= 400 && Ext.isEmpty(result.message)){
+            result.message = me.getStatusMessage(status);
+            Logger.debug(me.getError, result.message, me);
+            return result;
+        }
+
         if(result.validationErrors){
             result.validationErrors = me.normalizedValidationErrors(result.validationErrors);
         }
@@ -82,6 +92,12 @@ Ext.define('Common.overrides.data.request.Base',{
             });
         })
         return result;
+    },
+
+    privates:{
+        getStatusMessage(code){
+            return Ext.String.capitalize(Format.splitCamelCase(HttpStatusCode.getMessage(code), ' '));
+        }    
     }
 
 
