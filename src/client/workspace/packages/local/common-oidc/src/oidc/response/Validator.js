@@ -32,7 +32,7 @@ Ext.define('Common.oidc.response.Validator',{
         await me.processCode(response, state);
         Logger.debug(me.validateSigninResponse ,"code processed");
 
-        if (response.isOpenId) {
+        if (response.isOpenId()) {
             me.validateIdTokenAttributes(response);
         }
         Logger.debug(me.validateSigninResponse , "tokens validated");
@@ -44,7 +44,7 @@ Ext.define('Common.oidc.response.Validator',{
     async validateCredentialsResponse(response, skipUserInfo) {
         let me = this;
 
-        if (response.isOpenId) {
+        if (response.isOpenId()) {
             me.validateIdTokenAttributes(response);
         }
         Logger.debug(me.validateSigninResponse , "tokens validated");
@@ -64,7 +64,7 @@ Ext.define('Common.oidc.response.Validator',{
 
         // OpenID Connect Core 1.0 says that id_token is optional in refresh response:
         // https://openid.net/specs/openid-connect-core-1_0.html#RefreshTokenResponse
-        if (response.isOpenId && !!response.idToken) {
+        if (response.isOpenId() && !!response.idToken) {
             me.validateIdTokenAttributes(response, state.idToken);
             Logger.debug(me.validateRefreshResponse , "ID Token validated");
         }
@@ -76,7 +76,7 @@ Ext.define('Common.oidc.response.Validator',{
             response.profile = state.profile;
         }
 
-        let hasIdToken = response.isOpenId && !!response.idToken;
+        let hasIdToken = response.isOpenId() && !!response.idToken;
         await me.processClaims(response, false, hasIdToken);
         Logger.debug(me.validateRefreshResponse , "claims processed");
     },

@@ -1,6 +1,7 @@
 Ext.define('Common.service.Authentication',{
-    alternateClassName: 'Auth',
-    singleton: true,
+    alias: 'service.authentication',
+    // alternateClassName: 'Auth',
+    // singleton: true,
 
     mixins:[
         'Ext.mixin.Observable',
@@ -13,22 +14,57 @@ Ext.define('Common.service.Authentication',{
             name = Ext.getApplication().getName().toLowerCase(),
             appConfig = config[name];
             issuer = appConfig && appConfig['issuer'],
+            redirectUri = appConfig && appConfig['redirectUri'],
             settings = {
                 authority: config.authority,
                 issuer: issuer || config.issuer,
-                redirectUri: config.redirectUri,
+                redirectUri: redirectUri,
                 clientId: config.clientId,
                 scope: config.scope,
-                responseType: config.responseType        
+                responseType: config.responseType,
+                disablePKCE: true,
+                automaticSilentRenew: true
             };
         me.settings
-        me.userManger = Ext.create('oidc.usermanager', settings);
+        me.userManager = Ext.create('oidc.usermanager', settings);
     },
 
-    login(){
-        let userManger = this.userManger;
-        if(userManger.settings.responseType === 'code'){
-            return 
+    async login(){
+        let me = this,
+            userManager = me.userManager;
+        Logger.debug(me.login);
+        if(userManager.settings.responseType === 'code'){
+            return me.signinRedirect();
+        }
+
+    },
+
+    isAuthenticated(){
+        let me = this,
+            storage = AppStorage,
+            keys = me.storageKeys,
+            token = storage.get(keys.accessToken);
+        if(token){
+            let expiresAt = storage.get(keys.expiresAt),
+                now = new Date(),
+                isAuthenticated = expiresAt && parseInt(expiresAt, 10) > now.getTime();
+            //如果token已过期，清除全部数据
+            if(!isAuthenticated) me.removeAllStorageItem();
+            return isAuthenticated;
+        }
+        return false;
+    },
+
+    privates:{
+        async signinRedirect(){
+            let me = this,
+                userManager = me.userManager,
+                params = new URLSearchParams(window.location.href);
+            if(params.has('state')){
+                return await userManager.signinRedirectCallback();
+            }
+            return userManager.signinRedirect();
+
         }
     }
 

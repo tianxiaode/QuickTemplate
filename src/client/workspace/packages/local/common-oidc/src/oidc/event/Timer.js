@@ -3,7 +3,7 @@ Ext.define('Common.oidc.event.Timer',{
     alias: 'oidc.event.timer',
 
     timerHandle: null,
-    expiration: 0,
+    _expiration: 0,
 
     statics:{
         getEpochTime() {
@@ -15,16 +15,16 @@ Ext.define('Common.oidc.event.Timer',{
         let me = this;
         durationInSeconds = Math.max(Math.floor(durationInSeconds), 1);
         let expiration = Oidc.Timer.getEpochTime() + durationInSeconds;
-        if (me.expiration === expiration && me.timerHandle) {
+        if (me._expiration === expiration && me.timerHandle) {
             // no need to reinitialize to same expiration, so bail out
-            Logger.debug(me.init ,  "skipping since already initialized for expiration at", me.expiration);
+            Logger.debug(me.init ,  "skipping since already initialized for expiration at", me._expiration);
             return;
         }
 
         me.cancel();
 
         Logger.debug(me.init,  "using duration", durationInSeconds);
-        me.expiration = expiration;
+        me._expiration = expiration;
 
         // we're using a fairly short timer and then checking the expiration in the
         // callback to handle scenarios where the browser device sleeps, and then
@@ -34,7 +34,7 @@ Ext.define('Common.oidc.event.Timer',{
     },
 
     getExpiration() {
-        return this.expiration;
+        return this._expiration;
     },
 
     cancel() {        
@@ -48,10 +48,10 @@ Ext.define('Common.oidc.event.Timer',{
 
     callback(){
         let me = this,
-            diff = me.expiration -  Oidc.Timer.getEpochTime();
+            diff = me._expiration -  Oidc.Timer.getEpochTime();
         Logger.debug(me.callback,  "timer completes in", diff);
 
-        if (me.expiration <=  Oidc.Timer.getEpochTime()) {
+        if (me._expiration <=  Oidc.Timer.getEpochTime()) {
             me.cancel();
             me.raise();
         }

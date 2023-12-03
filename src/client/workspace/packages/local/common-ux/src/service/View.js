@@ -165,7 +165,7 @@ Ext.define('Common.service.View', {
         for (let key in me.views) {
             Ext.clear(me.views[key]);
         }
-        this.callParent();
+        me.callParent();
     },
 
     privates: {

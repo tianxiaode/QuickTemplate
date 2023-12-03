@@ -25,8 +25,8 @@ Ext.define('Common.ux.button.User',{
                 scrollable: true,
                 flex: 1,
                 fields: ['userName','name','surname', 'email', 'phoneNumber'],
-            },        
-        ],
+            }
+        ]
     },
 
 
@@ -44,6 +44,12 @@ Ext.define('Common.ux.button.User',{
             d.set('text', user[f]);
             d.commit();
         });    
+    },
+
+    doDestroy() {
+        let me = this;
+        me.destroyMembers('menu');
+        me.callParent();
     }
 
 

@@ -2,7 +2,8 @@ Ext.define('Common.view.home.HomeController',{
     extend: 'Ext.app.ViewController',
 
     requires:[
-        'Common.service.View'
+        'Common.service.View',
+        'Common.service.Authentication'
     ],
 
     currentToken: null,
@@ -29,21 +30,9 @@ Ext.define('Common.view.home.HomeController',{
         Logger.debug(this.onBeforeRoute, hash, action)
         let me = this;
         if(ViewService.pages[hash]) {
-            action.stop();
+            action.stop.call(me);
             return;
         }
-        // if(!Auth.isAuthenticated()){
-        //     action.stop();
-        //     Auth.on('loggedin', me.loadConfiguration, me);
-        //     Auth.login(hash);
-        //     return;
-        // }
-
-        // if(!me.isReady()){
-        //     action.stop();
-        //     me.loadConfiguration();
-        //     return;
-        // }
 
         action.resume();
     },

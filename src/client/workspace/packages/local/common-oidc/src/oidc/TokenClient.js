@@ -43,7 +43,7 @@ Ext.define('Common.oidc.TokenClient', {
             throw new Error("A code is required");
         }
 
-        let params = new URLSearchParams({ grant_ype: grantType, redirect_uri: redirectUri });
+        let params = new URLSearchParams({ grant_type: grantType, redirect_uri: redirectUri });
         for (let [key, value] of Object.entries(args)) {
             if (value != null) {
                 params.set(Format.splitCamelCase(key, '_'), value);
@@ -68,7 +68,7 @@ Ext.define('Common.oidc.TokenClient', {
         let url = await me.metadataService.getTokenEndpoint(false);
         Logger.debug(me.exchangeCode, "got token endpoint");
 
-        const response = await me.jsonService.postForm(url, params, basicAuth, settings.fetchRequestCredentials);
+        let response = await me.jsonService.postForm(url, params.toString(), basicAuth, settings.fetchRequestCredentials);
         Logger.debug(me.exchangeCode, "got response");
 
         return response;
@@ -128,7 +128,7 @@ Ext.define('Common.oidc.TokenClient', {
     async exchangeRefreshToken(options) {
 
         let me = this,
-            { grantType, clientId, clientSecret, ...args } = options,
+            { granttType, clientId, clientSecret, ...args } = options,
             settings = me.settings;
         grantType = grantType || 'refresh_token';
         clientId = clientId || settings.clientId;
@@ -141,7 +141,7 @@ Ext.define('Common.oidc.TokenClient', {
             throw new Error("A refresh_token is required");
         }
 
-        let params = new URLSearchParams({ grant_type: grantType });
+        let params = new URLSearchParams({ grant_type: granttType });
         for (let [key, value] of Object.entries(args)) {
             if (Array.isArray(value)) {
                 value.forEach(param => params.append(Format.splitCamelCase(key, '_'), param));

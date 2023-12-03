@@ -65,7 +65,7 @@ Ext.define('Common.oidc.service.Json', {
             if(withCredentials) {
                 options.withCredentials = true;
             }
-            response = await Http.post(url, null, options);
+            response = await Http.post(url, data, options);
         }
         catch (error) {
             Logger.debug(me.postForm, 'Error from server:', error) 

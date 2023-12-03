@@ -24,8 +24,7 @@ Ext.define('Common.app.Application', {
         ]
     },
 
-    init() {
-        I18N.loadResources();
+    async init() {
         //桌面应用允许用户选择文字
         if(Ext.platformTags.desktop){
             Ext.Viewport.setUserSelectable({
@@ -33,6 +32,18 @@ Ext.define('Common.app.Application', {
                 bodyElement: true
             })    
         }
+
+        window.Auth = Ext.create('service.authentication');
+
+        let user = await Auth.login();
+        Logger.debug(this.init, user)
+
+        // if(!await Auth.isAuthenticated()){
+        //     let user = await Auth.login();
+        //     return;            
+        // }
+
+        I18N.loadResources();
       
     },
 

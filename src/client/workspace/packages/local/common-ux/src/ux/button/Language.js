@@ -58,6 +58,13 @@ Ext.define('Common.ux.button.Language',{
      */
     onSwitchLanguage(sender){
         I18N.switchLanguages(sender.getValue());
+    },
+
+    doDestroy() {
+        let me = this;
+        me.destroyMembers('responsiveConfig');
+        me.callParent();
     }
+
 
 })

@@ -39,5 +39,10 @@ Ext.define('Common.ux.Logo', {
         return URI.crud('File',logo);
     },
 
+    doDestroy() {
+        let me = this;
+        me.destroyMembers('template');
+        me.callParent();
+    }
 
 });

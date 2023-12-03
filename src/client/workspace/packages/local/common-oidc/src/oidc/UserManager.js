@@ -158,7 +158,7 @@ Ext.define('Common.oidc.UserManager', {
     async signinRedirectCallback(url) {
         let me = this;
         url = url || window.location.href;
-        Logger.debug(me.signinRedirectCallback, "signinRedirectCallback");
+        Logger.debug(me.signinRedirectCallback, "signinRedirectCallback", url);
         let user = await me.signinEnd(url);
         if (user.profile && user.profile.sub) {
             Logger.info(me.signinCallback, "success, signed in subject", user.profile.sub);

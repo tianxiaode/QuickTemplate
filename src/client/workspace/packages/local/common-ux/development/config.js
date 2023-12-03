@@ -4,7 +4,6 @@ window.AppConfig = {
     //oidc设置
     authority: 'https://localhost:44320/',
     issuer: 'http://localhost:4200',
-    redirectUri: "http://localhost:4200/desktop",
     clientId: 'QuickTemplate_App',
     scope: 'offline_access QuickTemplate',
     responseType: 'code',
@@ -47,10 +46,10 @@ window.AppConfig = {
         "zh-CN": '加载中...'
     },
     desktop:{
-
+        redirectUri: "http://localhost:4200/desktop"
     },
     phone:{
-
+        redirectUri: "http://localhost:4200/phone",
     }
 
 };

@@ -7,6 +7,8 @@
     <JetBrainsAnnotationsVersion>2023.3.0</JetBrainsAnnotationsVersion>
 		<FileProvidersEmbeddedVersion>7.0.10</FileProvidersEmbeddedVersion>
 		<SkiaSharpVersion>2.80.3</SkiaSharpVersion>
+    <!-- All Microsoft EntityFrameworkCore packages -->
+    <MicrosoftEntityFrameworkCorePackageVersion>7.0.10</MicrosoftEntityFrameworkCorePackageVersion>
 
   </PropertyGroup>
 </Project>

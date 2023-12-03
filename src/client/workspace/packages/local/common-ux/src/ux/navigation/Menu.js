@@ -108,4 +108,11 @@ Ext.define('Common.ux.navigation.Menu',{
         })
     },
 
+    doDestroy() {
+        let me = this;
+        me.setList(null);
+        me.setHeader(null);
+        me.callParent();
+    }
+
 })

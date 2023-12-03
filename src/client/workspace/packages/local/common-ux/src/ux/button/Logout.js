@@ -28,7 +28,12 @@ Ext.define('Common.ux.button.Logout',{
             Config.clearAll();
             Auth.logout();                
         })
-    }
+    },
 
+    doDestroy() {
+        let me = this;
+        me.destroyMembers('responsiveConfig');
+        me.callParent();
+    }
 
 })

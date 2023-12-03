@@ -12,7 +12,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace QuickTemplate.Migrations
 {
     [DbContext(typeof(QuickTemplateDbContext))]
-    [Migration("20230820064900_Initial")]
+    [Migration("20231203082012_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace QuickTemplate.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("_Abp_DatabaseProvider", EfCoreDatabaseProvider.MySql)
-                .HasAnnotation("ProductVersion", "7.0.1")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("QuickTemplate.Infrastructures.Districts.District", b =>
@@ -130,6 +130,7 @@ namespace QuickTemplate.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
@@ -150,6 +151,7 @@ namespace QuickTemplate.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ExtraProperties")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("ExtraProperties");
 
@@ -362,6 +364,7 @@ namespace QuickTemplate.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
@@ -371,6 +374,7 @@ namespace QuickTemplate.Migrations
                         .HasColumnName("CreationTime");
 
                     b.Property<string>("ExtraProperties")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("ExtraProperties");
 
@@ -419,6 +423,7 @@ namespace QuickTemplate.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
@@ -428,6 +433,7 @@ namespace QuickTemplate.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.Property<string>("ExtraProperties")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("ExtraProperties");
 
@@ -490,11 +496,16 @@ namespace QuickTemplate.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
 
+                    b.Property<int>("EntityVersion")
+                        .HasColumnType("int");
+
                     b.Property<string>("ExtraProperties")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("ExtraProperties");
 
@@ -586,6 +597,7 @@ namespace QuickTemplate.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
@@ -598,6 +610,7 @@ namespace QuickTemplate.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ExtraProperties")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("ExtraProperties");
 
@@ -646,6 +659,7 @@ namespace QuickTemplate.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
@@ -678,7 +692,11 @@ namespace QuickTemplate.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("EmailConfirmed");
 
+                    b.Property<int>("EntityVersion")
+                        .HasColumnType("int");
+
                     b.Property<string>("ExtraProperties")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("ExtraProperties");
 
@@ -705,6 +723,9 @@ namespace QuickTemplate.Migrations
                     b.Property<Guid?>("LastModifierId")
                         .HasColumnType("char(36)")
                         .HasColumnName("LastModifierId");
+
+                    b.Property<DateTimeOffset?>("LastPasswordChangeTime")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("LockoutEnabled")
                         .ValueGeneratedOnAdd()
@@ -753,6 +774,9 @@ namespace QuickTemplate.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)")
                         .HasColumnName("SecurityStamp");
+
+                    b.Property<bool>("ShouldChangePasswordOnNextLogin")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Surname")
                         .HasMaxLength(64)
@@ -814,6 +838,32 @@ namespace QuickTemplate.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AbpUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Volo.Abp.Identity.IdentityUserDelegation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("SourceUserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("TargetUserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AbpUserDelegations", (string)null);
                 });
 
             modelBuilder.Entity("Volo.Abp.Identity.IdentityUserLogin", b =>
@@ -929,6 +979,7 @@ namespace QuickTemplate.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
@@ -955,7 +1006,11 @@ namespace QuickTemplate.Migrations
                         .HasColumnType("varchar(128)")
                         .HasColumnName("DisplayName");
 
+                    b.Property<int>("EntityVersion")
+                        .HasColumnType("int");
+
                     b.Property<string>("ExtraProperties")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("ExtraProperties");
 
@@ -1034,6 +1089,7 @@ namespace QuickTemplate.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
@@ -1065,6 +1121,7 @@ namespace QuickTemplate.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("ExtraProperties")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("ExtraProperties");
 
@@ -1122,6 +1179,7 @@ namespace QuickTemplate.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
@@ -1146,6 +1204,7 @@ namespace QuickTemplate.Migrations
                         .HasColumnName("DeletionTime");
 
                     b.Property<string>("ExtraProperties")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("ExtraProperties");
 
@@ -1196,6 +1255,7 @@ namespace QuickTemplate.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
@@ -1229,6 +1289,7 @@ namespace QuickTemplate.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("ExtraProperties")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("ExtraProperties");
 
@@ -1277,6 +1338,7 @@ namespace QuickTemplate.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
@@ -1304,6 +1366,7 @@ namespace QuickTemplate.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ExtraProperties")
+                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("ExtraProperties");
 
@@ -1501,6 +1564,55 @@ namespace QuickTemplate.Migrations
                         .IsUnique();
 
                     b.ToTable("AbpSettings", (string)null);
+                });
+
+            modelBuilder.Entity("Volo.Abp.SettingManagement.SettingDefinitionRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("DefaultValue")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(512)
+                        .HasColumnType("varchar(512)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("longtext")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<bool>("IsEncrypted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsInherited")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsVisibleToClients")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
+
+                    b.Property<string>("Providers")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("AbpSettingDefinitions", (string)null);
                 });
 
             modelBuilder.Entity("QuickTemplate.Infrastructures.Districts.District", b =>

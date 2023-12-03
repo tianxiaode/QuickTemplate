@@ -2,9 +2,8 @@ window.AppConfig = {
     currentLoadingText: '',
 
     //oidc设置
-    authority: 'https://localhost:44320/',
-    issuer: 'http://localhost:4200',
-    redirectUri: "http://localhost:4200/desktop",
+    authority: 'https://www.extjs.tech/',
+    issuer: null,
     clientId: 'QuickTemplate_App',
     scope: 'offline_access QuickTemplate',
     responseType: 'code',
@@ -47,9 +46,11 @@ window.AppConfig = {
         "zh-CN": '加载中...'
     },
     desktop:{
+        redirectUri: "http://d.extjs.tech",
 
     },
     phone:{
+        redirectUri: "http://m.extjs.tech",
 
     }
 

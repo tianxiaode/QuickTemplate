@@ -13,8 +13,10 @@ Ext.define('Common.oidc.util.Jwt',{
 
             options = options || {};
             let pos = options.header === true ? 0 : 1;
+            Logger.debug(this.decode, token, options.header, pos);
             try {
-                return JSON.parse(Oidc.Jwt.base64UrlDecode(token.split(".")[pos]));
+                let part = token.split(".")[pos];
+                return JSON.parse(Oidc.Jwt.base64UrlDecode(part));
             } catch (e) {
                 throw new Error("Invalid token specified: " + e.message);
             }

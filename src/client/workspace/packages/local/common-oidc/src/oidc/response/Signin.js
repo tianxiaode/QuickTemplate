@@ -64,6 +64,7 @@ Ext.define('Common.oidc.response.Signin', {
         me.errorUri = params.get("error_uri");
 
         me.code = params.get("code");
+        Logger.debug(me.constructor, params);
 
     },
 

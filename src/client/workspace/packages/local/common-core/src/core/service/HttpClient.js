@@ -110,7 +110,7 @@ Ext.define('Common.core.service.HttpClient', {
 
             let contentType = opts.headers && opts.headers['Content-Type'];
             if (contentType && contentType.includes('x-www-form')) {
-                opts.rawData = Ext.Object.toQueryString(data);
+                opts.rawData = Ext.isString(data) ? data : Ext.Object.toQueryString(data);
             } else {
                 opts.jsonData = data;
             }

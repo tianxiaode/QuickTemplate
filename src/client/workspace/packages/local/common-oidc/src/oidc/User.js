@@ -45,7 +45,10 @@ Ext.define('Common.oidc.User',{
     },
 
     constructor(config) {
+        let expiresIn = config.expiresIn;
+        delete config.expiresIn;
         Ext.apply(this, config);
+        this.setExpiresIn(expiresIn);
     },
 
     /** Computed number of seconds the access token has remaining. */

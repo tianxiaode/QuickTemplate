@@ -9,19 +9,20 @@ Ext.define('Common.oidc.event.AccessToken', {
     expiredTimer: null,
     expiringNotificationTimeInSeconds: null,
 
-    constructor(expiringNotificationTimeInSeconds) {
+    constructor(settings) {
         let me = this;
         me.expiringTimer = Ext.create('oidc.event.timer', 'Access token expiring');
         me.expiredTimer = Ext.create('oidc.event.timer', 'Access token expired');
-        me.expiringNotificationTimeInSeconds = expiringNotificationTimeInSeconds;
+        Logger.debug(me.constructor, settings,  settings.expiringNotificationTimeInSeconds)
+        me.expiringNotificationTimeInSeconds = settings.accessTokenExpiringNotificationTimeInSeconds;
     },
 
     load(container) {
         let me = this;
         Logger.debug(me.load);
         // only register events if there's an access token and it has an expiration
-        if (container.accessToken && container.expiresIn !== undefined) {
-            let duration = container.expiresIn;
+        if (container.accessToken && container.getExpiresIn() !== undefined) {
+            let duration = container.getExpiresIn();
             Logger.debug(me.load, "access token present, remaining duration:", duration);
 
             if (duration > 0) {
