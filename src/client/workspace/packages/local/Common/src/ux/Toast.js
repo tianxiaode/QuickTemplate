@@ -53,14 +53,6 @@ Ext.define('Common.ux.Toast', {
         timeout: 3000,
  
         /**
-         * @cfg {Number} maxQueue
-         * The the maximum number of toasts that can be queued up.  When there are this many toasts
-         * queued up and a new call to Ext.toast() is made, the oldest queued Toast that is not yet
-         * displayed will be dropped from the queue.
-         */
-        maxQueue: 3,
- 
-        /**
          * @cfg {Boolean/Object} messageAnimation
          * The animation that should be used between toast messages when they are queued up
          */

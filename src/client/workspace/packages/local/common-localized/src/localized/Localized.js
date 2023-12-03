@@ -5,7 +5,8 @@ Ext.define('Common.localized.Localized', {
     requires:[
         'Common.core.service.HttpClient',
         'Common.core.service.Url',
-        'Common.core.service.Storage'
+        'Common.core.service.Storage',
+        'Common.core.service.Alert'
     ],
 
     mixins: [
@@ -117,7 +118,7 @@ Ext.define('Common.localized.Localized', {
         me.isReady = false;
         url = url || URI.get('localization');
         let request = Http.get(url);
-        request.then(me.loadSuccess.bind(me), Ext.Msg.showAjaxErrors.bind(me,I18N.getLocalText('LoadingLocalizedError')));
+        request.then(me.loadSuccess.bind(me), Alert.ajax.bind(me,I18N.getLocalText('LoadingLocalizedError')));
         return request;
     },
 
@@ -163,8 +164,8 @@ Ext.define('Common.localized.Localized', {
                 'zh-Hans': '正在加载本地化文本...'
             },
             'LoadingLocalizedError':{
-                'en': 'Load localized text',
-                'zh-Hans': '加载本地化文本'
+                'en': 'Failed to load localized text',
+                'zh-Hans': '加载本地化文本失败'
             },
             'Error401': {
                 'en': 'There is no permission to do this.',

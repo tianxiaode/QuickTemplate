@@ -53,7 +53,7 @@ Ext.define('Common.overrides.data.request.Base',{
         return blob;
     },
 
-    getError() {
+    getError(defaultMessage) {
         let me  = this,
             status = me.result.status,
             data = me.getJson(),
@@ -61,7 +61,7 @@ Ext.define('Common.overrides.data.request.Base',{
 
         if(status === 0){
             let message = me.result.statusText;
-            result.message = Ext.isEmpty(message) ? I18N.getLocalText('NetworkError') : message;
+            result.message = Ext.isEmpty(message) ? defaultMessage : message;
             return result;
         }
 

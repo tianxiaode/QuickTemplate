@@ -3,15 +3,14 @@
     singleton: true,
 
     requires:[
-        'Common.core.util.Format',
-        'Common.core.service.Config'
+        'Common.core.util.Format'
     ],
 
     urlFormat: '{0}{1}{2}',
     defaultPath: 'api',
 
     getResourcePath(){
-        let appName = Config.getAppName(),
+        let appName = Ext.getApplication().getName(),
             isDebug = window.location.host.includes('localhost');
         return isDebug ? `/build/development/${appName}/` : '';
     },

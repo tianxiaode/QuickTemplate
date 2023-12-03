@@ -3,7 +3,6 @@ Ext.define('Common.core.service.Storage', {
     singleton: true,
 
     requires:[
-        'Common.core.service.Config',
         'Ext.util.Cookies'
     ],
 

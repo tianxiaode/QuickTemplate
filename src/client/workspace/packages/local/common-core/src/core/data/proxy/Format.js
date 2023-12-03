@@ -35,7 +35,7 @@ Ext.define('Common.core.data.proxy.Format', {
 
     listeners: {
         exception(proxy,response,options,eOpts){
-            MsgBox.showAjaxErrors(response);
+            Alert.ajax(response);
         }
     }
 

@@ -3,7 +3,10 @@ Ext.define('Common.core.service.Config', {
     singleton: true,
 
     requires:[
-        'Common.core.util.Logger'
+        'Common.core.util.Logger',
+        'Common.core.service.Alert',
+        'Common.core.service.Url',
+        'Common.core.service.HttpClient'
     ],
 
     mixins: [
@@ -71,7 +74,7 @@ Ext.define('Common.core.service.Config', {
         let me = this;
         me.isReady = false;
         let request = Http.get(URI.get('application-configuration'));
-        request.then(me.loadConfigurationSuccess, Ext.Msg.showAjaxErrors.bind(me, 'LoadConfiguration'), null ,me);
+        request.then(me.loadConfigurationSuccess, Alert.ajax.bind(me, me.getLoadFailureText()), null ,me);
         return request;
     },
 
@@ -103,6 +106,11 @@ Ext.define('Common.core.service.Config', {
 
         onScriptError(event){
             Http.postScriptError(event.error.message, event.filename, event.lineno, event.colno, event.error.stack);
+        },
+
+        getLoadFailureText(){
+            if(this.getCurrentLanguage() === 'zh-CN') return '加装应用程序配置失败';
+            return 'Failed to load the app configuration!';
         }
 
     

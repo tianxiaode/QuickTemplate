@@ -4,7 +4,6 @@ Ext.define('Common.core.service.HttpClient', {
 
   
     requires: [
-        'Common.core.service.Config',
         'Common.core.service.Storage',
         'Common.overrides.data.request.Base'
     ],
@@ -66,7 +65,7 @@ Ext.define('Common.core.service.HttpClient', {
     },
 
     getDefaultHeaders() {
-        let lang = Config.getCurrentLanguage();
+        let lang = AppConfig.lang;
         return {
             'Authorization': 'Bearer ' + AppStorage.get('access_token'),
             'Access-Control-Allow-Origin': '*',

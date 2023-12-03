@@ -229,26 +229,26 @@
     
   *.success,
   * + *.success {
-    background-color: var(--comfirm-color);
-    border-color: var(--comfirm-color);
+    background-color: var(--confirm-color) !important;
+    border-color: var(--confirm-color) !important;
     color: #ffffff;
   }
   *.warning,
   * + *.warning {
-    background-color: var(--accent-color);
-    border-color: var(--accent-color);
+    background-color: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
     color: #ffffff;
   }
   *.alert,
   * + *.alert {
-    background-color: var(--alert-color) ;
-    border-color: var(--alert-color);
+    background-color: var(--alert-color) !important;
+    border-color: var(--alert-color) !important;
     color: #ffffff ;
   }
   *.info,
   * + *.info {
-    background-color: var(--base-dark-color) ;
-    border-color: var(--base-dark-color);
+    background-color: var(--base-dark-color) !important;
+    border-color: var(--base-dark-color) !important;
     color: #ffffff;
   }
   *.text-success,
@@ -268,3 +268,10 @@
     color: var(--base-dark-color);
   }
   
+  .info .x-text-el,
+  .success .x-text-el,
+  .warning .x-text-el,
+  .alert .x-text-el{
+    font-weight: 500 !important;
+    color: #ffffff !important;
+  }
