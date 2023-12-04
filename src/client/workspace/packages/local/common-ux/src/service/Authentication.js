@@ -23,15 +23,19 @@ Ext.define('Common.service.Authentication',{
                 scope: config.scope,
                 responseType: config.responseType,
                 disablePKCE: true,
-                automaticSilentRenew: true
+                automaticSilentRenew: true,
+                userStore: Ext.create('oidc.state.store')
             };
-        me.settings
         me.userManager = Ext.create('oidc.usermanager', settings);
     },
 
     async login(){
         let me = this,
-            userManager = me.userManager;
+            userManager = me.userManager,
+            href = window.location.href;
+        if(!me.hasAuthParams()){
+            AppStorage.set('origin-href', href);
+        }
         Logger.debug(me.login);
         if(userManager.settings.responseType === 'code'){
             return me.signinRedirect();
@@ -39,32 +43,49 @@ Ext.define('Common.service.Authentication',{
 
     },
 
-    isAuthenticated(){
+    async isAuthenticated(){
         let me = this,
-            storage = AppStorage,
-            keys = me.storageKeys,
-            token = storage.get(keys.accessToken);
-        if(token){
-            let expiresAt = storage.get(keys.expiresAt),
-                now = new Date(),
-                isAuthenticated = expiresAt && parseInt(expiresAt, 10) > now.getTime();
-            //如果token已过期，清除全部数据
-            if(!isAuthenticated) me.removeAllStorageItem();
-            return isAuthenticated;
+            user =  await me.userManager.getUser();
+        Logger.debug(me.isAuthenticated, user);
+        if(user){
+            me.user = user;
+            return Promise.resolve(user);
         }
-        return false;
+        return Promise.reject();
+    },
+
+    getAccesssToken(){
+        return this.user.accessToken;
     },
 
     privates:{
         async signinRedirect(){
             let me = this,
-                userManager = me.userManager,
-                params = new URLSearchParams(window.location.href);
-            if(params.has('state')){
-                return await userManager.signinRedirectCallback();
+                userManager = me.userManager;
+            if(me.hasAuthParams()){
+                try {
+                    me.user = await userManager.signinRedirectCallback();
+                    let origin = AppStorage.get('origin-href');
+                    Logger.debug(me.signinRedirect, '已获取token', me.user);
+                    window.location.href = origin;
+                    AppStorage.remove('origin-href');
+                } catch (error) {
+                    Logger.debug(me.signinRedirect, '获取toke失败');
+                    Alert.error('获取toke失败');
+                }
+                return;
             }
             return userManager.signinRedirect();
 
+        },
+
+        hasAuthParams(){
+            let searchParams = new URLSearchParams(window.location.search);
+            if ((searchParams.get("code") || searchParams.get("error")) &&
+                searchParams.get("state")) {
+                return true;
+            }
+            return false;  
         }
     }
 

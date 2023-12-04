@@ -16,35 +16,22 @@ Ext.define('Common.app.Application', {
         },
     },
 
-    viewport:{
-        items:[
-            {
-                xtype: 'homeview'
-            }
-        ]
-    },
+    // viewport:{
+    //     items:[
+    //         {
+    //             xtype: 'homeview'
+    //         }
+    //     ]
+    // },
 
-    async init() {
+    init() {
         //桌面应用允许用户选择文字
         if(Ext.platformTags.desktop){
             Ext.Viewport.setUserSelectable({
                 element: true,
                 bodyElement: true
             })    
-        }
-
-        window.Auth = Ext.create('service.authentication');
-
-        let user = await Auth.login();
-        Logger.debug(this.init, user)
-
-        // if(!await Auth.isAuthenticated()){
-        //     let user = await Auth.login();
-        //     return;            
-        // }
-
-        I18N.loadResources();
-      
+        }      
     },
 
     onAppUpdate() {
@@ -60,8 +47,16 @@ Ext.define('Common.app.Application', {
     },
 
     launch(){
+        let me = this;
         //完成应用程序初始化再进行Viewport的初始化
         this.removeSplash();
+        window.Auth = Ext.create('service.authentication');
+
+        Auth.isAuthenticated().then(me.onLoggedIn, Auth.login.bind(Auth));
+    },
+
+    onLoggedIn(){
+
     },
 
     /**

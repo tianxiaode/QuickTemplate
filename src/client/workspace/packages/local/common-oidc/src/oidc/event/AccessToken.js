@@ -13,7 +13,6 @@ Ext.define('Common.oidc.event.AccessToken', {
         let me = this;
         me.expiringTimer = Ext.create('oidc.event.timer', 'Access token expiring');
         me.expiredTimer = Ext.create('oidc.event.timer', 'Access token expired');
-        Logger.debug(me.constructor, settings,  settings.expiringNotificationTimeInSeconds)
         me.expiringNotificationTimeInSeconds = settings.accessTokenExpiringNotificationTimeInSeconds;
     },
 
@@ -60,7 +59,8 @@ Ext.define('Common.oidc.event.AccessToken', {
  * Add callback: Raised prior to the access token expiring.
  */
     addAccessTokenExpiring(cb) {
-        return () => this.expiringTimer.addHandler(cb);
+        Logger.debug(this.addAccessTokenExpiring, cb)
+        return this.expiringTimer.addHandler(cb);
     },
     /**
      * Remove callback: Raised prior to the access token expiring.
@@ -73,7 +73,8 @@ Ext.define('Common.oidc.event.AccessToken', {
      * Add callback: Raised after the access token has expired.
      */
     addAccessTokenExpired(cb) {
-        return () => this.expiredTimer.addHandler(cb);
+        Logger.debug(this.addAccessTokenExpired, cb)
+        return this.expiredTimer.addHandler(cb);
     },
     /**
      * Remove callback: Raised after the access token has expired.

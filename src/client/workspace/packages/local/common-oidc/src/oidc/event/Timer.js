@@ -49,7 +49,7 @@ Ext.define('Common.oidc.event.Timer',{
     callback(){
         let me = this,
             diff = me._expiration -  Oidc.Timer.getEpochTime();
-        Logger.debug(me.callback,  "timer completes in", diff);
+        Logger.debug(me.callback, me.name,  "timer completes in", diff);
 
         if (me._expiration <=  Oidc.Timer.getEpochTime()) {
             me.cancel();

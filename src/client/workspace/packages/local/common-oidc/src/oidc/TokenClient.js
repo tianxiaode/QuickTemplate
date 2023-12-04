@@ -114,7 +114,7 @@ Ext.define('Common.oidc.TokenClient', {
         let url = await me.metadataService.getTokenEndpoint(false);
         Logger.debug(me.exchangeCredentials, "got token endpoint");
 
-        let response = await me.jsonService.postForm(url, params, basicAuth, settings.fetchRequestCredentials);
+        let response = await me.jsonService.postForm(url, params.toString(), basicAuth, settings.fetchRequestCredentials);
         Logger.debug(me.exchangeCredentials, "got response");
 
         return response;
@@ -128,7 +128,7 @@ Ext.define('Common.oidc.TokenClient', {
     async exchangeRefreshToken(options) {
 
         let me = this,
-            { granttType, clientId, clientSecret, ...args } = options,
+            { grantType, clientId, clientSecret, ...args } = options,
             settings = me.settings;
         grantType = grantType || 'refresh_token';
         clientId = clientId || settings.clientId;
@@ -141,7 +141,7 @@ Ext.define('Common.oidc.TokenClient', {
             throw new Error("A refresh_token is required");
         }
 
-        let params = new URLSearchParams({ grant_type: granttType });
+        let params = new URLSearchParams({ grant_type: grantType });
         for (let [key, value] of Object.entries(args)) {
             if (Array.isArray(value)) {
                 value.forEach(param => params.append(Format.splitCamelCase(key, '_'), param));
@@ -169,7 +169,7 @@ Ext.define('Common.oidc.TokenClient', {
         let url = await me.metadataService.getTokenEndpoint(false);
         Logger.debug(me.exchangeRefreshToken, "got token endpoint");
 
-        let response = await me.jsonService.postForm(url, params, basicAuth, settings.fetchRequestCredentials);
+        let response = await me.jsonService.postForm(url, params.toString(), basicAuth, settings.fetchRequestCredentials);
         Logger.debug(me.exchangeRefreshToken, "got response");
 
         return response;
@@ -203,7 +203,7 @@ Ext.define('Common.oidc.TokenClient', {
             params.set("client_secret", settings.clientSecret);
         }
 
-        await me.jsonService.postForm(url, params);
+        await me.jsonService.postForm(url, params.toString());
         Logger.debug(me.revoke, "got response");
     },
 
