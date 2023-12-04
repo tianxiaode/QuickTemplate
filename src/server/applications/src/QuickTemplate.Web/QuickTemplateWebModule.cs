@@ -74,8 +74,8 @@ public class QuickTemplateWebModule : AbpModule
         {
             builder.AddServer(m =>
             {
-                m.SetAccessTokenLifetime(TimeSpan.FromDays(3));
-                m.SetRefreshTokenLifetime(TimeSpan.FromDays(4));
+                m.SetAccessTokenLifetime(TimeSpan.FromMinutes(3));
+                m.SetRefreshTokenLifetime(TimeSpan.FromMinutes(4));
             });
             builder.AddValidation(options =>
             {

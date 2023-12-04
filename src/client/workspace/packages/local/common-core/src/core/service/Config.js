@@ -3,6 +3,7 @@ Ext.define('Common.core.service.Config', {
     singleton: true,
 
     requires:[
+        'Common.core.service.DocumentVisibility',
         'Common.core.util.Logger',
         'Common.core.service.Alert',
         'Common.core.service.Url',

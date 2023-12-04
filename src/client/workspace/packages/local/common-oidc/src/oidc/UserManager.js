@@ -38,6 +38,7 @@ Ext.define('Common.oidc.UserManager', {
         me.silentRenewService = Ext.create('oidc.service.silentrenew', me);
 
         if (settings.automaticSilentRenew) {
+            Ext.on('documentVisibilityChange', me.onDocumentVisibilityChange.bind(me));
             me.startSilentRenew();
         }
 
@@ -45,6 +46,7 @@ Ext.define('Common.oidc.UserManager', {
         if (settings.monitorSession) {
             me.sessionMonitor = Ext.create('oidc.sessionmonitor', me);
         }
+
     },
 
     getClient(){
@@ -609,10 +611,12 @@ Ext.define('Common.oidc.UserManager', {
             Logger.debug(me.storeUser, "storing user");
             let storageString = user.toStorageString();
             await store.set(me.getUserStoreKey(), storageString);
+            AppStorage.set('accessToken', user.accessToken);
         }
         else {
             Logger.debug(me.storeUser, "removing user");
             await store.remove(me.getUserStoreKey());
+            AppStorage.remove('accessToken');
         }
     },
 
@@ -624,6 +628,10 @@ Ext.define('Common.oidc.UserManager', {
     },
 
     destroy() {
+        let me = this;
+        if(me.settings.automaticSilentRenew){
+            Ext.un('documentVisibilityChange', me.onDocumentVisibilityChange.bind(me));
+        }
         this.destroyMembers('settings', 'client', 'redirectNavigator', 'popupNavigator', 'iframeNavigator', 'events', 'silentRenewService', 'sessionMonitor');
         this.callParent();
     },
@@ -798,6 +806,17 @@ Ext.define('Common.oidc.UserManager', {
 
             Logger.debug(me.loadUser, "no user storageString");
             return null;
+        },
+
+        onDocumentVisibilityChange(state){
+            let me = this;
+            if(state === 'hidden'){
+                me.stopSilentRenew();
+            }
+
+            if(state === 'visible'){
+                me.startSilentRenew();
+            }
         }
 
 

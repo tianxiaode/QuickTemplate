@@ -36,7 +36,6 @@ Ext.define('Common.service.Authentication',{
         if(!me.hasAuthParams()){
             AppStorage.set('origin-href', href);
         }
-        Logger.debug(me.login);
         if(userManager.settings.responseType === 'code'){
             return me.signinRedirect();
         }
@@ -46,17 +45,20 @@ Ext.define('Common.service.Authentication',{
     async isAuthenticated(){
         let me = this,
             user =  await me.userManager.getUser();
-        Logger.debug(me.isAuthenticated, user);
         if(user){
             me.user = user;
+            if(user.isExpired()) return Promise.reject();
             return Promise.resolve(user);
         }
         return Promise.reject();
     },
 
-    getAccesssToken(){
-        return this.user.accessToken;
+    destroy() {
+        let me = this;
+        me.destroyMembers('userManager', 'user');
+        me.callParent();
     },
+
 
     privates:{
         async signinRedirect(){
@@ -87,6 +89,7 @@ Ext.define('Common.service.Authentication',{
             }
             return false;  
         }
+
     }
 
 })

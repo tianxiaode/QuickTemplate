@@ -4,7 +4,7 @@ Ext.define('Common.oidc.event.Timer',{
 
     timerHandle: null,
     _expiration: 0,
-
+    
     statics:{
         getEpochTime() {
             return Math.floor(Date.now() / 1000);
@@ -29,8 +29,8 @@ Ext.define('Common.oidc.event.Timer',{
         // we're using a fairly short timer and then checking the expiration in the
         // callback to handle scenarios where the browser device sleeps, and then
         // the timers end up getting delayed.
-        let timerDurationInSeconds = Math.min(durationInSeconds, 5);
-        me.timerHandle = setInterval(me.callback.bind(me), timerDurationInSeconds * 1000);
+        //let timerDurationInSeconds = Math.min(durationInSeconds, 5);
+        me.timerHandle = setInterval(me.callback.bind(me), durationInSeconds * 1000);
     },
 
     getExpiration() {

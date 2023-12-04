@@ -59,7 +59,6 @@ Ext.define('Common.oidc.event.AccessToken', {
  * Add callback: Raised prior to the access token expiring.
  */
     addAccessTokenExpiring(cb) {
-        Logger.debug(this.addAccessTokenExpiring, cb)
         return this.expiringTimer.addHandler(cb);
     },
     /**

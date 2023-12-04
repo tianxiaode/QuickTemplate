@@ -16,6 +16,7 @@ Ext.define('Common.oidc.event.Event', {
 
     removeHandler(cb) {
         let idx = this.callbacks.lastIndexOf(cb);
+        Logger.debug(this.removeHandler, this.name, idx, this.callbacks, cb);
         if (idx >= 0) {
             this.callbacks.splice(idx, 1);
         }
@@ -23,7 +24,7 @@ Ext.define('Common.oidc.event.Event', {
 
     raise(...ev) {
         let me = this;
-        Logger.debug(me.raise, me.name, "raise:", ...ev);
+        Logger.debug(me.raise, me.name, "raise:", ...ev, this.callbacks);
         for (let cb of this.callbacks) {
             cb(...ev);
         }
