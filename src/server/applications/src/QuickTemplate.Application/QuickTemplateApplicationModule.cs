@@ -1,6 +1,7 @@
 ﻿using Generic.Abp.Enumeration;
 using Generic.Abp.ExtResource;
 using Generic.Abp.Identity;
+using Generic.Abp.MenuManagement;
 using Generic.Abp.OpenIddict;
 using QuickTemplate.Infrastructures;
 using Volo.Abp.Account;
@@ -22,7 +23,8 @@ namespace QuickTemplate;
     typeof(GenericAbpExtResourceApplicationModule),
     typeof(GenericAbpIdentityApplicationModule),
     typeof(GenericAbpOpenIddictApplicationModule),
-    typeof(QuickTemplateInfrastructuresApplicationModule)
+    typeof(QuickTemplateInfrastructuresApplicationModule),
+    typeof(GenericAbpMenuManagementApplicationModule)
 )]
 public class QuickTemplateApplicationModule : AbpModule
 {

@@ -159,6 +159,10 @@ Ext.define('Common.localized.Localized', {
                 'en': 'Loading the configuration...',
                 'zh-Hans': '正在加载用户配置...'
             },
+            'LoadingUserConfigurationrror': {
+                'en': 'Failed to load configuration',
+                'zh-Hans': '加载用户配置失败，请与管理员联系'
+            },
             'LoadingLocalized': {
                 'en': 'Loading localized text...',
                 'zh-Hans': '正在加载本地化文本...'
@@ -166,22 +170,6 @@ Ext.define('Common.localized.Localized', {
             'LoadingLocalizedError':{
                 'en': 'Failed to load localized text',
                 'zh-Hans': '加载本地化文本失败'
-            },
-            'Error401': {
-                'en': 'There is no permission to do this.',
-                'zh-Hans': '没有权限执行此操作.'
-            },
-            'Error404': {
-                'en': 'The requested resource is not avail.',
-                'zh-Hans': '请求的资源不可用.'
-            },
-            'Error405': {
-                'en': 'Method Not Allowed.',
-                'zh-Hans': '方法不被允许.'
-            },
-            'Error415': {
-                'en': 'Unsupported Media Type.',
-                'zh-Hans': '不支持的媒体类型.'
             },
             'WaitSwitch': {
                 'en': 'Wait for the last organizational switch before switching.',

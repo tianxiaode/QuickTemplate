@@ -26,7 +26,7 @@
     <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="$(AbpVersion)" />
     <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="$(AbpVersion)" />
     <PackageReference Include="Generic.Abp.Enumeration.Application" Version="$(GenericAbpVersion)" />
-    <PackageReference Include="Generic.Abp.ExtResource.Application" Version="$(GenericAbpVersion)" />
+    <PackageReference Include="Generic.Abp.MenuManagement.Application" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.Identity.Application" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.OpenIddict.Application" Version="$(GenericAbpVersion)" />
   </ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using Generic.Abp.BusinessException;
 using Generic.Abp.Enumeration;
 using Generic.Abp.Identity;
+using Generic.Abp.MenuManagement;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using QuickTemplate.Infrastructures;
@@ -32,7 +33,8 @@ namespace QuickTemplate;
     typeof(GenericAbpBusinessExceptionModule),
     typeof(GenericAbpEnumerationDomainSharedModule),
     typeof(GenericAbpIdentityDomainModule),
-    typeof(QuickTemplateInfrastructuresDomainModule)
+    typeof(QuickTemplateInfrastructuresDomainModule),
+    typeof(GenericAbpMenuManagementDomainModule)
 )]
 public class QuickTemplateDomainModule : AbpModule
 {

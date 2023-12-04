@@ -2,10 +2,6 @@ Ext.define('Common.ux.navigation.Tree',{
     extend: 'Ext.list.Tree',
     xtype: 'uxnavigationtree',
     
-    mixins:[
-        'Common.mixin.LoggedIn'
-    ],
-
     requires:[
         'Common.data.store.NavigationTrees'
     ],
@@ -26,11 +22,6 @@ Ext.define('Common.ux.navigation.Tree',{
     },
     listeners: {
         selectionchange: 'onNavigationTreeSelectionChange'
-    },
-
-    onLoggedIn(){
-        let me = this;
-        Http.get(URI.get('configuration','menus/desktop')).then(me.loadDataSuccess, me.loadDataFailure, null, me);
     },
 
 
@@ -56,6 +47,7 @@ Ext.define('Common.ux.navigation.Tree',{
         Ext.iterate(records,(id, record)=>{
             record.set('text', I18N.get(record.get('langText')));
         });            
+        Http.get(URI.get('configuration','menus/desktop')).then(me.loadDataSuccess, me.loadDataFailure, null, me);
     },
 
     applyCurrentViewType(xtype){

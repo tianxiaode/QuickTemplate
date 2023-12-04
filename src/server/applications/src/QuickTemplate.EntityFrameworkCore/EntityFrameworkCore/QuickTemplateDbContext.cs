@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Generic.Abp.MenuManagement.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using QuickTemplate.Infrastructures.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
@@ -74,6 +75,7 @@ public class QuickTemplateDbContext :
         //    b.ConfigureByConvention(); //auto configure for the base class props
         //    //...
         //});
+        builder.ConfigureMenuManagement();
         builder.ConfigureInfrastructures();
     }
 }

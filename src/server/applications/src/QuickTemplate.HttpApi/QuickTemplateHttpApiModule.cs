@@ -2,6 +2,7 @@
 using Generic.Abp.Enumeration;
 using Generic.Abp.ExtResource;
 using Generic.Abp.Identity;
+using Generic.Abp.MenuManagement;
 using Generic.Abp.OpenIddict;
 using Localization.Resources.AbpUi;
 using QuickTemplate.Infrastructures;
@@ -25,7 +26,8 @@ namespace QuickTemplate;
     typeof(GenericAbpIdentityHttpApiModule),
     typeof(GenericAbpApplicationModule),
     typeof(GenericAbpOpenIddictHttpApiModule),
-    typeof(QuickTemplateInfrastructuresHttpApiModule)
+    typeof(QuickTemplateInfrastructuresHttpApiModule),
+    typeof(GenericAbpMenuManagementHttpApiModule)
 )]
 public class QuickTemplateHttpApiModule : AbpModule
 {

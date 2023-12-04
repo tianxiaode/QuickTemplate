@@ -56,7 +56,17 @@ Ext.define('Common.app.Application', {
     },
 
     onLoggedIn(){
-
+        Ext.Viewport.setMasked({ message: I18N.getLocalText('LoadingUserConfiguration')});
+        Promise.all([Config.loadConfiguration(), I18N.loadResources()]).then(
+            ()=>{
+                Ext.Viewport.setMasked(null);
+                Ext.Viewport.add({ xtype: 'homeview' });
+            },
+            () =>{
+                alert.error(I18N.getLocalText('LoadingLocalizedError'));
+                Ext.Viewport.setMasked(null);
+            }
+        );
     },
 
     /**

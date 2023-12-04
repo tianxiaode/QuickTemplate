@@ -19,6 +19,7 @@
     <PackageReference Include="Generic.Abp.Identity.Domain.Shared" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.OpenIddict.Domain.Shared" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="$(FileProvidersEmbeddedVersion)" />
+    <PackageReference Include="Generic.Abp.MenuManagement.Domain.Shared" Version="$(GenericAbpVersion)" />
   </ItemGroup>
   
 

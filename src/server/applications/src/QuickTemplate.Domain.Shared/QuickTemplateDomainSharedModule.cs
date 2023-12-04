@@ -1,5 +1,6 @@
 ﻿using Generic.Abp.Enumeration;
 using Generic.Abp.Identity;
+using Generic.Abp.MenuManagement;
 using Generic.Abp.OpenIddict;
 using QuickTemplate.Infrastructures;
 using QuickTemplate.Localization;
@@ -30,7 +31,8 @@ namespace QuickTemplate;
     typeof(GenericAbpIdentityDomainSharedModule),
     typeof(GenericAbpEnumerationDomainSharedModule),
     typeof(GenericAbpOpenIddictDomainSharedModule),
-    typeof(QuickTemplateInfrastructuresDomainSharedModule)
+    typeof(QuickTemplateInfrastructuresDomainSharedModule),
+    typeof(GenericAbpMenuManagementDomainSharedModule)
 )]
 public class QuickTemplateDomainSharedModule : AbpModule
 {
