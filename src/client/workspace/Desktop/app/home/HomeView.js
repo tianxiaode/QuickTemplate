@@ -4,13 +4,6 @@ Ext.define('Desktop.view.home.HomeView', {
 
     requires: [
         'Ext.layout.Card',
-        'Ext.dataview.List',
-        'Ext.Button',
-        'Ext.SplitButton',
-        'Ext.layout.HBox',
-        'Ext.layout.VBox',
-        'Ext.field.Container',
-        'Ext.Spacer',
         'Common.ux.navigation.Tree',
         'Desktop.view.home.HeaderBar',
         'Desktop.view.home.HomeViewController',
@@ -62,7 +55,7 @@ Ext.define('Desktop.view.home.HomeView', {
                     xtype: 'container',
                     flex: 1,
                     reference: 'mainCardPanel',
-                    cls: 'sencha-dash-right-main-container p-2 bg-grey-200',
+                    cls: 'sencha-dash-right-main-container p-2 bg-color-grey-200',
                     itemId: 'contentPanel',
                     layout: 'card',                    
                     

@@ -1,5 +1,5 @@
 Ext.define('Desktop.view.dashboard.Dashboard',{
-    extend: 'Ext.Panel',
+    extend: 'Ext.Container',
     xtype: 'dashboardview',
 
     layout: {
@@ -7,7 +7,7 @@ Ext.define('Desktop.view.dashboard.Dashboard',{
     },
 
 
-    userCls: 'flex-wrap-item',
+    userCls: 'flex-wrap-item bg-color-white',
 
     defaults:{
         width: '49%',

@@ -1,5 +1,4 @@
 
-
 @mixin output-color($color-name, $color){
     @each $color-variant, $hex-value in $color {
         .color-#{$color-name}-#{$color-variant} {
