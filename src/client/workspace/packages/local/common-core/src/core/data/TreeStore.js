@@ -46,6 +46,7 @@ Ext.define('Common.core.data.TreeStore', {
         onRootLoaded(response){
             let me = this,
                 data = response.request.getJson();
+            Logger.debug(this.onRootLoaded, response);
             me.isRootReady = true;
             me.getRoot().set(data);
         }    

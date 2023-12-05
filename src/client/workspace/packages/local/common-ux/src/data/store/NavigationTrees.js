@@ -7,7 +7,7 @@ Ext.define('Common.data.store.NavigationTrees', {
     ],
 
     autoLoad: false,
-    remoteRoot: false,
+    remoteRoot: true,
     model: 'Common.data.model.menumanagement.Menu'
 
 });

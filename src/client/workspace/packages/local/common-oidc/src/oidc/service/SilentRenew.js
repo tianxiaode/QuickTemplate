@@ -17,7 +17,6 @@ Ext.define('Common.oidc.service.SilentRenew', {
     async start(){
         let me = this,
             userManager = me.userManager;
-            Logger.debug(this.start);
         if (!me.isStarted) {
             me.isStarted = true;
             userManager.events.addAccessTokenExpiring(me.fireTokenExpiringEvent);

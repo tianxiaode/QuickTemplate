@@ -39,6 +39,11 @@ Ext.define('Common.oidc.service.Json', {
             Logger.debug(me.getJson, 'Error from server:', error) 
             throw new Error(`${error.statusText} (${error.status})`);
         }
+
+        if(response.request.timedout === true){
+            throw Oidc.ErrorTimeout.create('Network timed out');
+        };
+
         let contentType = response.getResponseHeader("Content-Type");
         if (contentType && !me.contentTypes.find(item => contentType.startsWith(item))) {
             throw new Error(`Invalid response Content-Type: ${(contentType || "undefined")}, from URL: ${url}`);
@@ -71,6 +76,10 @@ Ext.define('Common.oidc.service.Json', {
             Logger.debug(me.postForm, 'Error from server:', error) 
             throw new Error(`${error.statusText} (${error.status})`);
         }
+
+        if(response.request.timedout === true){
+            throw Oidc.ErrorTimeout.create('Network timed out');
+        };
 
         Logger.debug(me.postForm, "HTTP response received, status", response.status);
         let contentType = response.getResponseHeader("Content-Type");

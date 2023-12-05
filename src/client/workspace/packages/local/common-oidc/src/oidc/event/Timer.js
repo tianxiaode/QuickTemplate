@@ -39,7 +39,7 @@ Ext.define('Common.oidc.event.Timer',{
 
     cancel() {        
         let me = this;
-        Logger.debug(me.cancel);
+        Logger.debug(me.cancel, me.name);
         if (me.timerHandle) {
             clearInterval(me.timerHandle);
             me.timerHandle = null;
