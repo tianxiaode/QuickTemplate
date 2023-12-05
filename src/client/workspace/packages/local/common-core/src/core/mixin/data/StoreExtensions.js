@@ -92,7 +92,6 @@ Ext.define('Common.core.mixin.data.StoreExtensions',{
         let entityName = me.getEntityName();
         if(!entityName) return;
         proxy.setUrl(URI.get(Ext.util.Inflector.pluralize(entityName)));
-
     },
 
     /**

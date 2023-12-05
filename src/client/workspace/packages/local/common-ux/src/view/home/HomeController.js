@@ -116,7 +116,7 @@ Ext.define('Common.view.home.HomeController',{
     },
 
     show404Page(){
-        ViewMgr.showPage(ViewMgr.pages.page404);
+        ViewService.showPage(ViewService.pages.page404);
     },
 
 
