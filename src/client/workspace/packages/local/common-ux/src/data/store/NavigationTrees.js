@@ -1,18 +1,16 @@
 Ext.define('Common.data.store.NavigationTrees', {
-    extend: 'Ext.data.TreeStore',
+    extend: 'Common.core.data.TreeStore',
     alias: 'store.navigationtrees',
+
+    requires:[
+        'Common.data.model.menumanagement.Menu'
+    ],
 
     autoLoad: false,
     root: {
-        id: 'd4548025-2425-4d53-a245-ac9a6cfb851b',
-        expanded: true,
+        id: null,
+        expanded: false,
     },
-
-    fields: [
-        { name: 'iconCls', type: 'string' },
-        { name: 'viewType', type: 'string' },
-        { name: 'isActive', type: 'boolean' },
-
-    ],    
+    model: 'Common.data.model.menumanagement.Menu'
 
 });

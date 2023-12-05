@@ -20,7 +20,6 @@ namespace QuickTemplate;
     typeof(AbpPermissionManagementApplicationModule),
     typeof(AbpSettingManagementApplicationModule),
     typeof(GenericAbpEnumerationApplicationModule),
-    typeof(GenericAbpExtResourceApplicationModule),
     typeof(GenericAbpIdentityApplicationModule),
     typeof(GenericAbpOpenIddictApplicationModule),
     typeof(QuickTemplateInfrastructuresApplicationModule),

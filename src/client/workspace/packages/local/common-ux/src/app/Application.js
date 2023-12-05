@@ -60,7 +60,9 @@ Ext.define('Common.app.Application', {
         Promise.all([Config.loadConfiguration(), I18N.loadResources()]).then(
             ()=>{
                 Ext.Viewport.setMasked(null);
-                Ext.Viewport.add({ xtype: 'homeview' });
+                let homeView = Ext.Viewport.add({ xtype: 'homeview' }),
+                    token = Ext.History.getToken();
+                homeView.getController().handleRoute(token);
             },
             () =>{
                 alert.error(I18N.getLocalText('LoadingLocalizedError'));

@@ -1,4 +1,6 @@
 ﻿using Generic.Abp.Identity.EntityFrameworkCore;
+using Generic.Abp.MenuManagement;
+using Generic.Abp.MenuManagement.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using QuickTemplate.Infrastructures.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
@@ -23,7 +25,8 @@ namespace QuickTemplate.EntityFrameworkCore;
     typeof(AbpBackgroundJobsEntityFrameworkCoreModule),
     typeof(AbpAuditLoggingEntityFrameworkCoreModule),
     typeof(GenericAbpIdentityEntityFrameworkCoreModule),
-    typeof(QuickTemplateInfrastructuresEntityFrameworkCoreModule)
+    typeof(QuickTemplateInfrastructuresEntityFrameworkCoreModule),
+    typeof(GenericAbpMenuManagementEntityFrameworkCoreModule)
 )]
 public class QuickTemplateEntityFrameworkCoreModule : AbpModule
 {

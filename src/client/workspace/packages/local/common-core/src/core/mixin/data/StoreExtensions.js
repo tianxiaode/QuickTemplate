@@ -8,7 +8,8 @@ Ext.define('Common.core.mixin.data.StoreExtensions',{
     mixinConfig: {
         config: true,
         before:{
-            destroy: 'destroy'
+            destroy: 'destroy',
+            updateModel: 'updateModel'
         }
     },
 
@@ -18,7 +19,8 @@ Ext.define('Common.core.mixin.data.StoreExtensions',{
     langText: null,
 
     config:{
-        entityName: null
+        entityName: null,
+        resourceName: null
     },
 
     /**
@@ -59,11 +61,14 @@ Ext.define('Common.core.mixin.data.StoreExtensions',{
         let me = this;
         alias = (Ext.isArray(alias) && alias.find(m=>m.startsWith('entity.'))) || null;
         if(!alias){
-            Ext.Logger.error('没有定义以entity.开头别名，无法生成实体名（entityName）');
+            Logger.error(me.parseEntityName, '没有定义以entity.开头别名，无法生成实体名（entityName）');
             return;
         }
-        let names = alias.split('.');
-        me.setEntityName(names.slice(1));
+        let names = alias.replace('entity.', '').split('.'),
+            entityName = names.pop();
+
+        me.setResourceName(names.join('.'));
+        me.setEntityName(entityName);
     },
 
     /**
@@ -84,17 +89,9 @@ Ext.define('Common.core.mixin.data.StoreExtensions',{
             proxy.setUrl(URI.get.apply(null, url));
             return;
         }
-        let entityName = me.getEntityName(),
-            ln = entityName.length;
+        let entityName = me.getEntityName();
         if(!entityName) return;
-        let args, last;
-        if(ln > 1){
-            last = entityName[ln-1];
-            args = [ ...entityName.slice(0,ln-1), Ext.util.Inflector.pluralize(last)];
-        }else{
-            args = [ Ext.util.Inflector.pluralize(entityName[0]) ];
-        }
-        proxy.setUrl(URI.get(...args));
+        proxy.setUrl(URI.get(Ext.util.Inflector.pluralize(entityName)));
 
     },
 
@@ -106,7 +103,7 @@ Ext.define('Common.core.mixin.data.StoreExtensions',{
     setExtraParams(){
         let proxy = this.getProxy();
         if(!proxy) return;
-        let extraParams = proxy.extraParams,
+        let extraParams = proxy.getExtraParams() || {},
             key = arguments[0],
             params = {},
             value, isClear;
@@ -123,10 +120,11 @@ Ext.define('Common.core.mixin.data.StoreExtensions',{
         if(!params) return;
         if(isClear === true) Ext.Object.clear(extraParams);
         extraParams = Ext.apply(extraParams, params);
+        proxy.setExtraParams(extraParams);
     },
 
     destroy(){
-        this.destroyMembers('url', 'localFilterFields', 'sortFields', 'langText', 'entityName');
+        this.destroyMembers('url', 'localFilterFields', 'sortFields', 'langText', 'entityName', 'resourceName');
     }
 
 

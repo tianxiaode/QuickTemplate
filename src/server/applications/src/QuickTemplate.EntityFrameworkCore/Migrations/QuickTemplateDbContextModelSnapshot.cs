@@ -21,6 +21,94 @@ namespace QuickTemplate.Migrations
                 .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("Generic.Abp.MenuManagement.Menus.Menu", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(127)
+                        .HasColumnType("varchar(127)")
+                        .UseCollation("ascii_general_ci");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .UseCollation("gbk_chinese_ci");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<string>("GroupName")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .UseCollation("gbk_chinese_ci");
+
+                    b.Property<string>("Icon")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .UseCollation("gbk_chinese_ci");
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsSelectable")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Router")
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)")
+                        .UseCollation("gbk_chinese_ci");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code");
+
+                    b.HasIndex("DisplayName");
+
+                    b.HasIndex("GroupName");
+
+                    b.HasIndex("Order");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("MenuManagementMenus", (string)null);
+                });
+
             modelBuilder.Entity("QuickTemplate.Infrastructures.Districts.District", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1612,6 +1700,15 @@ namespace QuickTemplate.Migrations
                     b.ToTable("AbpSettingDefinitions", (string)null);
                 });
 
+            modelBuilder.Entity("Generic.Abp.MenuManagement.Menus.Menu", b =>
+                {
+                    b.HasOne("Generic.Abp.MenuManagement.Menus.Menu", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("Parent");
+                });
+
             modelBuilder.Entity("QuickTemplate.Infrastructures.Districts.District", b =>
                 {
                     b.HasOne("QuickTemplate.Infrastructures.Districts.District", "Parent")
@@ -1752,6 +1849,11 @@ namespace QuickTemplate.Migrations
                     b.HasOne("Volo.Abp.OpenIddict.Authorizations.OpenIddictAuthorization", null)
                         .WithMany()
                         .HasForeignKey("AuthorizationId");
+                });
+
+            modelBuilder.Entity("Generic.Abp.MenuManagement.Menus.Menu", b =>
+                {
+                    b.Navigation("Children");
                 });
 
             modelBuilder.Entity("QuickTemplate.Infrastructures.Districts.District", b =>

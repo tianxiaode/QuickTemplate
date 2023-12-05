@@ -22,7 +22,6 @@ namespace QuickTemplate;
     typeof(AbpPermissionManagementHttpApiModule),
     typeof(AbpSettingManagementHttpApiModule),
     typeof(GenericAbpEnumerationHttpApiModule),
-    typeof(GenericAbpExtResourceHttpApiModule),
     typeof(GenericAbpIdentityHttpApiModule),
     typeof(GenericAbpApplicationModule),
     typeof(GenericAbpOpenIddictHttpApiModule),

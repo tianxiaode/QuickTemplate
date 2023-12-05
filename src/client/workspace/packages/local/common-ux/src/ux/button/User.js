@@ -6,9 +6,9 @@ Ext.define('Common.ux.button.User',{
         'Common.core.mixin.ConfigReady'
     ],
 
-    // requires:[
-    //     'Common.ux.dataview.DetailList',
-    // ],
+    requires:[
+        'Common.ux.dataview.DetailList',
+    ],
 
     ui: 'header',
     arrow: false,
@@ -18,32 +18,32 @@ Ext.define('Common.ux.button.User',{
         minWidth: 400,
         anchor: true,
         resourceName: 'AbpIdentity',
-        // items:[
-        //     {
-        //         xtype: 'uxdetaillist',
-        //         itemId: 'detailList',
-        //         scrollable: true,
-        //         flex: 1,
-        //         fields: ['userName','name','surname', 'email', 'phoneNumber'],
-        //     }
-        // ]
+        items:[
+            {
+                xtype: 'uxdetaillist',
+                itemId: 'detailList',
+                scrollable: true,
+                flex: 1,
+                fields: ['userName','name','surname', 'email', 'phoneNumber'],
+            }
+        ]
     },
 
 
 
     onConfigReady(){
-        // let me = this,
-        //     list = me.getMenu().down('#detailList'),
-        //     store = list.getStore();
-        // if(!store) return;
-        // let data = store.getData().items,
-        //     user = Config.getCurrentUser();
-        // me.setText(user.userName);
-        // Ext.each(data ,d=>{
-        //     let f = d.getId();
-        //     d.set('text', user[f]);
-        //     d.commit();
-        // });    
+        let me = this,
+            list = me.getMenu().down('#detailList'),
+            store = list.getStore();
+        if(!store) return;
+        let data = store.getData().items,
+            user = Config.getCurrentUser();
+        me.setText(user.userName);
+        Ext.each(data ,d=>{
+            let f = d.getId();
+            d.set('text', user[f]);
+            d.commit();
+        });    
     },
 
     doDestroy() {

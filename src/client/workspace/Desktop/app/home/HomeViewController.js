@@ -25,7 +25,8 @@ Ext.define('Desktop.view.home.HomeViewController', {
         let mainCard = me.lookup('mainCardPanel');
 
         Ext.Viewport.setActiveItem(me.getView());
-        ViewMgr.showView(xtype, ViewMgr.types.view,{}, false, mainCard);
+        Logger.debug(me.setCurrentView, xtype)
+        ViewService.show(xtype, ViewService.types.view,{}, false, mainCard);
         
 
     },

@@ -5,7 +5,6 @@ Ext.define('Desktop.view.home.HomeView', {
     requires: [
         'Ext.layout.Card',
         'Ext.dataview.List',
-        'Ext.list.Tree',
         'Ext.Button',
         'Ext.SplitButton',
         'Ext.layout.HBox',
