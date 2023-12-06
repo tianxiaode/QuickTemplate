@@ -3,7 +3,6 @@ window.AppConfig = {
 
     //oidc设置
     authority: 'https://www.extjs.tech/',
-    issuer: null,
     clientId: 'QuickTemplate_App',
     scope: 'offline_access QuickTemplate',
     responseType: 'code',

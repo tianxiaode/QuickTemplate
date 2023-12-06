@@ -61,7 +61,11 @@ Ext.define('Common.overrides.data.request.Base',{
         let me  = this,
             status = me.result.status,
             data = me.getJson(),
-            result = Ext.apply({code: null,  message:  null, details: null, data: null, validationErrors: null }, data && data.error);
+            result = Ext.apply({code: null,  message:  null, details: null, data: null, validationErrors: null }, { message: data && data.error });
+
+        if(data.error_description){            
+            result.message = data.error_description;
+        }
 
         if(status === 0){
             let message = me.result.statusText;

@@ -14,6 +14,8 @@ Ext.define('Common.ux.button.Logout',{
         }
     },
 
+    bind: {hidden: '{!isAuthenticated}'},
+
     initialize(){
         let me = this;
         me.callParent(arguments);

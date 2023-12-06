@@ -73,7 +73,11 @@ Ext.define('Common.oidc.service.Json', {
             response = await Http.post(url, data, options);
         }
         catch (error) {
-            Logger.debug(me.postForm, 'Error from server:', error) 
+            Logger.debug(me.postForm, 'Error from server:', error);
+            if(error.request){
+                let err = error.request.getError();
+                if(err.message) throw new Error(err.message);
+            }
             throw new Error(`${error.statusText} (${error.status})`);
         }
 
@@ -126,7 +130,7 @@ Ext.define('Common.oidc.service.Json', {
 
         getHeaders(token, isPost){
             let me = this,
-                headers = { "Accept": me.contentTypes.join(", ") };
+                headers = { "Accept": me.contentTypes.join(", ")};
             if(isPost){
                 headers["Content-Type"] = "application/x-www-form-urlencoded";
             }

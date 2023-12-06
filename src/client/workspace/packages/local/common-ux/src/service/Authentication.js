@@ -13,18 +13,19 @@ Ext.define('Common.service.Authentication',{
             config = AppConfig,
             name = Ext.getApplication().getName().toLowerCase(),
             appConfig = config[name];
-            issuer = appConfig && appConfig['issuer'],
             redirectUri = appConfig && appConfig['redirectUri'],
             settings = {
                 authority: config.authority,
-                issuer: issuer || config.issuer,
                 redirectUri: redirectUri,
                 clientId: config.clientId,
                 scope: config.scope,
                 responseType: config.responseType,
                 disablePKCE: true,
                 automaticSilentRenew: true,
-                userStore: Ext.create('oidc.state.store')
+                userStore: Ext.create('oidc.state.store'),
+                revokeTokensOnSignout: true,
+                postLogoutRedirectUri: redirectUri,
+                extraTokenParams: { culture: 'zh-Hans', 'ui-culture': 'zh-Hans' }
             };
         me.userManager = Ext.create('oidc.usermanager', settings);
     },
@@ -39,7 +40,12 @@ Ext.define('Common.service.Authentication',{
         if(userManager.settings.responseType === 'code'){
             return me.signinRedirect();
         }
+        Logger.debug(me.login, userManager.settings.responseType)
+        Ext.History.add('login');
+    },
 
+    signinResourceOwnerCredentials(username, password){
+        return this.userManager.signinResourceOwnerCredentials({username, password, culture: 'zh-Hans', 'ui-culture': 'zh-Hans'});
     },
 
     async isAuthenticated(){
@@ -52,6 +58,15 @@ Ext.define('Common.service.Authentication',{
         }
         return Promise.reject();
     },
+
+    logout(){
+        let me = this,
+            userManager = me.userManager;
+        if(userManager.settings.responseType === 'code'){
+            return userManager.signoutRedirect();
+        }
+        return userManager.signoutRedirectCallback();
+    },    
 
     destroy() {
         let me = this;

@@ -2,6 +2,9 @@ Ext.define('Desktop.view.home.HomeViewController', {
     extend: 'Common.view.home.HomeController',
     alias: 'controller.homeview',
 
+    getNavigationTree(){
+        return this.lookup('navigationTree');
+    },
 
     /**
      * 切换子视图
@@ -9,7 +12,7 @@ Ext.define('Desktop.view.home.HomeViewController', {
      */
     setCurrentView(xtype) {
         let me = this,
-            navigationTree = me.lookup('navigationTree');
+            navigationTree = me.getNavigationTree();
         if(!navigationTree.isReady){
             Ext.defer(me.setCurrentView, 50 , me , [xtype]);
             return;
@@ -29,6 +32,13 @@ Ext.define('Desktop.view.home.HomeViewController', {
         ViewService.show(xtype, ViewService.types.view,{}, false, mainCard);
         
 
+    },
+    
+    onLoggedIn(){
+        let me = this,
+            tree = me.getNavigationTree();
+        tree.init();
+        me.callParent(arguments);
     },
 
 
@@ -61,7 +71,7 @@ Ext.define('Desktop.view.home.HomeViewController', {
         navigationTree.setWidth(new_width);
         navigationTree.setMicro(collapsing);
 
-    },
+    }
 
 
 

@@ -28,50 +28,35 @@ Ext.define('Common.ux.navigation.Tree',{
 
     isReady: false,
 
-    initialize(){
-        let me = this,
-            store = me.getStore(),
-            root = store.getRoot();
-        me.callParent();
-        store.on('load', me.onStoreLoaded, me);
-        store.setExtraParams('groupName', Ext.getApplication().getName().toLocaleLowerCase());
-        root.getProxy().setExtraParam('groupName', Ext.getApplication().getName().toLocaleLowerCase());
-        root.expand();
-        //store.load({node: store.getRoot()});
-    },
-
     onStoreLoaded(){
         this.isReady = true;
     },
 
-    // loadDataSuccess(response){
-    //     let me = this;
-    //     let data = Http.parseResponse(response),
-    //         store = me.getStore(),
-    //         root = store.getRoot();
-    //     root.removeAll();
-    //     root.appendChild([].concat(data.items));        
-    //     me.onLocalized();
-    //     me.isReady = true;
-    // },
+    init(){
+        let me = this,
+            store = me.getStore(),
+            root = store.getRoot();
+        store.on('load', me.onStoreLoaded, me);
+        store.setExtraParams('groupName', Ext.getApplication().getName().toLocaleLowerCase());
+        root.getProxy().setExtraParam('groupName', Ext.getApplication().getName().toLocaleLowerCase());
+        root.expand();
+    },
 
-    // onLocalized(){
-    //     let me = this,
-    //         store = me.getStore(),
-    //         records = store.byIdMap;
-    //     me.callParent();
-    //     Ext.iterate(records,(id, record)=>{
-    //         record.set('text', I18N.get(record.get('langText')));
-    //     });            
-    //     Http.get(URI.get('configuration','menus/desktop')).then(me.loadDataSuccess, me.loadDataFailure, null, me);
-    // },
+    onLocalized(){
+        let me = this,
+            store = me.getStore(),
+            records = store.byIdMap;
+        me.callParent();
+        Ext.iterate(records,(id, record)=>{
+            record.set('text', me.getLocalizedText(record));
+        });            
+    },
 
     applyCurrentViewType(xtype){
         if(Ext.isEmpty(xtype)) return;
         let me = this,
             node = me.getNodeByXtype(xtype),
             parentNode = node ? node.parentNode : null;
-        Logger.debug(this.applyCurrentViewType, node)
 
         //如果未找到节点,直接返回
         if(!node) return;
@@ -103,20 +88,26 @@ Ext.define('Common.ux.navigation.Tree',{
     },
 
     getItemConfig(node, parent) {
-        node.set('text', node.get('translation') || node.get('displayName'));
+        let me = this;
+        node.set('text', me.getLocalizedText(node));
         return Ext.apply({
             parentItem: parent.isRootListItem ? null : parent,
-            owner: this,
+            owner: me,
             node: node,
-            indent: this.getIndent()
-        }, this.getDefaults());
+            indent: me.getIndent()
+        }, me.getDefaults());
     },
 
     doDestroy(){
         this.setCurrentViewType(null);
         this.callParent();
+    },
+
+    privates:{
+        getLocalizedText(record){
+            if(!record || !record.getTranslation) return;
+            return record.getTranslation(record, 'displayName') || record.get('displayName');
+        }
     }
-
-
 
 })

@@ -22,17 +22,14 @@ Ext.define('Common.data.model.Base', {
         if (data.hasTranslation) {
             cls.addFields(
                 [
-                    { name: 'translations' },
-                    {
-                        name: 'translation',
-                        convert(value, record) {
-                            let current = I18N.getLanguage();
-                            return (record.get('translations') || []).find(t => t.language === current);
-                        },
-                        depends: ['translations']
-                    }
+                    { name: 'translations' }
                 ]
             );
+            cls.addMember('getTranslation', (record, field) =>{
+                let current = I18N.getCurrentLanguage(),
+                    find = (record.get('translations') || []).find(t => t.language === current);
+                return find ? find[field] : null;
+            });
         }
     })
 });

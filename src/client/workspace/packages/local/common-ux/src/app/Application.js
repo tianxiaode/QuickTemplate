@@ -6,7 +6,9 @@ Ext.define('Common.app.Application', {
     requires:[
         'Common.core.service.Config',
         'Common.localized.Localized',
-        'Common.view.page.Page404'
+        'Common.view.page.Page404',
+        'Common.view.page.Login',
+        'Common.service.Authentication'
     ],
 
 
@@ -16,13 +18,13 @@ Ext.define('Common.app.Application', {
         },
     },
 
-    // viewport:{
-    //     items:[
-    //         {
-    //             xtype: 'homeview'
-    //         }
-    //     ]
-    // },
+    viewport:{
+        items:[
+            {
+                xtype: 'homeview'
+            }
+        ]
+    },
 
     init() {
         //桌面应用允许用户选择文字
@@ -31,7 +33,9 @@ Ext.define('Common.app.Application', {
                 element: true,
                 bodyElement: true
             })    
-        }      
+        }
+        I18N.loadResources();      
+        window.Auth = Ext.create('service.authentication');
     },
 
     onAppUpdate() {
@@ -50,25 +54,7 @@ Ext.define('Common.app.Application', {
         let me = this;
         //完成应用程序初始化再进行Viewport的初始化
         this.removeSplash();
-        window.Auth = Ext.create('service.authentication');
 
-        Auth.isAuthenticated().then(me.onLoggedIn, Auth.login.bind(Auth));
-    },
-
-    onLoggedIn(){
-        Ext.Viewport.setMasked({ message: I18N.getLocalText('LoadingUserConfiguration')});
-        Promise.all([Config.loadConfiguration(), I18N.loadResources()]).then(
-            ()=>{
-                Ext.Viewport.setMasked(null);
-                let homeView = Ext.Viewport.add({ xtype: 'homeview' }),
-                    token = Ext.History.getToken();
-                homeView.getController().handleRoute(token);
-            },
-            () =>{
-                alert.error(I18N.getLocalText('LoadingLocalizedError'));
-                Ext.Viewport.setMasked(null);
-            }
-        );
     },
 
     /**

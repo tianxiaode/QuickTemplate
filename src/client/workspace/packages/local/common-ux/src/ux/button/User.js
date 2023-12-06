@@ -29,7 +29,7 @@ Ext.define('Common.ux.button.User',{
         ]
     },
 
-
+    bind: {hidden: '{!isAuthenticated}'},
 
     onConfigReady(){
         let me = this,

@@ -2,8 +2,7 @@ Ext.define('Common.view.home.HomeController',{
     extend: 'Ext.app.ViewController',
 
     requires:[
-        'Common.service.View',
-        'Common.service.Authentication'
+        'Common.service.View'
     ],
 
     currentToken: null,
@@ -30,11 +29,24 @@ Ext.define('Common.view.home.HomeController',{
         Logger.debug(this.onBeforeRoute, hash, action)
         let me = this;
         if(ViewService.pages[hash]) {
-            action.stop.call(me);
+            action.stop();
             return;
         }
 
-        action.resume();
+        Auth.isAuthenticated().then(
+            ()=>{
+                if(me.isLoadConfiguration){
+                    action.resume();
+                    return;
+                }
+                me.onLoggedIn(action);
+            }, 
+            ()=>{
+                action.stop();
+                Auth.login();
+            }
+        );
+
     },
 
 
@@ -57,7 +69,7 @@ Ext.define('Common.view.home.HomeController',{
         view.setMasked(false);
 
         if(Ext.isEmpty(xtype)){
-            ViewService.showPage(ViewMgr.pages.page404);
+            ViewService.showPage(ViewService.pages.page404);
             return;
         }
 
@@ -73,6 +85,25 @@ Ext.define('Common.view.home.HomeController',{
         me.setCurrentView(xtype);
     },
 
+    onLoggedIn(action){
+        let me = this,
+            vm = me.getViewModel();
+        Logger.debug(me.onLoggedIn, action)
+        vm.set('isAuthenticated', true);
+        Ext.Viewport.setMasked(I18N.getLocalText('LoadingUserConfiguration'));
+        Promise.all([Config.loadConfiguration(), I18N.loadResources()]).then(
+            ()=>{
+                Ext.Viewport.setMasked(null);
+                me.isLoadConfiguration = true;
+                action.resume();
+            },
+            () =>{
+                alert.error(I18N.getLocalText('LoadingLocalizedError'));
+                Ext.Viewport.setMasked(null);
+            }
+        );
+    },
+    
 
     loadConfiguration() {
         let me = this,

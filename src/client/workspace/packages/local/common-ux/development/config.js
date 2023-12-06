@@ -3,10 +3,9 @@ window.AppConfig = {
 
     //oidc设置
     authority: 'https://localhost:44320/',
-    issuer: 'http://localhost:4200',
     clientId: 'QuickTemplate_App',
     scope: 'offline_access QuickTemplate',
-    responseType: 'code',
+    responseType: 'password',
 
 
     //调试设置

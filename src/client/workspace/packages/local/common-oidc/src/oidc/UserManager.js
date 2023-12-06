@@ -365,6 +365,7 @@ Ext.define('Common.oidc.UserManager', {
         let me = this;
         url = url || window.location.href;
         let { state } = await me.getClient().readSignoutResponseState(url);
+        Logger.debug(me.signinCallback, state)
         if (!state) {
             return;
         }
@@ -454,7 +455,8 @@ Ext.define('Common.oidc.UserManager', {
      */
     async signoutRedirect(args) {
         let me = this;
-        Logger.debug(me.signoutRedirect, "signoutRedirect")
+        Logger.debug(me.signoutRedirect, "signoutRedirect");
+        args = args || {};
         let {
             redirectMethod,
             ...requestArgs
@@ -662,7 +664,7 @@ Ext.define('Common.oidc.UserManager', {
 
             try {
                 let signinRequest = await me.getClient().createSigninRequest(args);
-                Logger.debug(me.signinStart, "got signin request", handle);
+                Logger.debug(me.signinStart, "got signin request");
 
                 return await handle.navigate({
                     url: signinRequest.url,
@@ -734,7 +736,7 @@ Ext.define('Common.oidc.UserManager', {
                 Logger.debug(me.signoutStart, "user removed, creating signout request");
 
                 let signoutRequest = await me.getClient().createSignoutRequest(args);
-                Logger.debug(me.signoutStart, "got signout request");
+                Logger.debug(me.signoutStart, "got signout request", signoutRequest, args);
 
                 return await handle.navigate({
                     url: signoutRequest.url,

@@ -67,8 +67,9 @@
  }
  .bg-lock-screen{
    background-image: url(common-core/images/lock-screen-background.jpg);
-   background-size: cover;
- }
+   background-size: 100% 100%;
+   background-repeat: no-repeat;
+}
 
 
  .x-field.x-required > .x-label-el:after {
