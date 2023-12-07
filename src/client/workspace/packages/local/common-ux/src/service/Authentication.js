@@ -24,8 +24,7 @@ Ext.define('Common.service.Authentication',{
                 automaticSilentRenew: true,
                 userStore: Ext.create('oidc.state.store'),
                 revokeTokensOnSignout: true,
-                postLogoutRedirectUri: redirectUri,
-                extraTokenParams: { culture: 'zh-Hans', 'ui-culture': 'zh-Hans' }
+                postLogoutRedirectUri: redirectUri
             };
         me.userManager = Ext.create('oidc.usermanager', settings);
     },
@@ -60,12 +59,8 @@ Ext.define('Common.service.Authentication',{
     },
 
     logout(){
-        let me = this,
-            userManager = me.userManager;
-        if(userManager.settings.responseType === 'code'){
-            return userManager.signoutRedirect();
-        }
-        return userManager.signoutRedirectCallback();
+        AppStorage.set('logout', true);
+        return this.userManager.signoutRedirect();
     },    
 
     destroy() {

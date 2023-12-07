@@ -8,6 +8,7 @@ Ext.define('Common.app.Application', {
         'Common.localized.Localized',
         'Common.view.page.Page404',
         'Common.view.page.Login',
+        'Common.view.page.Welcome',
         'Common.service.Authentication'
     ],
 

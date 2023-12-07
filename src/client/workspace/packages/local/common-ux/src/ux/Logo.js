@@ -25,7 +25,7 @@ Ext.define('Common.ux.Logo', {
 
     switchLogo(){
         let me= this,
-            lang = Config.getCurrentLanguage(),
+            lang = I18N.getCurrentLanguage(),
             shortName = AppConfig['companyShortName'][lang] || AppConfig['companyShortName']['en'],
             logoUrl = URI.getResource('logo'),
             cls = (me.isPhone() && 'phone') || 'desktop';

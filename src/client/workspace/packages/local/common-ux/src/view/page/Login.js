@@ -128,6 +128,13 @@ Ext.define('Common.view.page.Login',{
         me.showMessage(I18N.get('LoginSuccess'), 'text-success text-center');        
         password.setValue(null);
         password.setError(null);
+        let url = AppStorage.get('origin-href'),
+            params = new URL(url),
+            token = params.hash;
+        if(token && token.startsWith('#')) token = token.substring(1);
+        if(ViewService.pages[token]) token = Ext.getApplication().getDefaultToken();
+        Logger.debug(me.onLoginSuccess, params, token);
+        Ext.History.add(token);
 
     },
 
@@ -135,6 +142,16 @@ Ext.define('Common.view.page.Login',{
         let me = this;
         me.setMasked(null);
         me.showMessage(error.message, 'text-alert  text-center');
+    },
+
+    getLocalizedErrorMessage(message){
+        if(message.includes('Invalid username')) return I18N.get('InvalidUserNameOrPassword');
+        if(message.includes('Use another service'))  return I18N.get('UseAnotherServiceToLogin');
+        if(message.includes('locked out'))  return I18N.get('UserLockedOutMessage');
+        if(message.includes('not allowed to login'))  return I18N.get('LoginIsNotAllowed');
+        if(message.includes('Self-registration'))  return I18N.get('SelfRegistrationDisabledMessage');
+        if(message.includes('Local login'))  return I18N.get('LocalLoginDisabledMessage');
+        return message;
     },
 
 

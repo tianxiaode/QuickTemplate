@@ -47,12 +47,6 @@ Ext.define('Common.core.service.Config', {
         return this.data.auth;
     },
 
-    getCurrentLanguage(){
-        let locale  = window.location.href.match(/lang=([\w-]+)/),
-        currentLang = navigator.language || navigator.browserLanguage;
-        return (locale && locale[1]) || currentLang;
-    },
-
     getPasswordSetting(){
         let setting = Config.data.setting.values;
         return {
@@ -110,7 +104,7 @@ Ext.define('Common.core.service.Config', {
         },
 
         getLoadFailureText(){
-            if(this.getCurrentLanguage() === 'zh-CN') return '加装应用程序配置失败';
+            if(AppStorage.get('lang') === 'zh-Hans') return '加装应用程序配置失败';
             return 'Failed to load the app configuration!';
         }
 

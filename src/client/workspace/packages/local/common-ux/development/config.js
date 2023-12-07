@@ -5,7 +5,7 @@ window.AppConfig = {
     authority: 'https://localhost:44320/',
     clientId: 'QuickTemplate_App',
     scope: 'offline_access QuickTemplate',
-    responseType: 'password',
+    responseType: 'code',
 
 
     //调试设置
@@ -30,19 +30,19 @@ window.AppConfig = {
     icp: '粤ICP备2022031812号',
     companyFullName: {
         "en": 'Quick Template',
-        "zh-CN": '快速模板'
+        "zh-Hans": '快速模板'
     },
     companyShortName:{
         "en": 'Quick Template',
-        "zh-CN": '快速模板'
+        "zh-Hans": '快速模板'
     },
     appName:{
         en: 'Quick Template',
-        "zh-CN": '快速模板'
+        "zh-Hans": '快速模板'
     },
     loadingText:{
         "en": 'Loading...',
-        "zh-CN": '加载中...'
+        "zh-Hans": '加载中...'
     },
     desktop:{
         redirectUri: "http://localhost:4200/desktop"
@@ -52,13 +52,21 @@ window.AppConfig = {
     }
 
 };
+
 //加载语言
-let locale  = window.location.href.match(/lang=([\w-]+)/),
-    currentLang = navigator.language || navigator.browserLanguage,
-    lang = (locale && locale[1]) || currentLang; 
-AppConfig.lang = lang;
+AppConfig.lang = normalizeLang();
 let appName = AppConfig.appName[lang] || AppConfig.appName["en"];
 document.title = appName;
+
+normalizeLang = () => {
+    let locale  = window.location.href.match(/lang=([\w-]+)/),
+        currentLang = navigator.language || navigator.browserLanguage,
+        lang = (locale && locale[1]) || currentLang; 
+    if(lang.toLocaleLowerCase() === 'zh-cn') return 'zh-Hans';
+    if(lang.toLocaleLowerCase() === 'zh-tw') return 'zh-Hant';
+    localStorage.setItem('lang', lang);
+    return lang;
+}
 
 window.onload = () =>{
     let el = document.getElementById('loadingText');

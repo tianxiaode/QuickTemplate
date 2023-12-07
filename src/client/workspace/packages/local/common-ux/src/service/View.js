@@ -15,6 +15,8 @@ Ext.define('Common.service.View', {
 
     pages:{
         page404: 'page404',
+        login: 'login',
+        welcome: 'welcome'
     },
 
     /**

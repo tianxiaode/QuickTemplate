@@ -63,7 +63,7 @@ Ext.define('Common.view.page.Base', {
             currentYear = new Date().getFullYear(),
             startYear = AppConfig['copyrightStartValue'],
             isDesktop = Ext.platformTags.desktop,
-            lang = Config.getCurrentLanguage();
+            lang = I18N.getCurrentLanguage();
         me.callParent();
         me.setTitle(AppConfig['companyShortName'][lang]);
         bar.setHtml(Ext.String.format(me.getBottomMessage(), 

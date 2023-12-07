@@ -11,7 +11,7 @@ Ext.define('Common.view.home.HomeController',{
         ':page':{
             action: 'showPage',
             conditions: {
-                ':page': '(page404|login)?'
+                ':page': '(page404|login|welcome)?'
             }        
         },        
         ':xtype': {
@@ -31,6 +31,13 @@ Ext.define('Common.view.home.HomeController',{
         if(ViewService.pages[hash]) {
             action.stop();
             return;
+        }
+
+        let logout = AppStorage.get('logout');
+        if(logout){
+            action.stop();
+            AppStorage.remove('logout');
+            return me.redirectTo('welcome');
         }
 
         Auth.isAuthenticated().then(

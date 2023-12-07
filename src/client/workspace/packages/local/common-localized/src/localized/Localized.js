@@ -24,20 +24,8 @@ Ext.define('Common.localized.Localized', {
     constructor(config) {
         let me = this;
         me.initConfig(config)
-        me.initLanguages();
+        me.setCurrentLanguage(AppStorage.get('lang'));
         me.mixins.observable.constructor.call(me, config);
-    },
-
-    initLanguages() {
-        let me = this,
-            lang = AppConfig.lang,
-            current = AppStorage.get('lang');
-        if (!current) {
-            current = lang === 'zh-CN' ? 'zh-Hans'
-                : lang === 'zh-TW' ? 'zh-Hant' : lang;
-        }
-        me.setCurrentLanguage(current);
-        AppStorage.set('lang', current);
     },
 
     getDefaultResourceName() {
