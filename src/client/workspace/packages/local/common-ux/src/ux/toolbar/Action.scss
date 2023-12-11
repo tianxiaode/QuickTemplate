@@ -1,0 +1,122 @@
+/**
+ * @class Ext.grid.plugin.actiontoolbar
+ */
+
+/**
+ * @var {color}
+ * Paging toolbar background-color
+ */
+ $actiontoolbar-background-color: dynamic(null);
+
+ /**
+  * @var {string/list}
+  * Paging toolbar background-gradient. Can be either the name of a gradient defined by
+  * {@link Global_CSS#background-gradient} or a list of color stops.
+  */
+ $actiontoolbar-background-gradient: dynamic(null);
+ 
+ /**
+  * @var {color}
+  * Paging toolbar color
+  */
+ $actiontoolbar-color: dynamic(null);
+ 
+ /**
+  * @var {number/list}
+  * Paging toolbar border-width
+  */
+ $actiontoolbar-border-width: dynamic(null);
+ 
+ /**
+  * @var {string/list}
+  * Paging toolbar border-style
+  */
+ $actiontoolbar-border-style: dynamic(null);
+ 
+ /**
+  * @var {color/list}
+  * Paging toolbar border-color
+  */
+ $actiontoolbar-border-color: dynamic(null);
+ 
+ /**
+  * @var {list}
+  * Paging toolbar box-shadow
+  */
+ $actiontoolbar-box-shadow: dynamic(null);
+ 
+ /**
+  * @var {string/number}
+  * Paging toolbar font-weight
+  */
+ $actiontoolbar-font-weight: dynamic(null);
+ 
+ /**
+  * @var {number}
+  * Paging toolbar font-size
+  */
+ $actiontoolbar-font-size: dynamic(null);
+ 
+ /**
+  * @var {number}
+  * Paging toolbar font-size in the {@link Global_CSS#$enable-big big} sizing scheme
+  */
+ $actiontoolbar-font-size-big: dynamic(null);
+ 
+ /**
+  * @var {number}
+  * Paging toolbar line-height
+  */
+ $actiontoolbar-line-height: dynamic(null);
+ 
+ /**
+  * @var {number}
+  * Paging toolbar line-height in the {@link Global_CSS#$enable-big big} sizing scheme
+  */
+ $actiontoolbar-line-height-big: dynamic(null);
+ 
+ /**
+  * @var {string}
+  * Paging toolbar font-family
+  */
+ $actiontoolbar-font-family: dynamic(null);
+ 
+ /**
+  * @var {number/list}
+  * Paging toolbar padding
+  */
+ $actiontoolbar-padding: dynamic(null);
+ 
+ /**
+  * @var {number/list}
+  * Paging toolbar padding in the {@link Global_CSS#$enable-big big} sizing scheme
+  */
+ $actiontoolbar-padding-big: dynamic(null);
+ 
+ @mixin actiontoolbar-ui(
+     $ui: null,
+     $xtype: actiontoolbar,
+     $background-color: null,
+     $background-gradient: null,
+     $color: null,
+     $border-width: null,
+     $border-style: null,
+     $border-color: null,
+     $box-shadow: null,
+     $font-weight: null,
+     $font-size: null,
+     $font-size-big: null,
+     $line-height: null,
+     $line-height-big: null,
+     $font-family: null,
+     $padding: null,
+     $padding-big: null
+ ) {
+     $ui-suffix: ui-suffix($ui);
+ 
+     $arguments: intersect-arguments(actiontoolbar-ui, toolbar-ui);
+ 
+     @include toolbar-ui($arguments...);
+ 
+ }
+ 

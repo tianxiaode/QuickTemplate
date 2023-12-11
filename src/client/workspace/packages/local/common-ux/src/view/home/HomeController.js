@@ -68,10 +68,6 @@ Ext.define('Common.view.home.HomeController',{
         Logger.info(this.handleRoute, xtype);
         let me = this,
             view = me.getView();
-        if(!ViewService.pages.hasOwnProperty(xtype)) {
-            me.onHideLastView();
-            me.currentToken = xtype;
-        }
 
         view.setMasked(false);
 
@@ -95,7 +91,6 @@ Ext.define('Common.view.home.HomeController',{
     onLoggedIn(action){
         let me = this,
             vm = me.getViewModel();
-        Logger.debug(me.onLoggedIn, action)
         vm.set('isAuthenticated', true);
         Ext.Viewport.setMasked(I18N.getLocalText('LoadingUserConfiguration'));
         Promise.all([Config.loadConfiguration(), I18N.loadResources()]).then(
@@ -111,42 +106,6 @@ Ext.define('Common.view.home.HomeController',{
         );
     },
     
-
-    loadConfiguration() {
-        let me = this,
-            vm = me.getViewModel();
-        vm.set('isAuthenticated', true);
-
-        me.getView().setMasked(I18N.getLocalText('LoadingUserConfiguration'));
-        Config.on('ready', me.checkConfigLoaded, me);
-        I18N.on('ready', me.checkConfigLoaded, me);
-        Enums.on('ready', me.checkConfigLoaded, me);    
-        Ext.defer(()=>{
-            Config.loadConfiguration();
-            I18N.loadResources();
-            Enums.init();    
-        },10)
-        //Signalr.connect();
-
-    },
-
-    checkConfigLoaded(){
-        console.log('checkConfigLoaded', arguments)
-        let me = this,
-            hash = Auth.getOrginHash() || Ext.util.History.getToken() || me.getDefaultToken();
-        if(!me.isReady()) return;
-        Auth.removeOrginHash();
-        me.redirectTo(hash, { force: true, replace: true });
-    },
-
-    isReady(){
-        console.log(Config.isReady , I18N.isReady , Enums.isReady)
-        return Config.isReady && I18N.isReady && Enums.isReady;
-    },
-
-
-    initView: Ext.emptyFn,
-
     setCurrentView: Ext.emptyFn,
 
     getDefaultToken(){
@@ -156,8 +115,6 @@ Ext.define('Common.view.home.HomeController',{
     show404Page(){
         ViewService.showPage(ViewService.pages.page404);
     },
-
-
 
     onShowDialog(xtype, op){
         let me = this,
@@ -172,18 +129,6 @@ Ext.define('Common.view.home.HomeController',{
         if(op === 'more' && params.record) {
             view.setRecord(params.record);
         };
-    },
-
-    onHideLastView(){
-        let me = this,
-            token = me.currentToken;
-        if(Ext.isEmpty(token)) return;
-        let index = token.indexOf('/');
-        if(index<0) return;
-        let xtype = token.substring(token, index),
-            params = ViewMgr.getParams(xtype),
-            view = ViewMgr.getView(xtype, params.type);
-        if(view) view.setHidden(true);
     },
 
     onShowPages(){
