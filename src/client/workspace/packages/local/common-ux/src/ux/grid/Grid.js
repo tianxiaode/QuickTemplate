@@ -7,12 +7,9 @@ Ext.define('Common.ux.grid.Grid',{
         'Common.ux.grid.column.CheckChange'
     ],
 
+
     config:{
         grouped: false,
-    },
-
-    bodyStyle:{
-        'background-color': 'var(--background-color)'
     },
 
     privates:{
@@ -23,6 +20,9 @@ Ext.define('Common.ux.grid.Grid',{
             let columns = me.getColumns(),
                 model = store.getModel(),
                 map = model.fieldsMap;
+            Logger.debug(this.updateStore, store);
+            me.setEntityName(store.getEntityName());
+            me.setResourceName(store.getResourceName())
             columns.forEach(c=>{
                 let name = c.getDataIndex();
                 if(!name) return;

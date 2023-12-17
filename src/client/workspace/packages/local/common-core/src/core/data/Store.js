@@ -11,7 +11,9 @@ Ext.define('Common.core.data.Store', {
     filterValue: null,
     pageSize: 25,
 
-    proxy: 'format'
+    proxy: 'format',
+
+    updateModel(){}
 
 
 });

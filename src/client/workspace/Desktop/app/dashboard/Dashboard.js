@@ -1,29 +1,35 @@
 Ext.define('Desktop.view.dashboard.Dashboard',{
-    extend: 'Ext.Container',
+    extend: 'Common.ux.panel.Content',
     xtype: 'dashboardview',
 
-    layout: {
-        type: 'auto',
-    },
+    requires:[
+        'Common.data.store.menumanagement.Menus'
+    ],
 
-
-    userCls: 'flex-wrap-item bg-color-white',
-
-    defaults:{
-        width: '49%',
-        autoLabel: false
-    },
-
-    items:[
-        { xtype: 'textfield', langLabel: '1'},
-        { xtype: 'textfield', label: '2'},
-        { xtype: 'textfield', label: '3'},
-        { xtype: 'textfield',  label: '4'},
-        { xtype: 'textfield',  label: '5'},
-        { xtype: 'textfield',  label: '6'},
-        { xtype: 'textfield',  label: '7'},
-        { xtype: 'textareafield', width: '100%', label: '8'},
-    ]
+    list:{
+        store:{
+            type: 'menus'
+        },
+        columns:[
+            { 
+                dataIndex: 'displayName', flex: 1
+            },
+            {
+                dataIndex: 'groupName', flex: 1
+            },
+            { 
+                dataIndex: 'router', flex: 1
+            },
+            {
+                dataIndex: 'icon'
+            },
+            { xtype: 'uxcheckchangecolumn', dataIndex: 'isSelectable'} ,
+            { xtype: 'uxcheckchangecolumn', dataIndex: 'isDisabled'},
+            {
+                xtype: 'uxactioncolumn'
+            }
+        ]
+    }
 
 
 });

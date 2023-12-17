@@ -35,9 +35,9 @@
     },
 
     resources: {
-        logo: 'resources/Common/images/company-logo.png',
-        loading: 'resources/Common/images/blue-loading.gif',
-        holder: 'resources/Common/images/404.png'
+        logo: 'resources/common-core/images/company-logo.png',
+        loading: 'resources/common-core/images/blue-loading.gif',
+        holder: 'resources/common-core/images/404.png'
     },
 
     getResource(res) {

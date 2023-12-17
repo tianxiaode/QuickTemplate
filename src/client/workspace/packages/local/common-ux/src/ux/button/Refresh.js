@@ -8,7 +8,7 @@ Ext.define('Common.ux.button.Refresh',{
     responsiveConfig:{
         'desktop && !cancel':{
             langTooltip: 'Refresh',
-            weight: 200
+            weight: 400
         },
         'phone && !cancel':{
             ui: 'plain',

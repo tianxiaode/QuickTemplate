@@ -13,6 +13,12 @@ Ext.define('Common.ux.grid.column.Action', {
             iconCls: 'x-fa fa-globe text-primary',
             handler: 'onMultilingual',
             langTooltip: 'Multilingual',
+            weight: 400
+        },
+        update: {
+            iconCls: 'x-fa ffa-edit',
+            handler: 'onEdit',
+            langTooltip: 'Edit',
             weight: 300
         }
     },
@@ -30,6 +36,13 @@ Ext.define('Common.ux.grid.column.Action', {
             let tools = cell.tools;
             if (!tools) tools = cell.tools = {};
             tools.translation = Ext.clone(translation);
+        }
+
+        let update = me.getUpdate();
+        if(update){
+            let tools = cell.tools;
+            if (!tools) tools = cell.tools = {};
+            tools.update = Ext.clone(update);
         }
 
         return cell;

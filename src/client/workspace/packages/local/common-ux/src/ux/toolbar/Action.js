@@ -11,7 +11,10 @@ Ext.define('Common.ux.toolbar.Action', {
     ],
 
 
-    classCls: Ext.baseCSSPrefix + 'action',
-
+    weighted: true,
+    shadow: false,
+    style:{
+        'background-color': 'var(--background-color)'
+    }
 
 })

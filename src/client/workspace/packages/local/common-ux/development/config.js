@@ -53,11 +53,6 @@ window.AppConfig = {
 
 };
 
-//加载语言
-AppConfig.lang = normalizeLang();
-let appName = AppConfig.appName[lang] || AppConfig.appName["en"];
-document.title = appName;
-
 normalizeLang = () => {
     let locale  = window.location.href.match(/lang=([\w-]+)/),
         currentLang = navigator.language || navigator.browserLanguage,
@@ -67,6 +62,12 @@ normalizeLang = () => {
     localStorage.setItem('lang', lang);
     return lang;
 }
+
+//加载语言
+let lang = AppConfig.lang = normalizeLang();
+let appName = AppConfig.appName[lang] || AppConfig.appName["en"];
+document.title = appName;
+
 
 window.onload = () =>{
     let el = document.getElementById('loadingText');

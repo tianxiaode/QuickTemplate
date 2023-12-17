@@ -17,8 +17,8 @@ Ext.define('Common.mixin.component.SearchField',{
             searchName: 'filter',
             ownerCmp: this,
             width: !isPhone && 140 ,
-            weight: 300,
-            padding: ui === 'faded' && '0 5px'
+            weight: 500,
+            padding: config.ui === 'faded' && '0 5px'
         }, config);
     },
 
