@@ -1,14 +1,14 @@
 ﻿<Project>
   <PropertyGroup>
 
-    <AbpVersion>7.4.2</AbpVersion>
-    <GenericAbpVersion>1.0.7</GenericAbpVersion>
+    <AbpVersion>8.0.0</AbpVersion>
+    <GenericAbpVersion>1.0.11</GenericAbpVersion>
     <QuickTemplateVersion>0.0.1</QuickTemplateVersion>
     <JetBrainsAnnotationsVersion>2023.3.0</JetBrainsAnnotationsVersion>
-		<FileProvidersEmbeddedVersion>7.0.10</FileProvidersEmbeddedVersion>
-		<SkiaSharpVersion>2.80.3</SkiaSharpVersion>
+		<FileProvidersEmbeddedVersion>8.0.0</FileProvidersEmbeddedVersion>
+		<SkiaSharpVersion>2.88.6</SkiaSharpVersion>
     <!-- All Microsoft EntityFrameworkCore packages -->
-    <MicrosoftEntityFrameworkCorePackageVersion>7.0.10</MicrosoftEntityFrameworkCorePackageVersion>
+    <MicrosoftEntityFrameworkCorePackageVersion>8.0.0</MicrosoftEntityFrameworkCorePackageVersion>
 
   </PropertyGroup>
 </Project>

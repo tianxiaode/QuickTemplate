@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
@@ -88,7 +89,8 @@ namespace QuickTemplate.OpenIddict
                  * solution. Otherwise, you can delete this client. */
                 await CreateApplicationAsync(
                     name: webClientId,
-                    type: OpenIddictConstants.ClientTypes.Confidential,
+                    applicationType: OpenIddictConstants.ApplicationTypes.Web,
+                    clientType: OpenIddictConstants.ClientTypes.Confidential,
                     consentType: OpenIddictConstants.ConsentTypes.Implicit,
                     displayName: "Web Application",
                     secret: configurationSection["QuickTemplate_Web:ClientSecret"] ?? "1q2w3e*",
@@ -98,10 +100,9 @@ namespace QuickTemplate.OpenIddict
                         OpenIddictConstants.GrantTypes.Implicit
                     },
                     scopes: commonScopes,
-                    redirectUri: $"{webClientRootUrl}signin-oidc",
-                    clientUri: webClientRootUrl,
-                    postLogoutRedirectUri: $"{webClientRootUrl}signout-callback-oidc"
-                );
+                    redirectUri: new List<string>() { $"{webClientRootUrl}signin-oidc" },
+                    postLogoutRedirectUri: new List<string>() { $"{webClientRootUrl}signout-callback-oidc" },
+                    clientUri: webClientRootUrl);
             }
 
             //Console Test / Angular Client
@@ -109,9 +110,16 @@ namespace QuickTemplate.OpenIddict
             if (!consoleAndAngularClientId.IsNullOrWhiteSpace())
             {
                 var consoleAndAngularClientRootUrl = configurationSection["QuickTemplate_App:RootUrl"]?.TrimEnd('/');
+                var urls = new List<string>()
+                {
+                    consoleAndAngularClientRootUrl,
+                    consoleAndAngularClientRootUrl + "/desktop",
+                    consoleAndAngularClientRootUrl + "/phone"
+                };
                 await CreateApplicationAsync(
                     name: consoleAndAngularClientId,
-                    type: OpenIddictConstants.ClientTypes.Public,
+                    applicationType: OpenIddictConstants.ApplicationTypes.Web,
+                    clientType: OpenIddictConstants.ClientTypes.Public,
                     consentType: OpenIddictConstants.ConsentTypes.Implicit,
                     displayName: "Console Test / Angular Application",
                     secret: null,
@@ -123,10 +131,8 @@ namespace QuickTemplate.OpenIddict
                         OpenIddictConstants.GrantTypes.RefreshToken
                     },
                     scopes: commonScopes,
-                    redirectUri: consoleAndAngularClientRootUrl,
-                    clientUri: consoleAndAngularClientRootUrl,
-                    postLogoutRedirectUri: consoleAndAngularClientRootUrl
-                );
+                    redirectUri: urls,
+                    postLogoutRedirectUri: urls, clientUri: consoleAndAngularClientRootUrl);
             }
 
 
@@ -138,7 +144,8 @@ namespace QuickTemplate.OpenIddict
 
                 await CreateApplicationAsync(
                     name: swaggerClientId,
-                    type: OpenIddictConstants.ClientTypes.Public,
+                    applicationType: OpenIddictConstants.ApplicationTypes.Web,
+                    clientType: OpenIddictConstants.ClientTypes.Public,
                     consentType: OpenIddictConstants.ConsentTypes.Implicit,
                     displayName: "Swagger Application",
                     secret: null,
@@ -147,32 +154,33 @@ namespace QuickTemplate.OpenIddict
                         OpenIddictConstants.GrantTypes.AuthorizationCode,
                     },
                     scopes: commonScopes,
-                    redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html",
-                    clientUri: swaggerRootUrl
+                    redirectUri: new List<string>() { $"{swaggerRootUrl}/swagger/oauth2-redirect.html" },
+                    clientUri: swaggerRootUrl,
+                    postLogoutRedirectUri: new List<string>()
                 );
             }
         }
 
-        private async Task CreateApplicationAsync(
-            [NotNull] string name,
-            [NotNull] string type,
+        private async Task CreateApplicationAsync([NotNull] string name,
+            [NotNull] string applicationType,
+            [NotNull] string clientType,
             [NotNull] string consentType,
             string displayName,
             string secret,
             List<string> grantTypes,
             List<string> scopes,
-            string clientUri = null,
-            string redirectUri = null,
-            string postLogoutRedirectUri = null,
-            List<string> permissions = null)
+            List<string> redirectUri,
+            List<string> postLogoutRedirectUri,
+            List<string> permissions = null,
+            string clientUri = null)
         {
-            if (!string.IsNullOrEmpty(secret) && string.Equals(type, OpenIddictConstants.ClientTypes.Public,
+            if (!string.IsNullOrEmpty(secret) && string.Equals(clientType, OpenIddictConstants.ClientTypes.Public,
                     StringComparison.OrdinalIgnoreCase))
             {
                 throw new Volo.Abp.BusinessException(L["NoClientSecretCanBeSetForPublicApplications"]);
             }
 
-            if (string.IsNullOrEmpty(secret) && string.Equals(type, OpenIddictConstants.ClientTypes.Confidential,
+            if (string.IsNullOrEmpty(secret) && string.Equals(clientType, OpenIddictConstants.ClientTypes.Confidential,
                     StringComparison.OrdinalIgnoreCase))
             {
                 throw new Volo.Abp.BusinessException(L["TheClientSecretIsRequiredForConfidentialApplications"]);
@@ -189,8 +197,9 @@ namespace QuickTemplate.OpenIddict
             {
                 var application = new AbpApplicationDescriptor
                 {
+                    ApplicationType = applicationType,
                     ClientId = name,
-                    Type = type,
+                    ClientType = clientType,
                     ClientSecret = secret,
                     ConsentType = consentType,
                     DisplayName = displayName,
@@ -205,14 +214,15 @@ namespace QuickTemplate.OpenIddict
                 {
                     application.Permissions.Add(OpenIddictConstants.Permissions.ResponseTypes.CodeIdToken);
 
-                    if (string.Equals(type, OpenIddictConstants.ClientTypes.Public, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(clientType, OpenIddictConstants.ClientTypes.Public,
+                            StringComparison.OrdinalIgnoreCase))
                     {
                         application.Permissions.Add(OpenIddictConstants.Permissions.ResponseTypes.CodeIdTokenToken);
                         application.Permissions.Add(OpenIddictConstants.Permissions.ResponseTypes.CodeToken);
                     }
                 }
 
-                if (!redirectUri.IsNullOrWhiteSpace() || !postLogoutRedirectUri.IsNullOrWhiteSpace())
+                if (redirectUri.Count > 0 || postLogoutRedirectUri.Count > 0)
                 {
                     application.Permissions.Add(OpenIddictConstants.Permissions.Endpoints.Logout);
                 }
@@ -271,7 +281,7 @@ namespace QuickTemplate.OpenIddict
                     if (grantType == OpenIddictConstants.GrantTypes.Implicit)
                     {
                         application.Permissions.Add(OpenIddictConstants.Permissions.ResponseTypes.IdToken);
-                        if (string.Equals(type, OpenIddictConstants.ClientTypes.Public,
+                        if (string.Equals(clientType, OpenIddictConstants.ClientTypes.Public,
                                 StringComparison.OrdinalIgnoreCase))
                         {
                             application.Permissions.Add(OpenIddictConstants.Permissions.ResponseTypes.IdTokenToken);
@@ -301,14 +311,15 @@ namespace QuickTemplate.OpenIddict
                     }
                 }
 
-                if (redirectUri != null)
+                if (redirectUri.Count > 0)
                 {
-                    if (!redirectUri.IsNullOrEmpty())
+                    foreach (var url in redirectUri)
                     {
-                        if (!Uri.TryCreate(redirectUri, UriKind.Absolute, out var uri) ||
+                        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
                             !uri.IsWellFormedOriginalString())
                         {
-                            throw new Volo.Abp.BusinessException(L["InvalidRedirectUri", redirectUri]);
+                            throw new Volo.Abp.BusinessException(L["InvalidPostLogoutRedirectUri",
+                                postLogoutRedirectUri]);
                         }
 
                         if (application.RedirectUris.All(x => x != uri))
@@ -318,11 +329,11 @@ namespace QuickTemplate.OpenIddict
                     }
                 }
 
-                if (postLogoutRedirectUri != null)
+                if (postLogoutRedirectUri.Count > 0)
                 {
-                    if (!postLogoutRedirectUri.IsNullOrEmpty())
+                    foreach (var url in postLogoutRedirectUri)
                     {
-                        if (!Uri.TryCreate(postLogoutRedirectUri, UriKind.Absolute, out var uri) ||
+                        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
                             !uri.IsWellFormedOriginalString())
                         {
                             throw new Volo.Abp.BusinessException(L["InvalidPostLogoutRedirectUri",

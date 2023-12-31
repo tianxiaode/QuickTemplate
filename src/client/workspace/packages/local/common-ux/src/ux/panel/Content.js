@@ -39,7 +39,12 @@ Ext.define('Common.ux.panel.Content',{
     },
 
     createList(config){
-        return Ext.apply({ownerCmp: this}, config);
+        return Ext.apply({            
+            ownerCmp: this,
+            listeners:{
+                storechange: 'onStoreChange'
+            }
+        }, config);
     },
 
     applyList(config, old){
