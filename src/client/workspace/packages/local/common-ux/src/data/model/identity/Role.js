@@ -1,6 +1,6 @@
 Ext.define('Common.data.model.identity.Role', {
     extend: 'Common.data.model.Base',
-    alias: 'entity.role',
+    alias: 'entity.abpIdentity.role',
 
     hasTranslation: true,
 

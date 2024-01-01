@@ -4,7 +4,9 @@ Ext.define('Common.app.Application', {
     name: 'CommonShared',
 
     requires:[
+        'Common.core.util.Format',
         'Common.core.service.Config',
+        'Common.core.service.AccessControl',
         'Common.localized.Localized',
         'Common.view.page.Page404',
         'Common.view.page.Login',

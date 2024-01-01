@@ -28,7 +28,7 @@ Ext.define('Common.ux.navigation.Tree',{
 
     isReady: false,
 
-    onStoreLoaded(){
+    onStoreLoaded(store, records, successful, operation, node, eOpts){
         this.isReady = true;
     },
 
@@ -81,7 +81,7 @@ Ext.define('Common.ux.navigation.Tree',{
 
     getNodeByXtype(xtype){
         let me = this,
-            name = xtype.substring(xtype.indexOf('-')+1),
+            name = xtype.substring(xtype.indexOf('-')+1) || xtype,
             store = me.getStore();
         return store.findNode('router', name);
 

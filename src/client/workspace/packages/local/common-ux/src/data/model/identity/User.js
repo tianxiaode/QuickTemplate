@@ -1,13 +1,13 @@
 Ext.define('Common.data.model.identity.User', {
     extend: 'Common.data.model.Base',
-    alias: 'entity.user',
+    alias: 'entity.abpIdentity.user',
 
     fields: [
         { name: 'userName',type: 'string', defaultValue: '', messageField: true, sortable: true},
         { name: 'name', type: 'string',defaultValue: '', sortable: false},
         { name: 'surname',type: 'string', defaultValue: '', sortable: false},
         { name: 'email',type: 'string', defaultValue: '', sortable: true},
-        { name: 'phoneNumber',type: 'string', defaultValue: '', sortable: true},
+        { name: 'phoneNumber',type: 'string', defaultValue: '', sortable: true },
         { name: 'isActive', type: 'bool', defaultValue: true, updateAction: 'active', sortable: true},
         { name: 'lockoutEnabled', type: 'bool', defaultValue: true, updateAction: 'lockable', sortable: true, langText: 'Lockable'},
         { name: 'lockoutEnd', type: 'date', dateFormat:  'C', defaultValue: null, updateAction: 'lockout', sortable: true, langText: 'UserLocked' },

@@ -9,8 +9,9 @@ Ext.define('Common.overrides.Component',{
     config:{
         entityName: null,
         permissionGroup: null,
-        permissions: null
     },
+
+    permissions: null,
 
     updateEntityName(){
         this.initPermissions();
@@ -34,11 +35,11 @@ Ext.define('Common.overrides.Component',{
         let me = this,
             entityName = me._entityName,
             resourceName = me._resourceName,
-            group = me.permissionGroup || resourceName,
+            group = me._permissionGroup || resourceName,
             permissionName = me.permissionName || entityName,
             permissions= {};
-        //console.log('initPermissions', me.xtype, group, permissionName);
         if(Ext.isEmpty(permissionName) || Ext.isEmpty(group)) return;
+        Logger.debug(this.initPermissions, group, permissionName, permissions, Format.defaultPermissions)
         Ext.isArray(me.permissions) && me.setPermissions(permissions, me.permissions, group, permissionName);
         me.setPermissions(permissions, Format.defaultPermissions, group, permissionName);
         me.permissions = permissions;
@@ -47,11 +48,20 @@ Ext.define('Common.overrides.Component',{
     },
 
     setPermissions(permissions,actions, group , permissionName){
+        group = Format.capitalize(group);
+        permissionName = Format.capitalize(permissionName);
         actions.forEach(a=>{
             if(permissions[a]) return;
-            let permission = `${group}.${Format.pluralize(permissionName) }.${a}`;
+            let permission = `${group}.${Ext.util.Inflector.pluralize(permissionName) }.${a}`;
+            Logger.debug(this.setPermissions, permission)
             permissions[a.toLowerCase()] = ACL.isGranted(permission);
         })
-    },    
+    },
+
+    doDestroy(){
+        this.permissions = null;
+        this.callParent(arguments);
+    }
+    
 
 })

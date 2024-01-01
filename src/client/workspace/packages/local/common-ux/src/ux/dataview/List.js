@@ -3,6 +3,7 @@ Ext.define('Common.ux.dataview.List',{
     xtype: 'uxlist',
 
     requires:[
+        'Common.ux.dataview.Format',
         'Ext.dataview.plugin.ListPaging',
         'Common.ux.dataview.plugin.PullRefresh',
         'Common.ux.dataview.plugin.Checkbox'

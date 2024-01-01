@@ -48,7 +48,7 @@ Ext.define('Desktop.view.home.HomeViewController', {
      * @param {选择的节点} node 
      */
     onNavigationTreeSelectionChange(tree, node) {
-        var to = node && (node.get('routeId') || node.get('viewType'));
+        var to = node && node.get('router');
         if (to) {
             this.redirectTo(to);
         }

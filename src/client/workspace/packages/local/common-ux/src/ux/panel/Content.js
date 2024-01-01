@@ -5,13 +5,16 @@ Ext.define('Common.ux.panel.Content',{
     requires:[
         'Common.ux.toolbar.Action',
         'Common.ux.toolbar.Paging',
-        'Common.ux.grid.Grid'
+        'Common.ux.grid.Grid',
+        'Common.ux.grid.Tree',
+        'Common.ux.dataview.List'
     ],
 
     layout: 'vbox',
     weighted: true,
     flex: 1,
     userCls: 'bg-color-white',
+    includeResource: true,
 
     config:{
         actionToolbar:{
@@ -34,15 +37,15 @@ Ext.define('Common.ux.panel.Content',{
         return Ext.updateWidget(old, config,this, 'createActionToolbar');
     },
 
-    updateActionToolbar(config){
-        config && this.add(config);
-    },
+    // updateActionToolbar(config){
+    //     config && this.add(config);
+    // },
 
     createList(config){
         return Ext.apply({            
             ownerCmp: this,
             listeners:{
-                storechange: 'onStoreChange'
+                storechange: this.onStoreChange
             }
         }, config);
     },
@@ -51,10 +54,9 @@ Ext.define('Common.ux.panel.Content',{
         return Ext.updateWidget(old, config,this, 'createList');
     },
 
-    updateList(config){
-        Logger.debug(this.updateList, Ext.clone(config))
-        config && this.add(config);
-    },
+    // updateList(config){
+    //     config && this.add(config);
+    // },
 
     createPaging(config){
         return Ext.apply({
@@ -67,11 +69,30 @@ Ext.define('Common.ux.panel.Content',{
         return Ext.updateWidget(old, config,this, 'createPaging');
     },
 
-    updatePaging(config){
-        config && this.add(config);
+    // updatePaging(config){
+    //     config && this.add(config);
+    // },
+
+    initialize(){
+        let me = this,
+            list = me.getList(),
+            store = list.getStore(),
+            resourceName = store.getResourceName(),
+            entityName = store.getEntityName(),
+            toolbar = me.getActionToolbar(),
+            paging = me.getPaging();
+        me.callParent();
+        me.setEntityName(entityName);
+        me.setResourceName(resourceName);
+        me.setPermissionGroup(resourceName);
+        toolbar && me.add(toolbar);
+        me.add(list);
+        paging && me.add(paging);
     },
 
     doDestroy(){
         this.destroyMembers('actionToolbar', 'grid', 'paging');
-    }
+    },
+
+    onStoreChange(store, old){}
 })

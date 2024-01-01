@@ -28,7 +28,6 @@ Ext.define('Common.core.data.TreeStore', {
     load(options){
         let me = this;
         if(me.remoteRoot && !me.isRootReady){
-            Ext.defer(me.load, 50, me, [options]);
             return;
         }
         me.callParent(arguments);
@@ -39,16 +38,17 @@ Ext.define('Common.core.data.TreeStore', {
             let me = this,
                 entityName = me.getEntityName(),
                 url = URI.get(Ext.util.Inflector.pluralize(entityName), 'root');
-            me.iisRootReady = false;
+            me.isRootReady = false;
             Http.get(url).then(me.onRootLoaded.bind(me), Alert.ajax);        
         },
     
         onRootLoaded(response){
             let me = this,
-                data = response.request.getJson();
-            Logger.debug(this.onRootLoaded, response);
+                data = response.request.getJson(),
+                root = me.getRoot();
             me.isRootReady = true;
-            me.getRoot().set(data);
+            root.set(data);
+            me.load({node: root});
         }    
     }
 

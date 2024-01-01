@@ -26,7 +26,7 @@ Ext.define('Common.core.mixin.data.StoreExtensions',{
     /**
      * messageField: 记录用于显示模型信息的字段
      * loaclFilter: 记录哪些字段用于本地搜索
-     * allowSort: 记录哪些字段允许排序
+     * sortable: 记录哪些字段允许排序
      * langText: 记录字段的本地化文本
      * @param {Model} model 
      * @returns 
@@ -38,13 +38,13 @@ Ext.define('Common.core.mixin.data.StoreExtensions',{
         me.setProxyUrl();
         me.localFilterFields =new Set();
         me.sortFields = new Set();
-        me.langText = new Map();
+        me.langTextFields = new Map();
         fields.forEach(field => {
             let name = field.name;
             if(field.messageField) me.messageField = name;
             if(field.localFilter) me.localFilterFields.add(name);
-            if(field.allowSort) me.sortFields.add(name);
-            if(field.langText) me.langText.set(name, field.langText);
+            if(field.sortable) me.sortFields.add(name);
+            if(field.langText) me.langTextFields.set(name, field.langText);
         });
     },
 

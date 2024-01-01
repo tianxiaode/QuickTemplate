@@ -25,7 +25,7 @@ Ext.define('Common.data.model.menumanagement.Menu', {
                 return icon && icon.includes('fa') ? 'x-fa ' + icon : icon;
             },
             depends: ['icon']
-        }
+        }        
 
     ]   
 

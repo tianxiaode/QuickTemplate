@@ -9,10 +9,13 @@ Ext.define('Common.overrides.grid.column.Column',{
 
     onLocalized(){
         let me = this,
-            resourceName = me.getResourceName(),
-            entityName = me.getEntityName();
+            store = me.getGrid().getStore(),
+            langTextFields = store.langTextFields,
+            dataIndex = me.getDataIndex(),
+            resourceName = store.getResourceName(),
+            entityName = store.getEntityName();
         if(me.getAutoText()){
-            let name = Ext.util.Format.capitalize(me.getDataIndex());
+            name = Ext.util.Format.capitalize( langTextFields.get(dataIndex) || dataIndex);
             me.setLangText(name);
         }
         let text = me.getLocalizedText(me.getLangText(), resourceName, entityName);
@@ -21,20 +24,6 @@ Ext.define('Common.overrides.grid.column.Column',{
 
     // applyTpl(config) {
     //     return Template.getTplWithScope(config, this);
-    // },
-
-    // isSortable() {
-    //     var me = this,
-    //         grid = me.getGrid(),
-    //         store = grid.store,
-    //         sortFields = store.sortFields,
-    //         dataIndex = me.getDataIndex();
-    //     return me.isLeafHeader &&
-    //         (sortFields && sortFields[dataIndex]) &&
-    //         me.getSortable() &&
-    //         (me.pickSorter() || dataIndex) &&
-    //         me.getRootHeaderCt().getSortable() &&
-    //         grid.sortableColumns !== false;
     // },
 
 

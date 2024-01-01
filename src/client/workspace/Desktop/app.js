@@ -7,7 +7,7 @@ Ext.application({
 
     name: 'Desktop',
 
-    defaultToken: 'dashboardview',
+    defaultToken: 'dashboard',
 
     requires:[
         'Desktop.view.home.HomeView'
