@@ -7,10 +7,7 @@ Ext.define('Desktop.view.identity.user.User', {
     ],
 
     list:{
-        xtype: 'uxgrid',
-        store:{
-            type: 'users'
-        },
+        store:{ type: 'users' },
         columns:[
             { 
                 dataIndex: 'userName', flex:1,
@@ -44,4 +41,5 @@ Ext.define('Desktop.view.identity.user.User', {
             }
         ]
     }
+
 });

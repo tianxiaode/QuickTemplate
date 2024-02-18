@@ -11,7 +11,7 @@ Ext.define('Common.ux.toolbar.Paging', {
 
     classCls: Ext.baseCSSPrefix + 'pagingtoolbar',
     defaultBindProperty: 'store',
-    bind: '{mainStore}',
+    //bind: '{mainStore}',
 
     emptyPageData: {
         total: 0, //记录总数

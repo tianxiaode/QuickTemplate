@@ -1,4 +1,4 @@
-Ext.define('Common.mixin.component.SearchField',{
+Ext.define('Common.mixin.component.field.Search',{
     extend: 'Common.mixin.component.Base',
 
     requires:[
@@ -16,7 +16,7 @@ Ext.define('Common.mixin.component.SearchField',{
             isSearch: true,
             searchName: 'filter',
             ownerCmp: this,
-            width: !isPhone && 140 ,
+            width: !isPhone && 200 ,
             weight: 500,
             padding: config.ui === 'faded' && '0 5px'
         }, config);
@@ -29,13 +29,13 @@ Ext.define('Common.mixin.component.SearchField',{
     updateSearchField(config){
         if(!config) return;
         let me = this;
-        if(me.isPhone() && me.isCrudToolbar){
+        if(Ext.platformTags.phone && me.isCrudToolbar){
             field.setUi('solo');
             field.setWidth(null);
             field.setFlex(1);
             field.setMargin('0 5px 0 0');
-            return;
         }
+        me.add(config);
 
     },
 
