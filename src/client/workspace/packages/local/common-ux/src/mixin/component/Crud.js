@@ -84,5 +84,4 @@ Ext.define('Common.mixin.component.Crud', {
         this.destroyMembers('createButton', 'updateButton', 'deleteButton');
     }
 
-
 })

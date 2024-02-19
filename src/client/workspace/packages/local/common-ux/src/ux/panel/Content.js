@@ -1,8 +1,8 @@
-Ext.define('Common.ux.panel.Content',{
+Ext.define('Common.ux.panel.Content', {
     extend: 'Ext.Container',
     xtype: 'uxcontentpanel',
 
-    requires:[
+    requires: [
         'Common.ux.toolbar.Action',
         'Common.ux.toolbar.Paging',
         'Common.ux.grid.Grid',
@@ -13,42 +13,39 @@ Ext.define('Common.ux.panel.Content',{
     layout: 'vbox',
     weighted: true,
     flex: 1,
-    userCls: 'bg-content',
     includeResource: true,
+    userCls: 'bg-content',
 
-    config:{
-        actionToolbar:{
+    config: {
+        toolbar: {
             xtype: 'uxactiontoolbar',
             weight: 100,
         },
-        list:{
-            xtype: 'uxgrid',            
+        list: {
+            xtype: 'uxgrid',
             weight: 200,
             flex: 1,
         },
         paging: null
     },
 
-    createActionToolbar(config){
-        return Ext.apply({
-
-            ownerCmp: this
-        }, config);
+    createToolbar(config) {
+        return Ext.apply({ ownerCmp: this }, config);
     },
 
-    applyActionToolbar(config, old){
-        return Ext.updateWidget(old, config,this, 'createActionToolbar');
+    applyToolbar(config, old) {
+        return Ext.updateWidget(old, config, this, 'createToolbar');
     },
 
-    updateActionToolbar(config){
+    updateToolbar(config) {
         config && this.add(config);
     },
 
-    createList(config){
+    createList(config) {
         let me = this;
-        return Ext.apply({            
+        return Ext.apply({
             ownerCmp: me,
-            listeners:{
+            listeners: {
                 select: me.onListSelect,
                 deselect: me.onListDeselect,
                 scope: me
@@ -56,54 +53,158 @@ Ext.define('Common.ux.panel.Content',{
         }, config);
     },
 
-    applyList(config, old){
-        return Ext.updateWidget(old, config,this, 'createList');
+    applyList(config, old) {
+        return Ext.updateWidget(old, config, this, 'createList');
     },
 
-    updateList(config){
+    updateList(config) {
         this.onStoreChange(config.getStore());
         config && this.add(config);
     },
 
-    createPaging(config){
+    createPaging(config) {
         return Ext.apply({
             xtype: 'uxpagingtoolbar',
             ownerCmp: this
         }, config);
     },
 
-    applyPaging(config, old){
-        return Ext.updateWidget(old, config,this, 'createPaging');
+    applyPaging(config, old) {
+        return Ext.updateWidget(old, config, this, 'createPaging');
     },
 
-    updatePaging(config){
+    updatePaging(config) {
         config && this.add(config);
     },
 
-    doDestroy(){
+    /**
+     * 更新CRUD按钮状态
+     */
+    refreshButtons(allowUpdate ,allowDelete){
         let me = this;
-        me.setStore(null);
+        me.setButtonDisabled('update', !allowUpdate);
+        me.setButtonDisabled('delete', !allowDelete);
+    },
+
+
+    doDestroy() {
+        let me = this;
         me.destroyMembers('actionToolbar', 'grid', 'paging');
     },
 
-    privates:{
-        onStoreChange(store){
+    privates: {
+        onStoreChange(store) {
             let me = this,
-                toolbar = me.getActionToolbar(),
                 resourceName = store.getResourceName(),
                 entityName = store.getEntityName();
             me.setResourceName(resourceName);
             me.setEntityName(entityName);
             me.setPermissionGroup(resourceName);
-            toolbar.initButtons(me.permissions);
+            me.initButtons(me.permissions);
             Logger.debug(this.onStoreChange, me.getPermissionGroup(), me.permissions);
         },
 
-        onListSelect(){
+        initButtons(permissions){
+            let me = this;
+            me.setButtonHidden('create', !permissions.create);
+            me.setButtonHidden('update', !permissions.update);
+            me.setButtonHidden('delete', !permissions.delete);
+        },
+
+        getButtons() {
+            let me = this,
+                buttons = me.buttons;
+            if (!buttons) {
+                buttons = me.getToolbar().query('[isCrud]');
+                me.buttons = {};
+                buttons.forEach(b => {
+                    let name = b.crudName;
+                    me.buttons[name] = b;
+                    b.setHandler(me[`on${Ext.String.capitalize(name)}`]);
+                });
+            }
+            Logger.debug(me.getButtons, me.buttons)
+            return me.buttons;
+        },
+
+        /**
+         * 获取按钮
+         * @param {按钮的key} key 
+         */
+        getButton(key) {
+            let buttons = this.getButtons();
+            return buttons[key];
+        },
+
+
+        setButtonHidden(key, hidden){
+            let button = this.getButton(key) ;
+            button && button.setHidden(hidden);
+        },
+    
+        setButtonDisabled(key, disabled){
+            let button = this.getButton(key) ;
+            button && button.setDisabled(disabled);
+        },
+
+    
+
+        onListSelect() {
 
         },
 
-        onListDeselect(){
+        onListDeselect() {
+
+        },
+
+        onCreateEntity() {
+
+        },
+
+        onBeforeCreateEntity() {
+
+        },
+
+        doCreateEntity() {
+
+        },
+
+        onUpdateEntity() {
+
+        },
+
+        onBeforeUpdateEntity() {
+
+        },
+
+        doUpdateEntity() {
+
+        },
+
+        onDeleteEntity() {
+
+        },
+
+        onBeforeDeleteEntity() {
+
+        },
+
+        doDeleteEntity() {
+
+        },
+
+        onRefreshStore() {
+        },
+
+        onSearch() {
+
+        },
+
+        onBeforeSearch() {
+
+        },
+
+        doSearch() {
 
         }
     }

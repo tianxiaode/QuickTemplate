@@ -1,7 +1,15 @@
 Ext.define('Desktop.view.dashboard.Dashboard',{
-    extend: 'Common.ux.panel.Content',
+    extend: 'Ext.Panel',
     xtype: 'dashboard',
 
+
+    userCls: 'bg-content',
+
+    items:[
+        {
+            xtype: 'uxactiontoolbar',
+        }        
+    ]
 
 
 });

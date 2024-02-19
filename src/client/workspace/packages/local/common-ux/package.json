@@ -200,7 +200,7 @@
              *      +-----------------+
              */
             "src": [
-                "${package.dir}/sass/src"
+                "${package.dir}/sass/src/all.scss"
             ]
         },
 

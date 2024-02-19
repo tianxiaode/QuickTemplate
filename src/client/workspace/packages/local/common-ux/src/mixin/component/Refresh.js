@@ -28,6 +28,13 @@ Ext.define('Common.mixin.component.Refresh', {
 
     doDestroy() {
         this.destroyMembers('refreshButton');
+    },
+
+    privates:{
+        onRefreshButtonClick(sender){
+            this.fireEvent('refresh', this, sender);
+        }
+
     }
 
 

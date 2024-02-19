@@ -6,14 +6,6 @@ Ext.define('Common.overrides.field.Field',{
         langLabel: null,
     },
 
-    // responsiveConfig:{
-    //     'desktop && !cancel':{
-    //         labelAlign: 'left'
-    //     },
-    //     'phone && !cancel':{
-    //         errorTarget: 'qtip'
-    //     }
-    // },
 
     onLocalized(){
         let me = this,

@@ -1,5 +1,5 @@
 Ext.define('Common.ux.toolbar.Action', {
-    extend: 'Ext.Toolbar',
+    extend: 'Ext.Container',
     xtype: 'uxactiontoolbar',
 
     mixins: [
@@ -9,28 +9,79 @@ Ext.define('Common.ux.toolbar.Action', {
         'Common.mixin.component.field.Search'
     ],
 
-    weighted: true,
-    shadow: false,
     userCls: 'bg-content',
+    weighted: true,
     isCrudToolbar: true,
-    
-    /**
-     * 更新CRUD按钮状态
-     */
-    refreshButtons(allowUpdate ,allowDelete){
-        let me = this;
-        me.setButtonDisabled('update', !allowUpdate);
-        me.setButtonDisabled('delete', !allowDelete);
+    defaultListenerScope: true,
+    layout: 'vbox',
+
+    defaults:{
+        userCls: 'bg-content',
+        shadow: false,
+        weighted: true,
+        flex: 1
     },
+
+    config:{
+        toolbar:{}
+    },
+
+    createToolbar(config) {
+        return Ext.apply({
+            xtype: 'toolbar',
+            weight: 100,
+            ownerCmp: this,
+        }, config);
+    },
+
+    applyToolbar(config, old) {
+        return Ext.updateWidget(old, config, this, 'createToolbar');
+    },
+
+    updateToolbar(config) {
+        config && this.add(config);
+    },
+
+    updateCreateButton(config) {
+        config && this.getToolbar().add(config);
+    },
+
+    updateUpdateButton(config){
+        config && this.getToolbar().add(config);
+    },
+
+    updateDeleteButton(config){
+        config && this.getToolbar().add(config);
+    },
+
+    updateRefreshButton(config) {
+        config && this.getToolbar().add(config);
+    },
+
+    updateCountMessage(config){
+        config && this.getToolbar().add(config);
+    },
+
+    updateSearchField(config){
+        if(!config) return;
+        let me = this;
+        if(Ext.platformTags.phone && me.isCrudToolbar){
+            field.setUi('solo');
+            field.setWidth(null);
+            field.setFlex(1);
+            field.setMargin('0 5px 0 0');
+        }
+        me.getToolbar().add(config);
+    },
+
+
 
     /**
      * 初始化CRUD按钮的显示
      */
-    initButtons(permissions){
-        let me = this;
-        me.setButtonHidden('create', !permissions.create);
-        me.setButtonHidden('update', !permissions.update);
-        me.setButtonHidden('delete', !permissions.delete);
+
+    setCount(count){
+        this.getCountMessage().setCount(count);
     },
 
     doDestroy() {
@@ -38,39 +89,11 @@ Ext.define('Common.ux.toolbar.Action', {
     },
 
     privates:{
-        getButtons() {
-            let me = this,
-                buttons = me.buttons;
-            if (!buttons) {
-                buttons = me.query('[isCrud]');
-                me.buttons = {};
-                buttons.forEach(b => {
-                    me.buttons[b.crudName] = b;
-                });
-            }
-            Logger.debug(me.getButtons, me.buttons)
-            return me.buttons;
-        },
     
-        /**
-         * 获取按钮
-         * @param {按钮的key} key 
-         */
-        getButton(key) {
-            let buttons = this.getButtons();
-            return buttons[key];
-        },
-
-
-        setButtonHidden(key, hidden){
-            let button = this.getButton(key) ;
-            button && button.setHidden(hidden);
-        },
-    
-        setButtonDisabled(key, disabled){
-            let button = this.getButton(key) ;
-            button && button.setDisabled(disabled);
-        }       
+        
+        onSearch(){
+            Logger.debug(this.onSearch, arguments)
+        }
     
     }
 
