@@ -15,7 +15,6 @@ Ext.define('Common.core.service.AccessControl',{
     constructor(config) {
         let me = this;
         me.initConfig(config);
-        Config.on('ready', me.init, me);
     },
 
     isGranted(permissionName){

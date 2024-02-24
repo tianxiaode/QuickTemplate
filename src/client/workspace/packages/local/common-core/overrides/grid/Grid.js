@@ -8,5 +8,4 @@ Ext.define('Common.overrides.grid.Grid', {
     getSelectedRecords(){
         return this.getSelectable().getSelectedRecords();
     }
-
 });

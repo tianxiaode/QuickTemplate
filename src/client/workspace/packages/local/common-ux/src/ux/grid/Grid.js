@@ -8,9 +8,13 @@ Ext.define('Common.ux.grid.Grid',{
         'Common.ux.grid.column.Date',
     ],
 
-
     config:{
         grouped: false,
+    },
+
+    selectable: {
+        checkbox: true,
+        mode: "multi"
     }
 
 })

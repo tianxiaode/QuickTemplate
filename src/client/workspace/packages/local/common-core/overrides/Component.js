@@ -53,7 +53,6 @@ Ext.define('Common.overrides.Component',{
         actions.forEach(a=>{
             if(permissions[a]) return;
             let permission = `${group}.${Ext.util.Inflector.pluralize(permissionName) }.${a}`;
-            Logger.debug(this.setPermissions, permission)
             permissions[a.toLowerCase()] = ACL.isGranted(permission);
         })
     },

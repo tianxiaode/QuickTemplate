@@ -8,8 +8,10 @@ Ext.define('Common.overrides.grid.column.Column',{
     },
 
     onLocalized(){
-        let me = this,
-            store = me.getGrid().getStore(),
+        let me = this;
+        if(me.xtype === 'selectioncolumn') return;
+
+        let store = me.getGrid().getStore(),
             langTextFields = store.langTextFields,
             dataIndex = me.getDataIndex(),
             resourceName = store.getResourceName(),

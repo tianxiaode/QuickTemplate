@@ -13,6 +13,8 @@ Ext.define('Common.mixin.component.Refresh', {
     createRefreshButton(config) {
         return Ext.apply({
             xtype: 'uxrefreshbutton',
+            isCrud: true,
+            crudName: 'refresh',
             handler: 'onRefreshStore',
             ownerCmp: this,
         }, config);

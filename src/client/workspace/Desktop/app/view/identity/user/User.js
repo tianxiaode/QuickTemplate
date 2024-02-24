@@ -6,6 +6,7 @@ Ext.define('Desktop.view.identity.user.User', {
         'Common.data.store.identity.Users'
     ],
 
+    paging: true,
     list:{
         store:{ type: 'users' },
         columns:[

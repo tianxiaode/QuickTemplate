@@ -13,6 +13,7 @@ Ext.define('Common.mixin.component.field.Search',{
         let isPhone = Ext.platformTags.phone;
         return Ext.apply({
             xtype: 'uxsearchfield',
+            autoSearch: true,
             isSearch: true,
             searchName: 'filter',
             ownerCmp: this,

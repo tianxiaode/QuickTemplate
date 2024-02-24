@@ -7,12 +7,12 @@ Ext.define('Common.ux.CountMessage',{
     },
 
     updateCount(){
-        this.onLocalized();        
+        this.onLocalized();
     },
 
     onLocalized(){
         let me = this;
         me.callParent();
-        me.setHtml(Format.format(I18N.get('CountMessage'),me.getCount()));
+        me.setHtml(Format.format(I18N.get('CountMessage'), `<span class="color-base">${me.getCount()}</span>`));
     }
 })

@@ -9,9 +9,14 @@ Ext.define('Common.ux.toolbar.Paging', {
         'Ext.field.Number'
     ],
 
+    mixins:[
+        'Common.mixin.component.Refresh',
+        'Common.mixin.component.CountMessage'
+    ],
+
     classCls: Ext.baseCSSPrefix + 'pagingtoolbar',
     defaultBindProperty: 'store',
-    //bind: '{mainStore}',
+    userCls: 'bg-content',
 
     emptyPageData: {
         total: 0, //记录总数
@@ -29,15 +34,15 @@ Ext.define('Common.ux.toolbar.Paging', {
         pageCount: {},
         nextButton: {},
         lastButton: {},
-        refreshButton: {},
         pageSize: {},
-        summaryComponent: {}
+        refreshButton: { weight: 800}
     },
 
     createFirstButton(config) {
         return Ext.apply({
             xtype: 'button',
             weight: 100,
+            isPageing: true,
             disabled: true,
             iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-first',
             handler: this.onFirstPageTap,
@@ -45,11 +50,11 @@ Ext.define('Common.ux.toolbar.Paging', {
         }, config);
     },
 
-    updateFirstButton(config, old) {
+    applyFirstButton(config, old) {
         return Ext.updateWidget(old, config, this, 'createFirstButton');
     },
 
-    applyFirstButton(config) {
+    updateFirstButton(config) {
         config && this.add(config);
     },
 
@@ -60,7 +65,7 @@ Ext.define('Common.ux.toolbar.Paging', {
             isPageing: true,
             disabled: true,
             iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-prev',
-            handler: this.onPrevtPageTap,
+            handler: this.onPrevPageTap,
             ownerCmp: this
         }, config);
     },
@@ -78,11 +83,13 @@ Ext.define('Common.ux.toolbar.Paging', {
         return Ext.apply({
             xtype: 'numberfield',
             weight: 300,
+            width: 60,
             isPageing: true,
             disabled: true,
             value: 1,
+            autoLabel: false,
             listeners: {
-                blur: me.onPagingNumberBlur,
+                blur: me.onPageNumberBlur,
                 keyup: me.onPageNumberKeyUp,
                 scope: me
             },
@@ -100,9 +107,10 @@ Ext.define('Common.ux.toolbar.Paging', {
 
     createPageCount(config) {
         return Ext.apply({
-            xtype: 'componet',
+            xtype: 'component',
             isPageing: true,
             weight: 400,
+            userCls: 'mx-2',
             disabled: true,
             ownerCmp: this
         }, config);
@@ -142,7 +150,7 @@ Ext.define('Common.ux.toolbar.Paging', {
             isPageing: true,
             weight: 600,
             disabled: true,
-            iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-next',
+            iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-last',
             handler: this.onLastPageTap,
             ownerCmp: this
         }, config);
@@ -156,34 +164,15 @@ Ext.define('Common.ux.toolbar.Paging', {
         config && this.add(config);
     },
 
-    createRefreshButton(config) {
-        return Ext.apply({
-            xtype: 'button',
-            isPageing: true,
-            iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-refresh',
-            weight: 700,
-            disabled: true,
-            handler: this.onRefreshTap,
-            ownerCmp: this
-        }, config);
-    },
-
-    applyRefreshButton(config, old) {
-        return Ext.updateWidget(old, config, this, 'createRefreshButton');
-    },
-
-    updateRefreshButton(config) {
-        config && this.add(config);
-    },
-
     createPageSize(config) {
         let me = this;
         return Ext.apply({
-            xtype: 'select',
+            xtype: 'selectfield',
             flex: 1,
             weight: 700,
             isPageing: true,
             disabled: true,
+            autoLabel: false,
             listeners: {
                 change: me.onPageSizeChange,
                 scope: me
@@ -200,63 +189,44 @@ Ext.define('Common.ux.toolbar.Paging', {
         config && this.add(config);
     },
 
-    createSummaryComponent(config) {
-        return Ext.apply({
-            xtype: 'componet',
-            margin: '0 5px',
-            isPageing: true,
-            style: {
-                textAlign: 'right'
-            },
-            flex: 1,
-            weight: 800,
-            disabled: true,
-            ownerCmp: this
-        }, config);
-    },
-
-    applySummaryComponent(config) {
-        return Ext.updateWidget(old, config, this, 'createSummaryComponent');
-    },
-
-    updateSummaryComponent(config) {
-        config && this.add(config);
-    },
-
     applyStore(store) {
-        if (store) {
-            store = Ext.data.StoreManager.lookup(store);
-        }
+        let ret = store ? Ext.data.StoreManager.lookup(store) : null;
 
-        return store;
+        return ret;
     },
 
     updateStore(store, oldStore) {
         let me = this;
-
         if (oldStore) {
-            if (oldStore.getAutoDestroy()) {
-                oldStore.destroy();
+            if (!oldStore.destroyed) {
+                if (oldStore.getAutoDestroy()) {
+                    oldStore.destroy();
+                }
+                else {
+                    Ext.destroy(me.storeListeners);
+                }
             }
         }
 
         if (store) {
+            if (me.destroying) {
+                return;
+            }
 
-            store.on({
+            me.storeListeners = store.on({
                 scope: me,
                 destroyable: true,
-                load: {
-                    fn: 'onStoreLoad',
-                    priority: -1
-                },
-                beforeLoad: 'onStoreBeforeLoad',
-                refresh: 'onStoreRefresh'
+                load: me.onStoreLoad,
+                beforeLoad: me.onStoreBeforeLoad,
+                //refresh: me.onStoreRefresh
             });
 
             if (store.isLoaded() && !store.hasPendingLoad()) {
                 me.initPaging();
             }
         }
+
+
     },
 
     /**
@@ -271,7 +241,7 @@ Ext.define('Common.ux.toolbar.Paging', {
      * 单击上一页
      * @param {触发组件} sender 
      */
-    onPrevtPageTap(sender) {
+    onPrevPageTap(sender) {
         let me = this,
             store = me.getStore(),
             prev = store.currentPage - 1;
@@ -280,12 +250,199 @@ Ext.define('Common.ux.toolbar.Paging', {
         }
     },
 
+
+    /**
+     * 单击下一页
+     * @param {触发组件} sender 
+     */
+    onNextPageTap(sender) {
+        let me = this,
+            store = me.getStore(),
+            pageCount = me.getPageData().pageCount,
+            next = store.currentPage + 1;
+
+        if (next <= pageCount) {
+            store.nextPage();
+        }
+    },
+
+    /**
+     * 单击最后一页
+     * @param {触发组件} sender 
+     */
+    onLastPageTap(sender) {
+        let me = this,
+            last = me.getPageData().pageCount;
+        me.pagingStore.loadPage(last);
+    },
+
+    onPageSizeChange(sender, value, oldValue) {
+        let store = this.getStore();
+        store.setPageSize(value);
+        store.loadPage(1);
+    },
+
+    onStoreLoad() {
+        Logger.debug(this.onStoreLoad)
+        this.initPaging();
+    },
+
+    onStoreRefresh() {
+        this.getStore().load();
+    },
+
+    onStoreBeforeLoad() {
+        this.setItemsDisabled(0, 0, true, true);
+    },
+
+    initPaging() {
+        let me = this,
+            store = me.getStore(),
+            count = store.getCount(),
+            afterPageText = ' / {0}',
+            pageData = null,
+            currPage = 0,
+            pageCount = 0,
+            isEmpty = count === 0,
+            afterText = '',
+            pageNumber = me.getPageNumber(),
+            countMessage = me.getCountMessage();
+        Logger.debug(this.initPaging, store)
+
+        if (!isEmpty) {
+            pageData = me.getPageData();
+            currPage = pageData.currentPage;
+            pageCount = pageData.pageCount;
+
+            // Check for invalid current page.
+            if (currPage > pageCount) {
+                // If the surrent page is beyond the loaded end,
+                // jump back to the loaded end if there is a valid page count.
+                if (pageCount > 0) {
+                    store.loadPage(pageCount);
+                }
+                // If no pages, reset the page field.
+                else {
+                    pageNumber && pageNumber.reset();
+                }
+
+                return;
+            }
+
+            afterText = Ext.String.format(afterPageText, isNaN(pageCount) ? 1 : pageCount);
+        }
+        else {
+            currPage = 0;
+            pageCount = 0;
+            afterText = Ext.String.format(afterPageText, 0);
+        }
+        let pageCountCmp = me.getPageCount();
+        pageCountCmp && pageCountCmp.setHtml(afterText);
+        if (pageNumber) {
+            pageNumber.setDisabled(isEmpty)
+            pageNumber.setValue(currPage);
+        }
+
+        countMessage.setCount(count);
+
+
+        me.setItemsDisabled(currPage, pageCount, isEmpty, false);
+    },
+
+
+
+
+    doDestroy() {
+        var me = this,
+            store = me.getStore();
+
+        if (store && !store.destroyed && store.getAutoDestroy()) {
+            store.destroy();
+        }
+
+        me.destroyMembers(
+            'firstButton', 'prevButton', 'pageNumber',
+            'pageCount', 'nextButton', 'nextButton',
+            'nextButton', 'lastButton', 
+            'pageSize', 'emptyPageData',
+            'storeListeners'
+        );
+
+        me.callParent();
+    },
+
+    privates: {
+        /**
+         * 获取分页数据
+         */
+        getPageData() {
+            let store = this.getStore(),
+                totalCount = store.getTotalCount(),
+                pageCount = Math.ceil(totalCount / store.pageSize),
+                toRecord = Math.min(store.currentPage * store.pageSize, totalCount);
+
+            return {
+                total: totalCount,
+                currentPage: store.currentPage,
+                pageCount: Ext.Number.isFinite(pageCount) ? pageCount : 1,
+                fromRecord: ((store.currentPage - 1) * store.pageSize) + 1,
+                toRecord: toRecord || totalCount
+            };
+        },
+
+        setItemsDisabled(currPage, pageCount, isEmpty, refreshDisabled) {
+            let me = this,
+                first = me.getFirstButton(),
+                prev = me.getPrevButton(),
+                pageNumber = me.getPageNumber(),
+                pageCountCmp = me.getPageCount(),
+                next = me.getNextButton(),
+                last = me.getLastButton(),
+                refresh = me.getRefreshButton(),
+                pageSize = me.getPageSize(),
+                countMessage = me.getCountMessage();
+            first && first.setDisabled(currPage === 1 || isEmpty);
+            prev && prev.setDisabled(currPage === 1 || isEmpty);
+            next && next.setDisabled(currPage === pageCount || isEmpty);
+            last && last.setDisabled(currPage === pageCount || isEmpty);
+            pageNumber && pageNumber.setDisabled(pageCount === 1 || isEmpty);
+            pageCountCmp && pageCountCmp.setDisabled(false);
+            pageSize && pageSize.setDisabled(isEmpty);
+            refresh && refresh.setDisabled(refreshDisabled);
+            countMessage && countMessage.setDisabled(false);
+
+        },
+
+        /**
+         * 从分页输入字段获取页数
+         * @param {分页数据} pageData 
+         */
+        readPageFromInput(pageData) {
+            let field = this.getPageNumber(),
+                pageNum = false,
+                v;
+            if (!field) return pageNum;
+            v = field.getValue();
+            pageNum = parseInt(v, 10);
+
+            if (!v || isNaN(pageNum)) {
+                field.setValue(pageData.currentPage);
+
+                return false;
+            }
+            return pageNum;
+        },
+
+
+    },
+
+
     /**
      * 响应分页输入字段的键盘事件
      * @param {字段} sender 
      * @param {事件} e 
      */
-    onPageNumberKeyup(sender, e) {
+    onPageNumberKeyUp(sender, e) {
         let me = this,
             key = e.getKey(),
             store = me.getStore(),
@@ -339,186 +496,6 @@ Ext.define('Common.ux.toolbar.Paging', {
         if (!field) return;
         curPage = me.getPageData().currentPage;
         field.setValue(curPage);
-    },
-
-    /**
-     * 单击下一页
-     * @param {触发组件} sender 
-     */
-    onNextPageTap(sender) {
-        let me = this,
-            store = me.getStore(),
-            pageCount = me.getPageData().pageCount,
-            next = store.currentPage + 1;
-
-        if (next <= pageCount) {
-            store.nextPage();
-        }
-    },
-
-    /**
-     * 单击最后一页
-     * @param {触发组件} sender 
-     */
-    onLastPageTap(sender) {
-        let me = this,
-            last = me.getPageData().pageCount;
-        me.pagingStore.loadPage(last);
-    },
-
-    onPageSizeChange(sender, value, oldValue) {
-        let store = this.getStore();
-        store.setPageSize(value);
-        store.loadPage(1);
-    },
-
-    onStoreLoad() {
-        this.initPaging();
-    },
-
-    onStoreRefresh() {
-        this.getStore().load();
-    },
-
-    onStoreBeforeLoad() {
-        this.setItemsDisabled(0, 0, true, true);
-    },
-
-    initPaging() {
-        let me = this,
-            store = me.getStore(),
-            count = store.getCount(),
-            afterPageText = '/ {0}',
-            pageData = null,
-            currPage = 0,
-            pageCount = 0,
-            isEmpty = count === 0,
-            afterText = '',
-            pageNumber = me.getPageNumber()
-        summay = me.getSummaryComponent();
-
-        if (!isEmpty) {
-            pageData = me.getPageData();
-            currPage = pageData.currentPage;
-            pageCount = pageData.pageCount;
-
-            // Check for invalid current page.
-            if (currPage > pageCount) {
-                // If the surrent page is beyond the loaded end,
-                // jump back to the loaded end if there is a valid page count.
-                if (pageCount > 0) {
-                    store.loadPage(pageCount);
-                }
-                // If no pages, reset the page field.
-                else {
-                    pageNumber && pageNumber.reset();
-                }
-
-                return;
-            }
-
-            afterText = Ext.String.format(afterPageText, isNaN(pageCount) ? 1 : pageCount);
-        }
-        else {
-            currPage = 0;
-            pageCount = 0;
-            afterText = Ext.String.format(afterPageText, 0);
-        }
-        let pageCountCmp = me.getPageCount();
-        pageCountCmp && pageCountCmp.setHtml(afterText);
-        if (pageNumber) {
-            pageNumber.setDisabled(isEmpty)
-            pageNumber.setValue(currPage);
-        }
-
-
-        me.setItemsDisabled(currPage, pageCount, isEmpty, false);
-    },
-
-
-
-
-    doDestroy() {
-        var me = this,
-            store = me.getStore();
-
-        if (store && !store.destroyed && store.getAutoDestroy()) {
-            store.destroy();
-        }
-
-        me.destroyMembers(
-            'firstButton', 'prevButton', 'pageNumber',
-            'pageCount', 'nextButton', 'nextButton',
-            'nextButton', 'lastButton', 'refreshButton',
-            'pageSize', 'summaryComponent', 'emptyPageData'
-        );
-
-        me.callParent();
-    },
-
-    privates: {
-        /**
-         * 获取分页数据
-         */
-        getPageData() {
-            let store = this.getStore(),
-                totalCount = store.getTotalCount(),
-                pageCount = Math.ceil(totalCount / store.pageSize),
-                toRecord = Math.min(store.currentPage * store.pageSize, totalCount);
-
-            return {
-                total: totalCount,
-                currentPage: store.currentPage,
-                pageCount: Ext.Number.isFinite(pageCount) ? pageCount : 1,
-                fromRecord: ((store.currentPage - 1) * store.pageSize) + 1,
-                toRecord: toRecord || totalCount
-            };
-        },
-
-        setItemsDisabled(currPage, pageCount, isEmpty, refreshDisabled) {
-            let me = this,
-                first = me.getFirstButton(),
-                prev = me.getPrevButton(),
-                pageNumber = me.getPageNumber(),
-                pageCountCmp = me.getPageCount(),
-                next = me.getNextButton(),
-                last = me.getLastButton(),
-                refresh = me.getRefreshButton(),
-                pageSize = me.getPageSize(),
-                summay = me.getSummaryComponent();
-            first && first.setDisabled(currPage === 1 || isEmpty);
-            prev && prev.setDisabled(currPage === 1 || isEmpty);
-            next && next.setDisabled(currPage === pageCount || isEmpty);
-            last && last.setDisabled(currPage === pageCount || isEmpty);
-            pageNumber && pageNumber.setDisabled(pageCount === 1 || isEmpty);
-            pageCountCmp && pageCountCmp.setDisabled(false);
-            pageSize && pageSize.setDisabled(isEmpty);
-            refresh && refresh.setDisabled(refreshDisabled);
-            summay && summay.setDisabled(false);
-
-        },
-
-        /**
-         * 从分页输入字段获取页数
-         * @param {分页数据} pageData 
-         */
-        readPageFromInput(pageData) {
-            let field = this.getPageNumber(),
-                pageNum = false,
-                v;
-            if (!field) return pageNum;
-            v = field.getValue();
-            pageNum = parseInt(v, 10);
-
-            if (!v || isNaN(pageNum)) {
-                field.setValue(pageData.currentPage);
-
-                return false;
-            }
-            return pageNum;
-        },
-
-
     }
 
 
