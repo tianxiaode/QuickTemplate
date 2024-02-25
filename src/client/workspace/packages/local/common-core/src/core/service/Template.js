@@ -3,6 +3,8 @@ Ext.define('Common.core.service.Template', {
     singleton: true,
 
     templates:{},
+
+    fn:['highlight'],
     
 
     flag: '<span class="x-fa fa-flag text-info"></span>',
@@ -53,7 +55,7 @@ Ext.define('Common.core.service.Template', {
 
     destroy() {
         let me = this;
-        me.destroyMembers('templates')
+        me.destroyMembers('templates', 'fn')
     },
 
 

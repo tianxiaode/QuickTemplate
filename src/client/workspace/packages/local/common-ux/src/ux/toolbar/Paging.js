@@ -11,7 +11,8 @@ Ext.define('Common.ux.toolbar.Paging', {
 
     mixins:[
         'Common.mixin.component.Refresh',
-        'Common.mixin.component.CountMessage'
+        'Common.mixin.component.CountMessage',
+        'Common.mixin.data.Store'
     ],
 
     classCls: Ext.baseCSSPrefix + 'pagingtoolbar',
@@ -213,13 +214,15 @@ Ext.define('Common.ux.toolbar.Paging', {
                 return;
             }
 
-            me.storeListeners = store.on({
-                scope: me,
-                destroyable: true,
-                load: me.onStoreLoad,
-                beforeLoad: me.onStoreBeforeLoad,
-                //refresh: me.onStoreRefresh
-            });
+            me.initStoreListeners('load', 'beforeLoad');
+
+            // me.storeListeners = store.on({
+            //     scope: me,
+            //     destroyable: true,
+            //     load: me.onStoreLoad,
+            //     beforeLoad: me.onStoreBeforeLoad,
+            //     //refresh: me.onStoreRefresh
+            // });
 
             if (store.isLoaded() && !store.hasPendingLoad()) {
                 me.initPaging();
@@ -287,7 +290,7 @@ Ext.define('Common.ux.toolbar.Paging', {
         this.initPaging();
     },
 
-    onStoreRefresh() {
+    onRefreshStore() {
         this.getStore().load();
     },
 

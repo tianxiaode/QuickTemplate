@@ -5,6 +5,7 @@ Ext.define('Common.app.Application', {
 
     requires:[
         'Common.core.util.Format',
+        'Common.core.service.Template',
         'Common.core.service.Config',
         'Common.core.service.AccessControl',
         'Common.localized.Localized',

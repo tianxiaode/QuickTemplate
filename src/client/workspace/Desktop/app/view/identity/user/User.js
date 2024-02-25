@@ -6,14 +6,14 @@ Ext.define('Desktop.view.identity.user.User', {
         'Common.data.store.identity.Users'
     ],
 
-    paging: true,
+    //paging: true,
     list:{
         store:{ type: 'users' },
         columns:[
             { 
                 dataIndex: 'userName', flex:1,
                 cell:{  encodeHtml: false,},
-                tpl: `{userName:this.listHighlight(values, 'name')} ({fullName})`
+                tpl: `{userName:this.highlight} ({fullName})`
             },
             { 
                 dataIndex: 'email', flex:1,

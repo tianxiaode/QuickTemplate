@@ -6,8 +6,4 @@ Ext.define('Common.overrides.dataview.Abstract', {
         me.setLoadingText(I18N.get('LoadingText'))
     }
 
-    // applyItemTpl(config) {
-    //     return Template.getTplWithScope(config, this);
-    // },
-
 });
