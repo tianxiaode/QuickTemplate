@@ -76,6 +76,11 @@ Ext.define('Common.core.util.Logger', {
         this.log(this.levelMap.error, ...args);
     },
 
+    raise(...args){
+        this.getLogger().trace(...args);
+        throw new Error('Raise');
+    },
+
     destroy() {
         let me = this;
         me.destroyMembers('levelMap', 'levels', 'currentClass');

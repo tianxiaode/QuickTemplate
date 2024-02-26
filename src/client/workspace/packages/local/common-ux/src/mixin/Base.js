@@ -1,18 +1,13 @@
-Ext.define('Common.mixin.Component',{
+Ext.define('Common.mixin.Base', {
     extend: 'Ext.Mixin',
 
     mixinConfig: {
-        configs: true,
+        configs:true,
         before:{
-            initialize: 'initialize',
             doDestroy: 'doDestroy'
         }
     },
 
 
-    initialize(){},
-
     doDestroy(){}
-
-
-})
+});

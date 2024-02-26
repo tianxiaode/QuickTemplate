@@ -1,5 +1,5 @@
 Ext.define('Common.mixin.component.Refresh', {
-    extend: 'Common.mixin.component.Base',
+    extend: 'Common.mixin.Component',
 
     requires: [
         'Common.ux.button.Refresh'

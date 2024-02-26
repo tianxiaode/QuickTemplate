@@ -1,12 +1,5 @@
 Ext.define('Common.mixin.Searchable', {
-    extend: 'Ext.Mixin',
-
-    mixinConfig: {
-        configs: true,
-        before:{
-            doDestroy: 'doDestroy'
-        }
-    },
+    extend: 'Common.mixin.Base',
 
     config:{
         searchFields: null, //所有查询字段

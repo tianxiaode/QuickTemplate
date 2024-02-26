@@ -33,6 +33,7 @@ Ext.define('Common.localized.Localized', {
     },
 
     get(key, resourceName, entityName) {
+        if(Ext.isNumeric(key)) return key;
         resourceName = Format.capitalize(resourceName);
         entityName = Format.capitalize(entityName);
         key = Format.capitalize(key);

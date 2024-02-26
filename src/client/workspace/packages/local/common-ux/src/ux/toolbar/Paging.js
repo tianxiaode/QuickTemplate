@@ -6,13 +6,13 @@ Ext.define('Common.ux.toolbar.Paging', {
         'Ext.field.Select',
         'Ext.data.Store',
         'Ext.data.StoreManager',
-        'Ext.field.Number'
+        'Ext.field.Number',
+        'Common.ux.button.Option'
     ],
 
     mixins:[
         'Common.mixin.component.Refresh',
-        'Common.mixin.component.CountMessage',
-        'Common.mixin.data.Store'
+        'Common.mixin.component.CountMessage'
     ],
 
     classCls: Ext.baseCSSPrefix + 'pagingtoolbar',
@@ -43,7 +43,7 @@ Ext.define('Common.ux.toolbar.Paging', {
         return Ext.apply({
             xtype: 'button',
             weight: 100,
-            isPageing: true,
+            isPaging: true,
             disabled: true,
             iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-first',
             handler: this.onFirstPageTap,
@@ -63,7 +63,7 @@ Ext.define('Common.ux.toolbar.Paging', {
         return Ext.apply({
             xtype: 'button',
             weight: 200,
-            isPageing: true,
+            isPaging: true,
             disabled: true,
             iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-prev',
             handler: this.onPrevPageTap,
@@ -85,7 +85,7 @@ Ext.define('Common.ux.toolbar.Paging', {
             xtype: 'numberfield',
             weight: 300,
             width: 60,
-            isPageing: true,
+            isPaging: true,
             disabled: true,
             value: 1,
             autoLabel: false,
@@ -109,7 +109,7 @@ Ext.define('Common.ux.toolbar.Paging', {
     createPageCount(config) {
         return Ext.apply({
             xtype: 'component',
-            isPageing: true,
+            isPaging: true,
             weight: 400,
             userCls: 'mx-2',
             disabled: true,
@@ -128,7 +128,7 @@ Ext.define('Common.ux.toolbar.Paging', {
     createNextButton(config) {
         return Ext.apply({
             xtype: 'button',
-            isPageing: true,
+            isPaging: true,
             weight: 500,
             disabled: true,
             iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-next',
@@ -148,7 +148,7 @@ Ext.define('Common.ux.toolbar.Paging', {
     createLastButton(config) {
         return Ext.apply({
             xtype: 'button',
-            isPageing: true,
+            isPaging: true,
             weight: 600,
             disabled: true,
             iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-last',
@@ -168,12 +168,12 @@ Ext.define('Common.ux.toolbar.Paging', {
     createPageSize(config) {
         let me = this;
         return Ext.apply({
-            xtype: 'selectfield',
-            flex: 1,
+            xtype: 'uxoptionbutton',
             weight: 700,
-            isPageing: true,
+            isPaging: true,
             disabled: true,
             autoLabel: false,
+            options: [25, 50, 100],
             listeners: {
                 change: me.onPageSizeChange,
                 scope: me
@@ -214,15 +214,14 @@ Ext.define('Common.ux.toolbar.Paging', {
                 return;
             }
 
-            me.initStoreListeners('load', 'beforeLoad');
+            me.refreshPageSize(store.getPageSize())
 
-            // me.storeListeners = store.on({
-            //     scope: me,
-            //     destroyable: true,
-            //     load: me.onStoreLoad,
-            //     beforeLoad: me.onStoreBeforeLoad,
-            //     //refresh: me.onStoreRefresh
-            // });
+            me.storeListeners = store.on({
+                scope: me,
+                destroyable: true,
+                load: me.onStoreLoad,
+                beforeload: me.onStoreBeforeLoad
+            });
 
             if (store.isLoaded() && !store.hasPendingLoad()) {
                 me.initPaging();
@@ -230,6 +229,17 @@ Ext.define('Common.ux.toolbar.Paging', {
         }
 
 
+    },
+
+    updateRefreshButton(config) {
+        config.setHandler(this.onRefreshStore.bind(this));
+        config && this.add(config);
+    },
+
+    refreshPageSize(pageSize){
+        let cmp = this.getPageSize();
+        cmp.setText(pageSize);
+        cmp.setValue(pageSize);
     },
 
     /**
@@ -286,16 +296,15 @@ Ext.define('Common.ux.toolbar.Paging', {
     },
 
     onStoreLoad() {
-        Logger.debug(this.onStoreLoad)
         this.initPaging();
-    },
-
-    onRefreshStore() {
-        this.getStore().load();
     },
 
     onStoreBeforeLoad() {
         this.setItemsDisabled(0, 0, true, true);
+    },
+
+    onRefreshStore(){
+        this.getStore().load();
     },
 
     initPaging() {
@@ -345,7 +354,7 @@ Ext.define('Common.ux.toolbar.Paging', {
             pageNumber.setDisabled(isEmpty)
             pageNumber.setValue(currPage);
         }
-
+        
         countMessage.setCount(count);
 
 
@@ -367,8 +376,7 @@ Ext.define('Common.ux.toolbar.Paging', {
             'firstButton', 'prevButton', 'pageNumber',
             'pageCount', 'nextButton', 'nextButton',
             'nextButton', 'lastButton', 
-            'pageSize', 'emptyPageData',
-            'storeListeners'
+            'pageSize', 'emptyPageData'
         );
 
         me.callParent();

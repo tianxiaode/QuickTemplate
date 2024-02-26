@@ -1,5 +1,5 @@
 Ext.define('Common.mixin.component.field.TextField', {
-    extend: 'Common.mixin.component.Base',
+    extend: 'Common.mixin.Component',
 
     config: {
         textField: {}

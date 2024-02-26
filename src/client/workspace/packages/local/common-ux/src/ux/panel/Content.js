@@ -16,9 +16,9 @@ Ext.define('Common.ux.panel.Content', {
         'Common.mixin.crud.ButtonAction',
         'Common.mixin.crud.Batch',
         'Common.mixin.crud.CountMessage',
+        'Common.mixin.data.Store',
         'Common.mixin.crud.Selectable',
         'Common.mixin.Searchable',
-        'Common.mixin.data.Store',
     ],
 
     layout: 'vbox',
@@ -90,22 +90,18 @@ Ext.define('Common.ux.panel.Content', {
         this.add(config);
     },
 
-    onRefreshStore() {
-        this.getStore().load();
-    },
-
-
     doDestroy() {
         let me = this;
         me.buttons = null;
         me.searchFields = null;
-        me.destroyMembers('actionToolbar', 'grid', 'paging', 'searchTask');
+        me.destroyMembers('actionToolbar', 'grid', 'paging');
     },
 
     privates: {       
 
-        getCountMessage(){            
-            return this.getToolbar().getCountMessage();
+        getCountMessage(){
+            let toolbar = this.getToolbar();
+            return toolbar && toolbar.getCountMessage();
         },
 
         getStore() {
@@ -122,13 +118,10 @@ Ext.define('Common.ux.panel.Content', {
             me.setEntityName(entityName);
             me.setPermissionGroup(resourceName);
             me.initButtons(me.getToolbar(), me.permissions);
-            me.initSelectable();
             me.setSearchFields(me.getToolbar().query('[isSearch]'));
-            me.initStoreListeners('load', 'beforeLoad');
             paging && paging.setStore(store);
             (autoLoad === 'search') && me.doSearch();
             (autoLoad === true) && me.onRefreshStore();
-            Logger.debug(this.onStoreChange, me.getPermissionGroup(), me.permissions);
         }
 
 

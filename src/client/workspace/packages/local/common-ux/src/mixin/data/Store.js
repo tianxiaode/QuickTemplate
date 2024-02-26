@@ -1,27 +1,25 @@
 Ext.define('Common.mixin.data.Store', {
-    extend: 'Ext.Mixin',
+    extend: 'Common.mixin.Listener',
 
     mixinConfig: {
-        configs: true,
-        before: {
-            doDestroy: 'doDestroy'
+        configs:true,
+        before:{
+            doDestroy: 'doDestroy',
         }
+    },
+
+    config:{
+        storeEventListeners: ['load', 'beforeLoad'],
     },
 
     storeListeners: null,
 
-    initStoreListeners() {
-        let me = this,
-            store = me.getStore(),
-            listeners = { scope: me, destroyable: true };
-        Ext.each(arguments, name => {
-            let fn = `onStore${Ext.String.capitalize(name)}`;
-            me.superclass[fn] = () =>{};
-            listeners[name.toLocaleLowerCase()] = me[fn];
-        });
-        Logger.debug(this.initStoreListeners, listeners);
-        me.storeListeners = store.on(listeners);
+    updateStoreEventListeners(events){
+        let store = this.getStore();
+        if(!store) return;
+        this.addEventListeners(store,events, 'Store', 'storeListeners');
     },
+
 
     /**
      * 存储加载后的处理
@@ -39,7 +37,9 @@ Ext.define('Common.mixin.data.Store', {
      */
     onStoreBeforeLoad(store) {
         if (Ext.isEmpty(store.getProxy().getUrl())) return false;
-        this.doDeselectAll();
+        // let list = this.getList();
+        // Logger.debug(this.onStoreBeforeLoad, list)
+        // list && list.deselectAll();
         return true;
     },
 

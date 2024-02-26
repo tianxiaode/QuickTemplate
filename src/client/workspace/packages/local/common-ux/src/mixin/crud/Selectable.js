@@ -1,17 +1,29 @@
 Ext.define('Common.mixin.crud.Selectable',{
-    extend: 'Common.mixin.crud.Base',
+    extend: 'Common.mixin.Listener',
+
+    requires:[
+        'Common.mixin.crud.Button'
+    ],
+
+
+    mixinConfig: {
+        configs:true,
+        before:{
+            doDestroy: 'doDestroy'
+        },
+        after:{
+            onStoreBeforeLoad: 'doDeselectAll'
+        }
+    },
+
+    config:{
+        selectEventListeners: ['select', 'deselect']
+    },
 
     listSelectListeners: null,
 
-    initSelectable(){
-        let me = this,
-            list = me.getList();
-        me.listSelectListeners= list.on({
-            destroyable: true,
-            scope: me,
-            select: me.onListSelect,
-            deselect: me.onListDeSelect
-        })
+    updateSelectEventListeners(events){
+        this.addEventListeners(this.getList(), events, 'list', 'listSelectListeners');
     },
 
         /**
@@ -22,7 +34,8 @@ Ext.define('Common.mixin.crud.Selectable',{
      */    
     onListSelect(sender, selected, eOpts ){
         let me = this;
-        me.refresButtons(true);
+        Logger.debug(this.onListSelect, selected)
+        me.refreshButtons(me.hasSelection(false));
         me.afterListSelect && me.afterListSelect(selected);
     },
 
@@ -32,21 +45,22 @@ Ext.define('Common.mixin.crud.Selectable',{
      * @param {选择的记录} records 
      * @param {事件选项} eOpts 
      */
-    onListDeSelect(sender, records, eOpts){
+    onListDeselect(sender, records, eOpts){
         let me = this;
-        me.refresButtons(me.hasSelection(true));
-        me.afterListDeselect && me.afterListDeselect(selected);
+        me.refreshButtons(me.hasSelection(false));
+        me.afterListDeselect && me.afterListDeselect(records);
     },
 
     /**
      * 取消全部选择
      */
     doDeselectAll(){
-        this.getList().deselectAll();
+        let list = this.getList();
+        list && list.deselectAll();
     },
     
     hasSelection(alert){
-        let result = this.getlist().hasSelection();
+        let result = this.getList().hasSelection();
         !result && alert && MsgBox.alert(null, I18N.get('NoSelection'));
         return result;
     },

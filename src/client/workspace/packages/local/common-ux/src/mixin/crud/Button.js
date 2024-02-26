@@ -1,12 +1,5 @@
 Ext.define('Common.mixin.crud.Button', {
-    extend: 'Ext.Mixin',
-
-    mixinConfig: {
-        configs: true,
-        before: {
-            doDestroy: 'doDestroy'
-        }
-    },
+    extend: 'Common.mixin.Base',
 
     config: {
         crudButtons: null
@@ -32,9 +25,9 @@ Ext.define('Common.mixin.crud.Button', {
     /**
      * 初始化CRUD按钮的显示
      */
-    initButtons(contianner, permissions) {
+    initButtons(container, permissions) {
         let me = this;
-        me.setCrudButtons(contianner.query('[isCrud]'));
+        me.setCrudButtons(container.query('[isCrud]'));
         Logger.debug(me.initButtons, me.getCrudButtons());
         me.setButtonHidden('create', !permissions.create);
         me.setButtonHidden('update', !permissions.update);
@@ -50,7 +43,7 @@ Ext.define('Common.mixin.crud.Button', {
     /**
      * 更新CRUD按钮状态
      */
-    refresButtons(hasSelected) {
+    refreshButtons(hasSelected) {
         let me = this,
             allowUpdate = me.allowUpdate(hasSelected),
             allowDelete = me.allowDelete(hasSelected);

@@ -1,5 +1,5 @@
 Ext.define('Common.mixin.component.Crud', {
-    extend: 'Common.mixin.component.Base',
+    extend: 'Common.mixin.Component',
 
     requires: [
         'Common.ux.button.Create',
@@ -12,6 +12,11 @@ Ext.define('Common.mixin.component.Crud', {
         updateButton: null,
         deleteButton: {},
     },
+
+    beforeInitialize(){
+        console.log('beforeInitialize')
+    },
+
 
     createCreateButton(config) {
         let weight = Ext.platformTags.desktop ? 100 : 300;

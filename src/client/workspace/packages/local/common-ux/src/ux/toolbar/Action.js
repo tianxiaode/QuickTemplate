@@ -30,6 +30,7 @@ Ext.define('Common.ux.toolbar.Action', {
         return Ext.apply({
             xtype: 'toolbar',
             weight: 100,
+            weighted: true,
             ownerCmp: this,
         }, config);
     },
@@ -74,18 +75,8 @@ Ext.define('Common.ux.toolbar.Action', {
         me.getToolbar().add(config);
     },
 
-
-
-    /**
-     * 初始化CRUD按钮的显示
-     */
-
-    setCount(count){
-        this.getCountMessage().setCount(count);
-    },
-
     doDestroy() {
-        this.destroyMembers('buttons');
+        this.destroyMembers('toolbar');
     },
 
     privates:{

@@ -6,23 +6,23 @@ Ext.define('Desktop.view.identity.user.User', {
         'Common.data.store.identity.Users'
     ],
 
-    //paging: true,
+    paging: true,
     list:{
         store:{ type: 'users' },
         columns:[
             { 
                 dataIndex: 'userName', flex:1,
-                cell:{  encodeHtml: false,},
+                cell:{  encodeHtml: false},
                 tpl: `{userName:this.highlight} ({fullName})`
             },
             { 
                 dataIndex: 'email', flex:1,
-                renderer: Format.gridHighlight,
-                cell:{  encodeHtml: false,},
+                renderer: 'highlightRenderer',
+                cell:{  encodeHtml: false},
             },
             { 
                 dataIndex: 'phoneNumber', flex:1,
-                renderer: Format.gridHighlight,
+                renderer: Format.highlightRenderer,
                 cell:{  encodeHtml: false,},
             },
             {

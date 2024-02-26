@@ -2,11 +2,17 @@
     background-color: #fff;
 }
 .bg-content{
-    background-color: var(--background-color);
+    background-color: $background-color;
 }
 .color-base{
-    color: var(--base-color);
+    color: $base-color;
 }
 .color-alert{
-    color: var(--alert-color);
+    color: $alert-color;
+}
+.color-warning{
+    color: $accent-color;
+}
+.color-success{
+    color: $confirm-color;
 }

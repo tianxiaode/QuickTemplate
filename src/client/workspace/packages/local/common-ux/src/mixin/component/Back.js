@@ -1,5 +1,5 @@
 Ext.define('Common.mixin.component.Back', {
-    extend: 'Common.mixin.component.Base',
+    extend: 'Common.mixin.Component',
 
     config: {
         backButton: {}

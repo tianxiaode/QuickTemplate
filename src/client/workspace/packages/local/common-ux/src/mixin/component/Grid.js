@@ -1,5 +1,5 @@
 Ext.define('Common.ux.crud.container.mixin.Grid',{
-    extend: 'Common.mixin.component.Base',
+    extend: 'Common.mixin.Component',
 
     requires:[
         'Ext.grid.column.RowNumberer',

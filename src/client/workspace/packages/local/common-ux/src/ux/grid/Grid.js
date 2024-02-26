@@ -16,6 +16,8 @@ Ext.define('Common.ux.grid.Grid',{
         checkbox: true,
         mode: "multi"
     }
+    
+
 
 })
 

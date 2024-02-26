@@ -1,5 +1,5 @@
 Ext.define('Common.mixin.component.TabBar', {
-    extend: 'Common.mixin.component.Base',
+    extend: 'Common.mixin.Component',
 
     requires:[
         'Ext.tab.Bar',

@@ -1,5 +1,5 @@
 Ext.define('Common.mixin.component.field.Email', {
-    extend: 'Common.mixin.component.Base',
+    extend: 'Common.mixin.Component',
 
     requires: [
         'Ext.data.validator.Email'

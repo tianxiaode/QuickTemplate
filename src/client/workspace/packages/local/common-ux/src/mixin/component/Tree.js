@@ -1,5 +1,5 @@
 Ext.define('Common.ux.crud.container.mixin.Tree',{
-    extend: 'Common.mixin.component.Base',
+    extend: 'Common.mixin.Component',
 
     requires:[
         'Common.ux.grid.column.Action',

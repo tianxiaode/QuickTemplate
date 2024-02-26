@@ -4,11 +4,12 @@ Ext.define('Common.mixin.crud.CountMessage',{
     mixinConfig: {
         configs: true,
         after:{
-            onStoreLoad: 'onStoreLoad'
+            onStoreLoad: 'updateCountMessage'
         }
     },
         
-    onStoreLoad(store, records, successful, operation, eOpts){
+    updateCountMessage(store, records, successful, operation, eOpts){
+        Logger.debug(this.updateCountMessage)
         let countMessage = this.getCountMessage();
         countMessage && countMessage.setCount(store.getTotalCount());
     }
