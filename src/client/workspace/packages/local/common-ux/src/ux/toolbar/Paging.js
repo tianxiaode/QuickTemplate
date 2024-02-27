@@ -18,6 +18,7 @@ Ext.define('Common.ux.toolbar.Paging', {
     classCls: Ext.baseCSSPrefix + 'pagingtoolbar',
     defaultBindProperty: 'store',
     userCls: 'bg-content',
+    weighted: true,
 
     emptyPageData: {
         total: 0, //记录总数
@@ -36,7 +37,10 @@ Ext.define('Common.ux.toolbar.Paging', {
         nextButton: {},
         lastButton: {},
         pageSize: {},
-        refreshButton: { weight: 800}
+        spacer: {},
+        pageSizeText:{},
+        refreshButton: {isPaging: true},
+        countMessage:{ weight: 1100, flex: null }
     },
 
     createFirstButton(config) {
@@ -169,7 +173,7 @@ Ext.define('Common.ux.toolbar.Paging', {
         let me = this;
         return Ext.apply({
             xtype: 'uxoptionbutton',
-            weight: 700,
+            weight: 900,
             isPaging: true,
             disabled: true,
             autoLabel: false,
@@ -187,6 +191,43 @@ Ext.define('Common.ux.toolbar.Paging', {
     },
 
     updatePageSize(config) {
+        config && this.add(config);
+    },
+
+    createSpacer(config){
+        return Ext.apply({
+            xtype: 'component',
+            isPaging: true,
+            flex: 1,
+            weight: 800,
+            ownerCmp: this
+        },config)
+    },
+
+    applySpacer(config, old){
+        return Ext.updateWidget(old, config, this, 'createSpacer');
+    },
+
+    updateSpacer(config){
+        config && this.add(config);
+    },
+
+    createPageSizeText(config){
+        return Ext.apply({
+            xtype: 'component',
+            isPaging: true,            
+            weight: 1000,
+            userCls: 'mx-2',
+            html: ` ${I18N.get('item')} / ${I18N.get('page')} , `,
+            ownerCmp: this
+        },config)
+    },
+
+    applyPageSizeText(config, old){
+        return Ext.updateWidget(old, config, this, 'createPageSizeText');
+    },
+
+    updatePageSizeText(config){
         config && this.add(config);
     },
 
@@ -233,6 +274,7 @@ Ext.define('Common.ux.toolbar.Paging', {
 
     updateRefreshButton(config) {
         config.setHandler(this.onRefreshStore.bind(this));
+        config.setWeight(500);
         config && this.add(config);
     },
 
@@ -291,6 +333,7 @@ Ext.define('Common.ux.toolbar.Paging', {
 
     onPageSizeChange(sender, value, oldValue) {
         let store = this.getStore();
+        Logger.debug(this.onPageSizeChange, value);
         store.setPageSize(value);
         store.loadPage(1);
     },
@@ -319,7 +362,6 @@ Ext.define('Common.ux.toolbar.Paging', {
             afterText = '',
             pageNumber = me.getPageNumber(),
             countMessage = me.getCountMessage();
-        Logger.debug(this.initPaging, store)
 
         if (!isEmpty) {
             pageData = me.getPageData();
@@ -376,7 +418,7 @@ Ext.define('Common.ux.toolbar.Paging', {
             'firstButton', 'prevButton', 'pageNumber',
             'pageCount', 'nextButton', 'nextButton',
             'nextButton', 'lastButton', 
-            'pageSize', 'emptyPageData'
+            'pageSize', 'emptyPageData', 'spacer', 'pageSizeText'
         );
 
         me.callParent();

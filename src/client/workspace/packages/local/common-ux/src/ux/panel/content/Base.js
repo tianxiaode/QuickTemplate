@@ -1,4 +1,4 @@
-Ext.define('Common.ux.panel.Content', {
+Ext.define('Common.ux.panel.content.Base', {
     extend: 'Ext.Container',
     xtype: 'uxcontentpanel',
 

@@ -1,5 +1,5 @@
 Ext.define('Desktop.view.identity.user.User', {
-    extend: 'Common.ux.panel.Content',
+    extend: 'Common.ux.panel.content.Base',
     xtype: 'users',
 
     requires:[

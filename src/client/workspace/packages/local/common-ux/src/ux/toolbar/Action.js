@@ -26,6 +26,11 @@ Ext.define('Common.ux.toolbar.Action', {
         toolbar:{}
     },
 
+    refreshButton:{
+        isCrud: true,
+        crudName: 'refresh',
+    },
+
     createToolbar(config) {
         return Ext.apply({
             xtype: 'toolbar',
