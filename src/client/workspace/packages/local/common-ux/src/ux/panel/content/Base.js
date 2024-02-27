@@ -18,7 +18,12 @@ Ext.define('Common.ux.panel.content.Base', {
         'Common.mixin.crud.CountMessage',
         'Common.mixin.data.Store',
         'Common.mixin.crud.Selectable',
+        'Common.mixin.crud.ChildTap',
+        'Common.mixin.crud.ChildLongPress',
+        'Common.mixin.crud.DoubleTapToEdit',
         'Common.mixin.Searchable',
+        'Common.mixin.plugin.CellEditing',
+        'Common.mixin.plugin.ListPaging',
     ],
 
     layout: 'vbox',
@@ -28,6 +33,8 @@ Ext.define('Common.ux.panel.content.Base', {
     userCls: 'bg-content',
 
     autoLoad: true,
+
+    cellEditing: {},
 
     config: {
         toolbar: {
@@ -41,6 +48,8 @@ Ext.define('Common.ux.panel.content.Base', {
         },
         paging: null
     },
+
+    listPaging: {},
 
     createToolbar(config) {
         return Ext.apply({ ownerCmp: this }, config);
@@ -87,7 +96,8 @@ Ext.define('Common.ux.panel.content.Base', {
             refreshButton = toolbar.getRefreshButton();
         countMessage && countMessage.setHidden(true);
         refreshButton && refreshButton.setHidden(true);
-        this.add(config);
+        me.setListPaging(null);
+        me.add(config);
     },
 
     doDestroy() {

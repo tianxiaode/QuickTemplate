@@ -1,10 +1,24 @@
 Ext.define('Common.mixin.crud.ChildTap',{
-    extend: 'Common.mixin.crud.Base',
+    extend: 'Common.mixin.Base',
 
-    initList(){
+    config:{
+        childTap: false
+    },
+
+    childTapListener: null,
+
+    updateChildTap(value){
         let me = this,
-            list = me.list;
-        list.childTap && list.on('childtap', me.onListChildTap, me);        
+            list = me.getList() || me;
+        if(value){
+            me.childTapListener = list.on({
+                childtap: me.onListChildTap,
+                scope: me,
+                destroyable: true
+            })
+        }else{
+            Ext.destroy(me.childTapListener);
+        }
     },
 
     onListChildTap(sender, location, eOpts){
@@ -40,9 +54,11 @@ Ext.define('Common.mixin.crud.ChildTap',{
             return;
         }
 
-        me.doListChildTap && me.doListChildTap(me, record, target, classList);
+        me.doListChildTap && me.doListChildTap(me, record, target, classList, location);
+    },
+
+    doDestroy() {
+        Ext.destroy(this.childTapListener);
     }
-
-
 
 })

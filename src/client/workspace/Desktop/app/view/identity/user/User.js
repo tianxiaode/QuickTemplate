@@ -6,7 +6,6 @@ Ext.define('Desktop.view.identity.user.User', {
         'Common.data.store.identity.Users'
     ],
 
-    paging: true,
     list:{
         store:{ type: 'users' },
         columns:[
@@ -19,6 +18,7 @@ Ext.define('Desktop.view.identity.user.User', {
                 dataIndex: 'email', flex:1,
                 renderer: 'highlightRenderer',
                 cell:{  encodeHtml: false},
+                editor:{ xtype: 'textfield' },
             },
             { 
                 dataIndex: 'phoneNumber', flex:1,

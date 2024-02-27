@@ -1,14 +1,33 @@
 Ext.define('Common.mixin.crud.DoubleTapToEdit',{
-    extend: 'Common.mixin.crud.Base',
+    extend: 'Common.mixin.Base',
 
-    initList(){
+    config:{
+        doubleTapToEdit: false,
+    },
+
+    doubleTapToEditListener: null,
+
+    updateDoubleTapToEdit(value){
         let me = this,
-            list = me.list;
-        list.doubleTapToEdit && list.on('childdoubletap', me.onChildDoubleTap, me);
+            list = me.getList() || me;
+        if(value){
+            me.doubleTapToEditListener = list.on({
+                childdoubletap: me.onChildDoubleTap,
+                scope: me,
+                destroyable: true
+            })
+        }else{
+            Ext.destroy(me.doubleTapToEditListener);
+        }
     },
 
     onChildDoubleTap(sender, location, eOpts){
         this.doUpdate(location.record);
+    },
+
+    doDestroy() {
+        Ext.destroy(this.doubleTapToEditListener);
     }
+
 
 })
