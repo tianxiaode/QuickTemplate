@@ -3,9 +3,9 @@ Ext.define('Common.ux.grid.Grid',{
     xtype: 'uxgrid',
 
     requires:[
-        'Ext.dataview.plugin.ListPaging',
         'Common.ux.grid.column.CheckChange',
         'Common.ux.grid.column.Date',
+        'Common.core.util.Format'
     ],
 
     config:{
@@ -15,7 +15,11 @@ Ext.define('Common.ux.grid.Grid',{
     selectable: {
         checkbox: true,
         mode: "multi"
-    }
+    },
+
+    rowNumbers: true
+
+
     
 
 

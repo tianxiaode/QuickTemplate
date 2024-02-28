@@ -20,6 +20,7 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      * 执行创建操作，可重写
      */
     doCreate() {
+        Ext.History.add(`${this.getPluralizeEntityName()}/add`, false);
     },
 
     /**
@@ -113,7 +114,10 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     onCreateOrUpdateViewSaved(sender, action, after, record) {
         this.onRefreshStore();
     },
-
+    
+    getPluralizeEntityName(){
+        return Ext.util.Inflector.pluralize(this.getEntityName());
+    }
 
 
 })

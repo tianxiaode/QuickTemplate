@@ -2,11 +2,13 @@ Ext.define('Common.overrides.grid.column.Cloumn', {
     override: 'Ext.grid.column.Column',
 
     initialize(){
-        let me = this;
-        me.callParent();        
-        if(me.xtype === 'selectioncolumn') return;
+        let me = this,
+            grid = me.getGrid(),
+            store = grid && grid.getStore();
+        me.callParent();
 
-        let store = me.getGrid().getStore();
+        if(!store) return;
+
         me.setSortable(store.sortFields.has(me.getDataIndex()));
     },
 

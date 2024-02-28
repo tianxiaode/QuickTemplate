@@ -2,15 +2,6 @@ Ext.define('Common.ux.panel.content.Base', {
     extend: 'Ext.Container',
     xtype: 'uxcontentpanel',
 
-    requires: [
-        'Common.ux.toolbar.Action',
-        'Common.ux.toolbar.Paging',
-        'Common.core.util.Format',
-        'Common.ux.grid.Grid',
-        'Common.ux.grid.Tree',
-        'Common.ux.dataview.List'
-    ],
-
     mixins:[
         'Common.mixin.crud.Button',
         'Common.mixin.crud.ButtonAction',
@@ -24,6 +15,9 @@ Ext.define('Common.ux.panel.content.Base', {
         'Common.mixin.Searchable',
         'Common.mixin.plugin.CellEditing',
         'Common.mixin.plugin.ListPaging',
+        'Common.mixin.component.Toolbar',
+        'Common.mixin.component.List',
+        'Common.mixin.component.Paging',
     ],
 
     layout: 'vbox',
@@ -51,41 +45,9 @@ Ext.define('Common.ux.panel.content.Base', {
 
     listPaging: {},
 
-    createToolbar(config) {
-        return Ext.apply({ ownerCmp: this }, config);
-    },
-
-    applyToolbar(config, old) {
-        return Ext.updateWidget(old, config, this, 'createToolbar');
-    },
-
-    updateToolbar(config) {
-        config && this.add(config);
-    },
-
-    createList(config) {
-        return Ext.apply({ ownerCmp: this }, config);
-    },
-
-    applyList(config, old) {
-        return Ext.updateWidget(old, config, this, 'createList');
-    },
-
     updateList(config) {
         this.onStoreChange(config.getStore());
         config && this.add(config);
-    },
-
-    createPaging(config) {
-        return Ext.apply({
-            xtype: 'uxpagingtoolbar',
-            weight: 300,
-            ownerCmp: this
-        }, config);
-    },
-
-    applyPaging(config, old) {
-        return Ext.updateWidget(old, config, this, 'createPaging');
     },
 
     updatePaging(config) {
@@ -100,12 +62,7 @@ Ext.define('Common.ux.panel.content.Base', {
         me.add(config);
     },
 
-    doDestroy() {
-        let me = this;
-        me.buttons = null;
-        me.searchFields = null;
-        me.destroyMembers('actionToolbar', 'grid', 'paging');
-    },
+    doDestroy() {},
 
     privates: {       
 

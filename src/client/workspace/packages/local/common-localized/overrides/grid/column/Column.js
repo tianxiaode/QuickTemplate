@@ -8,16 +8,18 @@ Ext.define('Common.overrides.grid.column.Column',{
     },
 
     onLocalized(){
-        let me = this;
-        if(me.xtype === 'selectioncolumn') return;
+        let me = this,
+            grid = me.getGrid(),
+            store = grid && grid.getStore();
 
-        let store = me.getGrid().getStore(),
-            langTextFields = store.langTextFields,
+        if(!store) return;
+
+        let langTextFields = store.langTextFields,
             dataIndex = me.getDataIndex(),
             resourceName = store.getResourceName(),
             entityName = store.getEntityName();
         if(me.getAutoText()){
-            name = Ext.util.Format.capitalize( langTextFields.get(dataIndex) || dataIndex);
+            let name = Ext.util.Format.capitalize( langTextFields.get(dataIndex) || dataIndex);
             me.setLangText(name);
         }
         let text = me.getLocalizedText(me.getLangText(), resourceName, entityName);

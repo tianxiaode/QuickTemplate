@@ -1,6 +1,11 @@
 Ext.define('Common.mixin.component.Toolbar', {
     extend: 'Common.mixin.Component',
 
+    requires: [
+        'Common.ux.toolbar.Action'
+    ],
+
+
     config: {
         toolbar: null
     },

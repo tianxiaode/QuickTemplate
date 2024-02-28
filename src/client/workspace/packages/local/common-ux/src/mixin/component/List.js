@@ -1,7 +1,9 @@
-Ext.define('Common.ux.crud.container.mixin.List',{
+Ext.define('Common.mixin.component.List',{
     extend: 'Common.mixin.Component',
 
     requires:[
+        'Common.ux.grid.Grid',
+        'Common.ux.grid.Tree',
         'Common.ux.dataview.List'
     ],
 
@@ -11,19 +13,7 @@ Ext.define('Common.ux.crud.container.mixin.List',{
 
 
     createList(config) {
-        return Ext.apply({
-            xtype: 'uxlist',
-            isCrudList: true,
-            hasPullRefresh: true,
-            childTap: true,
-            childLongPress: false,
-            weight: 200,
-            bind:{ store: '{mainStore}'},    
-            selectable:{
-                mode: 'MULTI'
-            },
-            ownerCmp: this,
-        }, config);
+        return Ext.apply({ ownerCmp: this }, config);
     },
 
     applyList(config, old) {
@@ -31,10 +21,7 @@ Ext.define('Common.ux.crud.container.mixin.List',{
     },
 
     updateList(config){
-        if(!config) return;
-        let me = this,
-            container = (me.getContainer && me.getContainer()) || me;
-        container.add(config);
+        config && this.add(config);
     },
 
     doDestroy(){
