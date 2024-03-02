@@ -17,11 +17,11 @@ Ext.define('Common.view.home.HomeController',{
         ':xtype': {
             before : 'onBeforeRoute',
             action: 'handleRoute',
-        },
-        ':xtype/:id': {
-            before : 'onBeforeRoute',
-            action: 'onShowDialog',
         }
+        // ':xtype/:id': {
+        //     before : 'onBeforeRoute',
+        //     action: 'onShowDialog',
+        // }
     },
 
     onBeforeRoute(hash, action){
@@ -116,22 +116,22 @@ Ext.define('Common.view.home.HomeController',{
         ViewService.showPage(ViewService.pages.page404);
     },
 
-    onShowDialog(xtype, op){
-        let isEdit = op !== 'add';
+    // onShowDialog(xtype, op){
+    //     let isEdit = op !== 'add';
 
-        // let me = this,
-        //     params = ViewMgr.getParams(xtype),
-        //     container = Ext.platformTags.phone ? me.getView() : null;
-        // if(Ext.Object.isEmpty(params)) {
-        //     Ext.History.back();
-        //     return;
-        // }
-        // me.currentToken = Ext.History.getToken();
-        // let view = ViewMgr.showView(xtype,params.type, params.config, true, container);
-        // if(op === 'more' && params.record) {
-        //     view.setRecord(params.record);
-        // };
-    },
+    //     // let me = this,
+    //     //     params = ViewMgr.getParams(xtype),
+    //     //     container = Ext.platformTags.phone ? me.getView() : null;
+    //     // if(Ext.Object.isEmpty(params)) {
+    //     //     Ext.History.back();
+    //     //     return;
+    //     // }
+    //     // me.currentToken = Ext.History.getToken();
+    //     // let view = ViewMgr.showView(xtype,params.type, params.config, true, container);
+    //     // if(op === 'more' && params.record) {
+    //     //     view.setRecord(params.record);
+    //     // };
+    // },
 
     onShowPages(){
         let xtype = Ext.History.getToken();

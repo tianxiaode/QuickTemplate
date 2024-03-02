@@ -20,8 +20,15 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      * 执行创建操作，可重写
      */
     doCreate() {
-        Ext.History.add(`${this.getPluralizeEntityName()}/add`, false);
+        let me = this,
+            entityName = me.getEntityName();
+        Ext.History.add(`${me.getPluralizeEntityName()}/add`);
+        ViewService.showDialog('add', `${entityName.toLocaleLowerCase()}edit`, me.onAfterCreate.bind(me), me.onCancelCreate.bind(me));
     },
+
+    onAfterCreate(){},
+
+    onCancelCreate(){},
 
     /**
      * 单击更新按钮
@@ -41,12 +48,18 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      */
     onBeforeUpdate() { },
 
+    onAfterUpdate(){},
+    onCancelUpdate(){},
 
     /**
      * 执行更新操作
      */
     doUpdate() {
-        //this.onShowView('update', selection,this.getCreateOrUpdateViewEvents());
+        let me = this,
+            entityName = me.getEntityName(),
+            id;
+        Ext.History.add(`${me.getPluralizeEntityName()}/${id}`);
+        ViewService.showDialog('edit', `${entityName.toLocaleLowerCase()}edit`, me.onAfterUpdate.bind(me), me.onCancelUpdate.bind(me));
     },
 
     /**
@@ -86,35 +99,6 @@ Ext.define('Common.mixin.crud.ButtonAction', {
         this.onRefreshStore();
     },
 
-    getCreateOrUpdateViewEvents() {
-        return {
-            saved: this.onCreateOrUpdateViewSaved,
-            canceledit: this.onCreateOrUpdateCancelEdit
-        }
-    },
-
-    /**
-     * 新建或更新视图后的操作
-     * @param {对话框} dialog 
-     * @param {是否保存成功} isSavedSuccess 
-     * @param {是否保存了新记录} hasNewInSaved 
-     */
-    onCreateOrUpdateCancelEdit(sender, hasNew) {
-        if (hasNew) {
-            this.onRefreshStore();
-        }
-    },
-
-    /**
-     * 新增记录后操作
-     * @param {编辑视图}} sender 
-     * @param {后续操作} action 
-     * @param {新增的记录} record 
-     */
-    onCreateOrUpdateViewSaved(sender, action, after, record) {
-        this.onRefreshStore();
-    },
-    
     getPluralizeEntityName(){
         return Ext.util.Inflector.pluralize(this.getEntityName());
     }

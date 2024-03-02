@@ -2,7 +2,6 @@ Ext.define('Common.ux.dialog.Base', {
     extend: "Ext.Dialog",
 
     isSaveClose: true,
-    isSaved: false,
     displayed: true,
     closable: true,
     modal: true,
@@ -13,23 +12,24 @@ Ext.define('Common.ux.dialog.Base', {
     defaultListenerScope: true,
     weighted: true,
     includeResource: true,
+
+    callback: null,
+    cancelCallback: null,
+    isSaved: false,
     
     close(){
         let me = this,
             isSaved = me.isSaved,
-            callback = me.callback;
+            callback = me.callback,
+            cancelCallback = me.cancelCallback,
+            args = Array.prototype.slice.call(arguments);
         me.callParent();
-        if(isSaved && callback){
-            let args = Array.prototype.slice.call(arguments);
-            callback.apply(null, args);
-        }
-
-
+        isSaved ? callback && callback.apply(null, args) : cancelCallback && cancelCallback.apply(null, args);
     },
 
-    destroy() {
+    doDestroy() {
         let me = this;
-        me.callback = null;
+        me.destroyMembers('callback', 'cancelCallback');
         me.callParent(arguments);
     }
 

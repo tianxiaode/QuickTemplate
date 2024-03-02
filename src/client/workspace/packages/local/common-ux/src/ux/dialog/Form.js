@@ -3,12 +3,11 @@ Ext.define('Common.ux.dialog.Form',{
     xtype: 'uxformdialog',
 
     mixins:[
-        'Common.mixin.component.Toolbar'
+        'Common.mixin.component.Form'
     ],
 
     weighted: true,
     form: {weight: 100},
-    toolbar:{ weight: 200 },
 
     
 

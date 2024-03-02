@@ -160,6 +160,23 @@ Ext.define('Common.service.View', {
 
     },
 
+    /**
+     * 
+     * @param {状态} state add为新增，edit为编辑
+     * @param {*} form 可以是表达配置项或表单xtype
+     * @param {*} callback 单击确定按钮后的回调函数
+     * @param {*} cancelCallback 单击取消按钮后的回调函数 
+     * @param {*} options 附加配置项
+     */
+    showDialog(state, form, callback, cancelCallback, options){        
+        let config = Ext.isObject(state) ? state : Ext.apply({
+            state: state,
+            form : Ext.isObject(form) ? form : { xtype: form },
+            callback: callback,
+            cancelCallback: cancelCallback
+        }, options);
+
+    },
 
     doDestroy() {
         let me = this;
