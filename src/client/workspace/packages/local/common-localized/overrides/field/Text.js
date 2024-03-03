@@ -15,11 +15,9 @@ Ext.define('Common.overrides.field.Text',{
     onLocalized(){
         let me = this,
             badFormatMessage = me.getLangBadFormatMessage(),
-            text = me.getLangPlaceholder(),
-            resourceName = me.getResourceName(),
-            entityName = me.getEntityName();
+            text = me.getLangPlaceholder();
 
-        text = me.getLocalizedText(text, resourceName, entityName);
+        text = me.getLocalizedText(text);
     
         text && me.setPlaceholder(text);
 

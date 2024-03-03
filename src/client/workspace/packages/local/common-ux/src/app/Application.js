@@ -38,6 +38,7 @@ Ext.define('Common.app.Application', {
                 bodyElement: true
             })    
         }
+        Logger.debug(this.init, 'dddd')
         I18N.loadResources();      
         window.Auth = Ext.create('service.authentication');
     },
@@ -55,7 +56,7 @@ Ext.define('Common.app.Application', {
     },
 
     launch(){
-        let me = this;
+        Logger.debug(this.launch, 'dddd')
         //完成应用程序初始化再进行Viewport的初始化
         this.removeSplash();
 

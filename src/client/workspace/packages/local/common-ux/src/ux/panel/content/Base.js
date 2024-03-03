@@ -15,9 +15,9 @@ Ext.define('Common.ux.panel.content.Base', {
         'Common.mixin.Searchable',
         'Common.mixin.plugin.CellEditing',
         'Common.mixin.plugin.ListPaging',
-        'Common.mixin.component.Toolbar',
-        'Common.mixin.component.List',
-        'Common.mixin.component.Paging',
+        'Common.mixin.Toolbar',
+        'Common.mixin.List',
+        'Common.mixin.Paging',
     ],
 
     layout: 'vbox',

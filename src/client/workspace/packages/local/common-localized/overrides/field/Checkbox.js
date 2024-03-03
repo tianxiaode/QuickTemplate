@@ -9,15 +9,14 @@ Ext.define('Common.overrides.field.Checkbox',{
     isCheckbox: true,
 
     onLocalized(){
-        let me = this,
-            resourceName = me.getResourceName();
+        let me = this;
 
         if(me.getAutoLabel()){
             let name = Format.capitalize(me.getName() || me.getItemId());
             me.setLangBoxLabel(name);
         }
 
-        let label = me.getLocalizedText(me.getLangBoxLabel(), resourceName, me.getEntityName());
+        let label = me.getLocalizedText(me.getLangBoxLabel());
         
         label && me.setBoxLabel(label);
 

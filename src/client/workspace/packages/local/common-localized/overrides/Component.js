@@ -33,13 +33,11 @@ Ext.define('Common.overrides.Component',{
 
     onLocalized(){
         let me = this,
-            resourceName = me.getResourceName(),
-            entityName = me.getEntityName(),
-            text = me.getLocalizedText(me.getLangTooltip(), resourceName, entityName);
+            text = me.getLocalizedText(me.getLangTooltip());
 
         text && me.setTooltip(text);
 
-        text = me.getLocalizedText(me.getLangHtml(), resourceName, entityName);
+        text = me.getLocalizedText(me.getLangHtml());
 
         text && me.setHtml(text);
     },
@@ -60,22 +58,26 @@ Ext.define('Common.overrides.Component',{
         return this.up('[includeResource]');
     },
 
-    getLocalizedText(text, resourceName, entityName){
-        if(!text) return null;
-        let isArray = Ext.isArray(text);
-        text = isArray ? this.getArrayText(text, true, resourceName, entityName)
-            : I18N.get(text, resourceName, entityName);
-        return text;
-    },
-
-    getArrayText(text, needLocalized,resourceName, entityName){
-        let html = [];
-        text.forEach(t=>{
-            html.push(needLocalized ? I18N.get(t, resourceName, entityName) : t);
+    getLocalizedText(text){
+        Logger.debug(this.getLocalizedText, text)
+        let me = this,
+            resourceName = me.getResourceName(),
+            entityName = me.getEntityName(),
+            html = [];
+        if(!text) return '';
+        if(Ext.isString(text)) text = [text];
+        Ext.each(text, t=>{
+            let localizedText = I18N.get(t, resourceName, entityName);
+            if(Ext.isArray(localizedText)){
+                Ext.each(localizedText, l=>{
+                    html.push(I18N.get(l, resourceName, entityName));
+                });
+                return;
+            }
+            html.push(localizedText);
         })
         return html.join('');
     }
-
 
 
 })

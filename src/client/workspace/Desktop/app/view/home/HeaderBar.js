@@ -4,34 +4,38 @@ Ext.define('Desktop.view.home.HeaderBar',{
 
     requires:[
         'Common.ux.Logo',
-        'Common.ux.button.User',
-        'Common.ux.button.Logout',
-        'Common.ux.button.Language'
     ],
+
+    mixins:[
+        'Common.mixin.Spacer',
+        'Common.mixin.button.Logout',
+        'Common.mixin.button.Language',
+        'Common.mixin.button.User'        
+    ],
+
+    weighted: true,
 
     padding: '0 0 0 0',
     height: 64,
+
+    spacer: { weight: 300 },
+    languageButton: { weight: 400 },
+    logoutButton: { weight: 500},
+    userButton: { weight: 600},
+
     items:[
         {
             xtype: 'uxlogo',
             reference: 'logo',
             width: 250,
+            weight: 100
         },
         {
-            xtype: 'spacer',width: 5
-        },
-        {
-            ui: 'header',
+            ui: 'grey',
+            userCls: 'mx-2',
             iconCls: 'x-fa fa-bars',
-            handler: 'onToggleNavigationSize'
-        },
-        {
-            xtype: 'spacer',width: 5
-        },
-        '->',
-        {
-            xtype: 'uxlanguagebutton',
-            ui: 'header',
+            handler: 'onToggleNavigationSize',
+            weight: 200
         },
         // {
         //     xtype: 'shared-notificationbutton',                      
@@ -43,15 +47,5 @@ Ext.define('Desktop.view.home.HeaderBar',{
         //     langTooltip: 'Setting',
         //     bind: { hidden: '{!isAuthenticated}'},
         // },
-        {
-            xtype: 'uxlogoutbutton',
-        },
-        {
-            xtype: 'spacer',width: 5
-        },
-        {
-            xtype: 'uxuserbutton',                    
-        }
-
     ]
 })

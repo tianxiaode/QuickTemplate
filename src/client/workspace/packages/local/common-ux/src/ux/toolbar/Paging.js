@@ -11,8 +11,9 @@ Ext.define('Common.ux.toolbar.Paging', {
     ],
 
     mixins:[
-        'Common.mixin.component.Refresh',
-        'Common.mixin.component.CountMessage'
+        'Common.mixin.button.Refresh',
+        'Common.mixin.Spacer',
+        'Common.mixin.CountMessage'
     ],
 
     classCls: Ext.baseCSSPrefix + 'pagingtoolbar',
@@ -28,6 +29,10 @@ Ext.define('Common.ux.toolbar.Paging', {
         fromRecord: 0 //当前页开始记录号
     },
 
+    default:{
+        isPaging: true
+    },
+
     config: {
         store: null,
         firstButton: {},
@@ -37,7 +42,7 @@ Ext.define('Common.ux.toolbar.Paging', {
         nextButton: {},
         lastButton: {},
         pageSize: {},
-        spacer: {},
+        spacer: { weight: 800},
         pageSizeText:{},
         refreshButton: {isPaging: true},
         countMessage:{ weight: 1100, flex: null }
@@ -194,24 +199,6 @@ Ext.define('Common.ux.toolbar.Paging', {
         config && this.add(config);
     },
 
-    createSpacer(config){
-        return Ext.apply({
-            xtype: 'component',
-            isPaging: true,
-            flex: 1,
-            weight: 800,
-            ownerCmp: this
-        },config)
-    },
-
-    applySpacer(config, old){
-        return Ext.updateWidget(old, config, this, 'createSpacer');
-    },
-
-    updateSpacer(config){
-        config && this.add(config);
-    },
-
     createPageSizeText(config){
         return Ext.apply({
             xtype: 'component',
@@ -272,10 +259,8 @@ Ext.define('Common.ux.toolbar.Paging', {
 
     },
 
-    updateRefreshButton(config) {
-        config.setHandler(this.onRefreshStore.bind(this));
-        config.setWeight(500);
-        config && this.add(config);
+    onRefreshButtonTap(){
+        this.onRefreshStore();
     },
 
     refreshPageSize(pageSize){

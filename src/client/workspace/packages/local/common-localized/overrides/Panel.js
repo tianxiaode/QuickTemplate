@@ -8,7 +8,6 @@ Ext.define('Common.overrides.Panel',{
 
     onLocalized(){
         let me = this,
-            resourceName = me.getResourceName(),
             title = me.getLangTitle(),
             collapsible = me.getCollapsible && me.getCollapsible();
         if(me.closeTool){
@@ -19,7 +18,7 @@ Ext.define('Common.overrides.Panel',{
             collapsible.setExpandToolText(I18N.get('ExpandToolText'));
         }
 
-        title = me.getLocalizedText(title, resourceName);
+        title = me.getLocalizedText(title);
         
         title && me.setTitle(title);
 

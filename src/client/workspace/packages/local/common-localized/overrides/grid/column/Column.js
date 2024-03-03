@@ -15,14 +15,12 @@ Ext.define('Common.overrides.grid.column.Column',{
         if(!store) return;
 
         let langTextFields = store.langTextFields,
-            dataIndex = me.getDataIndex(),
-            resourceName = store.getResourceName(),
-            entityName = store.getEntityName();
+            dataIndex = me.getDataIndex();
         if(me.getAutoText()){
             let name = Ext.util.Format.capitalize( langTextFields.get(dataIndex) || dataIndex);
             me.setLangText(name);
         }
-        let text = me.getLocalizedText(me.getLangText(), resourceName, entityName);
+        let text = me.getLocalizedText(me.getLangText());
         text && me.setText(text);
     }
 

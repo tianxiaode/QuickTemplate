@@ -3,10 +3,13 @@ Ext.define('Common.ux.toolbar.Action', {
     xtype: 'uxactiontoolbar',
 
     mixins: [
-        'Common.mixin.component.Crud',
-        'Common.mixin.component.CountMessage',
-        'Common.mixin.component.Refresh',
-        'Common.mixin.component.field.Search'
+        'Common.mixin.button.Create',
+        'Common.mixin.button.Trash',
+        'Common.mixin.button.Refresh',
+        'Common.mixin.Spacer',
+        'Common.mixin.CountMessage',
+        'Common.mixin.field.Search',
+        'Common.mixin.Toolbar'
     ],
 
     userCls: 'bg-content',
@@ -23,29 +26,11 @@ Ext.define('Common.ux.toolbar.Action', {
     },
 
     config:{
-        toolbar:{}
-    },
-
-    refreshButton:{
-        isCrud: true,
-        crudName: 'refresh',
-    },
-
-    createToolbar(config) {
-        return Ext.apply({
-            xtype: 'toolbar',
-            weight: 100,
-            weighted: true,
-            ownerCmp: this,
-        }, config);
-    },
-
-    applyToolbar(config, old) {
-        return Ext.updateWidget(old, config, this, 'createToolbar');
-    },
-
-    updateToolbar(config) {
-        config && this.add(config);
+        toolbar:{},
+        createButton:{ isCrud: true, crudName: 'create', weight: 100 },
+        trashButton: { isCrud: true, crudName: 'delete', weight: 300},
+        refreshButton:{ isCrud: true, crudName: 'refresh', weight: 400},
+        searchField: { isSearch: true, weight: 500}
     },
 
     updateCreateButton(config) {
@@ -56,11 +41,15 @@ Ext.define('Common.ux.toolbar.Action', {
         config && this.getToolbar().add(config);
     },
 
-    updateDeleteButton(config){
+    updateTrashButton(config){
         config && this.getToolbar().add(config);
     },
 
     updateRefreshButton(config) {
+        config && this.getToolbar().add(config);
+    },
+
+    updateSpacer(config){
         config && this.getToolbar().add(config);
     },
 
@@ -78,10 +67,6 @@ Ext.define('Common.ux.toolbar.Action', {
             field.setMargin('0 5px 0 0');
         }
         me.getToolbar().add(config);
-    },
-
-    doDestroy() {
-        this.destroyMembers('toolbar');
     },
 
     privates:{

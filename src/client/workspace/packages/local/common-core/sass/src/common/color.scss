@@ -7,7 +7,8 @@
 .color-base{
     color: $base-color;
 }
-.color-alert{
+.color-alert,
+.color-danger{
     color: $alert-color;
 }
 .color-warning{

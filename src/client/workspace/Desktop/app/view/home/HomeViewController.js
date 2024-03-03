@@ -63,12 +63,12 @@ Ext.define('Desktop.view.home.HomeViewController', {
             logo= refs.logo,
             navigationTree = refs.navigationTree,
             collapsing = !navigationTree.getMicro(),
-            new_width = collapsing ? 64 : 250;
+            newWidth = collapsing ? 64 : 250;
 
 
         logo.el.down('span.company-name').setVisibility(!collapsing);
-        logo.setWidth(new_width);
-        navigationTree.setWidth(new_width);
+        logo.setWidth(newWidth);
+        navigationTree.setWidth(newWidth);
         navigationTree.setMicro(collapsing);
 
     }

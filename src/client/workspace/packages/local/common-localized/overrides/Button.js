@@ -9,7 +9,6 @@ Ext.define('Common.overrides.Button',{
 
     onLocalized(){
         let me = this,
-            resourceName = me.getResourceName(),
             langText = me.getLangText(),
             text = me.getText();
             
@@ -17,11 +16,11 @@ Ext.define('Common.overrides.Button',{
             me.setLangText(text);
         }
 
-        text = me.getLocalizedText(me.getLangText(), resourceName);
+        text = me.getLocalizedText(me.getLangText());
         
         text && me.setText(text);
 
-        text = me.getLocalizedText(me.getLangTooltip(), resourceName);
+        text = me.getLocalizedText(me.getLangTooltip());
         
         text && me.setTooltip(text);
     }

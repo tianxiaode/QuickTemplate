@@ -3,7 +3,7 @@ Ext.define('Desktop.view.dashboard.Dashboard',{
     xtype: 'dashboard',
 
     requires:[
-        'Common.ux.form.Base'
+        'Common.ux.dialog.Form'
     ],
 
     userCls: 'bg-content',
@@ -11,21 +11,28 @@ Ext.define('Desktop.view.dashboard.Dashboard',{
 
     items:[
         {
-            xtype: 'uxformpanel',
+            xtype: 'uxactiontoolbar',
+            toolbar:{
+                items:[
+                    {
+                        xtype: 'button',
+                        iconCls: 'x-fa fa-file'
+                    },
+                    {
+                        xtype: 'button',
+                        iconCls: 'x-fa fa-redo'
+                    }
+                ]    
+            }
+        },
+        {
+            xtype: 'button',
+            langText: 'save',
             flex: 1,
-            items: [
-                { name: 'a'},
-                { name: 'b', readOnly: true},
-                { name: 'c' },
-                { name: 'd', disabled: true},
-                { name: 'e'},
-                { name: 'f'},
-                { name: 'g'},
-                { name: 'h'},
-                { name: 'i'},
-                { name: 'j'},
-
-            ]
+            handler:()=>{
+                let dlg = Ext.create('Common.ux.dialog.Form');
+                dlg.show();
+            }
         }        
     ]
 

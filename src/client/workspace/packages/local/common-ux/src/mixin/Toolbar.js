@@ -1,0 +1,33 @@
+Ext.define('Common.mixin.Toolbar', {
+    extend: 'Common.mixin.Component',
+
+    requires: [
+        'Common.ux.toolbar.Action'
+    ],
+
+
+    config: {
+        toolbar: null
+    },
+
+    createToolBar(config) {
+        return Ext.apply({
+            xtype: 'toolbar',
+            weighted: true,
+            ownerCmp: this
+        }, config);
+    },
+
+    applyToolbar(config, old) {
+        return Ext.updateWidget(old, config, this, 'createToolBar');
+    },
+
+    updateToolbar(config){
+        config && this.add(config);
+    },
+
+    doDestroy(){
+        this.destroyMembers('toolbar');
+    }
+
+});

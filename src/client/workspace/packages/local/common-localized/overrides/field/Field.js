@@ -8,8 +8,7 @@ Ext.define('Common.overrides.field.Field',{
 
 
     onLocalized(){
-        let me = this,
-            resourceName = me.getResourceName();
+        let me = this;
         me.setRequiredMessage(I18N.get('RequiredMessage'));
         me.setValidationMessage(I18N.get('ValidationMessage'));
 
@@ -18,7 +17,7 @@ Ext.define('Common.overrides.field.Field',{
             me.setLangLabel(name);
         }
 
-        let label = me.getLocalizedText(me.getLangLabel(), resourceName, me.getEntityName());
+        let label = me.getLocalizedText(me.getLangLabel());
         
         label && me.setLabel(label);
 

@@ -1,6 +1,23 @@
 Ext.define('Common.ux.dialog.Base', {
     extend: "Ext.Dialog",
 
+    requires:[
+        'Common.ux.toolbar.Dialog',
+    ],
+
+    mixins:[
+        'Common.mixin.Toolbar',
+        'Common.mixin.DialogAction'
+    ],
+
+    config:{
+        toolbar: { 
+            xtype: 'uxdialogtoolbar',
+            docked: 'bottom',
+            saveButton:{ langText: 'OK'}
+        }
+    },
+
     isSaveClose: true,
     displayed: true,
     closable: true,

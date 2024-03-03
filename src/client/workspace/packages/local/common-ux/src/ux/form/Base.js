@@ -3,7 +3,7 @@ Ext.define('Common.ux.form.Base',{
     xtype: 'uxformpanel',
 
     mixins:[
-        'Common.mixin.component.field.EnterEvent',
+        'Common.mixin.field.EnterEvent',
     ],
 
     requires:[

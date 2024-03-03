@@ -46,6 +46,13 @@ $button-border-radius: dynamic(null);
 );
 
 @include button-ui(
+ $ui: 'grey',
+ $background-color: transparent,
+ $hovered-background-color: material-color('grey', '200'),
+ $color: material-color('grey')
+);
+
+@include button-ui(
  $ui: 'cyan',
  $background-color: transparent,
  $hovered-background-color: material-color('grey', '200'),

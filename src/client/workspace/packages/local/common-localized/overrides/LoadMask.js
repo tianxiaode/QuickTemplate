@@ -7,7 +7,6 @@ Ext.define('Common.overrides.LoadMask',{
 
     onLocalized(){
         let me = this,
-            resourceName = me.getResourceName(),
             message = me.getMessage(),
             langMessage = me.getLangMessage();
         
@@ -15,7 +14,7 @@ Ext.define('Common.overrides.LoadMask',{
             me.setLangMessage(message);
         }
     
-        message = me.getLocalizedText(me.getLangMessage(), resourceName);
+        message = me.getLocalizedText(me.getLangMessage());
         
         message && me.setMessage(message);
 
