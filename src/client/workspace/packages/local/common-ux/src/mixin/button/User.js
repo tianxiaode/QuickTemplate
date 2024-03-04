@@ -40,18 +40,23 @@ Ext.define('Common.mixin.button.User', {
     },
 
     updateUserButton(config){
-        //this.updateUserInfo();
-        config && this.add(config);
+        let me = this;
+        config && me.add(config);
+        Config.isReady && me.updateUserInfo();
+        Config.on('ready', me.updateUserInfo, me);
+
     },
 
     updateUserInfo(){
         let me = this,
-            list = me.getMenu().down('#detailList'),
+            button = me.getUserButton(),
+            list = button.getMenu().down('#detailList'),
             store = list.getStore();
         if(!store) return;
         let data = store.getData().items,
             user = Config.getCurrentUser();
-        me.setText(user.userName);
+        if(!user) return;
+        button.setText(user.userName);
         Ext.each(data ,d=>{
             let f = d.getId();
             d.set('text', user[f]);

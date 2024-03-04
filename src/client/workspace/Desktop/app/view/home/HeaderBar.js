@@ -10,7 +10,7 @@ Ext.define('Desktop.view.home.HeaderBar',{
         'Common.mixin.Spacer',
         'Common.mixin.button.Logout',
         'Common.mixin.button.Language',
-        'Common.mixin.button.User'        
+        'Common.mixin.button.User'
     ],
 
     weighted: true,

@@ -30,6 +30,7 @@ Ext.define('Common.ux.button.Option',{
             items.push(item);
         })
         me.setMenu({
+            anchor: true,
             items: items
         });
         me.initItemEvents();

@@ -13,6 +13,8 @@ Ext.define('Common.overrides.grid.column.Column',{
             store = grid && grid.getStore();
 
         if(!store) return;
+        me.setResourceName(store.getResourceName());
+        me.setEntityName(store.getEntityName());
 
         let langTextFields = store.langTextFields,
             dataIndex = me.getDataIndex();
@@ -23,10 +25,5 @@ Ext.define('Common.overrides.grid.column.Column',{
         let text = me.getLocalizedText(me.getLangText());
         text && me.setText(text);
     }
-
-    // applyTpl(config) {
-    //     return Template.getTplWithScope(config, this);
-    // },
-
 
 })

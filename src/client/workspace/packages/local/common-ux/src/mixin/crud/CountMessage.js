@@ -9,9 +9,7 @@ Ext.define('Common.mixin.crud.CountMessage',{
     },
         
     updateCountMessage(store, records, successful, operation, eOpts){
-        Logger.debug(this.updateCountMessage)
-        let countMessage = this.getCountMessage();
-        countMessage && countMessage.setCount(store.getTotalCount());
+        this.down(`{setDataCount}`).setDataCount(store.getTotalCount());
     }
 
 })

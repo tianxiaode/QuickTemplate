@@ -18,19 +18,14 @@ Ext.define('Common.ux.toolbar.Action', {
     defaultListenerScope: true,
     layout: 'vbox',
 
-    defaults:{
-        userCls: 'bg-content',
-        shadow: false,
-        weighted: true,
-        flex: 1
-    },
-
     config:{
         toolbar:{},
         createButton:{ isCrud: true, crudName: 'create', weight: 100 },
         trashButton: { isCrud: true, crudName: 'delete', weight: 300},
         refreshButton:{ isCrud: true, crudName: 'refresh', weight: 400},
-        searchField: { isSearch: true, weight: 500}
+        searchField: { isSearch: true, weight: 500},
+        spacer:{ weight: 600 },
+        countMessage:{ weight: 700}
     },
 
     updateCreateButton(config) {

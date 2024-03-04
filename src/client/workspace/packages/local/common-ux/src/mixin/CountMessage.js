@@ -1,20 +1,15 @@
 Ext.define('Common.mixin.CountMessage',{
     extend: 'Common.mixin.Component',
 
-    requires:[
-        'Common.ux.CountMessage'
-    ],
-
     config:{
-        countMessage:{}
+        countMessage: null,
+        dataCount: 0
     },
 
     createCountMessage(config){
         return Ext.apply({
-            xtype: 'uxcountmessage',
-            weight: 600,
-            flex: 1,
-            margin: '0 5px',
+            xtype: 'component',
+            userCls: 'mx-2',
             style: {
                 textAlign: 'right'
             },
@@ -28,6 +23,15 @@ Ext.define('Common.mixin.CountMessage',{
 
     updateCountMessage(config){
         config && this.add(config);
+    },
+
+    updateDataCount(){
+        this.onLocalized();
+    },
+
+    onLocalized(){
+        let me = this;
+        me.getCountMessage().setHtml(Format.format(I18N.get('CountMessage'), `<span class="color-base">${me.getDataCount()}</span>`));
     },
 
     doDestroy(){

@@ -382,7 +382,7 @@ Ext.define('Common.ux.toolbar.Paging', {
             pageNumber.setValue(currPage);
         }
         
-        countMessage.setCount(count);
+        me.setDataCount(count);
 
 
         me.setItemsDisabled(currPage, pageCount, isEmpty, false);

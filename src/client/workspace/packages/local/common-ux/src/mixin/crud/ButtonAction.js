@@ -1,5 +1,10 @@
 Ext.define('Common.mixin.crud.ButtonAction', {
     extend: 'Ext.Mixin',
+
+    requires:[
+        'Common.ux.dialog.Form'
+    ],
+
     /**
      * 单击新疆按钮
      */
@@ -20,10 +25,11 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      * 执行创建操作，可重写
      */
     doCreate() {
-        let me = this,
-            entityName = me.getEntityName();
+        let me = this;
         Ext.History.add(`${me.getPluralizeEntityName()}/add`);
-        ViewService.showDialog('add', `${entityName.toLocaleLowerCase()}edit`, me.onAfterCreate.bind(me), me.onCancelCreate.bind(me));
+        let config = me.getDialogConfig('create'),
+            dialog = Ext.create(config);
+        dialog.show();        
     },
 
     onAfterCreate(){},
@@ -101,7 +107,40 @@ Ext.define('Common.mixin.crud.ButtonAction', {
 
     getPluralizeEntityName(){
         return Ext.util.Inflector.pluralize(this.getEntityName());
+    },
+
+    dialogActonAlias:{
+        create: 'add', update: 'edit'
+    },
+
+    getDialogConfig(action, title,  formType, callback, cancelCallback, options){
+        let me = this,
+            actionAlias = me.dialogActonAlias[action],
+            entityName = me.getEntityName(),
+            resourceName = me.getResourceName();
+        action = Ext.String.capitalize(action);
+        formType = formType ||  `${entityName}form`.toLowerCase();
+        callback = callback || me[`onAfter${action}`].bind(me);
+        cancelCallback = cancelCallback || me[`onCancel${action}`].bind(me);
+        return Ext.apply({
+            langTitle: title || [ actionAlias , entityName],
+            xtype: 'uxformdialog',
+            action: action,
+            actionAlias: actionAlias,
+            entityName: entityName,
+            resourceName: resourceName,
+            form:{
+                xtype: formType,
+            },
+            callback: callback,
+            cancelCallback: cancelCallback
+        }, options)
+    },
+
+    doDestroy() {
+        this.destroyMembers('dialogActon');
     }
+
 
 
 })

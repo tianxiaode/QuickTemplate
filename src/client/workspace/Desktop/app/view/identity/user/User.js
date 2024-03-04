@@ -3,9 +3,11 @@ Ext.define('Desktop.view.identity.user.User', {
     xtype: 'users',
 
     requires:[
-        'Common.data.store.identity.Users'
+        'Common.data.store.identity.Users',
+        'Common.view.identity.user.Form'
     ],
 
+    paging: {},
     list:{
         store:{ type: 'users' },
         columns:[

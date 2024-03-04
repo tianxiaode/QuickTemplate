@@ -12,9 +12,10 @@ Ext.define('Common.ux.dialog.Form',{
         toolbar: { 
             xtype: 'uxdialogtoolbar',
             docked: 'bottom',
-            saveButton:{ weight: 400},
+            messageButton: { weight: 100, hidden: true},
+            resetButton: { weight: 200 },
             saveAndNewButton: { weight: 300},
-            messageButton: { weight: 100}
+            saveButton:{ weight: 400},
         },
         form: {weight: 100, },
     },

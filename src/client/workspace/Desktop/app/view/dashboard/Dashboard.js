@@ -10,30 +10,30 @@ Ext.define('Desktop.view.dashboard.Dashboard',{
     layout: 'vbox',
 
     items:[
-        {
-            xtype: 'uxactiontoolbar',
-            toolbar:{
-                items:[
-                    {
-                        xtype: 'button',
-                        iconCls: 'x-fa fa-file'
-                    },
-                    {
-                        xtype: 'button',
-                        iconCls: 'x-fa fa-redo'
-                    }
-                ]    
-            }
-        },
-        {
-            xtype: 'button',
-            langText: 'save',
-            flex: 1,
-            handler:()=>{
-                let dlg = Ext.create('Common.ux.dialog.Form');
-                dlg.show();
-            }
-        }        
+        // {
+        //     xtype: 'uxactiontoolbar',
+        //     toolbar:{
+        //         items:[
+        //             {
+        //                 xtype: 'button',
+        //                 iconCls: 'x-fa fa-file'
+        //             },
+        //             {
+        //                 xtype: 'button',
+        //                 iconCls: 'x-fa fa-redo'
+        //             }
+        //         ]    
+        //     }
+        // },
+        // {
+        //     xtype: 'button',
+        //     langText: 'save',
+        //     flex: 1,
+        //     handler:()=>{
+        //         let dlg = Ext.create('Common.ux.dialog.Form');
+        //         dlg.show();
+        //     }
+        // }        
     ]
 
 

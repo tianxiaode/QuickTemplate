@@ -31,6 +31,7 @@ Ext.define('Common.app.Application', {
     },
 
     init() {
+        Logger.debug(this.init, 'dddd')
         //桌面应用允许用户选择文字
         if(Ext.platformTags.desktop){
             Ext.Viewport.setUserSelectable({
@@ -38,12 +39,12 @@ Ext.define('Common.app.Application', {
                 bodyElement: true
             })    
         }
-        Logger.debug(this.init, 'dddd')
         I18N.loadResources();      
         window.Auth = Ext.create('service.authentication');
     },
 
     onAppUpdate() {
+        Logger.debug(this.onAppUpdate, 'dddd')
         let title = I18N.getLocalText('applicationUpdate'),
             message = I18N.getLocalText('applicationUpdateMessage');
         MsgBox.confirm(title, message,

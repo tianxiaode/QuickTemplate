@@ -28,8 +28,11 @@ Ext.define('Common.mixin.button.Reset', {
     },
 
     onResetButtonTap(){
-        let form = me.getForm() || me;
-        form.onReset();
+        let formContainer = this.up(`{getForm}`),
+            form = formContainer.getForm();
+        Logger.debug(this.onResetButtonTap, formContainer);
+        form.reset();
+        form.clearErrors();
     },
 
     doDestroy(){

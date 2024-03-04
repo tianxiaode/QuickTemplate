@@ -1,11 +1,6 @@
 Ext.define('Common.mixin.Toolbar', {
     extend: 'Common.mixin.Component',
 
-    requires: [
-        'Common.ux.toolbar.Action'
-    ],
-
-
     config: {
         toolbar: null
     },
@@ -13,6 +8,8 @@ Ext.define('Common.mixin.Toolbar', {
     createToolBar(config) {
         return Ext.apply({
             xtype: 'toolbar',
+            userCls: 'bg-content',
+            shadow: false,
             weighted: true,
             ownerCmp: this
         }, config);

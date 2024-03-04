@@ -33,14 +33,15 @@ Ext.define('Common.mixin.button.Language', {
         let me = this,
             current = I18N.getCurrentCulture(),
             displayName = current.cultureName && current.cultureName.includes('zh') ? current.displayName: current.englishName,
-            menu = me.getMenu();
+            button = me.getLanguageButton(),
+            menu = button.getMenu();
         if(!displayName) return;
-        me.setLangText(displayName);
+        button.setLangText(displayName);
 
         //菜单已存在，直接返回
         if(menu) return;
         //创建下拉菜单
-        menu = { ui: isPhone && 'dark', items:[], anchor: true, resourceName: I18N.getDefaultResourceName() };
+        menu = { ui: Ext.platformTags.phone && 'dark', items:[], anchor: true, resourceName: I18N.getDefaultResourceName() };
         I18N.getLanguages().forEach(l=>{
             menu.items.push({ 
                 xtype: 'menuradioitem',
@@ -52,8 +53,8 @@ Ext.define('Common.mixin.button.Language', {
                 hideOnClick: true
             });
         });
-        me.setMenu(menu);
-        me.setHidden(false);
+        button.setMenu(menu);
+        button.setHidden(false);
         
     },
 
