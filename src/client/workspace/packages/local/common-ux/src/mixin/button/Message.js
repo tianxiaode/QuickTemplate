@@ -41,23 +41,6 @@ Ext.define('Common.mixin.button.Message', {
         sender.getTooltip().show();
     },
 
-    updateMessageButtonTooltip(message){
-        message = message || me.getButtonMessage();
-        let me = this,        
-            isErrorMessage = me.isErrorMessage,
-            ui = isErrorMessage ? 'danger' : 'success',
-            iconCls = isErrorMessage ? 'times-circle' : 'check-circle',
-            tooltip = me.getTooltip();
-        me.setMinWidth(32);
-        me.setUi(ui);
-        me.setIconCls(`x-fa fa-${iconCls}`);
-        if(!me.hasListener('tap')){
-            me.on('tap', me.onShowTooltip, me);
-        }
-        //tooltip.setTitle(title);        
-        tooltip.setHtml(`<p class="m-0 p-0 color-${ui}">${message}</p>`);
-    },
-
     /**
      * 显示信息按钮提示
      * @param {要显示的信息} message 

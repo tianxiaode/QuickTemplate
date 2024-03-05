@@ -21,6 +21,8 @@ Ext.define('Common.view.identity.user.Form',{
             xtype: 'containerfield',
             autoLabel: false,
             label: Ext.emptyString,
+            userCls: 'cols-1',
+            bodyCls: 'clear-flex-wrap-item',
             layout: 'vbox',
             defaults:{
                 value: true,

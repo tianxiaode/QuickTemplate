@@ -1,4 +1,4 @@
-Ext.define('Common.overrides.grid.column.Cloumn', {
+Ext.define('Common.overrides.grid.column.Column', {
     override: 'Ext.grid.column.Column',
 
     initialize(){

@@ -3,7 +3,8 @@ Ext.define('Common.overrides.grid.column.RowNumberer',{
 
     config:{
         autoText: false,
-        langText: 'RowNumber'
+        langText: '#',
+        text: '#'
         //width: 60
     }
 

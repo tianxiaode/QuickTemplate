@@ -61,9 +61,15 @@ Ext.define('Common.overrides.data.request.Base',{
         let me  = this,
             status = me.result.status,
             data = me.getJson(),
-            result = Ext.apply({code: null,  message:  null, details: null, data: null, validationErrors: null }, { message: data && data.error });
+            result = {code: null,  message:  null, details: null, data: null, validationErrors: null };
 
-        if(data.error_description){            
+        if(data && data.error){
+            result = Ext.apply(result, data.error);
+        }
+        
+        Logger.debug(me.getError, data, result, me);
+
+        if(data && data.error_description){            
             result.message = data.error_description;
         }
 
@@ -75,13 +81,12 @@ Ext.define('Common.overrides.data.request.Base',{
 
         if(status >= 400 && Ext.isEmpty(result.message)){
             result.message = me.getStatusMessage(status);
-            Logger.debug(me.getError, result.message, me);
             return result;
         }
 
         if(result.validationErrors){
             result.validationErrors = me.normalizedValidationErrors(result.validationErrors);
-        }
+        }    
 
         return result;
     },

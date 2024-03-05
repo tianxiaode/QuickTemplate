@@ -5,3 +5,11 @@
     align-content: flex-start;
     justify-content: space-between;
 }
+
+.flex-wrap-item .x-body-el .x-body-el {
+    display: initial;
+    flex-wrap: initial;
+    flex-direction: initial;
+    align-content: initial;
+    justify-content: initial;        
+}

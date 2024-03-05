@@ -27,7 +27,7 @@ Ext.define('Common.mixin.field.Id', {
     },
 
     doDestroy() {
-        this.setIdField(null);
+        this.destroyMembers('idField');
     }
 
 

@@ -27,13 +27,6 @@ Ext.define('Common.mixin.button.Reset', {
         config && this.add(config);
     },
 
-    onResetButtonTap(){
-        let formContainer = this.up(`{getForm}`),
-            form = formContainer.getForm();
-        Logger.debug(this.onResetButtonTap, formContainer);
-        form.reset();
-        form.clearErrors();
-    },
 
     doDestroy(){
         this.destroyMembers( 'resetButton');

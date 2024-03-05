@@ -25,7 +25,7 @@ Ext.define('Common.mixin.field.TextField', {
     },
 
     doDestroy() {
-        this.setTextField(null);
+        this.destroyMembers('textField');
     }
 
 

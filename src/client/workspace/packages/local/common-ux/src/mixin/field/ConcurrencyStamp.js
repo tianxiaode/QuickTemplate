@@ -26,7 +26,7 @@ Ext.define('Common.mixin.field.ConcurrencyStamp', {
     },
 
     doDestroy() {
-        this.setConcurrencyStamp(null);
+        this.destroyMembers('concurrencyStamp');
     }
 
 

@@ -25,8 +25,13 @@
             let first =  Ext.isArray(isUseDefaultPath) ? isUseDefaultPath : [isUseDefaultPath];
             args = [...first, ...args];        
         }
+        url = me.ensureNotSlash(url) + '/';
+        Ext.each(args, m=>{
+            if(Ext.isEmpty(m)) return;
+            url += Format.splitCamelCase(m.toString()).toLocaleLowerCase() + '/';
+        });
 
-        return `${url}/${args.map(m=>Format.splitCamelCase(m.toString()).toLocaleLowerCase()).join('/')}`;
+        return me.ensureNotSlash(url);
     },
 
     ensureNotSlash(str){

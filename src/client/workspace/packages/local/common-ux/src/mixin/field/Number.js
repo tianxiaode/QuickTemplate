@@ -30,7 +30,7 @@ Ext.define('Common.mixin.field.Number', {
     },
 
     doDestroy(){
-        this.setNumberField(null);
+        this.destroyMembers('numberField');
     }
 
 })

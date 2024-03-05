@@ -3,6 +3,7 @@ Ext.define('Common.ux.panel.content.Base', {
     xtype: 'uxcontentpanel',
 
     mixins:[
+        'Common.mixin.Normalize',
         'Common.mixin.crud.Button',
         'Common.mixin.crud.ButtonAction',
         'Common.mixin.crud.Batch',

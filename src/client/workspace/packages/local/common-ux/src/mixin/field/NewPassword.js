@@ -57,8 +57,7 @@ Ext.define('Common.mixin.field.NewPassword', {
     },
 
     doDestroy() {
-        this.setNewPassword(null);
-        this.setConfirmPassword(null);
+        this.destroyMembers('newPassword', 'confirmPassword');
     }
 
 

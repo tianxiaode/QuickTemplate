@@ -117,5 +117,17 @@ URL: https://metroui.org.ua/
   .mw-100 {
     max-width: 100% !important;
   }
+  .cols-1{
+    width: calc( 100% - 8px );
+  }
+  .cols-2{
+    width: calc( 50% - 8px );
+  }
+ .cols-3{
+    width: calc( 100%/3 - 8px );
+ }
+ .cols-4{
+    width: calc( 125% - 8px );
+ }
 
   /*# sourceMappingURL=sizing.css.map */

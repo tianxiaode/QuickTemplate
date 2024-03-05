@@ -27,14 +27,16 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     doCreate() {
         let me = this;
         Ext.History.add(`${me.getPluralizeEntityName()}/add`);
-        let config = me.getDialogConfig('create'),
+        let config = me.getDefaultDialogConfig('create', Ext.create(me.getModelName(), me.getRecordDefaultValue())),
             dialog = Ext.create(config);
         dialog.show();        
     },
 
     onAfterCreate(){},
 
-    onCancelCreate(){},
+    onCancelCreate(){
+        Ext.History.back();
+    },
 
     /**
      * 单击更新按钮
@@ -55,7 +57,9 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     onBeforeUpdate() { },
 
     onAfterUpdate(){},
-    onCancelUpdate(){},
+    onCancelUpdate(){
+        Ext.History.back();
+    },
 
     /**
      * 执行更新操作
@@ -105,40 +109,67 @@ Ext.define('Common.mixin.crud.ButtonAction', {
         this.onRefreshStore();
     },
 
-    getPluralizeEntityName(){
-        return Ext.util.Inflector.pluralize(this.getEntityName());
+    /**
+     * 根据操作返回httpClient
+     * @param {操作} action 
+     * @returns 
+     */
+    getHttpClient(action){
+        action = action.toLocaleLowerCase();
+        return action === 'create' ? Http.post
+            : action === 'update' ? Http.put
+            : action;
     },
 
-    dialogActonAlias:{
-        create: 'add', update: 'edit'
-    },
 
-    getDialogConfig(action, title,  formType, callback, cancelCallback, options){
+    /**
+     * 获取默认对话框配置项
+     * @param {操作} action 
+     * @param {记录} record 
+     * @returns 
+     */
+    getDefaultDialogConfig(action, record){
         let me = this,
-            actionAlias = me.dialogActonAlias[action],
             entityName = me.getEntityName(),
-            resourceName = me.getResourceName();
-        action = Ext.String.capitalize(action);
-        formType = formType ||  `${entityName}form`.toLowerCase();
-        callback = callback || me[`onAfter${action}`].bind(me);
-        cancelCallback = cancelCallback || me[`onCancel${action}`].bind(me);
-        return Ext.apply({
-            langTitle: title || [ actionAlias , entityName],
+            normalizeAction =  me.capitalize(action);
+        return {
             xtype: 'uxformdialog',
             action: action,
-            actionAlias: actionAlias,
+            langTitle: me.getDefaultDialogTitle(action),
             entityName: entityName,
-            resourceName: resourceName,
+            resourceName: me.getResourceName(),
+            callback: me[`onAfter${normalizeAction}`].bind(me),
+            cancelCallback: me[`onCancel${normalizeAction}`].bind(me),
+            httpClient: me.getHttpClient(action),
             form:{
-                xtype: formType,
+                xtype: me.getFormType(),
+                recordDefaultValue: me.getRecordDefaultValue(),
+                record: record
             },
-            callback: callback,
-            cancelCallback: cancelCallback
-        }, options)
+            url: URI.get(me.getPluralizeEntityName(), action === 'update' ? record.getId() : null),
+        }
+    },
+
+    /**
+     * 根据操作获取默认标题
+     * @param {操作} action 
+     * @returns 
+     */
+
+    getDefaultDialogTitle(action){
+        let entityName = this.getEntityName();
+        return action === 'create' ? ['add', entityName] : ['edit', entityName];
+    },
+
+    /**
+     * 
+     * @returns 获取记录默认值
+     */
+    getRecordDefaultValue(){
+        return {};
     },
 
     doDestroy() {
-        this.destroyMembers('dialogActon');
     }
 
 

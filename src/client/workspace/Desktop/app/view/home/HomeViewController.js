@@ -71,6 +71,13 @@ Ext.define('Desktop.view.home.HomeViewController', {
         navigationTree.setWidth(newWidth);
         navigationTree.setMicro(collapsing);
 
+    },
+
+    onShowDialog(xtype){
+        Logger.debug(this.onShowDialog, xtype)
+        let mainCard = this.lookup('mainCardPanel'),
+            content = mainCard.down(xtype);
+        if(!content) Ext.History.add(xtype, true);        
     }
 
 

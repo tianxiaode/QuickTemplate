@@ -30,7 +30,7 @@ Ext.define('Common.mixin.field.Textarea', {
     },
 
     doDestroy() {
-        this.setTextarea(null);
+        this.destroyMembers('textarea');
     }
 
 
