@@ -143,6 +143,7 @@ Ext.define('Common.mixin.crud.ButtonAction', {
             httpClient: me.getHttpClient(action),
             form:{
                 xtype: me.getFormType(),
+                isEdit : action === 'update',
                 recordDefaultValue: me.getRecordDefaultValue(),
                 record: record
             },

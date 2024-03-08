@@ -24,6 +24,7 @@ Ext.define('Common.overrides.field.Field',{
         Ext.platformTags.desktop && me.labelElement.set({title : me.getLabel()});
 
         me.setError(null);
+        me.setSeparator(I18N.getLabelSeparator());
     },
 
     updateTipError: function(error) {

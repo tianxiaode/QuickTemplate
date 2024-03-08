@@ -21,25 +21,30 @@ Ext.define('Common.ux.form.Base',{
         'Common.mixin.field.ConcurrencyStamp',
     ],
 
-    layout: 'auto',    
+    layout: 'auto', 
+    weighted: true,   
 
     userCls: 'flex-wrap-item',
 
     defaultType: 'textfield',
     trackResetOnLoad: true,
+    isReady: false,
     
     config:{
         cols: 1,
-        labelWidth: 150
+        labelWidth: 120
     },
 
     defaults:{
+        errorTarget: 'under',
         userCls: 'mx-1'
     },
 
     updateCols(cols){
-        if(cols <= 0 || Ext.platformTags.phone) cols = 1;
-        let me = this,
+        let me = this;
+        if(!me.isReady) return;
+        if(cols <= 0 || Ext.platformTags.phone) cols = 1;        
+        let dialog = me.up('[isDialog]'),
             labelWidth = me.getLabelWidth(),
             items = me.getItems().items;
         Ext.each(items, item=>{
@@ -47,11 +52,22 @@ Ext.define('Common.ux.form.Base',{
             if(!cls.includes('cols-')){
                 item.setUserCls(`${cls} cols-${cols}`);
             }
+            Logger.debug(this.updateCols, item.name)
             if(item.getLangLabel()){
                 item.setLabelWidth(labelWidth);
             }
         })
+        if(!dialog) return;
+        dialog.setWidth(Ext.platformTags.desktop ? 400*cols : '100%');
     },
+
+    initialize(){
+        let me = this;
+        me.isReady = true;
+        me.updateCols(me.getCols());
+        me.callParent();
+    },
+
 
     setValues(values) {
         let me = this,

@@ -20,3 +20,21 @@
 .x-field-search .x-input-wrap-el{
     border-radius: 5px;
 }
+
+.x-field > .x-separator{
+    color: $field-label-color;
+    @include font(600, $field-label-font-size, $field-label-line-height, $field-label-font-family);
+}
+
+.x-field.x-disabled > .x-separator{
+    color: var(--disable-color) !important;
+}
+.x-textfield.x-disabled input{
+    background-color: var(--faded-color);
+}
+.x-textfield input:read-only{
+    background-color: var(--faded-color);
+}
+.x-field > * > * > .x-error-message-el{
+    min-height: 16px;
+}

@@ -15,7 +15,9 @@ Ext.define('Common.mixin.field.NewPassword', {
         return Ext.apply({
             xtype: 'passwordfield',
             validators: 'password',
+            name: 'password',
             autoComplete: false,
+            required: this.isEdit ? false : true,
             maxLength:128,
             ownerCmp: this
         }, config);
@@ -35,6 +37,7 @@ Ext.define('Common.mixin.field.NewPassword', {
             name: 'confirmPassword',
             autoLabel: false,
             langLabel: 'NewPasswordConfirm',
+            required: this.isEdit ? false : true,
             autoComplete: false,
             maxLength:128,
             validators(value){

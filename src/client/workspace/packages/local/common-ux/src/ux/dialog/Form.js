@@ -27,16 +27,23 @@ Ext.define('Common.ux.dialog.Form', {
 
     onSaveAndNew() {
         let me = this;
+        if(!me.validateForm()) return;
         me.afterSavedAction = me.addRecord.bind(me);
-        me.ooSave();
+        me.onSave();
     },
 
     onSave() {
-        let me = this,
-            values = me.getValues();
+        let me = this;
+        if(!me.validateForm()) return;
+            
+        let values = me.getValues();
         if (me.onBeforeSave(values) === false) return;
         me.doSave(values);
 
+    },
+
+    validateForm(){
+        return this.getForm().validate();
     },
 
     onBeforeSave(values) { },
@@ -64,7 +71,6 @@ Ext.define('Common.ux.dialog.Form', {
                 httpClient = me.httpClient;
             if (me.onBeforeSave(values) === false) return;
             me.mask(I18N.get('Saving'));
-            Logger.debug(this.doSave, url);
             values.userName = null;
             httpClient && httpClient.apply(Http, [url, values]).then(me.onSaveSuccess.bind(me), me.onSaveFailure.bind(me));
         },
@@ -75,10 +81,9 @@ Ext.define('Common.ux.dialog.Form', {
 
         onSaveFailure(response) {
             let me = this,
-                error = response.request.getError(),
-                message = `${error.message}\r\n${error.details}`;
+                error = response.request.getError();
             me.unmask();
-                Logger.debug(this.onSaveFailure, error)
+            Logger.debug(this.onSaveFailure, error)
             me.getToolbar().showMessageButtonTooltip(me.getErrorMessage(error),  true);
             if(error.validationErrors){
                 me.getForm().setErrors(error.validationErrors);

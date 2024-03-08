@@ -40,22 +40,25 @@ Ext.define('Common.mixin.Normalize', {
         let me = this,
             entityName = me.getEntityName(),
             resourceName = me.getResourceName();
-            message = [ `<p class="m-1 .text-bold" >${error.message}</p>`];
+            message = [ `<p class="m-1 text-bold" >${error.message}</p>`];
         if(!error.validationErrors) return message.join('');
         message.push(`<ul class="message-tips">`);
         Ext.Object.each(error.validationErrors, (key, value)=>{
-            message.push(`<li class="danger">`);
-            message.push(`<p class="my-1 mx-2 text-bold">`);
-            message.push(I18N.get(key, entityName, resourceName));
+            let locName = I18N.get(key, resourceName, entityName); 
+            message.push(`<li class="danger my-1 mx-2">`);
+            message.push(`<span class=" text-bold">`);
+            message.push(locName);
             message.push(`${I18N.getLabelSeparator()}`);
-            message.push(`</p>`);
+            message.push(`</span>`);
             message.push(`<p class="my-1 mx-3">`);
-            message.push(value.join('<br>'));
+            Ext.each(value, v=>{
+                message.push(`${v.replace(me.capitalize(key), locName)}<br>`);
+            })
+
             message.push(`</p>`);
             message.push(`</li>`);
         })
         message.push('</ul>');
-        Logger.debug(this.getErrorMessage, message)
         return message.join('');
     }
 
