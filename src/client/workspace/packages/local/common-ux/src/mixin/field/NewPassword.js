@@ -12,15 +12,16 @@ Ext.define('Common.mixin.field.NewPassword', {
     },
 
     createNewPassword(config) {
+        let me =this;
         return Ext.apply({
             xtype: 'passwordfield',
             validators: 'password',
             name: 'password',
             autoComplete: false,
-            required: this.isEdit ? false : true,
+            required: me.isEdit ? false : true,
             maxLength:128,
-            ownerCmp: this
-        }, config);
+            ownerCmp: me
+        }, config, me.getDefaults());
     },
 
     applyNewPassword(config, old) {
@@ -32,12 +33,13 @@ Ext.define('Common.mixin.field.NewPassword', {
     },
 
     createConfirmPassword(config) {
+        let me =this;
         return Ext.apply({
             xtype: 'passwordfield',
             name: 'confirmPassword',
             autoLabel: false,
             langLabel: 'NewPasswordConfirm',
-            required: this.isEdit ? false : true,
+            required: me.isEdit ? false : true,
             autoComplete: false,
             maxLength:128,
             validators(value){
@@ -47,8 +49,8 @@ Ext.define('Common.mixin.field.NewPassword', {
                 if( v !== value ) return I18N.get('PasswordNoEqual');
                 return true;
             },
-            ownerCmp: this
-        }, config);
+            ownerCmp: me
+        }, config, me.getDefaults());
     },
 
     applyConfirmPassword(config, old) {

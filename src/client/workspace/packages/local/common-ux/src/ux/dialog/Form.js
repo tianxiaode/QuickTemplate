@@ -42,6 +42,7 @@ Ext.define('Common.ux.dialog.Form', {
 
     },
 
+
     validateForm(){
         return this.getForm().validate();
     },
@@ -52,6 +53,13 @@ Ext.define('Common.ux.dialog.Form', {
         let form = this.getForm();
         form.reset();
         form.clearErrors();
+        form.initFocus();
+    },
+
+    updateHidden(hidden, oldHidden){
+        Logger.debug(this.updateHidden, this)
+        this.callParent(arguments);
+        !hidden && this.getForm().initFocus();
     },
 
     doDestroy() {
@@ -68,11 +76,16 @@ Ext.define('Common.ux.dialog.Form', {
                 form = me.getForm(),
                 url = me.url,
                 values = form.getSubmitValues(),
-                httpClient = me.httpClient;
+                httpClient = Http[me.httpMethod];
             if (me.onBeforeSave(values) === false) return;
-            me.mask(I18N.get('Saving'));
-            values.userName = null;
-            httpClient && httpClient.apply(Http, [url, values]).then(me.onSaveSuccess.bind(me), me.onSaveFailure.bind(me));
+            if(httpClient){
+                me.mask(I18N.get('Saving'));
+                httpClient.apply(Http, [url, values]).then(me.onSaveSuccess.bind(me), me.onSaveFailure.bind(me));
+            }else{
+                me.isSaved = true;                
+                me.close(values);
+            }                        
+            
         },
 
         onSaveSuccess() {

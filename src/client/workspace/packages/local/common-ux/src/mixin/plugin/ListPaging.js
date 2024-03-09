@@ -23,7 +23,6 @@ Ext.define('Common.mixin.plugin.ListPaging',{
         let me = this,
             list = me.getList() || me,
             plugin;
-        Logger.debug(this.updateListPaging, config,old,  me.listPagingPluginId);
         me.listPagingPluginId && list.removePlugin(me.listPagingPluginId);
 
         if(config){

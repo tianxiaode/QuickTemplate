@@ -32,40 +32,39 @@ Ext.define('Common.ux.form.Base',{
     
     config:{
         cols: 1,
-        labelWidth: 120
+        labelWidth: 120,
     },
+
+    autoLabelAlign: true,
 
     defaults:{
         errorTarget: 'under',
-        userCls: 'mx-1'
-    },
-
-    updateCols(cols){
-        let me = this;
-        if(!me.isReady) return;
-        if(cols <= 0 || Ext.platformTags.phone) cols = 1;        
-        let dialog = me.up('[isDialog]'),
-            labelWidth = me.getLabelWidth(),
-            items = me.getItems().items;
-        Ext.each(items, item=>{
-            let cls = item.getUserCls();
-            if(!cls.includes('cols-')){
-                item.setUserCls(`${cls} cols-${cols}`);
-            }
-            Logger.debug(this.updateCols, item.name)
-            if(item.getLangLabel()){
-                item.setLabelWidth(labelWidth);
-            }
-        })
-        if(!dialog) return;
-        dialog.setWidth(Ext.platformTags.desktop ? 400*cols : '100%');
+        userCls: 'mx-1 fixed-field-error-message'
     },
 
     initialize(){
         let me = this;
-        me.isReady = true;
-        me.updateCols(me.getCols());
         me.callParent();
+        me.initForm();
+    },
+
+    initForm(){
+        let me = this,
+            cols = me.getCols(),
+            autoLabelAlign = me.autoLabelAlign,
+            dialog = me.up('[isDialog]'),
+            labelWidth = me.getLabelWidth(),
+            items = me.getItems().items,
+            labelAlign = Ext.platformTags.desktop ? 'left' : 'top';
+        if(cols <= 0 || Ext.platformTags.phone) cols = 1;
+        Ext.each(items, item=>{
+            let cls = item.getUserCls();
+            !cls.includes('cols-') && item.setUserCls(`${cls} cols-${cols}`);
+            item.getLangLabel() && item.setLabelWidth(labelWidth);
+            autoLabelAlign && item.setLabelAlign(labelAlign)
+        })
+        if(!dialog) return;
+        dialog.setWidth(Ext.platformTags.desktop ? 400*cols : '100%');
     },
 
 

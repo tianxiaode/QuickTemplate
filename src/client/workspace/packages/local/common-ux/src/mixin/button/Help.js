@@ -6,15 +6,26 @@ Ext.define('Common.mixin.button.Help', {
     },
 
     createHelpButton(config) {
-        let me = this,
-            handler = 'onHelpButtonTap';
-        if(me[handler]) handler = me[handler].bind(me);
+        let me = this;
         return Ext.apply({
             xtype: 'button',
-            ui: 'success',
+            isHelp: true,
             langTooltip: 'Help',
+            arrow: false,
+            menuAlign: 'br',
             iconCls: 'x-far fa-question-circle',
-            handler: handler,
+            handler: me.onHelpButtonTap.bind(me),
+            menu:{
+                minWidth: 400,
+                anchor: true,
+                items:[
+                    {
+                        xtype: 'component',
+                        flex: 1,
+                        html: me.getLocalizedText(config.helpText)
+                    }
+                ]
+            },
             ownerCmp: me
         }, config);
     },
@@ -27,21 +38,12 @@ Ext.define('Common.mixin.button.Help', {
         config && this.add(config);
     },
 
-    updateHelpText(text){
-        let me = this,
-            html = me.getLocalizedText(text);
-        me.setMenu({
-            items:[
-                {
-                    xtype: 'component',
-                    flex: 1,
-                    html: html
-                }
-            ]
-        });
+    onHelpButtonTap(){
+        this.getHelpButton().getMenu().show();
     },
 
     doDestroy(){
+        Ext.destroy(this.getHelpButton().helpText); 
         this.destroyMembers( 'helpButton');
     }
 

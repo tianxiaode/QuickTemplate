@@ -20,12 +20,11 @@ Ext.define('Common.ux.dialog.Base', {
 
     isSaveClose: true,
     displayed: true,
-    closable: true,
+    //closable: true,
     modal: true,
     height: 'auto',
     layout: "vbox",
     padding: "0 0",
-    defaultListenerScope: true,
     weighted: true,
     includeResource: true,
 
@@ -33,6 +32,19 @@ Ext.define('Common.ux.dialog.Base', {
     cancelCallback: null,
     isSaved: false,
     
+    updateHeader(header){
+        let me = this;
+        me.callParent(arguments);
+        if(Ext.platformTags.phone){
+            header.setUi('dark');
+            header.setIconCls('md-icon-arrow-back');
+            me.headerIconElementListener = header.getTitle().iconElement.on('tap', me.close.bind(me));
+    
+        }else{
+            me.setClosable(true);
+        }
+    },
+
     close(){
         let me = this,
             isSaved = me.isSaved,
@@ -45,6 +57,7 @@ Ext.define('Common.ux.dialog.Base', {
 
     doDestroy() {
         let me = this;
+        Ext.destroy(me.headerIconElementListener);
         me.destroyMembers('callback', 'cancelCallback');
         me.callParent(arguments);
     }

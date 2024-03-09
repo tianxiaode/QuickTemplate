@@ -11,6 +11,7 @@ Ext.define('Common.mixin.crud.Button', {
      * @returns 
      */
     applyCrudButtons(buttons) {
+        Logger.debug(this.applyCrudButtons, buttons);
         if (!buttons) return;
         let me = this,
             map = new Map();
@@ -28,7 +29,6 @@ Ext.define('Common.mixin.crud.Button', {
     initButtons(container, permissions) {
         let me = this;
         me.setCrudButtons(container.query('[isCrud]'));
-        Logger.debug(me.initButtons, me.getCrudButtons());
         me.setButtonHidden('create', !permissions.create);
         me.setButtonHidden('update', !permissions.update);
         me.setButtonHidden('delete', !permissions.delete);
@@ -38,7 +38,7 @@ Ext.define('Common.mixin.crud.Button', {
      * 根据key获取按钮
      * @param {按钮的key} key 
      */
-    getButton(key) { return this.getCrudButtons.get(key) },
+    getButton(key) { return this.getCrudButtons().get(key) },
 
     /**
      * 更新CRUD按钮状态

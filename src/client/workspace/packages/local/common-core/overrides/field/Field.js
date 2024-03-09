@@ -2,17 +2,9 @@ Ext.define('Common.overrides.field.Field', {
     override: 'Ext.field.Field',
 
     config:{
-        separator: ':',
-        errorTarget: 'under',
+        separator: ':'
     },
     
-
-    responsiveConfig:{
-        'desktop && !cancel':{
-            labelAlign: 'left'
-        }
-    },
-
     getTemplate() {
         Logger.debug(this.getTemplate, this.name)
         return [
@@ -56,10 +48,15 @@ Ext.define('Common.overrides.field.Field', {
         let me = this,
             autoLabel = me.getAutoLabel(),
             isLeft = me.getLabelAlign() === 'left';
-        Logger.debug(this.updateSeparator, autoLabel)
         if(!isLeft || !autoLabel || me.isCheckbox) return;
         me.separatorElement.dom.style.padding = '7px 5px 7px 0';
         me.separatorElement.dom.innerHTML = separator;
-    }
+    },
+
+    updateUnderError(error) {
+        let el = this.errorMessageElement.dom;
+        el.innerHTML = error || '';
+        el.title = Ext.String.htmlDecode(error) || '';
+    },
 
 });

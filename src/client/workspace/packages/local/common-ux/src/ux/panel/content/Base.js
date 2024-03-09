@@ -2,6 +2,10 @@ Ext.define('Common.ux.panel.content.Base', {
     extend: 'Ext.Container',
     xtype: 'uxcontentpanel',
 
+    requires:[
+        'Common.ux.toolbar.Crud'
+    ],
+
     mixins:[
         'Common.mixin.Normalize',
         'Common.mixin.crud.Button',
@@ -33,7 +37,7 @@ Ext.define('Common.ux.panel.content.Base', {
 
     config: {
         toolbar: {
-            xtype: 'uxactiontoolbar',
+            xtype: 'uxcrudtoolbar',
             weight: 100,
         },
         list: {

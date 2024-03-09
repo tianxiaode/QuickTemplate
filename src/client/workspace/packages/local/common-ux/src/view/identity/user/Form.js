@@ -14,6 +14,7 @@ Ext.define('Common.view.identity.user.Form',{
         { 
             xtype: 'textfield', name: 'userName', maxLength: 256,
             reference: 'userNameField',
+            autoComplete: false,
             required: true, 
             weight: 100
         },

@@ -6,6 +6,9 @@ Ext.define('Common.overrides.Button',{
         langTooltip: null,
     },
 
+    updateLangTooltip(){
+        this.onLocalized();
+    },
 
     onLocalized(){
         let me = this,

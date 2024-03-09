@@ -2,7 +2,7 @@ Ext.define('Common.mixin.button.Search', {
     extend: 'Common.mixin.Component',
 
     config: {
-        searchButton: {}
+        searchButton: null
     },
 
 
@@ -12,8 +12,7 @@ Ext.define('Common.mixin.button.Search', {
         if(me[handler]) handler = me[handler].bind(me);
         return Ext.apply({
             xtype: 'button',
-            iconCls: 'md-icon-search',
-            ui: 'plain',
+            iconCls: 'x-fa fa-search',
             ownerCmp: me,
             handler: handler
         }, config);

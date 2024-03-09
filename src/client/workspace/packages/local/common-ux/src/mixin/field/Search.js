@@ -18,7 +18,6 @@ Ext.define('Common.mixin.field.Search',{
             userCls: 'mx-2',
             ownerCmp: this,
             width: !isPhone && 200 ,
-            weight: 500
         }, config);
     },
 

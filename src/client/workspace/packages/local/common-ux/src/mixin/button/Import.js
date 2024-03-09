@@ -11,7 +11,6 @@ Ext.define('Common.mixin.button.Import', {
         if(me[handler]) handler = me[handler].bind(me);
         return Ext.apply({
             xtype: 'button',
-            ui: 'success',
             langTooltip: 'Import',
             iconCls: 'x-fa fa-file-import',
             handler: handler,

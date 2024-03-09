@@ -29,7 +29,6 @@ Ext.define('Common.mixin.field.EnterEvent', {
             });
             index++;
         })
-        me.initFocus();
     },
 
     /**

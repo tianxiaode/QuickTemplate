@@ -75,6 +75,9 @@ Ext.define('Common.core.service.HttpClient', {
 
     },
 
+    getClient(method){
+        return Http[method.toLowerCase()];
+    },
 
     send(url, data, method, opts) {
         let me = this,

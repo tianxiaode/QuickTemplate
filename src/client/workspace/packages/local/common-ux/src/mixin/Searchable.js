@@ -50,7 +50,6 @@ Ext.define('Common.mixin.Searchable', {
     onSearch() {
         let me = this,
             searchTask = me.searchTask;
-        Logger.debug(this.onSearch);
         if (!searchTask) {
             searchTask = me.searchTask = new Ext.util.DelayedTask(me.doSearch, me);
         }
@@ -73,6 +72,10 @@ Ext.define('Common.mixin.Searchable', {
         let me = this,
             values = me.getSearchValues(),
             store = me.getStore();
+        if(Ext.Object.isEmpty(values)){
+            Ext.toast(I18N.get('SearchValueEmpty'));
+            return;
+        }
         if (me.onBeforeSearch(values) === false) return;
         if (!Ext.isObject(values)) return;
         if (!store.getRemoteFilter()) {

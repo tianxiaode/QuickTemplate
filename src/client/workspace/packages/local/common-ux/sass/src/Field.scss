@@ -35,6 +35,13 @@
 .x-textfield input:read-only{
     background-color: var(--faded-color);
 }
-.x-field > * > * > .x-error-message-el{
+// .x-field > * > * > .x-error-message-el{
+//     min-height: 16px;
+// }
+.fixed-field-error-message > * > * > .x-error-message-el{
+    max-height: 16px;
     min-height: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
