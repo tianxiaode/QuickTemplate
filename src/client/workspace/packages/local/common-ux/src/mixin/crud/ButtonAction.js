@@ -128,10 +128,10 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      * 单击更新按钮
      * @returns 
      */
-    onUpdateButtonTap() {
+    onUpdateButtonTap(isToolAction) {
         let me = this;
         if (me.onBeforeUpdate() === false) return;
-        me.doUpdate(selection);
+        me.doUpdate(isToolAction ? me.currentRecord : me.getSelection());
     },
 
     /**
@@ -145,14 +145,15 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     onAfterUpdate(){},
     onCancelUpdate(){
         Ext.History.back();
+        this.currentRecord = null;
     },
 
     /**
      * 执行更新操作
      */
-    doUpdate() {
+    doUpdate(record) {
         let me = this,
-            id = me.currentRecord.getId();
+            id = record.getId();
         Ext.History.add(`${me.getPluralizeEntityName()}/${id}`);
         let config = me.getDefaultDialogConfig('update');
 

@@ -5,15 +5,15 @@
     background-color: $background-color;
 }
 .color-base{
-    color: $base-color;
+    color: $base-color !important;
 }
 .color-alert,
 .color-danger{
-    color: $alert-color;
+    color: $alert-color !important;
 }
 .color-warning{
-    color: $accent-color;
+    color: $accent-color !important;
 }
 .color-success{
-    color: $confirm-color;
+    color: $confirm-color !important;
 }

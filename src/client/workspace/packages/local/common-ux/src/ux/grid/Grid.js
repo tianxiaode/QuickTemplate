@@ -10,7 +10,8 @@ Ext.define('Common.ux.grid.Grid',{
 
     mixins:[
         'Common.mixin.grid.CheckChange',
-        'Common.mixin.Normalize'
+        'Common.mixin.Normalize',
+        'Common.mixin.grid.ActionColumn'
     ],
 
     config:{

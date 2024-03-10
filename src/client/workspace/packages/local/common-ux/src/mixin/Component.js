@@ -9,6 +9,7 @@ Ext.define('Common.mixin.Component', {
             doDestroy: 'doDestroy'
         },
         after:{
+            initialize: 'afterInitialize',
             onLocalized: 'onLocalized'
         }
     },
@@ -16,5 +17,6 @@ Ext.define('Common.mixin.Component', {
     onLocalized(){},
     beforeInitialize(){},
     initialize(){},
+    afterInitialize(){},
     doDestroy(){}
 });

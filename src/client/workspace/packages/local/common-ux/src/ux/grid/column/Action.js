@@ -6,52 +6,65 @@ Ext.define('Common.ux.grid.column.Action', {
     text: '...',
     menu: false,
     align: 'center',
-    width: 60,
-
-    config: {
-        translation: {
-            iconCls: 'x-fa fa-globe text-primary',
-            handler: 'onMultilingual',
-            langTooltip: 'Multilingual',
-            weight: 400
-        },
-        update: {
-            iconCls: 'x-fa ffa-edit',
-            handler: 'onEdit',
-            langTooltip: 'Edit',
-            weight: 300
-        }
-    },
-
 
     applyCell(cell, oldCell) {
-        let me = this;
+        let me = this,
+            tools = cell.tools || {};
+        Logger.debug(this.applyCell, this);
         if (oldCell) {
             cell = Ext.apply(oldCell, cell);
         }
-
-        let translation = me.getTranslation();
-
-        if (translation) {
-            let tools = cell.tools;
-            if (!tools) tools = cell.tools = {};
-            tools.translation = Ext.clone(translation);
+        
+        if(me.isTranslation){
+            tools.translation = {
+                iconCls: 'x-fa fa-globe color-base',
+                handler:  'onTranslationToolTap',
+                langTooltip: 'Multilingual',
+                weight: 300
+            }
         }
 
-        let update = me.getUpdate();
-        if(update){
-            let tools = cell.tools;
-            if (!tools) tools = cell.tools = {};
-            tools.update = Ext.clone(update);
+        if(me.isUpdate){
+            tools.update = {
+                iconCls: 'x-fa fa-edit color-base',
+                handler: 'onUpdateToolTap',
+                langTooltip: 'Edit',
+                weight: 100
+            }
         }
+
+        if(me.isDelete){
+            tools.delete = {
+                iconCls: 'x-fa fa-trash color-alert',
+                handler: 'onDeleteToolTap',
+                langTooltip: 'Delete',
+                weight: 200
+            }
+        }
+
+        !Ext.Object.isEmpty(tools) && (cell.tools = tools);
 
         return cell;
     },
 
-    doDestroy() {
-        let me = this;
-        me.setTranslation(null);
-        me.callParent();
-    }
+    initialize(){
+        let me = this,
+            cell = me.getCell(),
+            container = me.getGrid().up(`[isToolAction]}`);
+            tools = cell.tools || {};
+        Logger.debug(this.initialize, tools, container);
+        Ext.Object.each(tools, (key,tool) => {
+            let handler = tool.handler;
+            if (Ext.isString(handler)) {
+                let fn = container[handler];
+                if (fn) tool.handler = fn;
+            }
+        });
+        me.callParent(arguments);
+
+    },
+
+
+    doDestroy() {}
 
 })
