@@ -7,7 +7,7 @@ Ext.define('Common.ux.toolbar.Paging', {
         'Ext.data.Store',
         'Ext.data.StoreManager',
         'Ext.field.Number',
-        'Common.ux.button.Option'
+        'Common.ux.button.SegmentedOption'
     ],
 
     mixins:[
@@ -44,7 +44,7 @@ Ext.define('Common.ux.toolbar.Paging', {
         pageSize: {},
         spacer: { weight: 800},
         pageSizeText:{},
-        refreshButton: {isPaging: true},
+        refreshButton: {isPaging: true, weight: 700},
         countMessage:{ weight: 1100, flex: null }
     },
 
@@ -177,14 +177,14 @@ Ext.define('Common.ux.toolbar.Paging', {
     createPageSize(config) {
         let me = this;
         return Ext.apply({
-            xtype: 'uxoptionbutton',
+            xtype: 'uxsegmentedoptionbutton',
             weight: 900,
             isPaging: true,
             disabled: true,
             autoLabel: false,
             options: [25, 50, 100],
             listeners: {
-                change: me.onPageSizeChange,
+                toggle: me.onPageSizeChange,
                 scope: me
             },
             ownerCmp: me
@@ -196,6 +196,7 @@ Ext.define('Common.ux.toolbar.Paging', {
     },
 
     updatePageSize(config) {
+        Logger.debug(this.updatePageSize, config);
         config && this.add(config);
     },
 
@@ -265,7 +266,7 @@ Ext.define('Common.ux.toolbar.Paging', {
 
     refreshPageSize(pageSize){
         let cmp = this.getPageSize();
-        cmp.setText(pageSize);
+        //cmp.set(pageSize);
         cmp.setValue(pageSize);
     },
 
@@ -316,8 +317,10 @@ Ext.define('Common.ux.toolbar.Paging', {
         me.pagingStore.loadPage(last);
     },
 
-    onPageSizeChange(sender, value, oldValue) {
-        let store = this.getStore();
+    onPageSizeChange(sender, button, pressed) {
+        if(!pressed) return;
+        let store = this.getStore(),
+            value = sender.getValue();
         Logger.debug(this.onPageSizeChange, value);
         store.setPageSize(value);
         store.loadPage(1);

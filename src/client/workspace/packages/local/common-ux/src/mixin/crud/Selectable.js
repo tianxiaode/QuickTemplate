@@ -73,6 +73,17 @@ Ext.define('Common.mixin.crud.Selectable',{
         return this.getSelectable().getSelectedRecords();
     },
 
+    /**
+     * 重置搜索字段值
+     */
+    onResetSearchFields(){
+        let fields = this.getSearchFields();
+        Ext.each(fields, f=>{
+            f.reset && f.reset();
+        })
+    },
+
+
     doDestroy(){
         Ext.destroy(this.listSelectListeners);
     }

@@ -81,3 +81,13 @@ $button-border-radius: dynamic(null);
 
 );
 
+@include button-ui(
+   $ui: 'action-segmented',
+   $color: $base-color,
+   $background-color: $faded-color,
+   $pressed-color: $base-foreground-color,
+   $pressed-background-color: $base-color,
+   $hovered-background-color: $base-pressed-color,
+   $pressed-hovered-background-color: $base-pressed-color,
+   $focused-hovered-background-color: $base-pressed-color
+);
