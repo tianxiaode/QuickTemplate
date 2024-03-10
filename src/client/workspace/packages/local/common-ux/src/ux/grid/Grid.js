@@ -5,7 +5,8 @@ Ext.define('Common.ux.grid.Grid',{
     requires:[
         'Common.ux.grid.column.CheckChange',
         'Common.ux.grid.column.Date',
-        'Common.core.util.Format'
+        'Common.core.util.Format',
+        'Common.ux.grid.column.Highlight'
     ],
 
     config:{

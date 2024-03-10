@@ -189,12 +189,6 @@ Ext.define('Common.ux.dataview.Format',{
         //     })
         //     return includes;
         // },
-        dateTimeToCheckbox(v, field){
-            let checked = !!v,
-                checkedCls = checked ?  Format.checkCls : '',
-                text = v ? Format.dateTime(v) : '';
-            return Format.format(Template.checkBoxItem, v, text, checkedCls, field);
-        },
         // getListItem(label,text,cls, id, field, inputType ){
         //     return `<div class="d-flex px-2 py-2">
         //         <div class="fw-bolder text-dark " style="width:150px;">${label}</div>
@@ -203,23 +197,6 @@ Ext.define('Common.ux.dataview.Format',{
         //         </div>
         //     </div>`
         // },
-        highlightRenderer(value, record, dataIndex, cell ,column){
-            return Format.gridHighlight(value, column.getGrid().getStore());
-        },
-        gridHighlight(value, store){
-            if(Ext.isEmpty(value)) return value;
-            let remoteFilter = store.getRemoteFilter(),
-                filter;
-            if(remoteFilter || store.isTreeStore){
-                let proxy = store.getProxy(),
-                    params = proxy.extraParams;
-                filter = params && params.filter;
-            }else{
-                filter = store.filterValue;
-            }
-            if(Ext.isEmpty(filter)) return value;
-            return Format.highlight(value, filter);
-        },
         highlight(value,filter){
             return String(value).replace(new RegExp('(' + filter + ')', "gi"), `<span class="color-alert"'>$1</span>`);
         }

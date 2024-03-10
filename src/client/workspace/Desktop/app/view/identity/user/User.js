@@ -17,29 +17,25 @@ Ext.define('Desktop.view.identity.user.User', {
                 tpl: `{userName:this.highlight} ({fullName})`
             },
             { 
-                dataIndex: 'email', flex:1,
-                renderer: 'highlightRenderer',
-                cell:{  encodeHtml: false},
-                editor:{ xtype: 'textfield' },
+                xtype: 'uxhighlightcolumn', dataIndex: 'email', flex:1
             },
             { 
-                dataIndex: 'phoneNumber', flex:1,
-                renderer: Format.highlightRenderer,
-                cell:{  encodeHtml: false,},
+                xtype: 'uxhighlightcolumn', dataIndex: 'phoneNumber', flex:1
             },
             {
                 xtype: 'uxdatecolumn', dataIndex: 'creationTime', 
             },
             { xtype: 'uxcheckchangecolumn', dataIndex: 'isActive' } ,
             {  
-                xtype: 'uxcheckchangecolumn', dataIndex: 'lockoutEnabled',
-                autoText: false, langText: 'Lockable'
+                xtype: 'uxcheckchangecolumn', dataIndex: 'lockoutEnabled'
             },
             {
-                dataIndex: 'lockoutEnd',autoText: false, langText: 'UserLocked',
-                flex:1,
-                cell:{  encodeHtml: false,},
-                tpl: `{lockoutEnd:dateTimeToCheckbox('lockoutEnd')}`
+                xtype: 'uxdatecolumn',
+                dataIndex: 'lockoutEnd',
+                showCheckbox: true,                
+                flex:1
+                // cell:{  encodeHtml: false,},
+                // tpl: `{lockoutEnd:dateTimeToCheckbox('lockoutEnd')}`
 
             }
         ]

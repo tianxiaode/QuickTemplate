@@ -6,7 +6,7 @@ Ext.define('Common.ux.grid.column.Date', {
 
     requires: [
         'Ext.Date',
-        'Ext.grid.cell.Date'
+        'Common.ux.grid.cell.Date'
     ],
 
     config: {
@@ -22,14 +22,18 @@ Ext.define('Common.ux.grid.column.Date', {
         },
 
         cell: {
-            xtype: 'datecell'
+            xtype: 'uxdatecell',
+            encodeHtml: false
         },
 
         summaries: {
             min: true,
             max: true,
             count: false
-        }
+        },
+
+        showCheckbox: false
+
     },
 
     applyFormat(format){

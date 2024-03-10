@@ -1,4 +1,4 @@
-Ext.define('Common.core.service.Template', {
+Ext.define('Common.service.Template', {
     alternateClassName: 'Template',
     singleton: true,
 
