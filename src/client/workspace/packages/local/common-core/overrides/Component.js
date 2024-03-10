@@ -44,7 +44,6 @@ Ext.define('Common.overrides.Component',{
         me.setPermissions(permissions, Format.defaultPermissions, group, permissionName);
         me.permissions = permissions;
         me.isInitPermissions = true;
-        //console.log(me.permissions)
     },
 
     setPermissions(permissions,actions, group , permissionName){

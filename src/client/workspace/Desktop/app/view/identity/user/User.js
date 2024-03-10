@@ -25,9 +25,9 @@ Ext.define('Desktop.view.identity.user.User', {
             {
                 xtype: 'uxdatecolumn', dataIndex: 'creationTime', 
             },
-            { xtype: 'uxcheckchangecolumn', dataIndex: 'isActive' } ,
+            { xtype: 'checkcolumn', dataIndex: 'isActive' } ,
             {  
-                xtype: 'uxcheckchangecolumn', dataIndex: 'lockoutEnabled'
+                xtype: 'checkcolumn', dataIndex: 'lockoutEnabled'
             },
             {
                 xtype: 'uxdatecolumn',

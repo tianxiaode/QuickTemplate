@@ -12,7 +12,6 @@ Ext.define('Common.ux.grid.cell.Highlight', {
             record = context.record,
             store = context.store;
 
-        Logger.debug(this.refreshValue, context, record, value);
         if(Ext.isEmpty(value)) return value;
         let remoteFilter = store.getRemoteFilter(),
             filter;
