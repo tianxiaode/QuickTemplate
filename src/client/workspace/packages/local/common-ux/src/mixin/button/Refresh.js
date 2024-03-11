@@ -12,7 +12,7 @@ Ext.define('Common.mixin.button.Refresh', {
         return Ext.apply({
             xtype: 'button',
             langTooltip: 'Refresh',
-            iconCls: 'x-fa fa-redo',
+            iconCls: IconCls.refresh,
             handler: handler,
             ownerCmp: me
         }, config);

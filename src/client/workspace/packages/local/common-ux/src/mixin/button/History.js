@@ -13,7 +13,7 @@ Ext.define('Common.mixin.button.History', {
             xtype: 'button',
             ui: 'grey',
             langTooltip: 'History',
-            iconCls: 'x-fa fa-history',
+            iconCls: IconCls.history,
             handler: handler,
             arrow: false,
             disabled: true,

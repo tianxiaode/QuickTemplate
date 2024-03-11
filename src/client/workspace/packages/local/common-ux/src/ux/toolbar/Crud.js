@@ -4,6 +4,7 @@ Ext.define('Common.ux.toolbar.Crud', {
 
     mixins: [
         'Common.mixin.button.Create',
+        'Common.mixin.button.Update',
         'Common.mixin.button.Trash',
         'Common.mixin.button.Refresh',
         'Common.mixin.button.Import',

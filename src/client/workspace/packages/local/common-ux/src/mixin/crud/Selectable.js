@@ -5,14 +5,13 @@ Ext.define('Common.mixin.crud.Selectable',{
         'Common.mixin.crud.Button'
     ],
 
-
     mixinConfig: {
         configs:true,
         before:{
             doDestroy: 'doDestroy'
         },
         after:{
-            onStoreBeforeLoad: 'doDeselectAll'
+            onListStoreBeforeLoad: 'doDeselectAll',
         }
     },
 

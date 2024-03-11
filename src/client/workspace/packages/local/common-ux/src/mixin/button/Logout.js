@@ -14,7 +14,7 @@ Ext.define('Common.mixin.button.Logout', {
             ui: 'grey',
             langTooltip: 'Logout',
             bind: {hidden: '{!isAuthenticated}'},
-            iconCls: 'x-fa fa-sign-out-alt',
+            iconCls: IconCls.logout,
             handler: handler,
             ownerCmp: me
         }, config);

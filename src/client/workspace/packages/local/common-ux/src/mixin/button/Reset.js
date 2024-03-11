@@ -13,7 +13,7 @@ Ext.define('Common.mixin.button.Reset', {
             xtype: 'button',
             ui: 'grey',
             langTooltip: 'Reset',
-            iconCls: 'x-fa fa-undo',
+            iconCls: IconCls.undo,
             handler: handler,
             ownerCmp: me
         }, config);

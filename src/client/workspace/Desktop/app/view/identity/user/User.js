@@ -7,6 +7,10 @@ Ext.define('Desktop.view.identity.user.User', {
         'Common.view.identity.user.Form'
     ],
 
+    toolbar:{
+        updateButton: {}
+    },
+
     paging: {},
     list:{
         store:{ type: 'users' },
@@ -34,9 +38,6 @@ Ext.define('Desktop.view.identity.user.User', {
                 dataIndex: 'lockoutEnd',
                 showCheckbox: true,                
                 flex:1
-                // cell:{  encodeHtml: false,},
-                // tpl: `{lockoutEnd:dateTimeToCheckbox('lockoutEnd')}`
-
             }
         ]
     }

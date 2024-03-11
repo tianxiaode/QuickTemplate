@@ -32,7 +32,6 @@ Ext.define('Common.service.Template', {
             </ul>
         `,
 
-
     getTplWithScope(config, scope){
         if(config.isXTemplate) return;
         let me = Template;
@@ -55,7 +54,7 @@ Ext.define('Common.service.Template', {
 
     destroy() {
         let me = this;
-        me.destroyMembers('templates', 'fn')
+        me.destroyMembers('templates', 'fn', 'iconCls')
     },
 
 

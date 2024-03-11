@@ -37,7 +37,6 @@ Ext.define('Common.localized.Localized', {
         resourceName = Format.capitalize(resourceName);
         entityName = Format.capitalize(entityName);
         key = Format.capitalize(key);
-        Logger.debug(this.get, key, entityName, resourceName)
         let me = this,
             defaultResourceName = me.remoteRawValue.defaultResourceName,
             values = me.remoteRawValue.values;

@@ -1,6 +1,10 @@
 Ext.define('Common.mixin.grid.ActionColumn', {
     extend: 'Common.mixin.Component',
 
+    requires: [
+        'Common.service.IconCls'
+    ],
+
     config: {
         translationTool: {},
         updateTool: {},
@@ -11,40 +15,45 @@ Ext.define('Common.mixin.grid.ActionColumn', {
 
     createActionColumn(config) {
         let me = this,
-            tools = [],
+            cell = config.cell || {},
+            tools = cell.tools || {},
             translationTool = me.getTranslationTool(),
             updateTool = me.getUpdateTool(),
             deleteTool = me.getDeleteTool();
+        delete config.cell;
         if(translationTool){
-            tools.push(Ext.apply({
-                iconCls: 'x-fa fa-globe color-base mx-1',
+            tools.translation = Ext.apply({
+                iconCls: IconCls.language +' color-base mx-1',
                 langTooltip: 'Multilingual',
-                actionName: 'onMultilingual',
+                actionName: 'translation',
                 hidden: true,
-                handler:  me.onTranslationToolTap.bind(me),
                 weight: 300,    
-            }, translationTool));
+            }, translationTool);
         }
         if(updateTool){
-            tools.push(Ext.apply({
-                iconCls: 'x-fa fa-edit color-base mx-1',
+            tools.update = Ext.apply({
+                iconCls: IconCls.update +' color-base mx-1',
                 langTooltip: 'Edit',
-                actionName: 'onUpdateButtonTap',
-                handler:  me.onUpdateToolTap.bind(me),
+                actionName: 'update',
                 weight: 100,    
                 hidden: true,
-            }, updateTool));
+            }, updateTool);
         }
         if(deleteTool){
-            tools.push(Ext.apply({
-                iconCls: 'x-fa fa-trash color-alert mx-1',
+            tools.delete = Ext.apply({
+                iconCls: IconCls.delete +' color-alert mx-1',
                 langTooltip: 'Delete',
-                handler:  me.onDeleteToolTap.bind(me),
-                actionName: 'onDeleteButtonTap',
+                actionName: 'delete',
                 weight: 200,    
                 hidden: true,
-            }, deleteTool));
+            }, deleteTool);
         }
+        Ext.Object.each(tools, (key, tool)=>{
+            if(!tool.iconCls.includes('mx-1')) tool.iconCls = tool.iconCls +'mx-1';
+            tool.handler = me.onToolTap.bind(me);
+        });
+        cell.tools = tools;
+        Logger.debug(this.createActionColumn, cell );
         return Ext.apply({
             xtype: 'gridcolumn',
             autoText: false,
@@ -52,9 +61,7 @@ Ext.define('Common.mixin.grid.ActionColumn', {
             menu: false,
             align: 'center',
             renderer: me.onActionColumnRenderer.bind(me),
-            cell:{
-                tools: tools
-            },
+            cell: cell,
         }, config);
     },
 
@@ -73,40 +80,21 @@ Ext.define('Common.mixin.grid.ActionColumn', {
     onActionColumnRenderer(value, record, dataIndex, cell, column) {
         let permissions = this.up('[permissions]').permissions,
             tools = cell.getTools();
-        Ext.each(tools, tool=>{            
-            if(tool.actionName === 'onMultilingual' ) {
+        Ext.each(tools, tool=>{      
+            let cls = tool.getIconCls();
+            if(cls.includes(IconCls.language)) {
                 tool.setHidden(!permissions.update);
-            }
-            if(tool.actionName === 'onUpdateButtonTap' ) {
+            }else if(cls.includes(IconCls.update)) {
                 tool.setHidden(!permissions.update);
-            }
-            if(tool.actionName === 'onDeleteButtonTap' ) {
+            }else if(cls.includes(IconCls.delete)) {
                 tool.setHidden(!permissions.delete);
             }
         })
-        Logger.debug(this.onActionColumnRenderer, arguments);
         return '';
     },
 
-    onTranslationToolTap(grid, context){
-        this.onToolAction(context.tool.actionName, grid, context);
-    },    
-
-    onUpdateToolTap(grid, context){
-        this.onToolAction(context.tool.actionName, grid, context);
-    },
-
-    onDeleteToolTap(grid, context){        
-        Logger.debug(this.onDeleteToolTap, grid, context);
-        this.onToolAction(context.tool.actionName, grid, context);
-    },
-
-    onToolAction(action, grid, context){
-        let container = this.up(`{${action}()}`);
-        if(!container) Ext.raise(`没有混入${action}操作的容器`);
-        let handler = container[action];
-        container.currentRecord = context.record;
-        handler(true);
+    onToolTap(grid, context){
+        this.fireEvent('tooltap', grid, context);
     },
 
     doDestroy() {

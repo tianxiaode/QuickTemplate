@@ -2,6 +2,10 @@ Ext.define('Common.ux.grid.cell.Date', {
     extend: 'Ext.grid.cell.Date',
     xtype: 'uxdatecell',
 
+    requires:[
+        'Common.service.Template'
+    ],
+
     formatValue(value) {
         let column = this.getColumn(),
             showCheckbox = column.getShowCheckbox(),

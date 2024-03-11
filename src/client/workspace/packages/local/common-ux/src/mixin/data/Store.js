@@ -17,7 +17,7 @@ Ext.define('Common.mixin.data.Store', {
     updateStoreEventListeners(events){
         let store = this.getStore();
         if(!store) return;
-        this.addEventListeners(store,events, 'Store', 'storeListeners');
+        this.addEventListeners(store,events, 'ListStore', 'storeListeners');
     },
 
 
@@ -29,13 +29,13 @@ Ext.define('Common.mixin.data.Store', {
      * @param {操作} operation 
      * @param {操作参数} eOpts 
      */
-    onStoreLoad(store, records, successful, operation, eOpts) { },
+    onListStoreLoad(store, records, successful, operation, eOpts) { },
 
 
     /**
      * 存储加载前的操作
      */
-    onStoreBeforeLoad(store) {
+    onListStoreBeforeLoad(store) {
         if (Ext.isEmpty(store.getProxy().getUrl())) return false;
         // let list = this.getList();
         // Logger.debug(this.onStoreBeforeLoad, list)

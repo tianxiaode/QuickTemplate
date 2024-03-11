@@ -13,7 +13,7 @@ Ext.define('Common.mixin.button.Help', {
             langTooltip: 'Help',
             arrow: false,
             menuAlign: 'br',
-            iconCls: 'x-far fa-question-circle',
+            iconCls: IconCls.help,
             handler: me.onHelpButtonTap.bind(me),
             menu:{
                 minWidth: 400,

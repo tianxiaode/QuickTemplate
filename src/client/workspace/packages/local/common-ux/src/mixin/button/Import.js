@@ -12,7 +12,7 @@ Ext.define('Common.mixin.button.Import', {
         return Ext.apply({
             xtype: 'button',
             langTooltip: 'Import',
-            iconCls: 'x-fa fa-file-import',
+            iconCls: IconCls.history,
             handler: handler,
             ownerCmp: me
         }, config);

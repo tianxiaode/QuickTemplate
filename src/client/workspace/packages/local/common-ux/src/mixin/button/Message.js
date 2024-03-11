@@ -52,10 +52,10 @@ Ext.define('Common.mixin.button.Message', {
             button = me.getMessageButton(),
             tooltip = button.getTooltip(),
             ui = isError ? 'danger' : 'success',
-            iconCls = isError ? 'times-circle' : 'check-circle';
+            iconCls = isError ? IconCls.error : IconCls.success;
         button.setMinWidth(32);
         button.setUi(ui);
-        button.setIconCls(`x-fa fa-${iconCls}`);
+        button.setIconCls(iconCls);
         tooltip.setHtml(`<p class="m-0 p-0 color-${ui}">${message}</p>`);
         button.setHidden(false);
         tooltip.show();

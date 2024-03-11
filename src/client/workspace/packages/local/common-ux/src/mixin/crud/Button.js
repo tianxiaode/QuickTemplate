@@ -32,6 +32,7 @@ Ext.define('Common.mixin.crud.Button', {
         me.setButtonHidden('create', !permissions.create);
         me.setButtonHidden('update', !permissions.update);
         me.setButtonHidden('delete', !permissions.delete);
+        me.refreshButtons(false);
     },
 
     /**
@@ -45,7 +46,7 @@ Ext.define('Common.mixin.crud.Button', {
      */
     refreshButtons(hasSelected) {
         let me = this,
-            allowUpdate = me.allowUpdate(hasSelected),
+            allowUpdate = me.allowUpdate(),
             allowDelete = me.allowDelete(hasSelected);
         me.setButtonDisabled('update', !allowUpdate);
         me.setButtonDisabled('delete', !allowDelete);
@@ -58,7 +59,12 @@ Ext.define('Common.mixin.crud.Button', {
      */
 
     allowUpdate(hasSelected) {
-        return hasSelected;
+        let selections = this.getSelections();
+        if(selections.length === 1){
+            this.currentRecord = selections[0];
+            return true;
+        }
+        return false;
     },
 
     /**

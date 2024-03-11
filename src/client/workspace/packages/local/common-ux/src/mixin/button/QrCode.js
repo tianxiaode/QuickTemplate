@@ -12,7 +12,7 @@ Ext.define('Common.mixin.button.QrCode', {
         return Ext.apply({
             xtype: 'button',
             langTooltip: 'ExportQrCode',
-            iconCls: 'x-fa fa-qrcode',
+            iconCls: IconCls.qrCode,
             handler: handler,
             ownerCmp: me
         }, config);

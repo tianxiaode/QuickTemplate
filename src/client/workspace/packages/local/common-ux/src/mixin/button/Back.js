@@ -11,7 +11,7 @@ Ext.define('Common.mixin.button.Back', {
         if(me[handler]) handler = me[handler].bind(me);
         return Ext.apply({
             xtype: 'button',
-            iconCls : 'md-icon-arrow-back',
+            iconCls : IconCls.left,
             weight : -100,
             ui: 'plain',
             ownerCmp: me,

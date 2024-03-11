@@ -1,6 +1,9 @@
 Ext.define('Common.mixin.Component', {
     extend: 'Common.mixin.Base',
 
+    requires:[
+        'Common.service.IconCls'
+    ],
     mixinConfig: {
         configs: true,
         before:{

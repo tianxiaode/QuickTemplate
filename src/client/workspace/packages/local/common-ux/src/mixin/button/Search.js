@@ -12,7 +12,7 @@ Ext.define('Common.mixin.button.Search', {
         if(me[handler]) handler = me[handler].bind(me);
         return Ext.apply({
             xtype: 'button',
-            iconCls: 'x-fa fa-search',
+            iconCls: IconCls.search,
             ownerCmp: me,
             handler: handler
         }, config);

@@ -16,7 +16,7 @@ Ext.define('Common.mixin.button.Language', {
             ui: 'grey',
             hidden: true,
             langTooltip: 'language',
-            iconCls: 'x-fa fa-globe',
+            iconCls: IconCls.language,
             ownerCmp: me
         }, config);
     },

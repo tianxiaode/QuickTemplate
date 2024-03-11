@@ -13,7 +13,7 @@ Ext.define('Common.mixin.button.Create', {
             xtype: 'button',
             ui: 'success',
             langTooltip: 'Add',
-            iconCls: 'x-fa fa-file',
+            iconCls: IconCls.create,
             handler: handler,
             ownerCmp: me
         }, config);

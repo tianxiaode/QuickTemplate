@@ -12,7 +12,7 @@ Ext.define('Common.mixin.button.Update', {
         return Ext.apply({
             xtype: 'button',
             langTooltip: 'Edit',
-            iconCls: 'x-fa fa-edit',
+            iconCls: IconCls.update,
             handler: handler,
             ownerCmp: me
         }, config);

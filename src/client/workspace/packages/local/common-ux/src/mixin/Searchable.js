@@ -116,6 +116,16 @@ Ext.define('Common.mixin.Searchable', {
         store.filterBy(fn, me);
     },
 
+    /**
+     * 重置搜索字段值
+     */
+    onResetSearchFields(){
+        let fields = this.getSearchFields();
+        Ext.each(fields, f=>{
+            f.reset && f.reset();
+        })
+    },
+
     doDestroy(){
         let me = this;
         Ext.each(me.fieldChangeListeners, e=>{

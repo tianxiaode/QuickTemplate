@@ -12,7 +12,7 @@ Ext.define('Common.mixin.button.Export', {
         return Ext.apply({
             xtype: 'button',
             langTooltip: 'Export',
-            iconCls: 'x-fa fa-file-export',
+            iconCls: IconCls.export,
             handler: handler,
             ownerCmp: me
         }, config);

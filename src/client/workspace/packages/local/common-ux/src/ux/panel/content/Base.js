@@ -69,7 +69,6 @@ Ext.define('Common.ux.panel.content.Base', {
     },
 
     doDestroy() {},
-
     privates: {       
 
         getCountMessage(){

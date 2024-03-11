@@ -131,7 +131,8 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     onUpdateButtonTap(isToolAction) {
         let me = this;
         if (me.onBeforeUpdate() === false) return;
-        me.doUpdate(isToolAction ? me.currentRecord : me.getSelection());
+        Logger.debug(me.onUpdateButtonTap, me, isToolAction);
+        me.doUpdate(isToolAction === true ? me.currentRecord : me.getSelections()[0]);
     },
 
     /**
@@ -151,9 +152,9 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     /**
      * 执行更新操作
      */
-    doUpdate(record) {
+    doUpdate() {
         let me = this,
-            id = record.getId();
+            id = me.currentRecord.getId();
         Ext.History.add(`${me.getPluralizeEntityName()}/${id}`);
         let config = me.getDefaultDialogConfig('update');
 
@@ -164,10 +165,10 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     /**
     * 单击删除按钮
     */
-    onDeleteButtonTap() {
+    onDeleteButtonTap(isCurrentRecord) {
         let me = this;
         if (me.onBeforeDelete() === false) return;
-        me.doDelete();
+        me.doDelete(isCurrentRecord);
         // me.doBatch(
         //     I18N.get('DeleteConfirmMessageTitle'),
         //     I18N.get('DeleteConfirmMessage'),

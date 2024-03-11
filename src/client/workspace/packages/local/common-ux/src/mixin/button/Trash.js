@@ -13,7 +13,7 @@ Ext.define('Common.mixin.button.Trash', {
             xtype: 'button',
             ui: 'danger',
             langTooltip: 'Delete',
-            iconCls: 'x-fa fa-trash',
+            iconCls: IconCls.delete,
             handler: handler,
             ownerCmp: me
         }, config);

@@ -60,7 +60,6 @@ Ext.define('Common.overrides.Component',{
     },
 
     getLocalizedText(text){
-        Logger.debug(this.getLocalizedText, text)
         let me = this,
             resourceName = me.getResourceName(),
             entityName = me.getEntityName(),
