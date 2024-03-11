@@ -6,7 +6,10 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     ],
 
     mixinConfig:{
-        configs: true
+        configs: true,
+        after: {
+            initialize: 'initialize'
+        }
     },
 
     config:{
@@ -90,6 +93,23 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      */
     currentRecord: null,
 
+    initialize() {
+        let me = this,
+            entityName = me.getEntityName(),
+            createTitle = me.getCreateDialogTitle(),
+            updateTitle = me.getUpdateDialogTitle();
+        if(Ext.isEmpty(createTitle)) {
+            me.setCreateDialogTitle(me.getLocalizedText(['add', entityName]));
+        }else{
+            me.setCreateDialogTitle(me.getLocalizedText(createTitle));
+        }
+        if(Ext.isEmpty(updateTitle)) {
+            me.setUpdateDialogTitle(me.getLocalizedText(['edit', entityName]));
+        }else{
+            me.setUpdateDialogTitle(me.getLocalizedText(updateTitle));
+        }
+
+    },
 
     /**
      * 单击新疆按钮
@@ -112,13 +132,15 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     doCreate() {
         let me = this;
         Ext.History.add(`${me.getPluralizeEntityName()}/add`);
+        me.currentRecord =Ext.create(me.getModelName(), me.getRecordDefaultValue());
         let config = me.getDefaultDialogConfig('create');
-
         let dialog = Ext.create(config);
         dialog.show();
     },
 
-    onAfterCreate(){},
+    onAfterCreate(){
+        this.onRefreshStore();
+    },
 
     onCancelCreate(){
         Ext.History.back();
@@ -142,7 +164,9 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      */
     onBeforeUpdate() { },
 
-    onAfterUpdate(){},
+    onAfterUpdate(){
+        this.onRefreshStore();
+    },
     onCancelUpdate(){
         Ext.History.back();
         this.currentRecord = null;
@@ -236,12 +260,13 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     getDefaultDialogConfig(action){
         let me = this,
             entityName = me.getEntityName(),
-            record = me.getCurrentRecord(action),
+            record = me.currentRecord,
             normalizeAction = me.capitalize(action);
         return {
             xtype: me.getDefaultDialogType(),
             action: action,
-            langTitle: me.getDialogTitle(action),
+            title: action === 'create' ? me.getCreateDialogTitle() : me.getUpdateDialogTitle(), 
+            createTitle: me.getCreateDialogTitle(),
             entityName: entityName,
             resourceName: me.getResourceName(),
             callback: me[`onAfter${normalizeAction}`].bind(me),
@@ -283,30 +308,6 @@ Ext.define('Common.mixin.crud.ButtonAction', {
                 recordDefaultValue: me.getRecordDefaultValue(),
                 record: record
             }, config)
-        },
-
-        /**
-         * 根据操作返回对应的记录，如果是新增操作，创建一个新记录并返回
-         * @param {操作} action 
-         * @returns 
-         */
-        getCurrentRecord(action){
-            let me = this;
-            if(action === 'create') return Ext.create(me.getModelName(), me.getRecordDefaultValue());
-            return this.currentRecord;
-        },
-
-        /**
-         * 根据操作获取对话框标题，如果没有自定义标题，返回默认值
-         * @param {操作} action 
-         */
-        getDialogTitle(action){
-            let me = this,
-                entityName = me.getEntityName(),
-                title = me[`_${action}DialogTitle`];
-            return Ext.isEmpty(title) 
-                ?  (action === 'create' ? ['add', entityName] : ['edit', entityName]) 
-                : title;
         },
 
         /**

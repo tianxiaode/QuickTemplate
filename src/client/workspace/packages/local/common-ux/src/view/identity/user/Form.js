@@ -3,11 +3,13 @@ Ext.define('Common.view.identity.user.Form',{
     xtype: 'userform',
 
     mixins:[
-        'Common.mixin.field.NewPassword'
+        'Common.mixin.field.NewPassword',
+        'Common.mixin.field.Email'
     ],
 
     newPassword:{ weight: 500},
     confirmPassword:{ weight: 600, autoLabel: true},
+    emailField:{ weight: 150, autoLabel: true, required: true, autoComplete: false},
     cols: 2,
 
     items:[
@@ -29,7 +31,7 @@ Ext.define('Common.view.identity.user.Form',{
         },
         { 
             xtype: 'textfield', name: 'phoneNumber', maxLength: 16,
-            weight: 400
+            weight: 400, required: true
         },
         {
             xtype: 'containerfield',
@@ -52,5 +54,6 @@ Ext.define('Common.view.identity.user.Form',{
             ]
         }
     ]
+
 
 })

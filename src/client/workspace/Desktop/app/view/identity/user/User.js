@@ -36,4 +36,5 @@ Ext.define('Desktop.view.identity.user.User', {
             }
         ]
     }
+
 });

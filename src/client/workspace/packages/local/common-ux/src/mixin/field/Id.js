@@ -23,7 +23,12 @@ Ext.define('Common.mixin.field.Id', {
     },
 
     updateIdField(config) {
-        config && this.add(config);
+        let me = this;
+        if(!config) return;
+
+        me.add(config);
+        let record = me.getRecord();
+        record && config.setValue(record.get(config.getName()));
     },
 
     doDestroy() {

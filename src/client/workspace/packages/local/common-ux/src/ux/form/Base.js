@@ -65,6 +65,11 @@ Ext.define('Common.ux.form.Base',{
         })
         if(!dialog) return;
         dialog.setWidth(Ext.platformTags.desktop ? 400*cols : '100%');
+        if(me.isEdit){
+            let record = me.getRecord();
+            me.setRecord(null);
+            me.setRecord(record);
+        }
     },
 
 
