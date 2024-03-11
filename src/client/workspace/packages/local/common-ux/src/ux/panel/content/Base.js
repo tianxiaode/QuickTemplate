@@ -6,14 +6,16 @@ Ext.define('Common.ux.panel.content.Base', {
         'Common.ux.toolbar.Crud'
     ],
 
+    viewModel:{},
+
     mixins:[
         'Common.mixin.Normalize',
         'Common.mixin.crud.Button',
         'Common.mixin.crud.ButtonAction',
         'Common.mixin.crud.Batch',
-        'Common.mixin.crud.CountMessage',
         'Common.mixin.data.Store',
         'Common.mixin.crud.Selectable',
+        'Common.mixin.crud.CountMessage',
         'Common.mixin.crud.ChildTap',
         'Common.mixin.crud.ChildLongPress',
         'Common.mixin.crud.DoubleTapToEdit',

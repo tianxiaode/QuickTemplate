@@ -37,8 +37,9 @@ Ext.define('Desktop.view.identity.user.User', {
         ]
     },
 
-    onAfterToolTap(){
-        Logger.debug(this.onAfterToolTap, arguments);
+    initialize(){
+        this.callParent(arguments);
+        Logger.debug(this.initialize, this.getViewModel());
     }
 
 

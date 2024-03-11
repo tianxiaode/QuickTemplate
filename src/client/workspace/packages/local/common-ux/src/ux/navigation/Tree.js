@@ -36,7 +36,7 @@ Ext.define('Common.ux.navigation.Tree',{
         let me = this,
             store = me.getStore(),
             root = store.getRoot();
-        store.on('load', me.onStoreLoaded, me);
+        me.storeListeners = store.on('load', me.onStoreLoaded, me);
         store.setExtraParams('groupName', Ext.getApplication().getName().toLocaleLowerCase());
         root.getProxy().setExtraParam('groupName', Ext.getApplication().getName().toLocaleLowerCase());
         root.expand();
@@ -99,8 +99,10 @@ Ext.define('Common.ux.navigation.Tree',{
     },
 
     doDestroy(){
-        this.setCurrentViewType(null);
-        this.callParent();
+        let me = this;
+        Ext.destroy(me.storeListeners);
+        me.setCurrentViewType(null);
+        me.callParent();
     },
 
     privates:{

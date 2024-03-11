@@ -2,22 +2,32 @@ Ext.define('Common.mixin.data.Store', {
     extend: 'Common.mixin.Listener',
 
     mixinConfig: {
-        configs:true,
-        before:{
+        configs: true,
+        before: {
             doDestroy: 'doDestroy',
-        }
+        },
+        // extended(baseClass, derivedClass, classBody){
+        //     let storeEventListeners = baseClass.$config.values.storeEventListeners;
+        //     if(Ext.isArray(storeEventListeners)){
+        //         Ext.each(storeEventListeners, (event)=>{
+        //            derivedClass.addMember( `onListStore${Ext.String.capitalize(event)}`, ()=>{});
+        //         });
+        //     }
+
+        //     Logger.debug(this.extended, baseClass, derivedClass, classBody);
+        // }
     },
 
-    config:{
+    config: {
         storeEventListeners: ['load', 'beforeLoad'],
     },
 
     storeListeners: null,
 
-    updateStoreEventListeners(events){
+    updateStoreEventListeners(events) {
         let store = this.getStore();
-        if(!store) return;
-        this.addEventListeners(store,events, 'ListStore', 'storeListeners');
+        if (!store) return;
+        this.addEventListeners(store, events, 'ListStore', 'storeListeners');
     },
 
 
@@ -29,19 +39,13 @@ Ext.define('Common.mixin.data.Store', {
      * @param {操作} operation 
      * @param {操作参数} eOpts 
      */
-    onListStoreLoad(store, records, successful, operation, eOpts) { },
+    onListStoreLoad(store, records, successful, operation, eOpts) {},
 
 
     /**
      * 存储加载前的操作
      */
-    onListStoreBeforeLoad(store) {
-        if (Ext.isEmpty(store.getProxy().getUrl())) return false;
-        // let list = this.getList();
-        // Logger.debug(this.onStoreBeforeLoad, list)
-        // list && list.deselectAll();
-        return true;
-    },
+    onListStoreBeforeLoad(store) {},
 
     /**
      * 刷新列表

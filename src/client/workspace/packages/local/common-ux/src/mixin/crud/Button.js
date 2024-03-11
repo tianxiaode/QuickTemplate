@@ -1,6 +1,18 @@
 Ext.define('Common.mixin.crud.Button', {
     extend: 'Common.mixin.Base',
 
+    mixinConfig: {
+        configs:true,
+        before:{
+            doDestroy: 'doDestroy'
+        },
+        after: {
+            onListSelect: 'refreshButtons',
+            onListDeselect: 'refreshButtons'
+        }
+    },
+
+
     config: {
         crudButtons: null
     },
@@ -11,7 +23,6 @@ Ext.define('Common.mixin.crud.Button', {
      * @returns 
      */
     applyCrudButtons(buttons) {
-        Logger.debug(this.applyCrudButtons, buttons);
         if (!buttons) return;
         let me = this,
             map = new Map();
@@ -44,8 +55,10 @@ Ext.define('Common.mixin.crud.Button', {
     /**
      * 更新CRUD按钮状态
      */
-    refreshButtons(hasSelected) {
+    refreshButtons() {
         let me = this,
+            selections = me.getSelections(),
+            hasSelected = selections.length > 0,
             allowUpdate = me.allowUpdate(),
             allowDelete = me.allowDelete(hasSelected);
         me.setButtonDisabled('update', !allowUpdate);
@@ -58,10 +71,10 @@ Ext.define('Common.mixin.crud.Button', {
      * @returns 
      */
 
-    allowUpdate(hasSelected) {
-        let selections = this.getSelections();
-        if(selections.length === 1){
-            this.currentRecord = selections[0];
+    allowUpdate() {
+        let selection = this.getSelection();
+        if(selection){
+            this.currentRecord = selection;
             return true;
         }
         return false;

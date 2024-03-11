@@ -53,7 +53,6 @@ Ext.define('Common.mixin.grid.ActionColumn', {
             tool.handler = me.onToolTap.bind(me);
         });
         cell.tools = tools;
-        Logger.debug(this.createActionColumn, cell );
         return Ext.apply({
             xtype: 'gridcolumn',
             autoText: false,

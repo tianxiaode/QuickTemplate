@@ -37,7 +37,6 @@ Ext.define('Common.mixin.plugin.CellEditing',{
                 scope: me,
                 destroyable: true
             })
-            Logger.debug(this.updateCellEditing, plugin);
         }
     },
 

@@ -45,7 +45,6 @@ Ext.define('Common.overrides.Component',{
     getResourceName(){
         let me = this,
             container = me.getResourceContainer();
-        Logger.debug(this.getResourceName, me._resourceName, container && container._resourceName )
         return me._resourceName || (container && container._resourceName);
     },
 

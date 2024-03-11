@@ -72,10 +72,10 @@ Ext.define('Common.mixin.Searchable', {
         let me = this,
             values = me.getSearchValues(),
             store = me.getStore();
-        if(Ext.Object.isEmpty(values)){
-            Ext.toast(I18N.get('SearchValueEmpty'));
-            return;
-        }
+        // if(Ext.Object.isEmpty(values)){
+        //     Ext.toast(I18N.get('SearchValueEmpty'));
+        //     return;
+        // }
         if (me.onBeforeSearch(values) === false) return;
         if (!Ext.isObject(values)) return;
         if (!store.getRemoteFilter()) {
@@ -84,7 +84,6 @@ Ext.define('Common.mixin.Searchable', {
         }
         store.setExtraParams(values, true);
         me.onRefreshStore();
-        Logger.debug(this.doSearch, values);
     },
 
 
