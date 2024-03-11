@@ -21,6 +21,7 @@ Ext.define('Common.ux.panel.content.Base', {
         'Common.mixin.crud.ChildTap',
         'Common.mixin.crud.ChildLongPress',
         'Common.mixin.crud.DoubleTapToEdit',
+        'Common.mixin.crud.Multilingual',
         'Common.mixin.crud.ToolAction',        
         'Common.mixin.Searchable',
         'Common.mixin.plugin.CellEditing',

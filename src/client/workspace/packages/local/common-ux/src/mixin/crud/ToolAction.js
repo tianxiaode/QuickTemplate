@@ -3,6 +3,25 @@ Ext.define('Common.mixin.crud.ToolAction', {
 
     toolTapEventListener: null,
 
+    config:{
+        toolActions: {}
+    },    
+
+    applyToolActions(actions){
+        let me = this,
+            ret = Ext.apply({
+            [IconCls.language]: me.onMultilingual,
+            [IconCls.delete]: me.onDeleteButtonTap.bind(me, true),
+            [IconCls.update]: me.onUpdateButtonTap
+        }, actions);
+        Ext.Object.each(ret, (key, value)=>{
+            if(typeof value ==='string'){
+                ret[key] = me[value]; 
+            }
+        });
+        return ret;
+    },
+
     initialize(){
         let me = this;
         me.toolTapEventListener = me.getList().on('tooltap', me.onToolTap, me);
@@ -12,20 +31,19 @@ Ext.define('Common.mixin.crud.ToolAction', {
         let me = this,
             cls = context.tool.getIconCls(),
             record = context.record;
-        Logger.debug(me.onToolTap, cls, context);
         me.currentRecord = record;
-        if(cls.includes(IconCls.language)){
-            Logger.debug(this.onToolTap, "多语言输入");
-        }else if(cls.includes(IconCls.delete)){
-            me.onDeleteButtonTap(true);
-        }else if(cls.includes(IconCls.update)){
-            me.onUpdateButtonTap();
-        }
+        Logger.debug(this.onToolTap, me.getToolActions());
+        Ext.Object.each(me.getToolActions(), (key, value)=>{
+            if(cls.includes(key)){
+                value.call(me, record);
+            }
+        })
         me.onAfterToolTap && me.onAfterToolTap(grid, context, cls, record);
     },
 
     doDestroy(){
         Ext.destroy(this.toolTapEventListener);
+        this.destroyMembers('toolActions');
     }
 
 });

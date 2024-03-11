@@ -128,11 +128,10 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      * 单击更新按钮
      * @returns 
      */
-    onUpdateButtonTap(isToolAction) {
+    onUpdateButtonTap() {
         let me = this;
         if (me.onBeforeUpdate() === false) return;
-        Logger.debug(me.onUpdateButtonTap, me, isToolAction);
-        me.doUpdate(isToolAction === true ? me.currentRecord : me.getSelections()[0]);
+        me.doUpdate();
     },
 
     /**

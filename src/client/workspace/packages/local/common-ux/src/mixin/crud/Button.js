@@ -72,9 +72,9 @@ Ext.define('Common.mixin.crud.Button', {
      */
 
     allowUpdate() {
-        let selection = this.getSelection();
-        if(selection){
-            this.currentRecord = selection;
+        let selections = this.getSelections();
+        if(selections.length === 1){
+            this.currentRecord = selections[0];
             return true;
         }
         return false;

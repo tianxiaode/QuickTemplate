@@ -35,12 +35,5 @@ Ext.define('Desktop.view.identity.user.User', {
                 flex:1
             }
         ]
-    },
-
-    initialize(){
-        this.callParent(arguments);
-        Logger.debug(this.initialize, this.getViewModel());
     }
-
-
 });
