@@ -6,7 +6,7 @@ Ext.define('Common.mixin.grid.ActionColumn', {
     ],
 
     config: {
-        translationTool: {},
+        translationTool: null,
         updateTool: {},
         deleteTool: {},
         actionColumn: {}
@@ -49,7 +49,7 @@ Ext.define('Common.mixin.grid.ActionColumn', {
             }, deleteTool);
         }
         Ext.Object.each(tools, (key, tool)=>{
-            if(!tool.iconCls.includes('mx-1')) tool.iconCls = tool.iconCls +'mx-1';
+            if(!tool.iconCls.includes('mx-1')) tool.iconCls = tool.iconCls +' mx-1';
             tool.handler = me.onToolTap.bind(me);
         });
         cell.tools = tools;

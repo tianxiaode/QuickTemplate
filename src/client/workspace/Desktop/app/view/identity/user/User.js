@@ -7,11 +7,6 @@ Ext.define('Desktop.view.identity.user.User', {
         'Common.view.identity.user.Form'
     ],
 
-    toolbar:{
-        updateButton: {}
-    },
-
-    paging: {},
     list:{
         store:{ type: 'users' },
         columns:[
@@ -40,6 +35,10 @@ Ext.define('Desktop.view.identity.user.User', {
                 flex:1
             }
         ]
+    },
+
+    onAfterToolTap(){
+        Logger.debug(this.onAfterToolTap, arguments);
     }
 
 

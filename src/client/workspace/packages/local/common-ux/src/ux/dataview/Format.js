@@ -197,6 +197,20 @@ Ext.define('Common.ux.dataview.Format',{
         //         </div>
         //     </div>`
         // },
+        gridHighlight(value, store){
+            if(Ext.isEmpty(value)) return value;
+            let remoteFilter = store.getRemoteFilter(),
+                filter;
+            if(remoteFilter || store.isTreeStore){
+                let proxy = store.getProxy(),
+                    params = proxy.extraParams;
+                filter = params && params.filter;
+            }else{
+                filter = store.filterValue;
+            }
+            if(Ext.isEmpty(filter)) return value;
+            return Format.highlight(value, filter);
+        },
         highlight(value,filter){
             return String(value).replace(new RegExp('(' + filter + ')', "gi"), `<span class="color-alert"'>$1</span>`);
         }
