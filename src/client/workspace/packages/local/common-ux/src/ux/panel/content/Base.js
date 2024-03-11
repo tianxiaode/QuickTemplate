@@ -6,15 +6,17 @@ Ext.define('Common.ux.panel.content.Base', {
         'Common.ux.toolbar.Crud'
     ],
 
-    viewModel:{},
-
+    /**
+     * 注意：Store和Selectable必须在Button和CountMessage之前
+     * 不然这两个类中after中定义的方法因为找不到父类方法而报错（callParent错误）
+     */
     mixins:[
         'Common.mixin.Normalize',
+        'Common.mixin.data.Store',
+        'Common.mixin.crud.Selectable',
         'Common.mixin.crud.Button',
         'Common.mixin.crud.ButtonAction',
         'Common.mixin.crud.Batch',
-        'Common.mixin.data.Store',
-        'Common.mixin.crud.Selectable',
         'Common.mixin.crud.CountMessage',
         'Common.mixin.crud.ChildTap',
         'Common.mixin.crud.ChildLongPress',
@@ -84,6 +86,7 @@ Ext.define('Common.ux.panel.content.Base', {
 
         onStoreChange(store) {
             let me = this,
+                viewModel = me.getViewModel(),
                 resourceName = store.getResourceName(),
                 entityName = store.getEntityName(),
                 autoLoad = me.autoLoad,
@@ -91,7 +94,10 @@ Ext.define('Common.ux.panel.content.Base', {
             me.setResourceName(resourceName);
             me.setEntityName(entityName);
             me.setPermissionGroup(resourceName);
+            
             me.initButtons(me.getToolbar(), me.permissions);
+
+            
             me.setSearchFields(me.getToolbar().query('[isSearch]'));
             paging && paging.setStore(store);
             (autoLoad === 'search') && me.doSearch();

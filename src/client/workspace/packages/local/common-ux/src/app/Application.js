@@ -30,7 +30,6 @@ Ext.define('Common.app.Application', {
     },
 
     init() {
-        Logger.debug(this.init, 'dddd')
         //桌面应用允许用户选择文字
         if(Ext.platformTags.desktop){
             Ext.Viewport.setUserSelectable({
@@ -43,7 +42,6 @@ Ext.define('Common.app.Application', {
     },
 
     onAppUpdate() {
-        Logger.debug(this.onAppUpdate, 'dddd')
         let title = I18N.getLocalText('applicationUpdate'),
             message = I18N.getLocalText('applicationUpdateMessage');
         MsgBox.confirm(title, message,
@@ -56,7 +54,6 @@ Ext.define('Common.app.Application', {
     },
 
     launch(){
-        Logger.debug(this.launch, 'dddd')
         //完成应用程序初始化再进行Viewport的初始化
         this.removeSplash();
 

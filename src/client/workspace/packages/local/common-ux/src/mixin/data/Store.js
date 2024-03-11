@@ -5,17 +5,7 @@ Ext.define('Common.mixin.data.Store', {
         configs: true,
         before: {
             doDestroy: 'doDestroy',
-        },
-        // extended(baseClass, derivedClass, classBody){
-        //     let storeEventListeners = baseClass.$config.values.storeEventListeners;
-        //     if(Ext.isArray(storeEventListeners)){
-        //         Ext.each(storeEventListeners, (event)=>{
-        //            derivedClass.addMember( `onListStore${Ext.String.capitalize(event)}`, ()=>{});
-        //         });
-        //     }
-
-        //     Logger.debug(this.extended, baseClass, derivedClass, classBody);
-        // }
+        }
     },
 
     config: {
