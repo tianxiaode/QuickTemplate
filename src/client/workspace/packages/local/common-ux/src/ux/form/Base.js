@@ -1,8 +1,8 @@
-Ext.define('Common.ux.form.Base',{
+Ext.define('Common.ux.form.Base', {
     extend: 'Ext.form.Panel',
     xtype: 'uxformpanel',
 
-    requires:[
+    requires: [
         'Ext.field.Hidden',
         'Ext.field.Password',
         'Ext.field.Text',
@@ -15,60 +15,67 @@ Ext.define('Common.ux.form.Base',{
         'Ext.field.Container'
     ],
 
-    mixins:[
+    mixins: [
         'Common.mixin.field.EnterEvent',
         'Common.mixin.field.Id',
         'Common.mixin.field.ConcurrencyStamp',
     ],
 
-    layout: 'auto', 
-    weighted: true,   
+    layout: 'auto',
+    weighted: true,
 
     userCls: 'flex-wrap-item',
 
     defaultType: 'textfield',
     trackResetOnLoad: true,
     isReady: false,
-    
-    config:{
+
+    config: {
         cols: 1,
         labelWidth: 120,
     },
 
     autoLabelAlign: true,
 
-    defaults:{
+    defaults: {
         errorTarget: 'under',
-        userCls: 'mx-1 fixed-field-error-message'
+        userCls: 'mx-1 fixed-field-error-message',
+        separatorAlign: 'field'
     },
 
-    initialize(){
+    initialize() {
         let me = this;
         me.callParent();
         me.initForm();
     },
 
-    initForm(){
+    initForm() {
         let me = this,
             cols = me.getCols(),
             autoLabelAlign = me.autoLabelAlign,
             dialog = me.up('[isDialog]'),
             labelWidth = me.getLabelWidth(),
             items = me.getItems().items,
-            labelAlign = Ext.platformTags.desktop ? 'left' : 'top';
-        if(cols <= 0 || Ext.platformTags.phone) cols = 1;
-        Ext.each(items, item=>{
+            labelAlign = Ext.platformTags.desktop ? 'left' : 'top',
+            record = me.getRecord();
+        if (cols <= 0 || Ext.platformTags.phone) cols = 1;
+        Ext.each(items, item => {
             let cls = item.getUserCls();
             !cls.includes('cols-') && item.setUserCls(`${cls} cols-${cols}`);
             item.getLangLabel() && item.setLabelWidth(labelWidth);
             autoLabelAlign && item.setLabelAlign(labelAlign)
+            item.set
         })
-        if(!dialog) return;
-        dialog.setWidth(Ext.platformTags.desktop ? 400*cols : '100%');
+        if (dialog) {
+            dialog.setWidth(Ext.platformTags.desktop ? 400 * cols : '100%');
+        };
 
         //混入字段在updateRecord调用setValues方法时还没初始化，
         //因而不会有初始值，必须在这里重新执行一次setValues
-        me.setValues(me.getRecord().data)
+        me.setValues(me.getRecord().data);
+
+        //使用该方便避免调用callParent的麻烦
+        me.onAfterInitForm && me.onAfterInitForm(items, record);
     },
 
 
@@ -76,24 +83,24 @@ Ext.define('Common.ux.form.Base',{
         let me = this,
             fields = me.getFields(),
             name, field, value, ln, i, f;
- 
+
         values = values || {};
- 
+
         for (name in values) {
             if (values.hasOwnProperty(name)) {
                 field = fields[name];
                 value = values[name];
- 
+
                 if (field) {
                     // If there are multiple fields with the same name. Checkboxes, radio
                     // fields and maybe event just normal fields..
                     if (Ext.isArray(field)) {
                         ln = field.length;
- 
+
                         // Loop through each of the fields
                         for (i = 0; i < ln; i++) {
                             f = field[i];
- 
+
                             if (f.isRadio) {
                                 // If it is a radio field just use setGroupValue which
                                 // will handle all of the radio fields
@@ -128,20 +135,20 @@ Ext.define('Common.ux.form.Base',{
                             field.setValue(value);
                         }
                     }
- 
+
                     if (me.getTrackResetOnLoad && me.getTrackResetOnLoad()) {
-                        if(Ext.isArray(field)){
-                            field.forEach(f=>{
+                        if (Ext.isArray(field)) {
+                            field.forEach(f => {
                                 f.resetOriginalValue();
                             });
-                        }else{
+                        } else {
                             field.resetOriginalValue();
                         }
                     }
                 }
             }
         }
- 
+
         return me;
     }
 

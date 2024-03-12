@@ -2,7 +2,8 @@ Ext.define('Common.overrides.field.Field', {
     override: 'Ext.field.Field',
 
     config:{
-        separator: ':'
+        separator: ':',
+        separatorAlign: 'label'
     },
     
     getTemplate() {
@@ -42,12 +43,23 @@ Ext.define('Common.overrides.field.Field', {
             }]
         }];
     },
+
+    updateLabelAlign(){
+        this.callParent(arguments);
+        this.updateSeparator(this.getSeparator());
+    },
     
     updateSeparator(separator){
         let me = this,
-            autoLabel = me.getAutoLabel(),
+            label = me.getLabel(),
+            align = me.getSeparatorAlign(),
             isLeft = me.getLabelAlign() === 'left';
-        if(!isLeft || !autoLabel || me.isCheckbox) return;
+        Logger.debug(this.updateSeparator, me.name, label, separator, align, me.getLabelAlign());
+        if(!isLeft || !label || me.isCheckbox) return;
+        if(align === 'label'){
+            me.setLabel(label + separator);
+            return;
+        }
         me.separatorElement.dom.style.padding = '7px 5px 7px 0';
         me.separatorElement.dom.innerHTML = separator;
     },

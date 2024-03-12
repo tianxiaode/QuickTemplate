@@ -55,9 +55,8 @@ Ext.define('Common.view.identity.user.Form',{
         }
     ],
 
-    initForm(){
+    onAfterInitForm(){
         let me = this;
-        me.callParent(arguments);
         me.getNewPasswordField().setRequired(!me.isEdit);
         me.getConfirmPasswordField().setRequired(!me.isEdit);
         me.clearErrors();

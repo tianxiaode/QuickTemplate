@@ -27,7 +27,7 @@ Ext.define('Common.overrides.field.Field',{
         me.setSeparator(I18N.getLabelSeparator());
     },
 
-    updateTipError: function(error) {
+    updateTipError(error) {
         if (error) {
             error = Ext.apply({
                 html: error,
