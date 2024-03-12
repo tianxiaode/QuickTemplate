@@ -1,10 +1,6 @@
 Ext.define('Common.overrides.Component',{
     override: 'Ext.Component',
 
-    mixins: [
-        'Ext.mixin.Responsive'
-    ],
-
     config:{
         langHtml: null,
         langTooltip: null,
@@ -44,18 +40,8 @@ Ext.define('Common.overrides.Component',{
 
     getResourceName(){
         let me = this,
-            container = me.getResourceContainer();
+            container = me.up('[_resourceName]');
         return me._resourceName || (container && container._resourceName);
-    },
-
-    getEntityName(){
-        let me = this,
-            container = me.getResourceContainer();
-        return me._entityName || (container && container._entityName);
-    },
-
-    getResourceContainer(){
-        return this.up('[includeResource]');
     },
 
     getLocalizedText(text){

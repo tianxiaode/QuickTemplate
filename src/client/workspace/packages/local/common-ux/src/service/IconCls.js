@@ -39,6 +39,7 @@ Ext.define('Common.service.IconCls', {
     down: 'x-fa fa-arrow-down',
     left: 'x-fa fa-arrow-left',
     right: 'x-fa fa-arrow-right',
-    qrCode: 'x-fa fa-qrcode'
+    qrCode: 'x-fa fa-qrcode',
+    done: 'x-fa fa-check'
 
 })

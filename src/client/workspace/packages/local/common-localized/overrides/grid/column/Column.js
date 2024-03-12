@@ -5,6 +5,7 @@ Ext.define('Common.overrides.grid.column.Column',{
         autoText: true,
         langText: null,
         groupable: false,
+        entityName: null
     },
 
     onLocalized(){

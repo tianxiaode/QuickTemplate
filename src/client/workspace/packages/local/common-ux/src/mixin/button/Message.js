@@ -8,13 +8,11 @@ Ext.define('Common.mixin.button.Message', {
     isErrorMessage: false,
 
     createMessageButton(config) {
-        let me = this,
-            handler = 'onMessageButtonTap';
-        if(me[handler]) handler = me[handler].bind(me);
         return Ext.apply({
             xtype: 'button',
             iconCls: 'x-fa  fa-check-circle',
-            handler: handler,
+            handler: 'onMessageButtonTap',
+            scope: this,
             tooltip: {
                 align: 'b-t',
                 zIndex: 1001,
@@ -25,19 +23,19 @@ Ext.define('Common.mixin.button.Message', {
                 autoHide: true,
                 closable: false
             },
-            ownerCmp: me
-        }, config);
+            ownerCmp: this
+        }, config, this.getDefaults());
     },
 
     applyMessageButton(config, old) {
         return Ext.updateWidget(old, config, this, 'createMessageButton');
     },
 
-    updateMessageButton(config){
+    updateMessageButton(config) {
         config && this.add(config);
     },
 
-    onMessageButtonTap(sender){
+    onMessageButtonTap(sender) {
         sender.getTooltip().show();
     },
 
@@ -47,7 +45,7 @@ Ext.define('Common.mixin.button.Message', {
      * @param {是否错误信息} isError 
      */
 
-    showMessageButtonTooltip(message, isError){
+    showMessageButtonTooltip(message, isError) {
         let me = this,
             button = me.getMessageButton(),
             tooltip = button.getTooltip(),
@@ -62,13 +60,13 @@ Ext.define('Common.mixin.button.Message', {
         Ext.defer(tooltip.hide, 2000, tooltip);
     },
 
-    hideMessageButton(){
+    hideMessageButton() {
         this.getMessageButton().setHidden(true);
     },
 
     doDestroy() {
         this.destroyMembers('messageButton');
     }
-    
+
 
 })

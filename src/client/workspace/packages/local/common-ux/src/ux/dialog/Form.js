@@ -17,6 +17,7 @@ Ext.define('Common.ux.dialog.Form', {
             resetButton: { weight: 200 },
             saveAndNewButton: { weight: 300 },
             saveButton: { weight: 400 },
+            cancelButton: { weight: 500 },
         },
         form: { weight: 100, },
     },
@@ -25,17 +26,16 @@ Ext.define('Common.ux.dialog.Form', {
         return this.getForm().getSubmitValues();
     },
 
-    onSaveAndNew() {
+    onSaveAndNewButtonTap() {
         let me = this;
         me.successMessage = 'SavedAndNew';
         me.doSave();
     },
 
-    onSave() {
+    onSaveButtonTap() {
         let me = this;
         me.successMessage = 'SavedAndExit';
         me.doSave();
-
     },
 
 
@@ -43,15 +43,8 @@ Ext.define('Common.ux.dialog.Form', {
         return this.getForm().validate();
     },
 
-    onBeforeSave(values) { },
-
-    onReset() {
-        let me = this,
-            form = me.getForm();
-        me.getToolbar().getMessageButton().setHidden(true);
-        form.reset();
-        form.clearErrors();
-        form.initFocus();
+    onBeforeSave(values) { 
+        return !this.validateForm();
     },
 
     updateHidden(hidden, oldHidden){
@@ -60,7 +53,7 @@ Ext.define('Common.ux.dialog.Form', {
     },
 
     doDestroy() {
-        this.destroyMembers('httpClient', 'recordDefaultValue');
+        this.destroyMembers('recordDefaultValue');
         this.callParent(arguments);
     },
 
@@ -69,10 +62,8 @@ Ext.define('Common.ux.dialog.Form', {
          * 执行保存操作
          */
         doSave() {
-            let me = this;
-            if(!me.validateForm()) return;
-        
-            let form = me.getForm(),
+            let me = this,
+                form = me.getForm(),
                 url = me.url,
                 values = form.getSubmitValues(),
                 httpClient = Http.getClient(me.httpMethod);
@@ -94,7 +85,6 @@ Ext.define('Common.ux.dialog.Form', {
             me.unmask();
             me.isSaved = true;
             me.showMessage(I18N.get(me.successMessage), false);
-            Logger.debug(me.onSaveSuccess, me, response, data);
             if(response){
                 record.set(data);
                 record.commit();
@@ -136,6 +126,8 @@ Ext.define('Common.ux.dialog.Form', {
             me.onBeforeAddRecord(record);
             me.setTitle(me.createTitle);
             form.isEdit = false;
+            me.httpMethod = me.createHttpMethod;
+            me.url = me.createUrl;
             form.setRecord(record);
             me.onReset();
             me.onAfterAddRecord(record);

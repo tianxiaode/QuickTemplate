@@ -24,12 +24,10 @@ Ext.define('Common.mixin.crud.Button', {
      */
     applyCrudButtons(buttons) {
         if (!buttons) return;
-        let me = this,
-            map = new Map();
+        let map = new Map();
         Ext.each(buttons, b => {
             let name = b.crudName;
             map.set(name, b);
-            b.setHandler(me[`on${Ext.String.capitalize(name)}ButtonTap`].bind(me));
         })
         return map;
     },

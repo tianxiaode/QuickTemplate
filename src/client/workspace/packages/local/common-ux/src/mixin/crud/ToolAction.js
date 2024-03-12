@@ -22,17 +22,11 @@ Ext.define('Common.mixin.crud.ToolAction', {
         return ret;
     },
 
-    initialize(){
-        let me = this;
-        me.toolTapEventListener = me.getList().on('tooltap', me.onToolTap, me);
-    },
-
     onToolTap(grid, context){
         let me = this,
             cls = context.tool.getIconCls(),
             record = context.record;
         me.currentRecord = record;
-        Logger.debug(this.onToolTap, me.getToolActions());
         Ext.Object.each(me.getToolActions(), (key, value)=>{
             if(cls.includes(key)){
                 value.call(me, record);
@@ -42,7 +36,6 @@ Ext.define('Common.mixin.crud.ToolAction', {
     },
 
     doDestroy(){
-        Ext.destroy(this.toolTapEventListener);
         this.destroyMembers('toolActions');
     }
 

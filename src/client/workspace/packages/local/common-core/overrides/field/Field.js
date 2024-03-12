@@ -6,7 +6,6 @@ Ext.define('Common.overrides.field.Field', {
     },
     
     getTemplate() {
-        Logger.debug(this.getTemplate, this.name)
         return [
             {
                 reference: 'labelElement',

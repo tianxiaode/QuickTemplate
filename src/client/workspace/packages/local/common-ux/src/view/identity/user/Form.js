@@ -7,8 +7,8 @@ Ext.define('Common.view.identity.user.Form',{
         'Common.mixin.field.Email'
     ],
 
-    newPassword:{ weight: 500},
-    confirmPassword:{ weight: 600, autoLabel: true},
+    newPasswordField:{ weight: 500},
+    confirmPasswordField:{ weight: 600, autoLabel: true},
     emailField:{ weight: 150, autoLabel: true, required: true, autoComplete: false},
     cols: 2,
 
@@ -53,7 +53,15 @@ Ext.define('Common.view.identity.user.Form',{
                 { name: 'lockoutEnabled'},
             ]
         }
-    ]
+    ],
+
+    initForm(){
+        let me = this;
+        me.callParent(arguments);
+        me.getNewPasswordField().setRequired(!me.isEdit);
+        me.getConfirmPasswordField().setRequired(!me.isEdit);
+        me.clearErrors();
+    }
 
 
 })

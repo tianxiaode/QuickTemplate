@@ -3,7 +3,9 @@ Ext.define('Common.ux.panel.content.Base', {
     xtype: 'uxcontentpanel',
 
     requires:[
-        'Common.ux.toolbar.Crud'
+        'Common.ux.toolbar.crud.Base',
+        'Common.ux.toolbar.crud.Multiline',
+
     ],
 
     /**
@@ -11,6 +13,8 @@ Ext.define('Common.ux.panel.content.Base', {
      * 不然这两个类中after中定义的方法因为找不到父类方法而报错（callParent错误）
      */
     mixins:[
+        'Common.mixin.Permission',
+        'Common.mixin.ComponentCreator',
         'Common.mixin.Normalize',
         'Common.mixin.data.Store',
         'Common.mixin.crud.Selectable',
@@ -34,18 +38,15 @@ Ext.define('Common.ux.panel.content.Base', {
     layout: 'vbox',
     weighted: true,
     flex: 1,
-    includeResource: true,
     userCls: 'bg-content',
 
     autoLoad: true,
 
     cellEditing: {},
+    multilineToolbar: false,    
 
     config: {
-        toolbar: {
-            xtype: 'uxcrudtoolbar',
-            weight: 100,
-        },
+        toolbar: { xtype: 'uxcrudtoolbar', weight: 100 },
         list: {
             xtype: 'uxgrid',
             weight: 200,
@@ -73,7 +74,12 @@ Ext.define('Common.ux.panel.content.Base', {
         me.add(config);
     },
 
-    doDestroy() {},
+    doDestroy() {
+        this.destroyMembers('listPaging', 'toolbar', 'list', 'paging');
+        this.callParent(arguments);
+    },
+
+
     privates: {       
 
         getCountMessage(){
@@ -87,7 +93,6 @@ Ext.define('Common.ux.panel.content.Base', {
 
         onStoreChange(store) {
             let me = this,
-                viewModel = me.getViewModel(),
                 resourceName = store.getResourceName(),
                 entityName = store.getEntityName(),
                 autoLoad = me.autoLoad,
@@ -96,7 +101,7 @@ Ext.define('Common.ux.panel.content.Base', {
             me.setEntityName(entityName);
             me.setPermissionGroup(resourceName);
             
-            me.initButtons(me.getToolbar(), me.permissions);
+            me.initButtons(me.getToolbar(), me.getPermissions());
 
             
             me.setSearchFields(me.getToolbar().query('[isSearch]'));

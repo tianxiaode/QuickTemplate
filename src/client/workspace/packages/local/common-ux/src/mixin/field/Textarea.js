@@ -6,33 +6,24 @@ Ext.define('Common.mixin.field.Textarea', {
     ],
 
     config: {
-        textarea: {}
-    },
-
-
-    createTextarea(config) {
-        return Ext.apply({
+        textareaField: {},
+        textareaFieldDefaults: {
             xtype: 'textareafield',
             fieldType: 'textarea',
             minHeight: 300,
             hidden: true,
             autoLabel: false,
-            ownerCmp: this,
-        }, config);
+            mixinName: 'textareaField',
+        }
     },
 
-    applyTextarea(config, old) {
-        return Ext.updateWidget(old, config, this, 'createTextarea');
+
+    applyTextareaField(config, old) {
+        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'textareaFieldDefaults');
     },
 
-    updateTextarea(config) {
+    updateTextareaField(config) {
         config && this.add(config);
-    },
-
-    doDestroy() {
-        this.destroyMembers('textarea');
     }
-
-
 
 })

@@ -1,5 +1,5 @@
 Ext.define('Common.mixin.Component', {
-    extend: 'Common.mixin.Base',
+    extend: 'Ext.Mixin',
 
     requires:[
         'Common.service.IconCls'

@@ -3,32 +3,22 @@ Ext.define('Common.mixin.button.Save', {
 
 
     config: {
-        saveButton: null
-    },
-
-    createSaveButton(config) {
-        let me = this,
-            handler = 'onSaveButtonTap';
-        if(me[handler]) handler = me[handler].bind(me);
-        return Ext.apply({
+        saveButton: null,
+        saveButtonDefaults: {
             xtype: 'button',
             ui: 'success',
             langText: 'Save',
-            handler: handler,
-            ownerCmp: me
-        }, config);
+            handler: 'onSaveButtonTap',
+            mixinName: 'saveButton'
+        }
     },
 
     applySaveButton(config, old) {
-        return Ext.updateWidget(old, config, this, 'createSaveButton');
+        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'saveButtonDefaults');
     },
 
-    updateSaveButton(config){
+    updateSaveButton(config) {
         config && this.add(config);
-    },
-
-    doDestroy(){
-        this.destroyMembers('saveButton');
     }
 
 });

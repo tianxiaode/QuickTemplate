@@ -6,17 +6,15 @@ Ext.define('Common.mixin.button.Logout', {
     },
 
     createLogoutButton(config) {
-        let me = this,
-            handler = 'onLogoutButtonTap';
-        if(me[handler]) handler = me[handler].bind(me);
         return Ext.apply({
             xtype: 'button',
             ui: 'grey',
             langTooltip: 'Logout',
-            bind: {hidden: '{!isAuthenticated}'},
+            bind: { hidden: '{!isAuthenticated}' },
             iconCls: IconCls.logout,
-            handler: handler,
-            ownerCmp: me
+            handler: 'onLogoutButtonTap',
+            scope: this,
+            ownerCmp: this
         }, config);
     },
 
@@ -24,19 +22,19 @@ Ext.define('Common.mixin.button.Logout', {
         return Ext.updateWidget(old, config, this, 'createLogoutButton');
     },
 
-    updateLogoutButton(config){
+    updateLogoutButton(config) {
         config && this.add(config);
     },
 
-    onLogoutButtonTap(){
-        Alert.confirm(I18N.get('Logout'), I18N.get('LogoutMessage')).then(()=>{
+    onLogoutButtonTap() {
+        Alert.confirm(I18N.get('Logout'), I18N.get('LogoutMessage')).then(() => {
             Config.clearAll();
             Auth.logout();
         })
     },
 
-    doDestroy(){
-        this.destroyMembers( 'logoutButton');
+    doDestroy() {
+        this.destroyMembers('logoutButton');
     }
 
 

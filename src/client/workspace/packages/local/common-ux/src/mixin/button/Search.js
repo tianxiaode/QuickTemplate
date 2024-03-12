@@ -2,31 +2,21 @@ Ext.define('Common.mixin.button.Search', {
     extend: 'Common.mixin.Component',
 
     config: {
-        searchButton: null
-    },
-
-
-    createSearchButton(config) {
-        let me = this,
-            handler = 'onSearchButtonTap';
-        if(me[handler]) handler = me[handler].bind(me);
-        return Ext.apply({
-            xtype: 'button',
+        searchButton: null,
+        searchButtonDefaults: {
             iconCls: IconCls.search,
-            ownerCmp: me,
-            handler: handler
-        }, config);
+            handler: 'onSearchButtonTap',
+            handler:'onSearch',
+            mixinName: 'searchButton'
+        }
     },
 
     applySearchButton(config, old) {
-        return Ext.updateWidget(old, config,this, 'createSearchButton');
+        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'searchButtonDefaults');
     },
 
-    updateSearchButton(config){
+    updateSearchButton(config) {
         config && this.add(config);
-    },
-
-    doDestroy() {
-        this.destroyMembers('searchButton');
     }
+
 })

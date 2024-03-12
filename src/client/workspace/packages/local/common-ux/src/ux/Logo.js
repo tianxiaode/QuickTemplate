@@ -28,7 +28,7 @@ Ext.define('Common.ux.Logo', {
             lang = I18N.getCurrentLanguage(),
             shortName = AppConfig['companyShortName'][lang] || AppConfig['companyShortName']['en'],
             logoUrl = URI.getResource('logo'),
-            cls = (me.isPhone() && 'phone') || 'desktop';
+            cls = Ext.platformTags.phone ? 'phone' : 'desktop';
         me.setUserCls(`logo ${cls}`);
         me.logoElement.dom.src = logoUrl;
         me.nameElement.dom.innerHTML = shortName;
@@ -37,12 +37,7 @@ Ext.define('Common.ux.Logo', {
     getLogoUrl(logo){
         if(Ext.isEmpty(logo) || logo === 'default' || logo === 'Default') return  URI.getResource('logo');
         return URI.crud('File',logo);
-    },
-
-    doDestroy() {
-        let me = this;
-        me.destroyMembers('template');
-        me.callParent();
     }
+
 
 });

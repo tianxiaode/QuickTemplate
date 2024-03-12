@@ -2,34 +2,22 @@ Ext.define('Common.mixin.button.Trash', {
     extend: 'Common.mixin.Component',
 
     config: {
-        trashButton: null
-    },
-
-    createTrashButton(config) {
-        let me = this,
-            handler = 'onTrashButtonTap';
-        if(me[handler]) handler = me[handler].bind(me);
-        return Ext.apply({
-            xtype: 'button',
+        trashButton: null,
+        trashButtonDefaults: {
             ui: 'danger',
             langTooltip: 'Delete',
             iconCls: IconCls.delete,
-            handler: handler,
-            ownerCmp: me
-        }, config);
+            handler: 'onTrashButtonTap',
+            mixinName: 'trashButton'
+        }
     },
 
     applyTrashButton(config, old) {
-        return Ext.updateWidget(old, config, this, 'createTrashButton');
+        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'trashButtonDefaults');
     },
 
-    updateTrashButton(config){
+    updateTrashButton(config) {
         config && this.add(config);
-    },
-
-
-    doDestroy(){
-        this.destroyMembers( 'trashButton');
     }
 
 

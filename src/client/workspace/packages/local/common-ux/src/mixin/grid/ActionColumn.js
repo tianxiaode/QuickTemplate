@@ -6,35 +6,36 @@ Ext.define('Common.mixin.grid.ActionColumn', {
     ],
 
     config: {
-        translationTool: null,
+        multilingualTool: null,
         updateTool: {},
         deleteTool: {},
-        actionColumn: {}
+        actionColumn: {},
     },
+
+    actionColumnScope: null,
 
 
     createActionColumn(config) {
         let me = this,
+            actionColumnScope = me.actionColumnScope,
             cell = config.cell || {},
             tools = cell.tools || {},
-            translationTool = me.getTranslationTool(),
+            multilingualTool = me.getMultilingualTool(),
             updateTool = me.getUpdateTool(),
             deleteTool = me.getDeleteTool();
         delete config.cell;
-        if(translationTool){
-            tools.translation = Ext.apply({
+        if(multilingualTool){
+            tools.multilingual = Ext.apply({
                 iconCls: IconCls.language +' color-base mx-1',
                 langTooltip: 'Multilingual',
-                actionName: 'translation',
                 hidden: true,
                 weight: 300,    
-            }, translationTool);
+            }, multilingualTool);
         }
         if(updateTool){
             tools.update = Ext.apply({
                 iconCls: IconCls.update +' color-base mx-1',
                 langTooltip: 'Edit',
-                actionName: 'update',
                 weight: 100,    
                 hidden: true,
             }, updateTool);
@@ -43,14 +44,14 @@ Ext.define('Common.mixin.grid.ActionColumn', {
             tools.delete = Ext.apply({
                 iconCls: IconCls.delete +' color-alert mx-1',
                 langTooltip: 'Delete',
-                actionName: 'delete',
                 weight: 200,    
                 hidden: true,
             }, deleteTool);
         }
         Ext.Object.each(tools, (key, tool)=>{
             if(!tool.iconCls.includes('mx-1')) tool.iconCls = tool.iconCls +' mx-1';
-            tool.handler = me.onToolTap.bind(me);
+            !tool.handler && (tool.handler = 'onToolTap');
+            !tool.scope && actionColumnScope && (tool.scope = actionColumnScope);
         });
         cell.tools = tools;
         return Ext.apply({
@@ -77,7 +78,7 @@ Ext.define('Common.mixin.grid.ActionColumn', {
     },
 
     onActionColumnRenderer(value, record, dataIndex, cell, column) {
-        let permissions = this.up('[permissions]').permissions,
+        let permissions = this.up('[_permissions]').getPermissions(),
             tools = cell.getTools();
         Ext.each(tools, tool=>{      
             let cls = tool.getIconCls();
@@ -92,12 +93,9 @@ Ext.define('Common.mixin.grid.ActionColumn', {
         return '';
     },
 
-    onToolTap(grid, context){
-        this.fireEvent('tooltap', grid, context);
-    },
-
     doDestroy() {
-        this.destroyMembers('actionColumn', 'translationTool', 'updateTool', 'deleteTool');
+        this.destroyMembers('actionColumn', 'multilingualTool', 
+        'updateTool', 'deleteTool', 'actionColumnScope');
     }
 
 

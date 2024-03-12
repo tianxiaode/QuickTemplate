@@ -3,6 +3,7 @@ Ext.define('Common.ux.toolbar.Dialog', {
     xtype: 'uxdialogtoolbar',
 
     mixins: [
+        'Common.mixin.ComponentCreator',
         'Common.mixin.button.Message',
         'Common.mixin.button.Reset',
         'Common.mixin.Spacer',
@@ -22,29 +23,8 @@ Ext.define('Common.ux.toolbar.Dialog', {
     ui: 'footer',
     weighted: true,
 
-    onSaveAndNewButtonTap(){
-        this.ownerCmp.onSaveAndNew();
-    },
-
-    onSaveButtonTap(){
-        this.ownerCmp.onSave();
-    },
-
-    onCancelButtonTap(){
-        this.ownerCmp.close();
-    },
-
-    onResetButtonTap(){
-        this.ownerCmp.onReset();
-    },
-
     doDestroy() {
         this.destroyMembers('toolbar');
-    },
-
-    privates:{
-    
     }
-
 
 })

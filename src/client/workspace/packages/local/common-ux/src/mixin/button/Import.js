@@ -2,33 +2,21 @@ Ext.define('Common.mixin.button.Import', {
     extend: 'Common.mixin.Component',
 
     config: {
-        importButton: null
-    },
-
-    createImportButton(config) {
-        let me = this,
-            handler = 'onImportButtonTap';
-        if(me[handler]) handler = me[handler].bind(me);
-        return Ext.apply({
-            xtype: 'button',
+        importButton: null,
+        importButtonDefaults: {
             langTooltip: 'Import',
             iconCls: IconCls.history,
-            handler: handler,
-            ownerCmp: me
-        }, config);
+            handler: 'onImportButtonTap',
+            mixinName: 'importButton'
+        }
     },
 
     applyImportButton(config, old) {
-        return Ext.updateWidget(old, config, this, 'createImportButton');
+        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'importButtonDefaults');
     },
 
-    updateImportButton(config){
+    updateImportButton(config) {
         config && this.add(config);
-    },
-
-
-    doDestroy(){
-        this.destroyMembers( 'importButton');
     }
 
 

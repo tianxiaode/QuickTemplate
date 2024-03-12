@@ -7,39 +7,20 @@ Ext.define('Common.mixin.field.NewPassword', {
     ],
 
     config: {
-        newPassword:{},
-        confirmPassword:{}
-    },
-
-    createNewPassword(config) {
-        let me =this;
-        return Ext.apply({
+        newPasswordField:{},
+        newPasswordFieldDefaults:{
             xtype: 'passwordfield',
-            validators: 'password',
             name: 'password',
             autoComplete: false,
-            required: me.isEdit ? false : true,
             maxLength:128,
-            ownerCmp: me
-        }, config, me.getDefaults());
-    },
-
-    applyNewPassword(config, old) {
-        return Ext.updateWidget(old, config,this, 'createNewPassword');
-    },
-
-    updateNewPassword(config){
-        config && this.add(config);
-    },
-
-    createConfirmPassword(config) {
-        let me =this;
-        return Ext.apply({
+            mixinName: 'newPasswordField'
+        },
+        confirmPasswordField:{},
+        confirmPasswordFieldDefaults:{
             xtype: 'passwordfield',
             name: 'confirmPassword',
             autoLabel: false,
             langLabel: 'NewPasswordConfirm',
-            required: me.isEdit ? false : true,
             autoComplete: false,
             maxLength:128,
             validators(value){
@@ -49,22 +30,25 @@ Ext.define('Common.mixin.field.NewPassword', {
                 if( v !== value ) return I18N.get('PasswordNoEqual');
                 return true;
             },
-            ownerCmp: me
-        }, config, me.getDefaults());
+            mixinName: 'confirmPasswordField'
+        }
     },
 
-    applyConfirmPassword(config, old) {
-        return Ext.updateWidget(old, config, this, 'createConfirmPassword');
+    applyNewPasswordField(config, old) {
+        return Ext.updateWidget(old, config,this, 'getComponentConfig', 'newPasswordFieldDefaults');
     },
 
-    updateConfirmPassword(config){
+    updateNewPasswordField(config){
         config && this.add(config);
     },
 
-    doDestroy() {
-        this.destroyMembers('newPassword', 'confirmPassword');
-    }
+    applyConfirmPasswordField(config, old) {
+        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'confirmPasswordFieldDefaults');
+    },
 
+    updateConfirmPasswordField(config){
+        config && this.add(config);
+    }
 
 
 })

@@ -14,11 +14,12 @@ Ext.define('Common.mixin.button.Help', {
             arrow: false,
             menuAlign: 'br',
             iconCls: IconCls.help,
-            handler: me.onHelpButtonTap.bind(me),
-            menu:{
+            handler: 'onHelpButtonTap',
+            scope: me,
+            menu: {
                 minWidth: 400,
                 anchor: true,
-                items:[
+                items: [
                     {
                         xtype: 'component',
                         flex: 1,
@@ -27,24 +28,24 @@ Ext.define('Common.mixin.button.Help', {
                 ]
             },
             ownerCmp: me
-        }, config);
+        }, config, this.getDefaults());
     },
 
     applyHelpButton(config, old) {
         return Ext.updateWidget(old, config, this, 'createHelpButton');
     },
 
-    updateHelpButton(config){
+    updateHelpButton(config) {
         config && this.add(config);
     },
 
-    onHelpButtonTap(){
+    onHelpButtonTap() {
         this.getHelpButton().getMenu().show();
     },
 
-    doDestroy(){
-        Ext.destroy(this.getHelpButton().helpText); 
-        this.destroyMembers( 'helpButton');
+    doDestroy() {
+        Ext.destroy(this.getHelpButton().helpText);
+        this.destroyMembers('helpButton');
     }
 
 

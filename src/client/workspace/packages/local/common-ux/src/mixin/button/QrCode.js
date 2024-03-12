@@ -2,34 +2,21 @@ Ext.define('Common.mixin.button.QrCode', {
     extend: 'Common.mixin.Component',
 
     config: {
-        qrCodeButton: null
-    },
-
-    createQrCodeButton(config) {
-        let me = this,
-            handler = 'onQrCodeButtonTap';
-        if(me[handler]) handler = me[handler].bind(me);
-        return Ext.apply({
-            xtype: 'button',
+        qrCodeButton: null,
+        qrCodeDefaults: {
             langTooltip: 'ExportQrCode',
             iconCls: IconCls.qrCode,
-            handler: handler,
-            ownerCmp: me
-        }, config);
+            handler: 'onQrCodeButtonTap',
+            mixinName: 'qrCodeButton'
+        }
     },
 
     applyQrCodeButton(config, old) {
-        return Ext.updateWidget(old, config, this, 'createQrCodeButton');
+        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'qrCodeButtonDefaults');
     },
 
-    updateQrCodeButton(config){
+    updateQrCodeButton(config) {
         config && this.add(config);
-    },
-
-
-    doDestroy(){
-        this.destroyMembers( 'qrCodeButton');
     }
-
 
 })

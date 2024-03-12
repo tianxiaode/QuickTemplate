@@ -2,37 +2,25 @@ Ext.define('Common.mixin.button.History', {
     extend: 'Common.mixin.Component',
 
     config: {
-        historyButton: null
-    },
-
-    createHistoryButton(config) {
-        let me = this,
-            handler = 'onHistoryButtonTap';
-        if(me[handler]) handler = me[handler].bind(me);
-        return Ext.apply({
-            xtype: 'button',
+        historyButton: null,
+        historyButtonDefaults: {
             ui: 'grey',
             langTooltip: 'History',
             iconCls: IconCls.history,
-            handler: handler,
+            handler: 'onHistoryButtonTap',            
             arrow: false,
             disabled: true,
-            ownerCmp: me
-        }, config);
+            mixinName: 'historyButton'
+
+        }
     },
 
     applyHistoryButton(config, old) {
-        return Ext.updateWidget(old, config, this, 'createHistoryButton');
+        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'historyButtonDefaults');
     },
 
     updateHistoryButton(config){
         config && this.add(config);
-    },
-
-
-    doDestroy(){
-        this.destroyMembers( 'historyButton');
     }
-
 
 })

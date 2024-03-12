@@ -6,6 +6,7 @@ Ext.define('Common.ux.dialog.Base', {
     ],
 
     mixins:[
+        'Common.mixin.ComponentCreator',
         'Common.mixin.Toolbar',
         'Common.mixin.DialogAction'
     ],

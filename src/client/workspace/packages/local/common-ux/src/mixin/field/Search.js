@@ -3,34 +3,25 @@ Ext.define('Common.mixin.field.Search',{
 
     config:{
         searchField:{},
-        remoteFilter: true
-    },
-
-    createSearchField(config){
-        let isPhone = Ext.platformTags.phone;
-        return Ext.apply({
-            xtype: 'searchfield',
+        searchFieldDefaults:{
+            xtype:'searchfield',
             autoSearch: true,
             isSearch: true,
             langPlaceholder: 'Search',
             autoLabel: false,
             searchName: 'filter',
             userCls: 'mx-2',
-            ownerCmp: this,
-            width: !isPhone && 200 ,
-        }, config);
+            mixinName: 'searchField'
+        },
+        remoteFilter: true
     },
 
     applySearchField(config, old){
-        return Ext.updateWidget(old, config, this, 'createSearchField');
+        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'searchFieldDefaults');
     },
 
     updateSearchField(config){
         config && this.add(config);
-    },
-
-    doDestroy() {
-        this.destroyMembers('searchField');
     }
 
 })

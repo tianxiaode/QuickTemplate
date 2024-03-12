@@ -9,23 +9,18 @@ Ext.define('Common.mixin.List',{
 
     config:{
         list: null,
-    },
-
-
-    createList(config) {
-        return Ext.apply({ ownerCmp: this }, config);
+        listDefaults: {
+            actionColumnScope: true,
+            mixinName: 'list'
+        }
     },
 
     applyList(config, old) {
-        return Ext.updateWidget(old, config,this, 'createList');
+        return Ext.updateWidget(old, config,this, 'getComponentConfig', 'listDefaults');
     },
 
     updateList(config){
         config && this.add(config);
-    },
-
-    doDestroy(){
-        this.destroyMembers('list');
     }
 
 

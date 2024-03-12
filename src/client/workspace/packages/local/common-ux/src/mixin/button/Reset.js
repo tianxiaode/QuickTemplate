@@ -2,34 +2,22 @@ Ext.define('Common.mixin.button.Reset', {
     extend: 'Common.mixin.Component',
 
     config: {
-        resetButton: null
-    },
-
-    createResetButton(config) {
-        let me = this,
-            handler = 'onResetButtonTap';
-        if(me[handler]) handler = me[handler].bind(me);
-        return Ext.apply({
-            xtype: 'button',
+        resetButton: null,
+        resetButtonDefaults: {
             ui: 'grey',
             langTooltip: 'Reset',
             iconCls: IconCls.undo,
-            handler: handler,
-            ownerCmp: me
-        }, config);
+            handler: 'onResetButtonTap',
+            mixinName: 'resetButton'
+        }
     },
 
     applyResetButton(config, old) {
-        return Ext.updateWidget(old, config, this, 'createResetButton');
+        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'resetButtonDefaults');
     },
 
-    updateResetButton(config){
+    updateResetButton(config) {
         config && this.add(config);
-    },
-
-
-    doDestroy(){
-        this.destroyMembers( 'resetButton');
     }
 
 

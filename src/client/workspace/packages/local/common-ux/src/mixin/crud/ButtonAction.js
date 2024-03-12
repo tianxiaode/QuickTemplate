@@ -267,6 +267,8 @@ Ext.define('Common.mixin.crud.ButtonAction', {
             action: action,
             title: action === 'create' ? me.getCreateDialogTitle() : me.getUpdateDialogTitle(), 
             createTitle: me.getCreateDialogTitle(),
+            createHttpMethod: me.getCreateHttpMethod(),
+            createUrl: me.getDialogUrl('create'),
             entityName: entityName,
             resourceName: me.getResourceName(),
             callback: me[`onAfter${normalizeAction}`].bind(me),

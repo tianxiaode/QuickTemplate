@@ -7,30 +7,21 @@ Ext.define('Common.mixin.field.Number', {
 
     config: {
         numberField: {},
-    },
-
-    hasNumber: false,
-
-    createNumberFeild(config) {
-        return Ext.apply({
+        numberFieldDefaults: {
             xtype: 'numberfield',
             fieldType: 'number',
             hidden: true,
             autoLabel: false,
-            ownerCmp: this
-        }, config);
+            mixinName: 'numberField'
+        }
     },
 
     applyNumberField(config, old) {
-        return Ext.updateWidget(old, config,this, 'createNumberFeild');
+        return Ext.updateWidget(old, config,this, 'getComponentConfig', 'numberFieldDefaults');
     },
 
     updateNumberField(config){
         config && this.add(config);
-    },
-
-    doDestroy(){
-        this.destroyMembers('numberField');
     }
 
 })

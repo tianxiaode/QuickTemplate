@@ -2,31 +2,22 @@ Ext.define('Common.mixin.field.TextField', {
     extend: 'Common.mixin.Component',
 
     config: {
-        textField: {}
-    },
-
-
-    createTextField(config) {
-        return Ext.apply({
+        textField: {},
+        textFieldDefaults: {
             xtype: 'textfield',
             fieldType: 'text',
             hidden: true,
             autoLabel: false,
-            ownerCmp: this,
-        }, config);
+            mixinName: 'textField'
+        }
     },
 
     applyTextField(config, old) {
-        return Ext.updateWidget(old, config, this, 'createTextField');
+        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'textFieldDefaults');
     },
 
     updateTextField(config){
         config && this.add(config);
-    },
-
-    doDestroy() {
-        this.destroyMembers('textField');
     }
-
 
 })
