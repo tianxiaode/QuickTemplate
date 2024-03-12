@@ -10,7 +10,7 @@ Ext.define('Common.ux.toolbar.Paging', {
         'Common.ux.button.SegmentedOption'
     ],
 
-    mixins:[
+    mixins: [
         'Common.mixin.button.Refresh',
         'Common.mixin.Spacer',
         'Common.mixin.CountMessage'
@@ -29,7 +29,7 @@ Ext.define('Common.ux.toolbar.Paging', {
         fromRecord: 0 //当前页开始记录号
     },
 
-    default:{
+    default: {
         isPaging: true
     },
 
@@ -42,21 +42,23 @@ Ext.define('Common.ux.toolbar.Paging', {
         nextButton: {},
         lastButton: {},
         pageSize: {},
-        spacer: { weight: 800},
-        pageSizeText:{},
-        refreshButton: {isPaging: true, weight: 700},
-        countMessage:{ weight: 1100, flex: null }
+        spacer: { weight: 800 },
+        pageSizeText: {},
+        refreshButton: { isPaging: true, weight: 700 },
+        countMessage: { weight: 1100, flex: null }
     },
 
     createFirstButton(config) {
+        let me = this;
         return Ext.apply({
             xtype: 'button',
             weight: 100,
             isPaging: true,
             disabled: true,
             iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-first',
-            handler: this.onFirstPageTap,
-            ownerCmp: this
+            handler: 'onFirstPageTap',
+            scope: me,
+            ownerCmp: me
         }, config);
     },
 
@@ -69,14 +71,16 @@ Ext.define('Common.ux.toolbar.Paging', {
     },
 
     createPrevButton(config) {
+        let me = this;
         return Ext.apply({
             xtype: 'button',
             weight: 200,
             isPaging: true,
             disabled: true,
             iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-prev',
-            handler: this.onPrevPageTap,
-            ownerCmp: this
+            handler: 'onPrevPageTap',
+            scope: me,
+            ownerCmp: me
         }, config);
     },
 
@@ -98,10 +102,15 @@ Ext.define('Common.ux.toolbar.Paging', {
             disabled: true,
             value: 1,
             autoLabel: false,
-            listeners: {
-                blur: me.onPageNumberBlur,
-                keyup: me.onPageNumberKeyUp,
-                scope: me
+            keyMap: {
+                scope: me,
+                ENTER: 'onPageNumberEnter',
+                UP: 'onPageNumberUpOrPageUP',
+                DOWN: 'onPageNumberDownOrPageDown',
+                HOME: 'onPageNumberHome',
+                END: 'onPageNumberEnd',
+                PAGE_UP: 'onPageNumberUpOrPageUP',
+                PAGE_DOWN: 'onPageNumberDownOrPageDown'
             },
             ownerCmp: me
         }, config);
@@ -135,14 +144,16 @@ Ext.define('Common.ux.toolbar.Paging', {
     },
 
     createNextButton(config) {
+        let me = this;
         return Ext.apply({
             xtype: 'button',
             isPaging: true,
             weight: 500,
             disabled: true,
             iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-next',
-            handler: this.onNextPageTap,
-            ownerCmp: this
+            handler: 'onNextPageTap',
+            scope: me,
+            ownerCmp: me
         }, config);
     },
 
@@ -155,14 +166,16 @@ Ext.define('Common.ux.toolbar.Paging', {
     },
 
     createLastButton(config) {
+        let me = this;
         return Ext.apply({
             xtype: 'button',
             isPaging: true,
             weight: 600,
             disabled: true,
             iconCls: Ext.baseCSSPrefix + 'pagingtoolbar-last',
-            handler: this.onLastPageTap,
-            ownerCmp: this
+            handler: 'onLastPageTap',
+            scope: me,
+            ownerCmp: me
         }, config);
     },
 
@@ -182,7 +195,7 @@ Ext.define('Common.ux.toolbar.Paging', {
             isPaging: true,
             disabled: true,
             autoLabel: false,
-            options: [25, 50, 100],
+            options: [2, 25, 50, 100],
             listeners: {
                 toggle: me.onPageSizeChange,
                 scope: me
@@ -196,26 +209,25 @@ Ext.define('Common.ux.toolbar.Paging', {
     },
 
     updatePageSize(config) {
-        Logger.debug(this.updatePageSize, config);
         config && this.add(config);
     },
 
-    createPageSizeText(config){
+    createPageSizeText(config) {
         return Ext.apply({
             xtype: 'component',
-            isPaging: true,            
+            isPaging: true,
             weight: 1000,
             userCls: 'mx-2',
             html: ` ${I18N.get('item')} / ${I18N.get('page')} , `,
             ownerCmp: this
-        },config)
+        }, config)
     },
 
-    applyPageSizeText(config, old){
+    applyPageSizeText(config, old) {
         return Ext.updateWidget(old, config, this, 'createPageSizeText');
     },
 
-    updatePageSizeText(config){
+    updatePageSizeText(config) {
         config && this.add(config);
     },
 
@@ -260,11 +272,11 @@ Ext.define('Common.ux.toolbar.Paging', {
 
     },
 
-    onRefreshButtonTap(){
+    onRefreshButtonTap() {
         this.onRefreshStore();
     },
 
-    refreshPageSize(pageSize){
+    refreshPageSize(pageSize) {
         let cmp = this.getPageSize();
         //cmp.set(pageSize);
         cmp.setValue(pageSize);
@@ -314,14 +326,13 @@ Ext.define('Common.ux.toolbar.Paging', {
     onLastPageTap(sender) {
         let me = this,
             last = me.getPageData().pageCount;
-        me.pagingStore.loadPage(last);
+        me.getStore().loadPage(last);
     },
 
     onPageSizeChange(sender, button, pressed) {
-        if(!pressed) return;
+        if (!pressed) return;
         let store = this.getStore(),
             value = sender.getValue();
-        Logger.debug(this.onPageSizeChange, value);
         store.setPageSize(value);
         store.loadPage(1);
     },
@@ -334,7 +345,7 @@ Ext.define('Common.ux.toolbar.Paging', {
         this.setItemsDisabled(0, 0, true, true);
     },
 
-    onRefreshStore(){
+    onRefreshStore() {
         this.getStore().load();
     },
 
@@ -348,8 +359,7 @@ Ext.define('Common.ux.toolbar.Paging', {
             pageCount = 0,
             isEmpty = count === 0,
             afterText = '',
-            pageNumber = me.getPageNumber(),
-            countMessage = me.getCountMessage();
+            pageNumber = me.getPageNumber();
 
         if (!isEmpty) {
             pageData = me.getPageData();
@@ -384,8 +394,8 @@ Ext.define('Common.ux.toolbar.Paging', {
             pageNumber.setDisabled(isEmpty)
             pageNumber.setValue(currPage);
         }
-        
-        me.setDataCount(count);
+
+        me.setDataCount(store.getTotalCount());
 
 
         me.setItemsDisabled(currPage, pageCount, isEmpty, false);
@@ -405,7 +415,7 @@ Ext.define('Common.ux.toolbar.Paging', {
         me.destroyMembers(
             'firstButton', 'prevButton', 'pageNumber',
             'pageCount', 'nextButton', 'nextButton',
-            'nextButton', 'lastButton', 
+            'nextButton', 'lastButton',
             'pageSize', 'emptyPageData', 'spacer', 'pageSizeText'
         );
 
@@ -474,26 +484,23 @@ Ext.define('Common.ux.toolbar.Paging', {
             return pageNum;
         },
 
+        /**
+         * 焦点移出分页输入
+         * @param {触发组件} sender 
+         * @param {事件} e 
+         */
+        onPageNumberBlur(sender, e) {
+            let me = this,
+                curPage = 0;
+            curPage = me.getPageData().currentPage;
+            sender.setValue(curPage);
+        },
 
-    },
-
-
-    /**
-     * 响应分页输入字段的键盘事件
-     * @param {字段} sender 
-     * @param {事件} e 
-     */
-    onPageNumberKeyUp(sender, e) {
-        let me = this,
-            key = e.getKey(),
+        onPageNumberEnter(e, sender) {
+            let me = this,
+                pageData = me.getPageData()
             store = me.getStore(),
-            pageData = me.getPageData(),
-            increment = e.shiftKey ? 10 : 1,
-            pageNum;
-
-        if (key === e.RETURN) {
-            e.stopEvent();
-            pageNum = me.readPageFromInput(pageData);
+                pageNum = me.readPageFromInput(pageData);
             if (pageNum !== false) {
                 pageNum = Math.min(Math.max(1, pageNum), pageData.pageCount);
 
@@ -501,44 +508,49 @@ Ext.define('Common.ux.toolbar.Paging', {
                     store.loadPage(pageNum);
                 }
             }
-        }
-        else if (key === e.HOME || key === e.END) {
-            e.stopEvent();
-            pageNum = key === e.HOME ? 1 : pageData.pageCount;
-            field.setValue(pageNum);
-        }
-        else if (key === e.UP || key === e.PAGE_UP || key === e.DOWN || key === e.PAGE_DOWN) {
-            e.stopEvent();
-            pageNum = me.readPageFromInput(pageData);
+        },
 
-            if (pageNum) {
-                if (key === e.DOWN || key === e.PAGE_DOWN) {
-                    increment *= -1;
-                }
+        onPageNumberUpOrPageUP(e, sender) {
+            this.changePageNumber(sender, 1 , e.shiftKey);
+        },
 
-                pageNum += increment;
+        onPageNumberDownOrPageDown(e, sender) {
+            this.changePageNumber(sender, -1, e.shiftKey);
+        },
 
-                if (pageNum >= 1 && pageNum <= pageData.pageCount) {
-                    field.setValue(pageNum);
-                }
+        onPageNumberHome(e, sender) {
+            sender.setValue(1);
+            this.setDisplayValue(sender, 1);
+        },
+
+        onPageNumberEnd(e, sender) {
+            let me = this,
+                pageData = me.getPageData(),
+                pageCount = pageData.pageCount;
+            sender.setValue(pageCount);
+            me.setDisplayValue(sender, pageCount);
+        },
+
+        //增加/减少页码
+        changePageNumber(sender, increment, shiftKey) {
+            let me = this,
+                pageData = me.getPageData(),
+                pageNum = me.readPageFromInput(pageData);
+
+            if (!pageNum) return;
+
+            pageNum += increment * (shiftKey ? 10 : 1);
+            if (pageNum >= 1 && pageNum <= pageData.pageCount) {
+                sender.setValue(pageNum);
+                me.setDisplayValue(sender, pageNum);
             }
+        },
+        
+        setDisplayValue(sender, value) {
+            sender.inputElement.dom.value = value;
         }
+
     },
-
-    /**
-     * 焦点移出分页输入
-     * @param {触发组件} sender 
-     * @param {事件} e 
-     */
-    onPageNumberBlur(sender, e) {
-        let me = this,
-            field = me.getPageNumber(),
-            curPage = 0;
-        if (!field) return;
-        curPage = me.getPageData().currentPage;
-        field.setValue(curPage);
-    }
-
 
 
 })

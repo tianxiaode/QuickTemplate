@@ -65,11 +65,10 @@ Ext.define('Common.ux.form.Base',{
         })
         if(!dialog) return;
         dialog.setWidth(Ext.platformTags.desktop ? 400*cols : '100%');
-        if(me.isEdit){
-            let record = me.getRecord();
-            me.setRecord(null);
-            me.setRecord(record);
-        }
+
+        //混入字段在updateRecord调用setValues方法时还没初始化，
+        //因而不会有初始值，必须在这里重新执行一次setValues
+        me.setValues(me.getRecord().data)
     },
 
 
