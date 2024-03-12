@@ -28,6 +28,7 @@ Ext.define('Common.mixin.grid.ActionColumn', {
             tools.multilingual = Ext.apply({
                 iconCls: IconCls.language +' color-base mx-1',
                 langTooltip: 'Multilingual',
+                handler: 'onMultilingualToolTap',
                 hidden: true,
                 weight: 300,    
             }, multilingualTool);
@@ -36,6 +37,7 @@ Ext.define('Common.mixin.grid.ActionColumn', {
             tools.update = Ext.apply({
                 iconCls: IconCls.update +' color-base mx-1',
                 langTooltip: 'Edit',
+                handler: 'onUpdateToolTap',
                 weight: 100,    
                 hidden: true,
             }, updateTool);
@@ -44,13 +46,13 @@ Ext.define('Common.mixin.grid.ActionColumn', {
             tools.delete = Ext.apply({
                 iconCls: IconCls.delete +' color-alert mx-1',
                 langTooltip: 'Delete',
+                handler: 'onDeleteToolTap',
                 weight: 200,    
                 hidden: true,
             }, deleteTool);
         }
         Ext.Object.each(tools, (key, tool)=>{
             if(!tool.iconCls.includes('mx-1')) tool.iconCls = tool.iconCls +' mx-1';
-            !tool.handler && (tool.handler = 'onToolTap');
             !tool.scope && actionColumnScope && (tool.scope = actionColumnScope);
         });
         cell.tools = tools;

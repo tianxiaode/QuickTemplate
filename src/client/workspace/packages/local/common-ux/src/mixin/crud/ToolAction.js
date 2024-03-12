@@ -1,42 +1,21 @@
 Ext.define('Common.mixin.crud.ToolAction', {
-    extend: 'Common.mixin.Component',
+    extend: 'Ext.Mixin',
 
-    toolTapEventListener: null,
-
-    config:{
-        toolActions: {}
-    },    
-
-    applyToolActions(actions){
-        let me = this,
-            ret = Ext.apply({
-            [IconCls.language]: me.onMultilingual,
-            [IconCls.delete]: me.onDeleteButtonTap.bind(me, true),
-            [IconCls.update]: me.onUpdateButtonTap
-        }, actions);
-        Ext.Object.each(ret, (key, value)=>{
-            if(typeof value ==='string'){
-                ret[key] = me[value]; 
-            }
-        });
-        return ret;
+    onMultilingualToolTap(grid, context){
+        this.currentRecord = context.record;
+        this.onMultilingual && this.onMultilingual();
     },
 
-    onToolTap(grid, context){
-        let me = this,
-            cls = context.tool.getIconCls(),
-            record = context.record;
-        me.currentRecord = record;
-        Ext.Object.each(me.getToolActions(), (key, value)=>{
-            if(cls.includes(key)){
-                value.call(me, record);
-            }
-        })
-        me.onAfterToolTap && me.onAfterToolTap(grid, context, cls, record);
+    onDeleteToolTap(grid, context){
+        this.currentRecord = context.record;
+        this.onDelete(true);
     },
+    
 
-    doDestroy(){
-        this.destroyMembers('toolActions');
+    onUpdateToolTap(grid, context){
+        this.currentRecord = context.record;
+        this.onUpdateButtonTap();
     }
+
 
 });
