@@ -2,19 +2,22 @@ Ext.define('Common.mixin.button.Back', {
     extend: 'Common.mixin.Component',
 
     config: {
-        backButton: null,
-        backButtonDefaults: {
-            iconCls : IconCls.left,
-            mixinName: 'backButton',
-            weight : -100,
-            scope: 'this',
+        backButton: null
+    },
+
+    createBackButton(config) {
+        return Ext.apply({
+            xtype: 'button',
             ui: 'plain',
-            handler: 'onBackButtonTap'
-        }
+            iconCls: IconCls.left,
+            weight: -100,
+            handler: this.onBackButtonTap,
+            ownerCmp: this
+        }, config, this.getDefaults()); 
     },
 
     applyBackButton(config, old) {
-        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'backButtonDefaults');
+        return Ext.updateWidget(old, config, this, 'backButton');
     },
 
     updateBackButton(config){
@@ -23,5 +26,9 @@ Ext.define('Common.mixin.button.Back', {
 
     onBackButtonTap(){
         Ext.History.back();
+    },
+
+    doDestroy(){
+        this.destroyMembers('backButton');
     }
 })

@@ -260,6 +260,7 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     getDefaultDialogConfig(action){
         let me = this,
             entityName = me.getEntityName(),
+            resourceName = me.getResourceName(),
             record = me.currentRecord,
             normalizeAction = me.capitalize(action);
         return {
@@ -270,11 +271,11 @@ Ext.define('Common.mixin.crud.ButtonAction', {
             createHttpMethod: me.getCreateHttpMethod(),
             createUrl: me.getDialogUrl('create'),
             entityName: entityName,
-            resourceName: me.getResourceName(),
+            resourceName: resourceName,
             callback: me[`onAfter${normalizeAction}`].bind(me),
             cancelCallback: me[`onCancel${normalizeAction}`].bind(me),
             httpMethod: me.getHttpMethod(action),
-            form: me.getFormConfig(action, record),
+            form: me.getFormConfig(action, record, entityName, resourceName),
             url: me.getDialogUrl(action, record),
         }
     },
@@ -300,12 +301,14 @@ Ext.define('Common.mixin.crud.ButtonAction', {
          * @param {操作} action 
          * @param {记录} record 
          */
-        getFormConfig(action, record){
+        getFormConfig(action, record, entityName, resourceName){
             let me = this,
                 config = me[`_${action}Form`];
-            if(Ext.isEmpty(config)) config = { xtype: `${me.getEntityName()}form`};
+            if(Ext.isEmpty(config)) config = { xtype: `${entityName}form`};
             if(Ext.isString(config)) config = { xtype: config };
             return Ext.apply({
+                entityName: entityName,
+                resourceName: resourceName,
                 isEdit : action === 'update',
                 recordDefaultValue: me.getRecordDefaultValue(),
                 record: record

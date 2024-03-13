@@ -8,15 +8,29 @@ Ext.define('Common.mixin.field.NewPassword', {
 
     config: {
         newPasswordField:{},
-        newPasswordFieldDefaults:{
+        confirmPasswordField:{}
+    },
+
+    createNewPasswordField(config){
+        return Ext.apply({
             xtype: 'passwordfield',
             name: 'password',
             autoComplete: false,
             maxLength:128,
-            mixinName: 'newPasswordField'
-        },
-        confirmPasswordField:{},
-        confirmPasswordFieldDefaults:{
+            ownerCmp: this
+        }, config, this.getDefaults());        
+    },
+
+    applyNewPasswordField(config, old) {
+        return Ext.updateWidget(old, config,this, 'createNewPasswordField');
+    },
+
+    updateNewPasswordField(config){
+        config && this.add(config);
+    },
+
+    createConfirmPasswordField(config){
+        return Ext.apply({
             xtype: 'passwordfield',
             name: 'confirmPassword',
             autoLabel: false,
@@ -30,25 +44,22 @@ Ext.define('Common.mixin.field.NewPassword', {
                 if( v !== value ) return I18N.get('PasswordNoEqual');
                 return true;
             },
-            mixinName: 'confirmPasswordField'
-        }
-    },
-
-    applyNewPasswordField(config, old) {
-        return Ext.updateWidget(old, config,this, 'getComponentConfig', 'newPasswordFieldDefaults');
-    },
-
-    updateNewPasswordField(config){
-        config && this.add(config);
+            ownerCmp: this
+        }, config, this.getDefaults());                
     },
 
     applyConfirmPasswordField(config, old) {
-        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'confirmPasswordFieldDefaults');
+        return Ext.updateWidget(old, config, this, 'createConfirmPasswordField');
     },
 
     updateConfirmPasswordField(config){
         config && this.add(config);
+    },
+
+    doDestroy() {
+        this.destroyMembers('newPasswordField', 'confirmPasswordField');
     }
+
 
 
 })

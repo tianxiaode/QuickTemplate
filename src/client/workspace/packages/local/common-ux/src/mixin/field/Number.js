@@ -6,22 +6,29 @@ Ext.define('Common.mixin.field.Number', {
     ],
 
     config: {
-        numberField: {},
-        numberFieldDefaults: {
+        numberField: {}
+    },
+
+    createNumberField(config){
+        return Ext.apply({
             xtype: 'numberfield',
             fieldType: 'number',
             hidden: true,
             autoLabel: false,
-            mixinName: 'numberField'
-        }
+            ownerCt: this
+        }, config, this.getDefaults())
     },
 
     applyNumberField(config, old) {
-        return Ext.updateWidget(old, config,this, 'getComponentConfig', 'numberFieldDefaults');
+        return Ext.updateWidget(old, config,this, 'createNumberField');
     },
 
     updateNumberField(config){
         config && this.add(config);
+    },
+
+    doDestroy() {
+        this.destroyMembers('numberField');
     }
 
 })

@@ -28,6 +28,9 @@ Ext.define('Common.mixin.crud.Button', {
         Ext.each(buttons, b => {
             let name = b.crudName;
             map.set(name, b);
+
+            //初始化按钮的scope
+            b.setScope(this);
         })
         return map;
     },

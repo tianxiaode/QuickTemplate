@@ -11,7 +11,6 @@ Ext.define('Common.ux.toolbar.Paging', {
     ],
 
     mixins: [
-        'Common.mixin.ComponentCreator',
         'Common.mixin.button.Refresh',
         'Common.mixin.Spacer',
         'Common.mixin.CountMessage'

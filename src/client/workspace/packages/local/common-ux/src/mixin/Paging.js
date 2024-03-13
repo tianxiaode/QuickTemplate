@@ -6,24 +6,27 @@ Ext.define('Common.mixin.Paging',{
     ],
 
     config:{
-        paging: null,
-        pagingDefaults: {
-            xtype: 'uxpagingtoolbar',
-            weight: 300,
-            mixinName: 'paging'
-        }
-        
+        paging: null
     },
 
+    createPaging(config){
+        return Ext.apply({
+            xtype: 'uxpagingtoolbar',
+            weight: 300,
+            ownerCt: this
+        }, config);
+    },
 
     applyPaging(config, old) {
-        return Ext.updateWidget(old, config,this, 'getComponentConfig', 'pagingDefaults');
+        return Ext.updateWidget(old, config,this, 'createPaging');
     },
 
     updatePaging(config){
         config && this.add(config);
+    },
+
+    doDestroy() {
+        this.destroyMembers('paging');
     }
-
-
 
 })

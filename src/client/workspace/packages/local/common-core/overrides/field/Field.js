@@ -54,8 +54,7 @@ Ext.define('Common.overrides.field.Field', {
             label = me.getLabel(),
             align = me.getSeparatorAlign(),
             isLeft = me.getLabelAlign() === 'left';
-        Logger.debug(this.updateSeparator, me.name, label, separator, align, me.getLabelAlign());
-        if(!isLeft || !label || me.isCheckbox) return;
+        if(!isLeft || !label || label === Ext.emptyString || me.isCheckbox) return;
         if(align === 'label'){
             me.setLabel(label + separator);
             return;

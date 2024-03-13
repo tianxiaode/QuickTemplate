@@ -6,20 +6,27 @@ Ext.define('Common.mixin.field.ConcurrencyStamp', {
     ],
 
     config: {
-        concurrencyStampField: {},
-        concurrencyStampFieldDefaults: {
+        concurrencyStampField: {}
+    },
+
+    createConcurrencyStampField(config){
+        return Ext.apply({
             xtype: 'hiddenfield',
             name: 'concurrencyStamp',
-            mixinName: 'concurrencyStampField',
-        }
+            ownerCmp: this,
+        }, config, this.getDefaults());
     },
 
     applyConcurrencyStampField(config, old) {
-        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'concurrencyStampFieldDefaults');
+        return Ext.updateWidget(old, config, this, 'createConcurrencyStampField');
     },
 
     updateConcurrencyStampField(config) {
         config && this.add(config);
+    },
+
+    doDestroy() {
+        this.destroyMembers('concurrencyStampField');
     }
 
 })

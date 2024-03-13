@@ -1,27 +1,33 @@
-Ext.define('Common.mixin.List',{
+Ext.define('Common.mixin.List', {
     extend: 'Common.mixin.Component',
 
-    requires:[
+    requires: [
         'Common.ux.grid.Grid',
         'Common.ux.grid.Tree',
         'Common.ux.dataview.List'
     ],
 
-    config:{
-        list: null,
-        listDefaults: {
-            actionColumnScope: true,
-            mixinName: 'list'
-        }
+    config: {
+        list: null
+    },
+
+    createList(config) {
+        return Ext.apply({
+            xtype: 'list',
+            ownerCmp: this
+        }, config);
     },
 
     applyList(config, old) {
-        return Ext.updateWidget(old, config,this, 'getComponentConfig', 'listDefaults');
+        return Ext.updateWidget(old, config, this, 'createList');
     },
 
-    updateList(config){
+    updateList(config) {
         config && this.add(config);
-    }
+    },
 
+    doDestroy() {
+        this.destroyMembers('list');
+    }
 
 })

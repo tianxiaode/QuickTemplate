@@ -14,7 +14,6 @@ Ext.define('Common.ux.panel.content.Base', {
      */
     mixins:[
         'Common.mixin.Permission',
-        'Common.mixin.ComponentCreator',
         'Common.mixin.Normalize',
         'Common.mixin.data.Store',
         'Common.mixin.crud.Selectable',

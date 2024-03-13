@@ -6,21 +6,26 @@ Ext.define('Common.mixin.field.Id', {
     ],
 
     config: {
-        idField: {},
-        idFieldDefaults: {
+        idField: {}
+    },
+
+    createIdField(config){
+        return Ext.apply({
             xtype: 'hiddenfield',
             name: 'id',
-            mixinName: 'idField'
-        }
+            ownerCmp: this
+        }, config, this.getDefaults())
     },
 
     applyIdField(config, old) {
-        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'idFieldDefaults');
+        return Ext.updateWidget(old, config, this, 'createIdField');
     },
 
     updateIdField(config) {
         config && this.add(config);
+    },
+
+    doDestroy() {
+        this.destroyMembers('idField');
     }
-
-
 })

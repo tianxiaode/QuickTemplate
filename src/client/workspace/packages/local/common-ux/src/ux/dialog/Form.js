@@ -22,6 +22,29 @@ Ext.define('Common.ux.dialog.Form', {
         form: { weight: 100, },
     },
 
+    initialize() {
+        this.callParent(arguments);
+        this.resetWidth();
+        Logger.debug(this.initialize, this)
+    },
+
+    resetWidth(){
+        let me = this,        
+            width = me.getWidth(),
+            form = me.getForm();
+        //自定义宽度不做修改
+        if(width) return;
+        //手机端默认宽度100%
+        if(Ext.platformTags.phone){
+            me.setWidth('100%');
+            return
+        }
+        //如果表单是分列的，则PC端默认列宽度为400，对话框宽度为400*列数
+        if(form.getCols){
+            me.setWidth(form.getCols() *400);
+        }
+    },
+
     getValues() {
         return this.getForm().getSubmitValues();
     },

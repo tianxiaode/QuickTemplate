@@ -3,7 +3,6 @@ Ext.define('Common.ux.toolbar.crud.Base', {
     xtype: 'uxcrudtoolbar',
 
     mixins: [
-        'Common.mixin.ComponentCreator',
         'Common.mixin.button.Create',
         'Common.mixin.button.Update',
         'Common.mixin.button.Trash',
@@ -29,40 +28,6 @@ Ext.define('Common.ux.toolbar.crud.Base', {
         searchField: { weight: 900 },
         spacer:{ weight: 1000 },
         countMessage:{ weight: 1100 }
-    },
-
-    updateUpdateButton(config){
-        this.addToolbarItem(config, 200, 'update');
-    },
-
-    updateImportButton(config){
-        this.addToolbarItem(config, 500, 'import');
-    },
-
-    updateExportButton(config){
-        this.addToolbarItem(config, 600, 'export');
-    },
-
-    updateSearchButton(config){
-        config.setLangTooltip('Search');
-        this.addToolbarItem(config, 700, 'search');
-    },
-
-    updateResetButton(config){
-        config.setLangTooltip('ResetSearchValue');
-        this.addToolbarItem(config, 800, 'reset');
-    },
-
-    updateHelpButton(config){
-        this.addToolbarItem(config, 1200);
-    },
-
-    addToolbarItem(config, weight, crudName){
-        if(!config) return;
-        crudName && (config.crudName = crudName);
-        if(config.isButton && !config.isHelp ) config.isCrud = true;
-        this.add(config);
-        weight && !config._weight && config.setWeight(weight);
     }
 
 

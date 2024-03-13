@@ -1,24 +1,31 @@
 Ext.define('Common.mixin.Spacer', {
     extend: 'Common.mixin.Component',
 
-    requires:[
+    requires: [
         'Ext.Spacer'
     ],
 
     config: {
-        spacer: null,
-        spacerDefaults: {
-            xtype:'spacer',
-            mixinName: 'spacer'
-        }
+        spacer: null
+    },
+
+    createSpacer(config) {
+        return Ext.apply({
+            xtype: 'spacer',
+            ownerCt: this
+        }, config);
     },
 
     applySpacer(config, old) {
-        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'spacerDefaults');
+        return Ext.updateWidget(old, config, this, 'createSpacer');
     },
 
-    updateSpacer(config){
+    updateSpacer(config) {
         config && this.add(config);
+    },
+
+    doDestroy() {
+        this.destroyMembers('spacer');
     }
 
 });

@@ -3,22 +3,41 @@ Ext.define('Common.mixin.Toolbar', {
 
     config: {
         toolbar: null,
-        toolbarDefaults: {
+    },
+
+    isInitButtonScope: false,
+
+    createToolbar(config) {
+        return Ext.apply({
             xtype: 'toolbar',
             userCls: 'bg-content',
             shadow: false,
-            buttonScope: true,
             weighted: true,
-            mixinName: 'toolbar'
-        }
+            ownerCt: this
+        }, config);
     },
 
     applyToolbar(config, old) {
-        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'toolbarDefaults');
+        return Ext.updateWidget(old, config, this, 'createToolbar');
     },
 
-    updateToolbar(config){
+    updateToolbar(config) {
         config && this.add(config);
+    },
+
+    afterInitialize() {
+        let me = this;
+        if(!me.isInitButtonScope) return;
+        let buttons = me.getToolbar().query('[isButton]');
+        Logger.debug(this.afterInitialize, buttons);
+        Ext.each(buttons, btn=> {            
+            btn.setScope(me);
+        });
+    },
+
+
+    doDestroy() {
+        this.destroyMembers('toolbar');
     }
 
 });

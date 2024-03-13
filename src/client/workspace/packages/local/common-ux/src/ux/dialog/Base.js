@@ -6,7 +6,6 @@ Ext.define('Common.ux.dialog.Base', {
     ],
 
     mixins:[
-        'Common.mixin.ComponentCreator',
         'Common.mixin.Toolbar',
         'Common.mixin.DialogAction'
     ],
@@ -27,11 +26,11 @@ Ext.define('Common.ux.dialog.Base', {
     layout: "vbox",
     padding: "0 0",
     weighted: true,
-    includeResource: true,
 
     callback: null,
     cancelCallback: null,
     isSaved: false,
+    isInitButtonScope: true,
     
     updateHeader(header){
         let me = this;

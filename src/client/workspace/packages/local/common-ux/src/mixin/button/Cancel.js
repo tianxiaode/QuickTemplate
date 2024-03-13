@@ -3,21 +3,30 @@ Ext.define('Common.mixin.button.Cancel', {
 
 
     config: {
-        cancelButton: null,
-        cancelButtonDefaults: {
+        cancelButton: null
+    },
+
+    createCancelButton(config) {
+        return Ext.apply({
+            xtype: 'button',
             langText: 'Cancel',
-            mixinName: 'cancelButton',
             ui: 'grey',
-            handler: 'onCancelButtonTap'
-        }
+            handler: 'onCancelButtonTap',
+            ownerCmp: this,
+        }, config, this.getDefaults());
     },
 
     applyCancelButton(config, old) {
-        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'cancelButtonDefaults');
+        return Ext.updateWidget(old, config, this, 'createCancelButton');
     },
 
-    updateCancelButton(config){
+    updateCancelButton(config) {
         config && this.add(config);
+    },
+
+    doDestroy(){
+        this.destroyMembers('cancelButton');
     }
+
 
 });

@@ -42,7 +42,6 @@ Ext.define('Common.mixin.Permission',{
         if(Ext.isEmpty(entityName) || Ext.isEmpty(group) || Ext.isEmpty(permissions)) return;
         Ext.Object.each(permissions, (permissionName, value) => {
             let permission = `${c(group)}.${c(Ext.util.Inflector.pluralize(entityName))}.${c(permissionName)}`;
-            Logger.debug(this.initPermissions,permission, permission);
             permissions[permissionName] = ACL.isGranted(permission);
         });
     },

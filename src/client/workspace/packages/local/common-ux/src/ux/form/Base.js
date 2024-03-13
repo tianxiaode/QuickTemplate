@@ -51,33 +51,32 @@ Ext.define('Common.ux.form.Base', {
 
     initForm() {
         let me = this,
-            cols = me.getCols(),
-            autoLabelAlign = me.autoLabelAlign,
-            dialog = me.up('[isDialog]'),
-            labelWidth = me.getLabelWidth(),
             items = me.getItems().items,
-            labelAlign = Ext.platformTags.desktop ? 'left' : 'top',
+            cols = me.getCols(),
             record = me.getRecord();
+        me.initFields(items,cols);
+
+        //混入字段在updateRecord调用setValues方法时还没初始化，
+        //因而不会有初始值，必须在这里重新执行一次setValues
+        me.setValues(record.data);
+
+        //使用该方便避免调用callParent的麻烦
+        me.onAfterInitForm && me.onAfterInitForm(items, record);
+    },
+
+    initFields(items, cols){
+        let me = this,
+            autoLabelAlign = me.autoLabelAlign,
+            labelWidth = me.getLabelWidth(),            
+            labelAlign = Ext.platformTags.desktop ? 'left' : 'top';
         if (cols <= 0 || Ext.platformTags.phone) cols = 1;
         Ext.each(items, item => {
             let cls = item.getUserCls();
             !cls.includes('cols-') && item.setUserCls(`${cls} cols-${cols}`);
             item.getLangLabel() && item.setLabelWidth(labelWidth);
             autoLabelAlign && item.setLabelAlign(labelAlign)
-            item.set
         })
-        if (dialog) {
-            dialog.setWidth(Ext.platformTags.desktop ? 400 * cols : '100%');
-        };
-
-        //混入字段在updateRecord调用setValues方法时还没初始化，
-        //因而不会有初始值，必须在这里重新执行一次setValues
-        me.setValues(me.getRecord().data);
-
-        //使用该方便避免调用callParent的麻烦
-        me.onAfterInitForm && me.onAfterInitForm(items, record);
     },
-
 
     setValues(values) {
         let me = this,

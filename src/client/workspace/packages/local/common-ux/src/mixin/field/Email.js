@@ -6,22 +6,29 @@ Ext.define('Common.mixin.field.Email', {
     ],
 
     config: {
-        emailField: {},
-        emailFieldDefaults: {
+        emailField: {}
+    },
+
+    createEmailField(config){
+        return Ext.apply({
             xtype: 'textfield',
             name: 'email',
             validators: 'email',
             maxLength: 256,
-            mixinName: 'emailField'
-        }
+            ownerCmp: this
+            }, config, this.getDefaults())
     },
 
     applyEmailField(config, old) {
-        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'emailFieldDefaults');
+        return Ext.updateWidget(old, config, this, 'createEmailField');
     },
 
     updateEmailField(config) {
         config && this.add(config);
+    },
+
+    doDestroy() {
+        this.destroyMembers('emailField');
     }
 
 })

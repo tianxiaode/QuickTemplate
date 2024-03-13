@@ -2,22 +2,32 @@ Ext.define('Common.mixin.button.Refresh', {
     extend: 'Common.mixin.Component',
 
     config: {
-        refreshButton: null,
-        refreshButtonDefaults: {
+        refreshButton: null
+    },
+
+    createRefreshButton(config) {
+        return Ext.apply({
+            xtype: 'button',
             langTooltip: 'Refresh',
             iconCls: IconCls.refresh,
             handler: 'onRefreshButtonTap',
-            mixinName: 'refreshButton'
-        }
+            isCrud: true,
+            crudName: 'refresh',
+            weight: 400,
+            ownerCmp: this
+        }, config, this.getDefaults());
     },
 
     applyRefreshButton(config, old) {
-        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'refreshButtonDefaults');
+        return Ext.updateWidget(old, config, this, 'createRefreshButton');
     },
 
     updateRefreshButton(config){
         config && this.add(config);
-    }
+    },
 
+    doDestroy(){
+        this.destroyMembers('refreshButton');
+    }
 
 })

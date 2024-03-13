@@ -15,6 +15,7 @@ Ext.define('Common.mixin.button.Help', {
             menuAlign: 'br',
             iconCls: IconCls.help,
             handler: 'onHelpButtonTap',
+            weight: 1200,
             scope: me,
             menu: {
                 minWidth: 400,

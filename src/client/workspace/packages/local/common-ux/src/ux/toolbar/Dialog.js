@@ -3,7 +3,6 @@ Ext.define('Common.ux.toolbar.Dialog', {
     xtype: 'uxdialogtoolbar',
 
     mixins: [
-        'Common.mixin.ComponentCreator',
         'Common.mixin.button.Message',
         'Common.mixin.button.Reset',
         'Common.mixin.Spacer',
@@ -14,8 +13,9 @@ Ext.define('Common.ux.toolbar.Dialog', {
 
     config:{
         spacer: { weight: 200 },
+        resetButton: { weight: 300, langTooltip: 'Reset' },
         saveButton: { weight: 400},
-        cancelButton: { weight: 500}
+        cancelButton: { weight: 500},
     },
 
     defaultType: 'button',

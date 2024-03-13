@@ -17,7 +17,6 @@ Ext.define('Common.mixin.grid.ActionColumn', {
 
     createActionColumn(config) {
         let me = this,
-            actionColumnScope = me.actionColumnScope,
             cell = config.cell || {},
             tools = cell.tools || {},
             multilingualTool = me.getMultilingualTool(),
@@ -26,7 +25,7 @@ Ext.define('Common.mixin.grid.ActionColumn', {
         delete config.cell;
         if(multilingualTool){
             tools.multilingual = Ext.apply({
-                iconCls: IconCls.language +' color-base mx-1',
+                iconCls: IconCls.language +' color-base',
                 langTooltip: 'Multilingual',
                 handler: 'onMultilingualToolTap',
                 hidden: true,
@@ -35,7 +34,7 @@ Ext.define('Common.mixin.grid.ActionColumn', {
         }
         if(updateTool){
             tools.update = Ext.apply({
-                iconCls: IconCls.update +' color-base mx-1',
+                iconCls: IconCls.update +' color-base',
                 langTooltip: 'Edit',
                 handler: 'onUpdateToolTap',
                 weight: 100,    
@@ -44,7 +43,7 @@ Ext.define('Common.mixin.grid.ActionColumn', {
         }
         if(deleteTool){
             tools.delete = Ext.apply({
-                iconCls: IconCls.delete +' color-alert mx-1',
+                iconCls: IconCls.delete +' color-alert',
                 langTooltip: 'Delete',
                 handler: 'onDeleteToolTap',
                 weight: 200,    
@@ -53,7 +52,6 @@ Ext.define('Common.mixin.grid.ActionColumn', {
         }
         Ext.Object.each(tools, (key, tool)=>{
             if(!tool.iconCls.includes('mx-1')) tool.iconCls = tool.iconCls +' mx-1';
-            !tool.scope && actionColumnScope && (tool.scope = actionColumnScope);
         });
         cell.tools = tools;
         return Ext.apply({
@@ -76,14 +74,25 @@ Ext.define('Common.mixin.grid.ActionColumn', {
             columns = me.getColumns(),
             ln = columns.length,
             actionColumn = me.getActionColumn();
-        actionColumn &&me.insertColumn(ln, actionColumn);
+        actionColumn && me.insertColumn(ln, actionColumn);
+    },
+
+    getActionContainer() {
+        return this.up('[_permissions]');
     },
 
     onActionColumnRenderer(value, record, dataIndex, cell, column) {
-        let permissions = this.up('[_permissions]').getPermissions(),
+        let me = this
+            actionContainer = me.up('[_permissions]'),
+            permissions = actionContainer.getPermissions(),
             tools = cell.getTools();
         Ext.each(tools, tool=>{      
             let cls = tool.getIconCls();
+
+            //设置作用域
+            tool.scope = actionContainer;
+
+            //根据权限设置按钮显示状态
             if(cls.includes(IconCls.language)) {
                 tool.setHidden(!permissions.update);
             }else if(cls.includes(IconCls.update)) {
@@ -92,6 +101,11 @@ Ext.define('Common.mixin.grid.ActionColumn', {
                 tool.setHidden(!permissions.delete);
             }
         })
+
+        // 自定义渲染器
+        if(me.afterActionColumnRenderer){
+            return me.afterActionColumnRenderer(value, record, dataIndex, cell, column, permissions, tools);
+        }
         return '';
     },
 

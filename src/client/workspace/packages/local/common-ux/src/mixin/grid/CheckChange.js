@@ -47,7 +47,7 @@ Ext.define('Common.mixin.grid.CheckChange', {
      */
 
     beforeCheckChange() {
-        let permissions = this.up('[permissions]').permissions;
+        let permissions = this.up('[_permissions]').getPermissions();
         if(permissions && !permissions.update){
             Ext.toast(I18N.get('NoPermissionToUpdate'));
             return false;

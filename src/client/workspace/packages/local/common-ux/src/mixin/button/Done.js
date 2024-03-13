@@ -2,21 +2,30 @@ Ext.define('Common.mixin.button.Done', {
     extend: 'Common.mixin.Component',
 
     config: {
-        doneButton: null,
-        doneButtonDefaults: {
+        doneButton: null
+    },
+
+    createDoneButton(config) {
+        return Ext.apply({
+            xtype: 'button',
             ui: 'plain',
             iconCls: IconCls.done,
             handler: 'onDoneButtonTap',
-            mixinName: 'doneButton'
-        }
+            ownerCmp: this
+        }, config, this.getDefaults());
     },
 
     applyDoneButton(config, old) {
-        return Ext.updateWidget(old, config, this, 'getComponentConfig', 'doneButtonDefaults');
+        return Ext.updateWidget(old, config, this, 'createDoneButton');
     },
 
     updateDoneButton(config){
         config && this.add(config);
+    },
+
+    doDestroy(){
+        this.destroyMembers('doneButton');
     }
+
 
 })
