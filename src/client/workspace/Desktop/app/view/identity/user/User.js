@@ -7,7 +7,6 @@ Ext.define('Desktop.view.identity.user.User', {
         'Common.view.identity.user.Form'
     ],
 
-    paging: true,
     list:{
         store:{ type: 'users' },
         columns:[

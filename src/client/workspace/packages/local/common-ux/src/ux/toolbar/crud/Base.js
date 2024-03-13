@@ -15,19 +15,21 @@ Ext.define('Common.ux.toolbar.crud.Base', {
         'Common.mixin.Spacer',
         'Common.mixin.CountMessage',
         'Common.mixin.field.Search',
+        'Common.mixin.button.MoreActions',        
     ],
 
     userCls: 'bg-content',
     weighted: true,
-    isCrudToolbar: true,
+    isCrudToolbar: true,    
 
     config:{
-        createButton:{ crudName: 'create' , weight: 100 },
-        trashButton: { crudName: 'trash'  , weight: 300 },
-        refreshButton:{ crudName:'refresh', weight: 400 },
-        searchField: { weight: 900 },
-        spacer:{ weight: 1000 },
-        countMessage:{ weight: 1100 }
+        createButton: true,
+        trashButton: true,
+        refreshButton: true,
+        searchField: { weight: 500},
+        spacer: { weight: 1000},
+        countMessage: { weight:1100 },
+        moreActionsButton: true
     }
 
 

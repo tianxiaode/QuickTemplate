@@ -6,33 +6,17 @@ Ext.define('Common.mixin.plugin.ListPaging',{
     ],
 
     config:{
-        listPaging: null
+        listPaging: true
     },
 
-    listPagingPluginId: null,
+    listPagingPlugin: null,
 
-    applyListPaging(config){
-        if(!config) return config;
-        return Ext.apply({
-            type: "listpaging",
-            autoPage: true
-        }, config)
-    },
-
-    updateListPaging(config, old){
-        let me = this,
-            list = me.getList() || me,
-            plugin;
-        me.listPagingPluginId && list.removePlugin(me.listPagingPluginId);
-
-        if(config){
-            plugin = list.addPlugin(config);
-            me.listPagingPluginId = plugin.id;
-        }
+    updateListPaging(value){
+        this.changePagingType(false);
     },
 
     doDestroy() {
-        this.destroyMembers( 'listPaging');
+        this.destroyMembers( 'listPagingPlugin');
     }
 
 

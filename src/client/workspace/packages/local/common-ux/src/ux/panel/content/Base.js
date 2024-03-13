@@ -31,7 +31,8 @@ Ext.define('Common.ux.panel.content.Base', {
         'Common.mixin.plugin.ListPaging',
         'Common.mixin.Toolbar',
         'Common.mixin.List',
-        'Common.mixin.Paging'
+        'Common.mixin.Paging',
+        'Common.mixin.crud.ShowPagingMenu'
     ],
 
     layout: 'vbox',
@@ -54,23 +55,18 @@ Ext.define('Common.ux.panel.content.Base', {
         paging: null
     },
 
-    listPaging: {},
+    updatePaging(config) {
+        this.changePagingType(true);
+    },
 
     updateList(config) {
         this.onStoreChange(config.getStore());
         config && this.add(config);
     },
 
-    updatePaging(config) {
-        if(!config) return;
-        let me = this,
-            toolbar = me.getToolbar(),
-            countMessage = toolbar.getCountMessage(),
-            refreshButton = toolbar.getRefreshButton();
-        countMessage && countMessage.setHidden(true);
-        refreshButton && refreshButton.setHidden(true);
-        me.setListPaging(null);
-        me.add(config);
+    //改变分页方式
+    setPagingType(isToolbar){
+
     },
 
     doDestroy() {

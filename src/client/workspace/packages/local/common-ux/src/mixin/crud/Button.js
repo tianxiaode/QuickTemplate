@@ -29,8 +29,18 @@ Ext.define('Common.mixin.crud.Button', {
             let name = b.crudName;
             map.set(name, b);
 
-            //初始化按钮的scope
-            b.setScope(this);
+            if(b.crudName === 'moreactions'){
+                let menu = b.getMenu(),
+                    items = menu.getItems().items;
+                Ext.each(items, item => {
+                    let handler = item.getHandler();
+                    if(handler) item.scope = this;
+                });
+            }else{
+                //初始化按钮的scope
+                b.setScope(this);
+            }
+
         })
         return map;
     },
