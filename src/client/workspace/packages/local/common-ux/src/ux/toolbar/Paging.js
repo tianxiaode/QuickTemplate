@@ -195,7 +195,7 @@ Ext.define('Common.ux.toolbar.Paging', {
             isPaging: true,
             disabled: true,
             autoLabel: false,
-            options: [2, 25, 50, 100],
+            options: [25, 50, 100],
             listeners: {
                 toggle: me.onPageSizeChange,
                 scope: me

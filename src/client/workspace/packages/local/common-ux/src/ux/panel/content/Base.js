@@ -28,7 +28,6 @@ Ext.define('Common.ux.panel.content.Base', {
         'Common.mixin.crud.ToolAction',        
         'Common.mixin.Searchable',
         'Common.mixin.plugin.CellEditing',
-        'Common.mixin.plugin.ListPaging',
         'Common.mixin.Toolbar',
         'Common.mixin.List',
         'Common.mixin.Paging',
@@ -42,7 +41,6 @@ Ext.define('Common.ux.panel.content.Base', {
 
     autoLoad: true,
 
-    cellEditing: {},
     multilineToolbar: false,    
 
     config: {
@@ -51,22 +49,29 @@ Ext.define('Common.ux.panel.content.Base', {
             xtype: 'uxgrid',
             weight: 200,
             flex: 1,
-        },
-        paging: null
+        }
     },
 
-    updatePaging(config) {
-        this.changePagingType(true);
-    },
 
     updateList(config) {
         this.onStoreChange(config.getStore());
         config && this.add(config);
     },
 
-    //改变分页方式
-    setPagingType(isToolbar){
+    afterUpdatePagingMode(mode) {
+        let me = this,
+            grid = me.getList(),
+            store = grid.getStore(),
+            isHide = mode === 'toolbar',
+            toolbar = me.getToolbar(),
+            countMessage = toolbar.getCountMessage(),
+            refreshButton = toolbar.getRefreshButton();
+        countMessage && countMessage.setHidden(isHide);
+        refreshButton && refreshButton.setHidden(isHide);
 
+        if(isHide){
+            store && me.getPaging().setStore(store);
+        }
     },
 
     doDestroy() {

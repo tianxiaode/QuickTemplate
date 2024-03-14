@@ -2,10 +2,14 @@ Ext.define('Common.overrides.dataview.plugin.ListPaging',{
     override: 'Ext.dataview.plugin.ListPaging',
 
 
-    destroy: function() {
-        Ext.destroy(this._storeListeners);
-        this.cmp.remove(this.getLoadMoreCmp());
-        this.callParent();
+    destroy() {
+        let me = this,
+            loadMoreCmp = me.getLoadMoreCmp();
+        Ext.destroy(me._storeListeners);
+        Logger.debug(this.destroy, loadMoreCmp);
+        me.cmp.remove(loadMoreCmp);
+        me.destroyMembers(loadMoreCmp);
+        me.callParent();
     },
 
 })

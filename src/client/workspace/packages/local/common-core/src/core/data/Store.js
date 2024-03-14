@@ -9,7 +9,7 @@ Ext.define('Common.core.data.Store', {
     remoteSort: true,
     remoteFilter: true,
     filterValue: null,
-    pageSize: 2,
+    pageSize: 25,
 
     proxy: 'format',
 
