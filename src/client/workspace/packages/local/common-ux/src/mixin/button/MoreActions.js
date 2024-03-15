@@ -2,7 +2,7 @@ Ext.define('Common.mixin.button.MoreActions', {
     extend: 'Common.mixin.Component',
 
     requires: [
-        'Ext.menu.CheckItem'
+        'Common.ux.menu.QueryScopeCheckItem'
     ],
 
     config: {
@@ -15,9 +15,9 @@ Ext.define('Common.mixin.button.MoreActions', {
         let menuItems = [];
         if (this.showPagingMenu) {
             menuItems.push({
-                xtype: 'menucheckitem',
+                xtype: 'uxqueryscopemenucheckitem',
                 handler: 'onShowPagingMenuTap',
-                text: '显示分页工具栏'
+                langText: 'PagingToolbar'
             })
         };
         return Ext.apply({

@@ -41,10 +41,17 @@ Ext.define('Common.ux.panel.content.Base', {
 
     autoLoad: true,
 
-    multilineToolbar: false,    
+    multilineToolbar: false,
+    isContentPanel: true,    
 
     config: {
-        toolbar: { xtype: 'uxcrudtoolbar', weight: 100 },
+        toolbar: { 
+            xtype: 'uxcrudtoolbar', weight: 100 ,
+            defaults:{
+                queryScope: 'isContentPanel',                
+            },
+            defaultType: 'uxqueryscopebutoon'
+        },
         list: {
             xtype: 'uxgrid',
             weight: 200,

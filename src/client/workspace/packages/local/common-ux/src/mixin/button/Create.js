@@ -7,7 +7,6 @@ Ext.define('Common.mixin.button.Create', {
 
     createCreateButton(config) {
         return Ext.apply({
-            xtype: 'button',
             iconCls: IconCls.create,
             ui: 'success',
             handler: 'onCreateButtonTap',

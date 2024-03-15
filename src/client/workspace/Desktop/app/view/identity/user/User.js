@@ -13,7 +13,7 @@ Ext.define('Desktop.view.identity.user.User', {
             { 
                 dataIndex: 'userName', flex:1,
                 cell:{  encodeHtml: false},
-                tpl: `{userName:this.highlight} ({fullName})`
+                tpl: `{userName:this.highlight} ({fullName:this.highlight})`
             },
             { 
                 xtype: 'uxhighlightcolumn', dataIndex: 'email', flex:1

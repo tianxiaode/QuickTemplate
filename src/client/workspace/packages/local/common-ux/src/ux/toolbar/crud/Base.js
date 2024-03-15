@@ -2,6 +2,10 @@ Ext.define('Common.ux.toolbar.crud.Base', {
     extend: 'Ext.Toolbar',
     xtype: 'uxcrudtoolbar',
 
+    requires:[
+        'Common.ux.button.QueryScope'
+    ],
+
     mixins: [
         'Common.mixin.button.Create',
         'Common.mixin.button.Update',

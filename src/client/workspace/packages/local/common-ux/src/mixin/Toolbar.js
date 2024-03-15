@@ -25,15 +25,15 @@ Ext.define('Common.mixin.Toolbar', {
         config && this.add(config);
     },
 
-    afterInitialize() {
-        let me = this;
-        if(!me.isInitButtonScope) return;
-        let buttons = me.getToolbar().query('[isButton]');
-        Logger.debug(this.afterInitialize, buttons);
-        Ext.each(buttons, btn=> {            
-            btn.setScope(me);
-        });
-    },
+    // afterInitialize() {
+    //     let me = this;
+    //     if(!me.isInitButtonScope) return;
+    //     let buttons = me.getToolbar().query('[isButton]');
+    //     Logger.debug(this.afterInitialize, buttons);
+    //     Ext.each(buttons, btn=> {            
+    //         btn.setScope(me);
+    //     });
+    // },
 
 
     doDestroy() {
