@@ -9,7 +9,7 @@ Ext.define('Common.mixin.grid.ActionColumn', {
         multilingualTool: null,
         updateTool: {},
         deleteTool: {},
-        actionColumn: {},
+        actionColumn: { queryScope: 'isContentPanel'},
     },
 
     actionColumnScope: null,
@@ -17,6 +17,7 @@ Ext.define('Common.mixin.grid.ActionColumn', {
 
     createActionColumn(config) {
         let me = this,
+            queryScope = config.queryScope,
             cell = config.cell || {},
             tools = cell.tools || {},
             multilingualTool = me.getMultilingualTool(),
@@ -52,8 +53,10 @@ Ext.define('Common.mixin.grid.ActionColumn', {
         }
         Ext.Object.each(tools, (key, tool)=>{
             if(!tool.iconCls.includes('mx-1')) tool.iconCls = tool.iconCls +' mx-1';
+            tool.queryScope = queryScope;
         });
         cell.tools = tools;
+        delete config.queryScope;
         return Ext.apply({
             xtype: 'gridcolumn',
             autoText: false,
@@ -77,10 +80,6 @@ Ext.define('Common.mixin.grid.ActionColumn', {
         actionColumn && me.insertColumn(ln, actionColumn);
     },
 
-    getActionContainer() {
-        return this.up('[_permissions]');
-    },
-
     onActionColumnRenderer(value, record, dataIndex, cell, column) {
         let me = this
             actionContainer = me.up('[_permissions]'),
@@ -90,7 +89,7 @@ Ext.define('Common.mixin.grid.ActionColumn', {
             let cls = tool.getIconCls();
 
             //设置作用域
-            tool.scope = actionContainer;
+            //tool.scope = actionContainer;
 
             //根据权限设置按钮显示状态
             if(cls.includes(IconCls.language)) {

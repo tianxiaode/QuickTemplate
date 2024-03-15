@@ -2,7 +2,7 @@ Ext.define('Common.mixin.button.MoreActions', {
     extend: 'Common.mixin.Component',
 
     requires: [
-        'Common.ux.menu.QueryScopeCheckItem'
+        'Ext.menu.CheckItem'
     ],
 
     config: {
@@ -12,13 +12,18 @@ Ext.define('Common.mixin.button.MoreActions', {
 
 
     createMoreActionsButton(config) {
-        let menuItems = [];
+        let menuItems = [],
+            defaults = this.getDefaults();
         if (this.showPagingMenu) {
-            menuItems.push({
-                xtype: 'uxqueryscopemenucheckitem',
+            let item = {
+                xtype: 'menucheckitem',
                 handler: 'onShowPagingMenuTap',
                 langText: 'PagingToolbar'
-            })
+            }
+            if(defaults && defaults.queryScope){
+                item.queryScope = defaults.queryScope;
+            }
+            menuItems.push(item)
         };
         return Ext.apply({
             xtype: 'button',
@@ -35,7 +40,7 @@ Ext.define('Common.mixin.button.MoreActions', {
                 flex: 1,
             },
             ownerCmp: this,
-        }, config, this.getDefaults());
+        }, config, defaults);
     },
 
 

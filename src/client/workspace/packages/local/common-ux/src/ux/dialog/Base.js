@@ -14,7 +14,10 @@ Ext.define('Common.ux.dialog.Base', {
         toolbar: { 
             xtype: 'uxdialogtoolbar',
             docked: 'bottom',
-            saveButton:{ langText: 'OK'}
+            saveButton:{ langText: 'OK'},
+            defaults:{
+                queryScope: 'isUxDialog'
+            }
         }
     },
 
@@ -30,7 +33,7 @@ Ext.define('Common.ux.dialog.Base', {
     callback: null,
     cancelCallback: null,
     isSaved: false,
-    isInitButtonScope: true,
+    isUxDialog: true,
     
     updateHeader(header){
         let me = this;

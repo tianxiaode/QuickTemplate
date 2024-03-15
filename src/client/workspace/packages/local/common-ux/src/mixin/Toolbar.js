@@ -5,8 +5,6 @@ Ext.define('Common.mixin.Toolbar', {
         toolbar: null,
     },
 
-    isInitButtonScope: false,
-
     createToolbar(config) {
         return Ext.apply({
             xtype: 'toolbar',
@@ -24,17 +22,6 @@ Ext.define('Common.mixin.Toolbar', {
     updateToolbar(config) {
         config && this.add(config);
     },
-
-    // afterInitialize() {
-    //     let me = this;
-    //     if(!me.isInitButtonScope) return;
-    //     let buttons = me.getToolbar().query('[isButton]');
-    //     Logger.debug(this.afterInitialize, buttons);
-    //     Ext.each(buttons, btn=> {            
-    //         btn.setScope(me);
-    //     });
-    // },
-
 
     doDestroy() {
         this.destroyMembers('toolbar');

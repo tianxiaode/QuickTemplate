@@ -13,7 +13,7 @@ Ext.define('Common.mixin.button.Trash', {
             iconCls: IconCls.delete,
             handler: 'onTrashButtonTap',
             isCrud: true,
-            crudName: 'trash',
+            crudName: 'delete',
             weight: 300,
             ownerCmp: this
         }, config, this.getDefaults());
