@@ -1,11 +1,12 @@
-import {ILanguageInfo} from './Languagenfo'
+import {ILanguageInfo} from './LanguageInfo'
+import {ICurrentCulture} from './CurrentCulture'
 
 
  export interface IApplicationLocalizationConfiguration {
 	values: any ;
 	resources: any ;
 	languages: ILanguageInfo ;
-	currentCulture: any ;
+	currentCulture: ICurrentCulture ;
 	defaultResourceName: string ;
 	languagesMap: any ;
 	languageFilesMap: any ;

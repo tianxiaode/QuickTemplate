@@ -1,3 +1,4 @@
+import {IDistrict} from './District'
 import {IDistrictTranslation} from './DistrictTranslation'
 import {IDistrict} from './District'
 
@@ -14,7 +15,7 @@ import {IDistrict} from './District'
 	displayName: string ;
 	parentId: string ;
 	leaf: boolean ;
-	parent: any ;
+	parent: IDistrict ;
 	translations: IDistrictTranslation ;
 	children: IDistrict ;
 }

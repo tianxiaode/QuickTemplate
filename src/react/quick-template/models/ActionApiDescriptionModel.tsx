@@ -1,5 +1,6 @@
 import {IMethodParameterApiDescriptionModel} from './MethodParameterApiDescriptionModel'
 import {IParameterApiDescriptionModel} from './ParameterApiDescriptionModel'
+import {IReturnValueApiDescriptionModel} from './ReturnValueApiDescriptionModel'
 
 
  export interface IActionApiDescriptionModel {
@@ -10,7 +11,7 @@ import {IParameterApiDescriptionModel} from './ParameterApiDescriptionModel'
 	supportedVersions: any ;
 	parametersOnMethod: IMethodParameterApiDescriptionModel ;
 	parameters: IParameterApiDescriptionModel ;
-	returnValue: any ;
+	returnValue: IReturnValueApiDescriptionModel ;
 	allowAnonymous: boolean ;
 	implementFrom: string ;
 }

@@ -1,3 +1,4 @@
+import {IDateTimeFormat} from './DateTimeFormat'
 
 
  export interface ICurrentCulture {
@@ -9,7 +10,7 @@
 	cultureName: string ;
 	name: string ;
 	nativeName: string ;
-	dateTimeFormat: any ;
+	dateTimeFormat: IDateTimeFormat ;
 }
  
 

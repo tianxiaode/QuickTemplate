@@ -1,4 +1,4 @@
-import {IPermissionGrantInfo} from './PermissionGrantnfo'
+import {IPermissionGrantInfo} from './PermissionGrantInfo'
 
 
  export interface IPermissionGroup {

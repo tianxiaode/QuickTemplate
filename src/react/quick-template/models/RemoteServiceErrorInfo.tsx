@@ -1,4 +1,4 @@
-import {IRemoteServiceValidationErrorInfo} from './RemoteServiceValidationErrornfo'
+import {IRemoteServiceValidationErrorInfo} from './RemoteServiceValidationErrorInfo'
 
 
  export interface IRemoteServiceErrorInfo {

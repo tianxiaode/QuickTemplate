@@ -1,7 +1,8 @@
+import {IRemoteServiceErrorInfo} from './RemoteServiceErrorInfo'
 
 
  export interface IRemoteServiceErrorResponse {
-	error: any ;
+	error: IRemoteServiceErrorInfo ;
 }
  
 

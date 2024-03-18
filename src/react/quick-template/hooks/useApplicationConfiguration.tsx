@@ -1,33 +1,19 @@
-import React from "react";
+import { IApplicationConfiguration } from '@/models/ApplicationConfiguration';
+import { ApplicationConfigurationQuery } from '@/queries.txs/ApplicationConfigurationQuery';
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
+import { useAuth } from "react-oidc-context";
 
-interface ApplicationConfigurationContextProps {
-    auth: any,
-    clock: any,
-    currentTenant: any,
-    currentUser: any,
-    extraProperties: any,
-    features: any,
-    globalFeatures: any,
-    localization: any,
-    multiTenancy: any,
-    objectExtensions: any,
-    setting: any,
-    timing: any,
-}
-
-export const ApplicationConfigurationContext = React.createContext<ApplicationConfigurationContextProps | undefined>(undefined);
-ApplicationConfigurationContext.displayName = "ApplicationConfigurationContext";
-
-
-/**
- * @public
- */
-export const useApplicationConfiguration = (): ApplicationConfigurationContextProps => {
-    const context = React.useContext(ApplicationConfigurationContext);
-
-    if (!context) {
-        console.warn("ApplicationConfiguration context is undefined, please verify you are calling useAuth() as child of a <AuthProvider> component.");
-    }
-
-    return context as ApplicationConfigurationContextProps;
+export const useApplicationConfiguration = (): UseQueryResult<IApplicationConfiguration, unknown> => {
+    const auth = useAuth();
+    const token = auth.user?.access_token;
+    const query = new ApplicationConfigurationQuery(auth.user?.access_token);
+    return useQuery({
+        queryKey: [query.name],
+        enabled:!!token && !ApplicationConfigurationQuery.isLoading,
+        queryFn: () => {
+            const result = query.sendRequest(null);
+            ApplicationConfigurationQuery.isLoading = true;
+            return result;
+        }
+    });
 };

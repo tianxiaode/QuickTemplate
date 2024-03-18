@@ -1,4 +1,4 @@
-import {IControllerInterfaceApiDescriptionModel} from './ControllernterfaceApiDescriptionModel'
+import {IControllerInterfaceApiDescriptionModel} from './ControllerInterfaceApiDescriptionModel'
 
 
  export interface IControllerApiDescriptionModel {

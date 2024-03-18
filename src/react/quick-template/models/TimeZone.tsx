@@ -1,8 +1,10 @@
+import {IIanaTimeZone} from './IanaTimeZone'
+import {IWindowsTimeZone} from './WindowsTimeZone'
 
 
  export interface ITimeZone {
-	iana: any ;
-	windows: any ;
+	iana: IIanaTimeZone ;
+	windows: IWindowsTimeZone ;
 }
  
 

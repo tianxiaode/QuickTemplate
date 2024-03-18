@@ -1,4 +1,4 @@
-import {IProviderInfo} from './Providernfo'
+import {IProviderInfo} from './ProviderInfo'
 
 
  export interface IPermissionGrantInfo {

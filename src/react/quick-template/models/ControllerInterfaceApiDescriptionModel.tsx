@@ -1,4 +1,4 @@
-import {IInterfaceMethodApiDescriptionModel} from './nterfaceMethodApiDescriptionModel'
+import {IInterfaceMethodApiDescriptionModel} from './InterfaceMethodApiDescriptionModel'
 
 
  export interface IControllerInterfaceApiDescriptionModel {

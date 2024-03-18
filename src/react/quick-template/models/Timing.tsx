@@ -1,7 +1,8 @@
+import {ITimeZone} from './TimeZone'
 
 
  export interface ITiming {
-	timeZone: any ;
+	timeZone: ITimeZone ;
 }
  
 

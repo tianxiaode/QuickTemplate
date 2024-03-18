@@ -1,4 +1,5 @@
 import {IMenu} from './Menu'
+import {IMenu} from './Menu'
 import {IMenuTranslation} from './MenuTranslation'
 
 
@@ -13,7 +14,7 @@ import {IMenuTranslation} from './MenuTranslation'
 	displayName: string ;
 	parentId: string ;
 	leaf: boolean ;
-	parent: any ;
+	parent: IMenu ;
 	children: IMenu ;
 	icon: string ;
 	isSelectable: boolean ;
