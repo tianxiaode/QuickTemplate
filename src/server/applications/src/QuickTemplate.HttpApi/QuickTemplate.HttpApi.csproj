@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\common.props" />
 
@@ -26,7 +26,7 @@
     <PackageReference Include="Generic.Abp.MenuManagement.HttpApi" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.Identity.HttpApi" Version="$(GenericAbpVersion)" />
     <PackageReference Include="Generic.Abp.OpenIddict.HttpApi" Version="$(GenericAbpVersion)" />
-    <!--PackageReference Include="Generic.Abp.Application" Version="$(GenericAbpVersion)" /-->
+    <PackageReference Include="Generic.Abp.Application" Version="$(GenericAbpVersion)" />
   </ItemGroup>
 
   <ItemGroup>
