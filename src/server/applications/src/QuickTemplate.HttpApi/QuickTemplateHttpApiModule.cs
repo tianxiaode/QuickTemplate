@@ -24,6 +24,7 @@ namespace QuickTemplate;
     typeof(GenericAbpOpenIddictHttpApiModule),
     typeof(QuickTemplateInfrastructuresHttpApiModule),
     typeof(GenericAbpMenuManagementHttpApiModule)
+    //typeof(GenericAbpApplicationModule)
 )]
 public class QuickTemplateHttpApiModule : AbpModule
 {

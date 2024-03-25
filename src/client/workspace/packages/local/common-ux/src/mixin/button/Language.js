@@ -29,20 +29,29 @@ Ext.define('Common.mixin.button.Language', {
         config && this.add(config);
     },
 
+    onConfigReady() {
+        this.onLocalized();
+    },
+
     onLocalized() {
+        if(!Config || !Config.isReady) return;
         let me = this,
-            current = I18N.getCurrentCulture(),
-            displayName = current.cultureName && current.cultureName.includes('zh') ? current.displayName : current.englishName,
+            current = Config.getCurrentCulture();
+            Logger.debug(this.onLocalized, 'current', current);
+        if(!current) return;
+        let displayName = current.displayName || current.englishName,
             button = me.getLanguageButton(),
             menu = button.getMenu();
-        if (!displayName) return;
-        button.setLangText(displayName);
+        button.setText(displayName);
 
         //菜单已存在，直接返回
         if (menu) return;
         //创建下拉菜单
-        menu = { ui: Ext.platformTags.phone && 'dark', items: [], anchor: true, resourceName: I18N.getDefaultResourceName() };
-        I18N.getLanguages().forEach(l => {
+        menu = { 
+            ui: Ext.platformTags.phone && 'dark', 
+            items: [], anchor: true, 
+            resourceName: Config.getDefaultResourceName() };
+        Config.getLanguages().forEach(l => {
             menu.items.push({
                 xtype: 'menuradioitem',
                 group: 'language',
@@ -64,7 +73,21 @@ Ext.define('Common.mixin.button.Language', {
      * @param {事件触发者} sender 
      */
     onSwitchLanguage(sender) {
-        I18N.switchLanguages(sender.getValue());
+        let me = this,
+            value = sender.getValue(),
+            current = AppStorage.get('lang'),
+            langs = Config.getLanguages(),
+            currentCulture ;
+        if (current === value) return;
+        Ext.each(langs, (l)=>{
+            if(l.cultureName === value){
+                currentCulture = l;
+                return false; 
+            }
+        })
+        Config.setCurrentCulture(currentCulture);
+        AppStorage.set('lang', value);
+        I18N.loadResources();    
     },
 
 

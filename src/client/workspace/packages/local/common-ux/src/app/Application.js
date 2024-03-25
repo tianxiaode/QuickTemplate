@@ -5,9 +5,9 @@ Ext.define('Common.app.Application', {
 
     requires:[
         'Common.core.util.Format',
-        'Common.core.service.Config',
+        //'Common.core.service.Config',
         'Common.core.service.AccessControl',
-        'Common.localized.Localized',
+        //'Common.localized.Localized',
         'Common.view.page.Page404',
         'Common.view.page.Login',
         'Common.view.page.Welcome',
@@ -37,7 +37,8 @@ Ext.define('Common.app.Application', {
                 bodyElement: true
             })    
         }
-        I18N.loadResources();      
+        Logger.debug(this.init, 'Application initialized');
+        //I18N.loadResources();      
         window.Auth = Ext.create('service.authentication');
     },
 

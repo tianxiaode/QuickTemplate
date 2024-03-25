@@ -2,7 +2,7 @@ Ext.define('Common.core.service.Config', {
     alternateClassName: 'Config',
     singleton: true,
 
-    requires:[
+    requires: [
         'Common.core.service.DocumentVisibility',
         'Common.core.util.Logger',
         'Common.core.service.Alert',
@@ -13,41 +13,46 @@ Ext.define('Common.core.service.Config', {
     mixins: [
         'Ext.mixin.Observable',
     ],
-    
+
+    config: {
+        clock: null,
+        currentUser: null,
+        currentTenant: null,
+        features: null,
+        globalFeatures: null,
+        currentCulture: null,
+        languages: null,
+        multiTenancy: false,
+        setting: null,
+        timing: null,
+        grantedPolicies: null,
+        defaultResourceName: null,
+    },
 
     isReady: false,
 
-    constructor(config){
+    constructor(config) {
         let me = this;
-        me.initConfig(config)
+        //me.initConfig(config);
         me.mixins.observable.constructor.call(me, config);
-        if(AppConfig.isLogScriptError){
+        if (AppConfig.isLogScriptError) {
             window.addEventListener('error', me.onScriptError);
         }
-        if(AppConfig.loggerLevel){
+        if (AppConfig.loggerLevel) {
             Logger.setLevel(AppConfig.loggerLevel);
         }
 
     },
 
-    getAppName(){
+    getAppName() {
         return Ext.getApplication().getName();
-    },    
-
-    isAuthenticated(){
-        let me = this;
-        return me.data.currentUser && me.data.currentUser.id && me.data.user.currentUser > 0;
     },
 
-    getCurrentUser(){
-        return this.data.currentUser;
-    },
-
-    getAuthData(){
+    getAuthData() {
         return this.data.auth;
     },
 
-    getPasswordSetting(){
+    getPasswordSetting() {
         let setting = Config.data.setting.values;
         return {
             requiredLength: setting['Abp.Identity.Password.RequiredLength'],
@@ -59,56 +64,69 @@ Ext.define('Common.core.service.Config', {
         };
     },
 
-    getFileOption(key){
+    getFileOption(key) {
         let me = this,
             fileOptions = me.getFileOptions();
         return fileOptions[key];
     },
 
-    loadConfiguration(){
+    loadConfiguration() {
         let me = this;
         me.isReady = false;
-        let request = Http.get(URI.get('abp', 'application-configuration'), {IncludeLocalizationResources: false});
-        request.then(me.loadConfigurationSuccess, Alert.ajax.bind(me, me.getLoadFailureText()), null ,me);
+        let request = Http.get(URI.get('abp', 'application-configuration'), { IncludeLocalizationResources: false });
+        request.then(me.loadConfigurationSuccess, Alert.ajax.bind(me, me.getLoadFailureText()), null, me);
         return request;
     },
 
-    clearAll(){
+    clearAll() {
         let me = this;
         me.isReady = false;
         me.data = null;
     },
-    
+
     destroy() {
         let me = this;
-        if(AppConfig.isLogScriptError){
+        if (AppConfig.isLogScriptError) {
             window.removeEventListener('error', me.onScriptError);
         }
-        me.destroyMembers('oAuthConfig', 'data');
+        me.destroyMembers('clock', 'currentUser', 'currentTenant', 'features',
+            'globalFeatures', 'currentCulture', 'grantedPolicies',
+            'languages', 'multiTenancy', 'setting', 'timing');
         me.callParent();
     },
 
-    privates:{
-        data: {},
+    privates: {
 
-        loadConfigurationSuccess(response){
+        loadConfigurationSuccess(response) {
             let me = this,
                 data = response.request.getJson();
-            me.data = Object.assign({}, data);
+            me.setGrantedPolicies(data.auth.grantedPolicies);
+            me.setClock(data.clock);
+            me.setCurrentUser(data.currentUser);
+            me.setCurrentTenant(data.currentTenant);
+            me.setFeatures(data.features);
+            me.setGlobalFeatures(data.globalFeatures);
+            me.setCurrentCulture(data.localization.currentCulture);
+            me.setLanguages(data.localization.languages);
+            me.setMultiTenancy(data.multiTenancy.isEnabled);
+            me.setSetting(data.setting);
+            me.setTiming(data.timing);
+            me.setDefaultResourceName(data.localization.defaultResourceName);
             me.isReady = true;
-            Ext.defer(me.fireEvent, 10, me,  ['ready',me]);
+            //Ext.fireEvent('configReady', me);
+            Ext.defer(me.fireEvent, 10, me, ['ready', me]);
         },
 
-        onScriptError(event){
+        onScriptError(event) {
             Http.postScriptError(event.error.message, event.filename, event.lineno, event.colno, event.error.stack);
         },
 
-        getLoadFailureText(){
-            if(AppStorage.get('lang') === 'zh-Hans') return '加装应用程序配置失败';
+        getLoadFailureText() {
+            if (AppStorage.get('lang') === 'zh-Hans') return '加装应用程序配置失败';
             return 'Failed to load the app configuration!';
         }
 
-    
+
     }// end privates
 
 

@@ -29,7 +29,7 @@ Ext.define('Common.core.service.AccessControl',{
 
     init(){        
         let me = this,
-            auth = Config.getAuthData();
+            auth = Config.getGrantedPolicies();
         if(!auth) return;
         me.setPolicies(Object.assign({}, auth.grantedPolicies) );
         me.setGrantedPolicies(Object.assign({},auth.grantedPolicies));

@@ -17,6 +17,7 @@ Ext.define('Desktop.view.home.HeaderBar',{
 
     padding: '0 0 0 0',
     height: 64,
+    isEnableConfigListener: true,
 
     spacer: { weight: 300 },
     languageButton: { weight: 400 },

@@ -49,9 +49,10 @@ Ext.define('Common.ux.dataview.DetailList',{
     onLocalized(){
         let me = this,
             resourceName = me.getResourceName(),
+            entityName = me.getEntityName(),
             data = me.getStore().getData();
         data.each(r=>{
-            r.set('label', I18N.get(r.get('langLabel'), resourceName));
+            r.set('label', I18N.get(r.get('langLabel'), resourceName, entityName));
             r.commit();
         })
     },

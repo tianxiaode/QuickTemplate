@@ -9,6 +9,8 @@ Ext.define('Common.mixin.button.User', {
         userButton: null
     },
 
+    isEnableConfigListener: true,
+
     createUserButton(config) {
         let me = this;
         return Ext.apply({
@@ -40,14 +42,15 @@ Ext.define('Common.mixin.button.User', {
     },
 
     updateUserButton(config){
-        let me = this;
-        config && me.add(config);
-        Config.isReady && me.updateUserInfo();
-        Config.on('ready', me.updateUserInfo, me);
+        config && this.add(config);
+    },
 
+    onConfigReady(){
+        this.updateUserInfo();
     },
 
     updateUserInfo(){
+        Logger.debug(this.updateUserInfo, 'updateUserInfo');
         let me = this,
             button = me.getUserButton(),
             list = button.getMenu().down('#detailList'),

@@ -14,17 +14,16 @@ Ext.define('Common.overrides.Component',{
 
 
     initialize(){
-        let me = this,
-            i18n = window.I18N;
+        let me = this;
+        me.initConfigReadyEvent();
+        me.initLocalizedReadyEvent();
         me.callParent(arguments);
-        if(!i18n){
-            Ext.defer(me.initialize, 50, me );
-            return;
-        }
-        if(i18n.isReady){
-            me.onLocalized();
-        }
-        i18n.on('ready', me.onLocalized, me);
+    },
+
+    initLocalizedReadyEvent(){
+        let me = this;
+        I18N.on('ready', me.onLocalized, me);
+        if(I18N.isReady) me.onLocalized();
     },
 
     onLocalized(){

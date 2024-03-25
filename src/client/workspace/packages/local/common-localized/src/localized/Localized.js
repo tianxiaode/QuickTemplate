@@ -2,7 +2,7 @@ Ext.define('Common.localized.Localized', {
     alternateClassName: 'I18N',
     singleton: true,
 
-    requires:[
+    requires: [
         'Common.core.service.HttpClient',
         'Common.core.service.Url',
         'Common.core.service.Storage',
@@ -14,8 +14,8 @@ Ext.define('Common.localized.Localized', {
     ],
 
     config: {
-        currentLanguage: null,
         labelSeparator: '',
+        resources: null
     },
 
     isReady: false,
@@ -23,45 +23,53 @@ Ext.define('Common.localized.Localized', {
 
     constructor(config) {
         let me = this;
-        me.initConfig(config)
-        me.setCurrentLanguage(AppStorage.get('lang'));
+        // this.initConfig(config);
         me.mixins.observable.constructor.call(me, config);
     },
 
-    getDefaultResourceName() {
-        return I18N.remoteRawValue.defaultResourceName;
+    getCurrentLanguage() {
+        return AppStorage.get('lang')
+    },
+
+    getResourceText(key, resourceName, entityName) {
+        let me = this,
+            resource = me.getResource(resourceName),
+            text;
+        if (!resource) return null;
+        text = resource[key];
+        if (text) return text;
+        if (entityName) {
+            text = resource[`${entityName}:${key}`]
+            if (text) return text;
+        }
+        text = resource[`DisplayName:${key}`];
+        return text ? text : null;
+    },
+
+    getDefaultResourceText(key, entityName) {
+        return this.getResourceText(key, Config.getDefaultResourceName(), entityName);
+    },
+
+    getExtResourceText(key, entityName) {
+        return this.getResourceText(key, 'ExtResource', entityName);
     },
 
     get(key, resourceName, entityName) {
-        if(Ext.isNumeric(key)) return key;
+        if (Ext.isNumeric(key)) return key;
         resourceName = Format.capitalize(resourceName);
         entityName = Format.capitalize(entityName);
         key = Format.capitalize(key);
         let me = this,
-            defaultResourceName = me.remoteRawValue.defaultResourceName,
-            values = me.remoteRawValue.resources;
-        if (!values) return;
-        let extResource = values['ExtResource'] || {},
-            defaultResource = values[defaultResourceName],
-            displayNameKey = `DisplayName:${key}`,
-            entityKey = `${entityName}:${key}`;
+            text;
+        Logger.debug(this.get, key, resourceName, entityName);
         if (resourceName) {
-            let resource = values[resourceName];
-            if (resource) {
-                if (resource.hasOwnProperty(key)) return resource[key];
-                if (resource.hasOwnProperty(entityKey)) return resource[entityKey];
-                if (resource.hasOwnProperty(displayNameKey)) return resource[displayNameKey];
-            }
+            text = me.getResourceText(key, resourceName, entityName);
+            if (text) return text;
         }
-        if (extResource.hasOwnProperty(key)) return extResource[key];
-        if (extResource.hasOwnProperty(entityKey)) return extResource[entityKey];
-        if (extResource.hasOwnProperty(displayNameKey)) return extResource[displayNameKey];
-
-        if(!defaultResource) return key;
-        if (defaultResource.hasOwnProperty(key)) return defaultResource[key];
-        if (defaultResource.hasOwnProperty(entityKey)) return defaultResource[entityKey];
-        if (defaultResource.hasOwnProperty(displayNameKey)) return defaultResource[displayNameKey];
-        return key;
+        text = me.getDefaultResourceText(key, entityName);
+        if (text) return text;
+        text = me.getExtResourceText(key, entityName);
+        return text ? text : key;
     },
 
     getLanguage(cultureName) {
@@ -77,15 +85,6 @@ Ext.define('Common.localized.Localized', {
         return I18N.remoteRawValue.currentCulture;
     },
 
-    switchLanguages(value) {
-        let me = this,
-            current = me.getCurrentLanguage();
-        if (current === value) return;
-        me.setCurrentLanguage(value);
-        AppStorage.set('lang', value);
-        me.loadResources();
-    },
-
     getUnknownError() {
         return I18N.localText.UnknownError[I18N.getCurrentLanguage()];
     },
@@ -98,22 +97,24 @@ Ext.define('Common.localized.Localized', {
         return I18N.localText[key][I18N.getCurrentLanguage()];
     },
 
-    getResourceName() {
-        return Object.keys(I18N.remoteRawValue.resources);
-    },
-
     loadResources(url) {
         let me = this;
         me.isReady = false;
         url = url || URI.get('abp', 'application-localization');
         let request = Http.get(url, { cultureName: me.getCurrentLanguage() });
-        request.then(me.loadSuccess.bind(me), Alert.ajax.bind(me,I18N.getLocalText('LoadingLocalizedError')));
+        request.then(me.loadSuccess.bind(me), Alert.ajax.bind(me, I18N.getLocalText('LoadingLocalizedError')));
         return request;
+    },
+
+    getResource(name) {
+        let resources = this.getResources(),
+            resource = resources && resources[name];
+        return resource && resource.texts;
     },
 
     destroy() {
         let me = this;
-        me.destroyMembers('remoteRawValue', 'localText', 'languageMap');
+        me.destroyMembers('localText', 'languageMap', 'resources');
         me.callParent();
     },
 
@@ -128,7 +129,7 @@ Ext.define('Common.localized.Localized', {
                 'en': 'Information',
                 'zh-Hans': '信息'
             },
-            'NetworkError':{
+            'NetworkError': {
                 'en': 'Network Error!',
                 'zh-Hans': '网络错误'
             },
@@ -148,7 +149,7 @@ Ext.define('Common.localized.Localized', {
                 'en': 'Loading localized text...',
                 'zh-Hans': '正在加载本地化文本...'
             },
-            'LoadingLocalizedError':{
+            'LoadingLocalizedError': {
                 'en': 'Failed to load localized text',
                 'zh-Hans': '加载本地化文本失败'
             },
@@ -160,32 +161,37 @@ Ext.define('Common.localized.Localized', {
 
         doOverride() {
             let me = this,
-                values = me.remoteRawValue.values.ExtResource,
-                newMonthNames = [],
-                newDayNames = [],
-                am = values['AM'] || 'AM',
-                pm = values['PM'] || 'PM';
+                localizeMonthNames = [],
+                localizeDayNames = [],
+                am = me.getResourceText('AM') || 'AM',
+                pm = me.getResourceText('PM') || 'PM';
+
             if (Ext.util && Ext.util.Format) {
-                Ext.util.Format.defaultDateFormat = values.DefaultDateFormat;
-                Ext.util.Format.defaultDateTimeFormat = values.DefaultDateTimeFormat;
-                Ext.util.Format.currencySign = values.CurrencySign;
+                Ext.util.Format.defaultDateFormat = me.getExtResourceText('DefaultDateFormat');
+                Ext.util.Format.defaultDateTimeFormat = me.getExtResourceText('DefaultDateTimeFormat');
+                Ext.util.Format.currencySign = me.getExtResourceText('CurrencySign');
             }
 
-            if (!Ext.Date.originMonthNames) Ext.Date.originMonthNames = [].concat(Ext.Date.monthNames);
-            Ext.Date.originMonthNames.forEach(month => {
-                newMonthNames.push(values[month] || month);
+            if (!Ext.Date.originMonthNames) {
+                Ext.Date.originMonthNames = [...Ext.Date.monthNames];
+            }
 
+            Ext.each(Ext.Date.originMonthNames, month => {
+                localizeMonthNames.push(me.getExtResourceText(month) || month);
             });
-            Ext.Date.monthNames = newMonthNames;
 
-            if (!Ext.Date.originDayNames) Ext.Date.originDayNames = [].concat(Ext.Date.dayNames);
-            Ext.Date.originDayNames.forEach(day => {
-                newDayNames.push(values[day] || day);
+            Ext.Date.monthNames = localizeMonthNames;
 
+            if (!Ext.Date.originDayNames) {
+                Ext.Date.originDayNames = [...Ext.Date.dayNames];
+            }
+
+            Ext.each(Ext.Date.originDayNames, day => {
+                localizeDayNames.push(me.getExtResourceText(day) || day);
             });
-            Ext.Date.dayNames = newDayNames;
 
-            //console.log(Ext.Date)
+            Ext.Date.dayNames = localizeDayNames;
+
             Ext.Date.formatCodes.a = `(this.getHours() < 12 ? '${am}' : '${pm}')`;
             Ext.Date.formatCodes.A = `(this.getHours() < 12 ? '${am}' : '${pm}')`;
 
@@ -207,23 +213,16 @@ Ext.define('Common.localized.Localized', {
 
     loadSuccess(response) {
         let me = this,
-            data = response.request.getJson(),
-            map;
+            data = response.request.getJson();
         if (!data) return;
-        me.remoteRawValue = Object.assign({}, data);
+        me.setResources(data.resources);
         me.doOverride();
-        if (data.resources && data.resources.ExtResource) {
-            me.setLabelSeparator(data.resources.ExtResource.LabelSeparator);
-        }
-        map = me.languageMap = {};
-        if (data.languages) {
-            Ext.each(data.languages, l => {
-                map[l.cultureName] = l;
-            })
-        }
+        me.setLabelSeparator(me.getExtResourceText('LabelSeparator'));
         me.isReady = true;
-        Ext.defer(me.fireEvent, 10, me, ['ready', me]);
-    }
+        //Ext.fireEvent('localizedReady', me);
+        Ext.defer(me.fireEvent, 10, me, ['ready', me])
+    },
+
 
 
 })
