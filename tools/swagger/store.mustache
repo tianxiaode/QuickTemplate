@@ -1,0 +1,10 @@
+Ext.define('Common.data.store.{{path}}.{{name}}',{
+    extend: 'Common.core.data.Store',
+    alias: 'store.{{aliasName}}',
+
+    requires:[
+        'Common.data.model.{{path}}.{{model}}'
+    ],
+
+    model: 'Common.data.model.{{path}}.{{model}}',
+})

@@ -9,19 +9,11 @@ export class BaseQuery<T>  {
     protected method:string = '';
     public name:string = '';
 
-    private _token:string | undefined;
 
-    constructor(token:string | undefined){
-        this._token = token;
-    }
-
-    sendRequest(data:any | undefined):Promise<T>{
+    sendRequest(data:any | undefined, token:string | undefined):Promise<T>{
         const me = this;
         const deferred = new Deferred<T>();
-        console.log(`Sending ${me.name} request`, me._token)
-        if(!me._token){
-            return Promise.reject("No token provided");
-        }
+        console.log(`Sending ${me.name} request`, token)
         const config:AxiosRequestConfig = {
             url: `${process.env.NEXT_PUBLIC_AUTH_ISSUER_BASE_URL}/api/${me.endpoint}`,
             method: me.method,            
@@ -33,10 +25,10 @@ export class BaseQuery<T>  {
 
 
         config.headers = {
-            'Authorization': `Bearer ${me._token}`
+            'Authorization': `Bearer ${token}`
         }                            
 
-        console.log(`Sending ${me.name} request`, config, me._token)
+        console.log(`Sending ${me.name} request`, config, token)
 
         Axios.request(config).then((response:AxiosResponse<T>) => {
             me.onSuccess.call(me, response, deferred);

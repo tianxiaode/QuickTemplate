@@ -65,12 +65,10 @@ Ext.define('Common.core.service.HttpClient', {
     },
 
     getDefaultHeaders() {
-        let lang = AppConfig.lang;
         return {
             'Authorization': 'Bearer ' + AppStorage.get('accessToken'),
             'Access-Control-Allow-Origin': '*',
-            "accept-language": AppStorage.get('lang') || (lang === 'zh-CN' ? 'zh-Hans'
-                : lang === 'zh-TW' ? 'zh-Hant' : lang)
+            "accept-language": AppStorage.get('lang')
         };
 
     },

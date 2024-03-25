@@ -3,16 +3,37 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { useAuth } from "react-oidc-context";
-  
+import { useRequest } from 'ahooks';
+import  ApplicationConfigurationQuery  from "@/queries/ApplicationConfigurationQuery";  
+import axios  from 'axios';
+import { useAuth} from "react-oidc-context";
+
 export default function Nav() {
     const pathname = usePathname();
     const pageName = pathname?.split('/').pop();
     const auth = useAuth();
-    const user = useCurrentUser();
-
-    console.log('Nav is rendering', user)
+    const token = useAuth().user?.access_token;
+    const apiFn = async (token: string | undefined) => {
+        const url = `${process.env.NEXT_PUBLIC_AUTH_ISSUER_BASE_URL}/api/application-configuration`;
+        const config = { headers: {} };
+        if(token){
+            config.headers = {  Authorization: `Bearer ${token}` };
+        }
+      
+        // 发起GET请求，带上参数
+        const response = await axios.get(url);
+      
+        if (response.status === 200) {
+          return response.data;
+        } else {
+          throw new Error('Failed to fetch data');
+        }
+      };
+      
+    //const user = useApplicationConfiguration()?.appConfig?.currentUser;
+    const { data, error, loading } = useRequest(apiFn);
+    const user = data?.currentUser;
+    console.log('Nav is rendering', data, error, loading)
     return (
 
         <>
@@ -29,14 +50,14 @@ export default function Nav() {
                                 <li>
                                     <div>
                                         {user?.userName}{" "}
-                                        <button onClick={() => void auth.removeUser()}>Log out</button>
+                                        <button onClick={() => auth.signoutSilent()}>Log out</button>
                                     </div>                                
                                     </li>
                             </>
                         ) : (
                             <>
                                 <li>
-                                    <button onClick={() => void auth.signinRedirect()}>Log in</button>
+                                    <button onClick={() => auth.signinRedirect()}>Log in</button>
                                 </li>
                             </>
                         )}

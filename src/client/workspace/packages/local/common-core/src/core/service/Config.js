@@ -68,7 +68,7 @@ Ext.define('Common.core.service.Config', {
     loadConfiguration(){
         let me = this;
         me.isReady = false;
-        let request = Http.get(URI.get('application-configuration'));
+        let request = Http.get(URI.get('abp', 'application-configuration'), {IncludeLocalizationResources: false});
         request.then(me.loadConfigurationSuccess, Alert.ajax.bind(me, me.getLoadFailureText()), null ,me);
         return request;
     },

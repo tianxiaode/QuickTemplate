@@ -42,8 +42,8 @@ Ext.define('Common.app.Application', {
     },
 
     onAppUpdate() {
-        let title = I18N.getLocalText('applicationUpdate'),
-            message = I18N.getLocalText('applicationUpdateMessage');
+        let title = AppConfig.getApplicationUpdateTitle(),
+            message = AppConfig.getApplicationUpdateMessage();
         MsgBox.confirm(title, message,
             function (choice) {
                 if (choice === 'yes') {

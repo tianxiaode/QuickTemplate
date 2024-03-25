@@ -1,0 +1,16 @@
+Ext.define('Common.data.model.{{path}}.{{name}}', {
+    extend: 'Common.data.model.Base',
+    alias: 'entity.{{alias}}',
+
+    fields: [
+        {{#list fields}}
+            { name: '{{fieldName}}', type: '{{type}}', 
+                {{defaultValue}}, 
+                {{minLength}}, {{maxLength}}, {{allowBlank}},
+                {{required}}, sortable: true
+            },
+        {{/each}}
+        
+    ],
+
+})

@@ -39,7 +39,7 @@ Ext.define('Common.localized.Localized', {
         key = Format.capitalize(key);
         let me = this,
             defaultResourceName = me.remoteRawValue.defaultResourceName,
-            values = me.remoteRawValue.values;
+            values = me.remoteRawValue.resources;
         if (!values) return;
         let extResource = values['ExtResource'] || {},
             defaultResource = values[defaultResourceName],
@@ -99,14 +99,14 @@ Ext.define('Common.localized.Localized', {
     },
 
     getResourceName() {
-        return Object.keys(I18N.remoteRawValue.values);
+        return Object.keys(I18N.remoteRawValue.resources);
     },
 
     loadResources(url) {
         let me = this;
         me.isReady = false;
-        url = url || URI.get('localization');
-        let request = Http.get(url);
+        url = url || URI.get('abp', 'application-localization');
+        let request = Http.get(url, { cultureName: me.getCurrentLanguage() });
         request.then(me.loadSuccess.bind(me), Alert.ajax.bind(me,I18N.getLocalText('LoadingLocalizedError')));
         return request;
     },
@@ -120,14 +120,6 @@ Ext.define('Common.localized.Localized', {
     privates: {
         remoteRawValue: {},
         localText: {
-            applicationUpdate: {
-                "en": 'Application Update',
-                "zh-CN": '更新应用程序'
-            },
-            applicationUpdateMessage:{
-                "en": 'This application has an update, reload?',
-                "zh-CN": '应用程序已更新，是否重新加载？'
-            },
             'LoadingOrganizationUnit': {
                 'en': 'Loading the organization...',
                 'zh-Hans': '正在加载组织...'
@@ -220,8 +212,8 @@ Ext.define('Common.localized.Localized', {
         if (!data) return;
         me.remoteRawValue = Object.assign({}, data);
         me.doOverride();
-        if (data.values && data.values.ExtResource) {
-            me.setLabelSeparator(data.values.ExtResource.LabelSeparator);
+        if (data.resources && data.resources.ExtResource) {
+            me.setLabelSeparator(data.resources.ExtResource.LabelSeparator);
         }
         map = me.languageMap = {};
         if (data.languages) {
