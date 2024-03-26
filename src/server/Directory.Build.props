@@ -2,7 +2,7 @@
   <PropertyGroup>
 
     <AbpVersion>8.0.4</AbpVersion>
-    <GenericAbpVersion>1.0.13</GenericAbpVersion>
+    <GenericAbpVersion>1.0.15</GenericAbpVersion>
     <QuickTemplateVersion>0.0.1</QuickTemplateVersion>
     <JetBrainsAnnotationsVersion>2023.3.0</JetBrainsAnnotationsVersion>
 		<FileProvidersEmbeddedVersion>8.0.0</FileProvidersEmbeddedVersion>

@@ -1,0 +1,3 @@
+GET https://localhost:44350/api/localization HTTP/1.1
+content-type: application/json
+Accept-Language: zh-cn

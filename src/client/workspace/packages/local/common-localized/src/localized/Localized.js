@@ -15,7 +15,10 @@ Ext.define('Common.localized.Localized', {
 
     config: {
         labelSeparator: '',
-        resources: null
+        resources: null,
+        defaultResourceName: null,
+        currentCulture: null,
+        languages: null,
     },
 
     isReady: false,
@@ -25,6 +28,19 @@ Ext.define('Common.localized.Localized', {
         let me = this;
         // this.initConfig(config);
         me.mixins.observable.constructor.call(me, config);
+    },
+
+    applyCurrentCulture(culture) {
+        if(!culture || !culture.cultureName) return this.getCurrentCultureByLanguages();
+        return culture;
+    },
+
+    updateLanguages(languages) {
+        let me = this,
+            languageMap = {};
+        languages.forEach(language => {
+            languageMap[language.cultureName] = language;
+        });
     },
 
     getCurrentLanguage() {
@@ -47,7 +63,7 @@ Ext.define('Common.localized.Localized', {
     },
 
     getDefaultResourceText(key, entityName) {
-        return this.getResourceText(key, Config.getDefaultResourceName(), entityName);
+        return this.getResourceText(key, this.getDefaultResourceName(), entityName);
     },
 
     getExtResourceText(key, entityName) {
@@ -61,7 +77,6 @@ Ext.define('Common.localized.Localized', {
         key = Format.capitalize(key);
         let me = this,
             text;
-        Logger.debug(this.get, key, resourceName, entityName);
         if (resourceName) {
             text = me.getResourceText(key, resourceName, entityName);
             if (text) return text;
@@ -70,19 +85,6 @@ Ext.define('Common.localized.Localized', {
         if (text) return text;
         text = me.getExtResourceText(key, entityName);
         return text ? text : key;
-    },
-
-    getLanguage(cultureName) {
-        let value = I18N.languageMap && I18N.languageMap[cultureName];
-        return value;
-    },
-
-    getLanguages() {
-        return I18N.remoteRawValue.languages;
-    },
-
-    getCurrentCulture() {
-        return I18N.remoteRawValue.currentCulture;
     },
 
     getUnknownError() {
@@ -100,7 +102,7 @@ Ext.define('Common.localized.Localized', {
     loadResources(url) {
         let me = this;
         me.isReady = false;
-        url = url || URI.get('abp', 'application-localization');
+        url = url || URI.get('localization');
         let request = Http.get(url, { cultureName: me.getCurrentLanguage() });
         request.then(me.loadSuccess.bind(me), Alert.ajax.bind(me, I18N.getLocalText('LoadingLocalizedError')));
         return request;
@@ -109,17 +111,25 @@ Ext.define('Common.localized.Localized', {
     getResource(name) {
         let resources = this.getResources(),
             resource = resources && resources[name];
-        return resource && resource.texts;
+        return resource;
+    },
+
+    switchLanguage(language) {
+        let me = this,
+            current = AppStorage.get('lang');
+        if (current === language) return;
+        AppStorage.set('lang', language);
+        me.loadResources();
     },
 
     destroy() {
         let me = this;
-        me.destroyMembers('localText', 'languageMap', 'resources');
+        me.destroyMembers('localText', 'resources', 
+            'defaultResourceName', 'languageMap', 'languages');
         me.callParent();
     },
 
     privates: {
-        remoteRawValue: {},
         localText: {
             'LoadingOrganizationUnit': {
                 'en': 'Loading the organization...',
@@ -215,12 +225,22 @@ Ext.define('Common.localized.Localized', {
         let me = this,
             data = response.request.getJson();
         if (!data) return;
-        me.setResources(data.resources);
+        me.setResources(data.values);
+        me.setDefaultResourceName(data.defaultResourceName);
+        me.setCurrentCulture(data.currentCulture);
+        me.setLanguages(data.languages);
         me.doOverride();
         me.setLabelSeparator(me.getExtResourceText('LabelSeparator'));
         me.isReady = true;
         //Ext.fireEvent('localizedReady', me);
-        Ext.defer(me.fireEvent, 10, me, ['ready', me])
+        Ext.defer(me.fireEvent, 50, me, ['ready', me])
+    },
+
+    getCurrentCultureByLanguages() {
+        let currentLanguage = me.getCurrentLanguage();
+        if(currentLanguage === 'zh-CN') currentLanguage = 'zh-Hans';
+        if(currentLanguage === 'zh-TW') currentLanguage = 'zh-Hant';
+        return this.languageMap[currentLanguage];
     },
 
 

@@ -20,13 +20,10 @@ Ext.define('Common.core.service.Config', {
         currentTenant: null,
         features: null,
         globalFeatures: null,
-        currentCulture: null,
-        languages: null,
         multiTenancy: false,
         setting: null,
         timing: null,
         grantedPolicies: null,
-        defaultResourceName: null,
     },
 
     isReady: false,
@@ -90,8 +87,8 @@ Ext.define('Common.core.service.Config', {
             window.removeEventListener('error', me.onScriptError);
         }
         me.destroyMembers('clock', 'currentUser', 'currentTenant', 'features',
-            'globalFeatures', 'currentCulture', 'grantedPolicies',
-            'languages', 'multiTenancy', 'setting', 'timing');
+            'globalFeatures', 'grantedPolicies',
+            'multiTenancy', 'setting', 'timing');
         me.callParent();
     },
 
@@ -106,15 +103,15 @@ Ext.define('Common.core.service.Config', {
             me.setCurrentTenant(data.currentTenant);
             me.setFeatures(data.features);
             me.setGlobalFeatures(data.globalFeatures);
-            me.setCurrentCulture(data.localization.currentCulture);
-            me.setLanguages(data.localization.languages);
+            // me.setCurrentCulture(data.localization.currentCulture);
+            // me.setLanguages(data.localization.languages);
             me.setMultiTenancy(data.multiTenancy.isEnabled);
             me.setSetting(data.setting);
             me.setTiming(data.timing);
-            me.setDefaultResourceName(data.localization.defaultResourceName);
+            // me.setDefaultResourceName(data.localization.defaultResourceName);
             me.isReady = true;
             //Ext.fireEvent('configReady', me);
-            Ext.defer(me.fireEvent, 10, me, ['ready', me]);
+            Ext.defer(me.fireEvent, 50, me, ['ready', me]);
         },
 
         onScriptError(event) {

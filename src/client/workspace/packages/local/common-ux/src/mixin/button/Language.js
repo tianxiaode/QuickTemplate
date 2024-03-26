@@ -29,15 +29,9 @@ Ext.define('Common.mixin.button.Language', {
         config && this.add(config);
     },
 
-    onConfigReady() {
-        this.onLocalized();
-    },
-
     onLocalized() {
-        if(!Config || !Config.isReady) return;
         let me = this,
-            current = Config.getCurrentCulture();
-            Logger.debug(this.onLocalized, 'current', current);
+            current = I18N.getCurrentCulture();
         if(!current) return;
         let displayName = current.displayName || current.englishName,
             button = me.getLanguageButton(),
@@ -50,8 +44,8 @@ Ext.define('Common.mixin.button.Language', {
         menu = { 
             ui: Ext.platformTags.phone && 'dark', 
             items: [], anchor: true, 
-            resourceName: Config.getDefaultResourceName() };
-        Config.getLanguages().forEach(l => {
+            resourceName: I18N.getDefaultResourceName() };
+        Ext.each(I18N.getLanguages(), l => {
             menu.items.push({
                 xtype: 'menuradioitem',
                 group: 'language',
@@ -73,21 +67,7 @@ Ext.define('Common.mixin.button.Language', {
      * @param {事件触发者} sender 
      */
     onSwitchLanguage(sender) {
-        let me = this,
-            value = sender.getValue(),
-            current = AppStorage.get('lang'),
-            langs = Config.getLanguages(),
-            currentCulture ;
-        if (current === value) return;
-        Ext.each(langs, (l)=>{
-            if(l.cultureName === value){
-                currentCulture = l;
-                return false; 
-            }
-        })
-        Config.setCurrentCulture(currentCulture);
-        AppStorage.set('lang', value);
-        I18N.loadResources();    
+        I18N.switchLanguage(sender.getValue());
     },
 
 
