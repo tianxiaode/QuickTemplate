@@ -113,9 +113,14 @@
 
          "js": [
             {
+                "path": "${build.environment}/locale.js",
+                "requiresSdk": false,
+                "compress": true
+            },
+            {
               "path": "${build.environment}/config.js",
               "requiresSdk": false,
-              "compress": false
+              "compress": true
             }
           ],
 

@@ -65,12 +65,12 @@ Ext.define('Common.view.page.Base', {
             isDesktop = Ext.platformTags.desktop,
             lang = I18N.getCurrentLanguage();
         me.callParent();
-        me.setTitle(AppConfig['companyShortName'][lang]);
+        me.setTitle(locale.get('companyShortName'));
         bar.setHtml(Ext.String.format(me.getBottomMessage(), 
             currentYear == startYear ? '' : startYear + '-',
             currentYear,
             AppConfig['companyUrl'],
-            AppConfig['companyFullName'][lang],
+            locale.get('companyFullName'),
             isDesktop ? '' : '<br/>',
             AppConfig['icp'],
             isDesktop ? 'lh-50': 'lh-24'

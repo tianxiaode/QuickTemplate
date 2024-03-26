@@ -43,8 +43,8 @@ Ext.define('Common.app.Application', {
     },
 
     onAppUpdate() {
-        let title = AppConfig.getApplicationUpdateTitle(),
-            message = AppConfig.getApplicationUpdateMessage();
+        let title = locale.get('applicationUpdateTitle'),
+            message = locale.get('applicationUpdateMessage');
         MsgBox.confirm(title, message,
             function (choice) {
                 if (choice === 'yes') {

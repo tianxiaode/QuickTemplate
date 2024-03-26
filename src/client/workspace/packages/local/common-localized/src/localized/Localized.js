@@ -96,7 +96,7 @@ Ext.define('Common.localized.Localized', {
     },
 
     getLocalText(key) {
-        return I18N.localText[key][I18N.getCurrentLanguage()];
+        return window.locale.get(key);
     },
 
     loadResources(url) {
@@ -130,45 +130,6 @@ Ext.define('Common.localized.Localized', {
     },
 
     privates: {
-        localText: {
-            'LoadingOrganizationUnit': {
-                'en': 'Loading the organization...',
-                'zh-Hans': '正在加载组织...'
-            },
-            'DefaultInfoTitle': {
-                'en': 'Information',
-                'zh-Hans': '信息'
-            },
-            'NetworkError': {
-                'en': 'Network Error!',
-                'zh-Hans': '网络错误'
-            },
-            'UnknownError': {
-                'en': 'Unknown error!',
-                'zh-Hans': '未知错误'
-            },
-            'LoadingUserConfiguration': {
-                'en': 'Loading the configuration...',
-                'zh-Hans': '正在加载用户配置...'
-            },
-            'LoadingUserConfigurationrror': {
-                'en': 'Failed to load configuration',
-                'zh-Hans': '加载用户配置失败，请与管理员联系'
-            },
-            'LoadingLocalized': {
-                'en': 'Loading localized text...',
-                'zh-Hans': '正在加载本地化文本...'
-            },
-            'LoadingLocalizedError': {
-                'en': 'Failed to load localized text',
-                'zh-Hans': '加载本地化文本失败'
-            },
-            'WaitSwitch': {
-                'en': 'Wait for the last organizational switch before switching.',
-                'zh-Hans': '请等待上一次组织切换以后再进行切换'
-            }
-        },
-
         doOverride() {
             let me = this,
                 localizeMonthNames = [],
