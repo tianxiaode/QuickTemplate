@@ -18,6 +18,7 @@ Ext.define('Common.service.Template', {
                     </li>
                 </tpl>
             </ul>
+            <p class="m-1 text-bold warning" >{warning}</p>
         `,
         spinnerEditor: `
             <div class="col-2 text-center "><span data-field="{leftField}" class="editor fs-6 x-fa fa-caret-left {leftCls} "></span> </div>
@@ -56,11 +57,12 @@ Ext.define('Common.service.Template', {
         });
     },
 
-    getMessage(title, messages, type){
+    getMessage(title, messages, type, warning){
         return this.getMessageTpl().apply({
             title: title,
             messages: messages, 
-            type: type
+            type: type,
+            warning: warning
         });
     },  
             

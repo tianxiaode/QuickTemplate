@@ -3,7 +3,7 @@ Ext.define('Common.data.model.identity.User', {
     alias: 'entity.abpIdentity.user',
 
     fields: [
-        { name: 'userName',type: 'string', defaultValue: '', messageField: true, sortable: true},
+        { name: 'userName',type: 'string', defaultValue: '', isMessage: true, sortable: true},
         { name: 'name', type: 'string',defaultValue: '', sortable: false},
         { name: 'surname',type: 'string', defaultValue: '', sortable: false},
         { name: 'email',type: 'string', defaultValue: '', sortable: true},

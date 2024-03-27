@@ -42,23 +42,18 @@ Ext.define('Common.core.service.Alert', {
         return deferred.promise;
     },
 
-    ajax(defaultMessage, response){
+    ajax(){
+        let defaultMessage = arguments[0],
+            response = arguments[1];
+        this.unmask && this.unmask();
         if(!Ext.isString(defaultMessage)){
             response = defaultMessage;
             defaultMessage = '';
         }
         let error = response.request.getError(defaultMessage),
             message = `${error.message}`;
-
         if(error.details){
             message += `: ${error.details}`;
-        }
-        if(error.validationErrors){
-            let tpl = Template.getTpl('messageList');
-            Object.keys(error.validationErrors).forEach(k=>{
-                let errors = error.validationErrors[k];
-                message += `<p class="m-0 p02">${k}: ${tpl.apply(errors)}</p>`;
-            })
         }
         Alert.error(message);
     },

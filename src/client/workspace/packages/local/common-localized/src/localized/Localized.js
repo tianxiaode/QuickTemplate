@@ -103,7 +103,9 @@ Ext.define('Common.localized.Localized', {
         me.isReady = false;
         url = url || URI.get('localization');
         let request = Http.get(url, { cultureName: me.getCurrentLanguage() });
-        request.then(me.loadSuccess.bind(me), Alert.ajax.bind(me, I18N.getLocalText('LoadingLocalizedError')));
+        request.then(
+            me.loadSuccess.bind(me), 
+            Alert.ajax.bind(me, locale.get('loadingLocalizedError')));
         return request;
     },
 
@@ -183,13 +185,18 @@ Ext.define('Common.localized.Localized', {
     loadSuccess(response) {
         let me = this,
             data = response.request.getJson();
-        if (!data) return;
+        if (!data) return;        
         me.setResources(data.values);
         me.setDefaultResourceName(data.defaultResourceName);
         me.setCurrentCulture(data.currentCulture);
         me.setLanguages(data.languages);
         me.doOverride();
         me.setLabelSeparator(me.getExtResourceText('LabelSeparator'));
+        
+        let extResource = me.getResource('ExtResource');
+        extResource['ConfirmMessageTitle'] = "确认要对以下数据执行{0}操作？";
+        extResource['ConfirmMessageWarning'] = "注意：部分数据可能因条件限制{0}不了！";
+
         me.isReady = true;
         Ext.defer(me.fireEvent, 50, me, ['ready', me])
     },

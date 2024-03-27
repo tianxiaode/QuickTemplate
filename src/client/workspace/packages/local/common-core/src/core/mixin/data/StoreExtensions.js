@@ -41,8 +41,8 @@ Ext.define('Common.core.mixin.data.StoreExtensions',{
         me.langTextFields = new Map();
         fields.forEach(field => {
             let name = field.name;
-            if(field.messageField) me.messageField = name;
-            if(field.localFilter) me.localFilterFields.add(name);
+            if(field.isMessage) me.messageField = name;
+            if(field.isLocalFilter) me.localFilterFields.add(name);
             if(field.sortable) me.sortFields.add(name);
             if(field.langText) me.langTextFields.set(name, field.langText);
         });

@@ -47,13 +47,7 @@ Ext.define('Common.mixin.controller.crud.Selectable',{
      */
     doDeselectAll(){
         this.list.deselectAll();
-    },
-    
-    hasSelections(alert){
-        let result = this.list.hasSelection();
-        !result && alert && MsgBox.alert(null, I18N.get('NoSelection'));
-        return result;
-    }
+    }   
 
     
 })

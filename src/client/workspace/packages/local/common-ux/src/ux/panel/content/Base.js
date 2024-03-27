@@ -19,7 +19,6 @@ Ext.define('Common.ux.panel.content.Base', {
         'Common.mixin.crud.Selectable',
         'Common.mixin.crud.Button',
         'Common.mixin.crud.ButtonAction',
-        'Common.mixin.crud.Batch',
         'Common.mixin.crud.CountMessage',
         'Common.mixin.crud.ChildTap',
         'Common.mixin.crud.ChildLongPress',

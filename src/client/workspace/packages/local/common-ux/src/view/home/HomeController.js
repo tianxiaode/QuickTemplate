@@ -100,7 +100,6 @@ Ext.define('Common.view.home.HomeController',{
                 action.resume();
             },
             () =>{
-                alert.error(I18N.getLocalText('LoadingLocalizedError'));
                 Ext.Viewport.setMasked(null);
             }
         );

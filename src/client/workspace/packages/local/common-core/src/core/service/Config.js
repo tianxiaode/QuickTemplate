@@ -71,7 +71,10 @@ Ext.define('Common.core.service.Config', {
         let me = this;
         me.isReady = false;
         let request = Http.get(URI.get('abp', 'application-configuration'), { IncludeLocalizationResources: false });
-        request.then(me.loadConfigurationSuccess, Alert.ajax.bind(me, me.getLoadFailureText()), null, me);
+        request.then(
+            me.loadConfigurationSuccess.bind(me),
+            Alert.ajax.bind(me, locale.get('loadingUserConfigurationError'))
+        );
         return request;
     },
 
@@ -116,12 +119,8 @@ Ext.define('Common.core.service.Config', {
 
         onScriptError(event) {
             Http.postScriptError(event.error.message, event.filename, event.lineno, event.colno, event.error.stack);
-        },
-
-        getLoadFailureText() {
-            if (AppStorage.get('lang') === 'zh-Hans') return '加装应用程序配置失败';
-            return 'Failed to load the app configuration!';
         }
+
 
 
     }// end privates

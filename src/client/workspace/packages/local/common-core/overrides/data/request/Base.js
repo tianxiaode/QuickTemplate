@@ -75,7 +75,7 @@ Ext.define('Common.overrides.data.request.Base',{
 
         if(status === 0){
             let message = me.result.statusText;
-            result.message = Ext.isEmpty(message) ? defaultMessage : message;
+            result.message = Ext.isEmpty(message) ? (defaultMessage || locale.get('networkError')) : message;
             return result;
         }
 

@@ -80,6 +80,47 @@ Ext.define('Common.mixin.crud.ButtonAction', {
          */
         deleteHttpMethod: 'DELETE',
 
+        /**
+         * 用于设置批量操作时获取确认提示信息的字段
+         * @cfg {String} messageField 信息字段
+         */
+        deleteMessageField: null,
+
+        /**
+         * 用于设置批量操作时获取提交参数的字段         * 
+         * @cfg {String} valueField 值字段
+         */
+        deleteValueField: null,
+
+        /**
+         * @cfg {String} deleteConfirmTitle
+         * 删除确认对话框的标题, 默认值为'Delete'
+         */
+        deleteDialogTitle: 'Delete',
+
+        /**
+         * @cfg {String} deleteConfirmMessageTitle
+         * 删除确认对话框的提示消息标题, 默认值为'Delete'
+         */
+        deleteMessageTitle: 'Delete',
+
+        /**
+         * @cfg {String} deleteConfirmMessageWarning
+         * 删除确认对话框的提示消息警告,默认值为'Delete'
+         */
+        deleteMessageWarning: 'Delete',
+
+        /**
+         * @cfg {String} deleteConfirmMessageType
+         * 删除确认对话框的提示消息类型, 默认为'danger'
+         */
+        deleteMessageType: 'danger',
+
+        /**
+         * @cfg {String} defaultValueField
+         * 批量操作的默认值字段
+         */
+        defaultValueField: 'id'
     },
 
     /**
@@ -92,6 +133,21 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      * 当前操作记录
      */
     currentRecord: null,
+
+
+
+    // applyDeleteConfirmTitle(value, oldValue) {
+    //     return I18N.get(value);
+    // },
+
+    // applyDeleteConfirmMessageTitle(value, oldValue) {
+    //     return Format.format(I18N.get('ConfirmMessageTitle'), I18N.get(value));
+    // },
+
+    // applyDeleteConfirmMessageWarning(value, oldValue) {
+    //     return Format.format(I18N.get('ConfirmMessageWarning'), I18N.get(value));
+    // },
+
 
     initialize() {
         let me = this,
@@ -152,8 +208,20 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      */
     onUpdateButtonTap() {
         let me = this;
-        if (me.onBeforeUpdate() === false) return;
+        if (me.onBeforeUpdate(me.currentRecord) === false) return;
         me.doUpdate();
+    },
+
+    /**
+     * 默认的更新之前操作，检测是否有当前记录
+     * 因为重写onBeforeUpdate有可能需要重写这部分代码，所以单独抽出来
+     * @param {记录} record 
+     * @returns 
+     */
+    onDefaultBeforeUpdate(record) {
+        if (record) return true;
+        this.showNoSelectionAlert();
+        return false;
     },
 
     /**
@@ -162,7 +230,9 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      * @param {对话框} dialog 
      * @param {要编辑的记录} selection 
      */
-    onBeforeUpdate() { },
+    onBeforeUpdate(record) { 
+        return this.onDefaultBeforeUpdate(record);
+    },
 
     onAfterUpdate() {
         this.onRefreshStore();
@@ -188,17 +258,31 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     /**
     * 单击删除按钮
     */
-    onDeleteButtonTap(isCurrentRecord) {
+    onTrashButtonTap(isCurrentRecord) {
         let me = this,
             deletes = isCurrentRecord ? [me.currentRecord] : me.getSelections();
-        if (me.onBeforeDelete(deletes) === false) return;
+        if (me.onBeforeDelete([]) === false) return;
         me.doDelete(deletes);
+    },
+
+    /**
+     * 默认的删除之前操作，检测是否有选择的记录
+     * 因为重写onBeforeDelete有可能需要重写这部分代码，所以单独抽出来
+     * @param {记录} records 
+     * @returns 
+     */
+    onDefaultBeforeDelete(deletes) {
+        if (deletes.length > 0) return true;
+        this.showNoSelectionAlert();
+        return false; 
     },
 
     /**
      * 执行删除操作之前的操作，返回falsle可取消删除操作
      */
-    onBeforeDelete() { },
+    onBeforeDelete(deletes) { 
+        return this.onDefaultBeforeDelete(deletes);
+    },
 
     /**
      * 执行删除操作
@@ -206,8 +290,11 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      * @returns 
      */
     doDelete(deletes) {
-        let me = this;
-        return Http.delete(URI.crud(this.entityName), data.ids);
+        let me = this,
+            data = me.getBatchData(deletes, 'delete');
+        Logger.debug(this.doDelete, data);
+        return;
+        me.doBatch(records, 'delete', me.isBatchDelete);
     },
 
     /**
@@ -284,6 +371,45 @@ Ext.define('Common.mixin.crud.ButtonAction', {
         return {};
     },
 
+    /**
+     * 获取多实体远程操作数据
+     * @param {要获取数据的记录} records
+     * @param {信息字段} messageField 
+     * @param {值字段} valueField 
+     */
+    getBatchData(records, action) {
+        let me = this
+            messageField = me[`_${action}MessageField`] || me.getDefaultMessageField(),
+            valueField = me[`_${action}ValueField`] || me.getDefaultValueField(),
+            result = { values: [], messages: [] };
+        //组织数据
+        Ext.each(records, (r) => {
+            let message = r.get(messageField),
+                value = r.get(valueField);
+            result.values.push(value);
+            result.messages.push(message);
+        });
+
+        result['url'] = me[`_${action}Url`] || me.getDialogUrl(action);
+
+        result['httpMethod'] = me.getHttpMethod(action);
+
+        result['dialogTitle'] = me[`_${action}DialogTitle`]; 
+
+        result['messageTitle'] = Format.format(I18N.get('ConfirmMessageTitle'), I18N.get(me[`_${action}MessageTitle`]));
+
+        result['messageWarning'] = Format.format(I18N.get('ConfirmMessageWarning'), I18N.get(me[`_${action}MessageWarning`]));
+
+        result['messageType'] = me[`_${action}MessageType`];
+
+        return result;
+    },
+
+    showNoSelectionAlert() {
+        Alert.error(I18N.get('NoSelection'));
+    },
+
+
 
     doDestroy() {
         this.destroyMembers('createForm', 'updateForm', 'currentRecord')
@@ -335,6 +461,18 @@ Ext.define('Common.mixin.crud.ButtonAction', {
                 method = me[`_${action}HttpMethod`];
             return method;
         },
+
+        /**
+         * 获取默认的提示信息字段
+         * @returns 信息字段名称
+         */
+        getDefaultMessageField(){
+            return this.getStore().messageField;
+        },
+
+
+
+
     }
 
 

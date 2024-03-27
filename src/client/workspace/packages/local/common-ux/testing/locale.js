@@ -72,7 +72,7 @@ window.locale = {
         applicationUpdateMessage: "应用程序有新版本可用。 现在要更新吗？",
         loadingOrganizationUnit: "正在加载组织单元...",
         defaultInfoTitle: "信息",
-        networkError: "网络错误。 请坚持您的网络连接并重试。",
+        networkError: "网络错误。 请检查您的网络连接并重试。",
         unknownError: "未知错误。 请稍后再试。",
         loadingUserConfiguration: "正在加载用户配置...",
         loadingUserConfigurationError: "加载用户配置时出错。 请稍后再试。",

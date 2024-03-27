@@ -8,7 +8,7 @@ Ext.define('Common.mixin.crud.ToolAction', {
 
     onDeleteToolTap(grid, context){
         this.currentRecord = context.record;
-        this.onDeleteButtonTap(true);
+        this.onTrashButtonTap(true);
     },
     
 
