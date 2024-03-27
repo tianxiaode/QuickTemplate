@@ -6,40 +6,30 @@ Ext.define('Common.core.service.AccessControl',{
         'Common.core.service.Config'
     ],
 
-    config:{
-        policies: null,
-        grantedPolicies: null
-    },
-
-
-    constructor(config) {
-        let me = this;
-        me.initConfig(config);
-    },
 
     isGranted(permissionName){
-        let policies = this.getGrantedPolicies(),
+        let policies = Config.getGrantedPolicies(),
             v = policies && policies[permissionName];            
         return  v === "true" || v === true  || false;
     },
 
-    getDisplayName(permission){
-        return this.getPolicies()[permission];
-    },
+    // getDisplayName(permission){
+    //     return this.getPolicies()[permission];
+    // },
 
-    init(){        
-        let me = this,
-            auth = Config.getGrantedPolicies();
-        if(!auth) return;
-        me.setPolicies(Object.assign({}, auth.grantedPolicies) );
-        me.setGrantedPolicies(Object.assign({},auth.grantedPolicies));
-    },
+    // init(){        
+    //     let me = this,
+    //         auth = Config.getGrantedPolicies();
+    //     if(!auth) return;
+    //     me.setPolicies(Object.assign({}, auth.grantedPolicies) );
+    //     me.setGrantedPolicies(Object.assign({},auth.grantedPolicies));
+    // },
 
     destroy() {
-        let me = this;
-        me.setPolicies(null);
-        me.setGrantedPolicies(null);
-        me.callParent();
+        // let me = this;
+        // me.setPolicies(null);
+        // me.setGrantedPolicies(null);
+        // me.callParent();
     }
 
 

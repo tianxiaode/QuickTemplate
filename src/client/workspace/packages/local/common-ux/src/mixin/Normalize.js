@@ -40,26 +40,21 @@ Ext.define('Common.mixin.Normalize', {
         let me = this,
             entityName = me.getEntityName(),
             resourceName = me.getResourceName();
-            message = [ `<p class="m-1 text-bold" >${error.message}</p>`];
-        if(!error.validationErrors) return message.join('');
-        message.push(`<ul class="message-tips">`);
+            labelSeparator = I18N.getLabelSeparator(),
+            messages = [ ];
+        if(!error.validationErrors) return Template.getMessage(error.message, messages, 'danger');
         Ext.Object.each(error.validationErrors, (key, value)=>{
-            let locName = I18N.get(key, resourceName, entityName); 
-            message.push(`<li class="danger my-1 mx-2">`);
-            message.push(`<span class=" text-bold">`);
-            message.push(locName);
-            message.push(`${I18N.getLabelSeparator()}`);
-            message.push(`</span>`);
-            message.push(`<p class="my-1 mx-3">`);
-            Ext.each(value, v=>{
-                message.push(`${v.replace(me.capitalize(key), locName)}<br>`);
-            })
-
-            message.push(`</p>`);
-            message.push(`</li>`);
+            let localizedName = I18N.get(key, resourceName, entityName); 
+            messages.push(`
+                <span class=" text-bold">
+                    ${localizedName}${labelSeparator}
+                </span>
+                <p class="my-1 mx-3">
+                    ${value.map(v=>v.replace(me.capitalize(key), localizedName)).join('<br>')}
+                </p>
+            `)
         })
-        message.push('</ul>');
-        return message.join('');
+        return Template.getMessage(error.message, messages, 'danger');
     }
 
 

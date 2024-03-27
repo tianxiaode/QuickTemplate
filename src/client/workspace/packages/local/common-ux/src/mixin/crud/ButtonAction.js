@@ -1,18 +1,18 @@
 Ext.define('Common.mixin.crud.ButtonAction', {
     extend: 'Ext.Mixin',
 
-    requires:[
+    requires: [
         'Common.ux.dialog.Form'
     ],
 
-    mixinConfig:{
+    mixinConfig: {
         configs: true,
         after: {
             initialize: 'initialize'
         }
     },
 
-    config:{
+    config: {
 
         /**
          * @cfg {String/Object} defaultDialogType
@@ -69,12 +69,6 @@ Ext.define('Common.mixin.crud.ButtonAction', {
         updateDialogTitle: null,
 
         /**
-         * @cfg {String} isBatchDelete
-         * 是否批量删除，默认值为true，使用批量删除
-         */
-        isBatchDelete: true,
-
-        /**
          * @cfg {String} deleteUrl
          * 删除记录的提交url，默认值为：http://域名/实体名复数
          */
@@ -89,6 +83,12 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     },
 
     /**
+     * @cfg {String} isBatchDelete
+     * 是否批量删除，默认值为true，使用批量删除
+     */
+    isBatchDelete: true,
+
+    /**
      * 当前操作记录
      */
     currentRecord: null,
@@ -98,14 +98,14 @@ Ext.define('Common.mixin.crud.ButtonAction', {
             entityName = me.getEntityName(),
             createTitle = me.getCreateDialogTitle(),
             updateTitle = me.getUpdateDialogTitle();
-        if(Ext.isEmpty(createTitle)) {
+        if (Ext.isEmpty(createTitle)) {
             me.setCreateDialogTitle(me.getLocalizedText(['add', entityName]));
-        }else{
+        } else {
             me.setCreateDialogTitle(me.getLocalizedText(createTitle));
         }
-        if(Ext.isEmpty(updateTitle)) {
+        if (Ext.isEmpty(updateTitle)) {
             me.setUpdateDialogTitle(me.getLocalizedText(['edit', entityName]));
-        }else{
+        } else {
             me.setUpdateDialogTitle(me.getLocalizedText(updateTitle));
         }
 
@@ -132,17 +132,17 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     doCreate() {
         let me = this;
         Ext.History.add(`${me.getPluralizeEntityName()}/add`);
-        me.currentRecord =Ext.create(me.getModelName(), me.getRecordDefaultValue());
+        me.currentRecord = Ext.create(me.getModelName(), me.getRecordDefaultValue());
         let config = me.getDefaultDialogConfig('create');
         let dialog = Ext.create(config);
         dialog.show();
     },
 
-    onAfterCreate(){
+    onAfterCreate() {
         this.onRefreshStore();
     },
 
-    onCancelCreate(){
+    onCancelCreate() {
         Ext.History.back();
     },
 
@@ -164,10 +164,10 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      */
     onBeforeUpdate() { },
 
-    onAfterUpdate(){
+    onAfterUpdate() {
         this.onRefreshStore();
     },
-    onCancelUpdate(){
+    onCancelUpdate() {
         Ext.History.back();
         this.currentRecord = null;
     },
@@ -189,65 +189,61 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     * 单击删除按钮
     */
     onDeleteButtonTap(isCurrentRecord) {
-        let me = this;
-        if (me.onBeforeDelete() === false) return;
-        me.doDelete(isCurrentRecord);
-        // me.doBatch(
-        //     I18N.get('DeleteConfirmMessageTitle'),
-        //     I18N.get('DeleteConfirmMessage'),
-        //     me.deleteAction,
-        //     me.getDeleteData
-        // );
-
+        let me = this,
+            deletes = isCurrentRecord ? [me.currentRecord] : me.getSelections();
+        if (me.onBeforeDelete(deletes) === false) return;
+        me.doDelete(deletes);
     },
 
     /**
      * 执行删除操作之前的操作，返回falsle可取消删除操作
      */
-    onBeforeDelete(){},
+    onBeforeDelete() { },
 
     /**
      * 执行删除操作
      * @param {数据} data 
      * @returns 
      */
-    doDelete(data) {
+    doDelete(deletes) {
+        let me = this;
         return Http.delete(URI.crud(this.entityName), data.ids);
     },
 
     /**
      * 单击刷新按钮
      */
-    onRefreshButtonTap(){
+    onRefreshButtonTap() {
+
         this.onRefreshStore();
     },
 
     /**
      * 单击导入按钮
      */
-    onImportButtonTap(){
+    onImportButtonTap() {
         Logger.debug(this.onImportButtonTap, this);
     },
 
     /**
      * 单击导出按钮
      */
-    onExportButtonTap(){
+    onExportButtonTap() {
         Logger.debug(this.onExportButtonTap, this);
     },
 
     /**
      * 单击搜索按钮
      */
-    onSearchButtonTap(){
+    onSearchButtonTap() {
         this.doSearch();
     },
 
-    onResetButtonTap(){
+    onResetButtonTap() {
         this.resetSearchFields();
     },
 
-    resetSearchFields(){
+    resetSearchFields() {
         Logger.debug(this.resetSearchFields, this);
     },
 
@@ -257,7 +253,7 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      * @param {记录} record 
      * @returns 
      */
-    getDefaultDialogConfig(action){
+    getDefaultDialogConfig(action) {
         let me = this,
             entityName = me.getEntityName(),
             resourceName = me.getResourceName(),
@@ -266,7 +262,7 @@ Ext.define('Common.mixin.crud.ButtonAction', {
         return {
             xtype: me.getDefaultDialogType(),
             action: action,
-            title: action === 'create' ? me.getCreateDialogTitle() : me.getUpdateDialogTitle(), 
+            title: action === 'create' ? me.getCreateDialogTitle() : me.getUpdateDialogTitle(),
             createTitle: me.getCreateDialogTitle(),
             createHttpMethod: me.getCreateHttpMethod(),
             createUrl: me.getDialogUrl('create'),
@@ -284,7 +280,7 @@ Ext.define('Common.mixin.crud.ButtonAction', {
      * 
      * @returns 获取记录默认值
      */
-    getRecordDefaultValue(){
+    getRecordDefaultValue() {
         return {};
     },
 
@@ -294,22 +290,22 @@ Ext.define('Common.mixin.crud.ButtonAction', {
     },
 
 
-    privates:{
+    privates: {
 
         /**
          * 根据操作和要操作的记录返回表单配置项
          * @param {操作} action 
          * @param {记录} record 
          */
-        getFormConfig(action, record, entityName, resourceName){
+        getFormConfig(action, record, entityName, resourceName) {
             let me = this,
                 config = me[`_${action}Form`];
-            if(Ext.isEmpty(config)) config = { xtype: `${entityName}form`};
-            if(Ext.isString(config)) config = { xtype: config };
+            if (Ext.isEmpty(config)) config = { xtype: `${entityName}form` };
+            if (Ext.isString(config)) config = { xtype: config };
             return Ext.apply({
                 entityName: entityName,
                 resourceName: resourceName,
-                isEdit : action === 'update',
+                isEdit: action === 'update',
                 recordDefaultValue: me.getRecordDefaultValue(),
                 record: record
             }, config)
@@ -321,11 +317,11 @@ Ext.define('Common.mixin.crud.ButtonAction', {
          * @param {记录} record 
          * @returns 
          */
-        getDialogUrl(action, record){
+        getDialogUrl(action, record) {
             let me = this,
                 url = me[`_${action}Url`];
-            return Ext.isEmpty(url) 
-                ? URI.get(me.getPluralizeEntityName(), action === 'update' ? record.getId() : null) 
+            return Ext.isEmpty(url)
+                ? URI.get(me.getPluralizeEntityName(), action === 'update' ? record.getId() : null)
                 : url;
         },
 
@@ -334,7 +330,7 @@ Ext.define('Common.mixin.crud.ButtonAction', {
          * @param {操作} action 
          * @returns 
          */
-        getHttpMethod(action){
+        getHttpMethod(action) {
             let me = this,
                 method = me[`_${action}HttpMethod`];
             return method;

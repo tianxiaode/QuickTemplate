@@ -90,7 +90,7 @@ Ext.define('Common.ux.dialog.Form', {
                 url = me.url,
                 values = form.getSubmitValues(),
                 httpClient = Http.getClient(me.httpMethod);
-
+            if(me.validateForm() === false) return;
             if (me.onBeforeSave(values) === false) return;
             if(httpClient){
                 me.mask(I18N.get('Saving'));

@@ -10,7 +10,6 @@ Ext.define('Common.ux.grid.column.Action', {
     applyCell(cell, oldCell) {
         let me = this,
             tools = cell.tools || {};
-        Logger.debug(this.applyCell, this);
         if (oldCell) {
             cell = Ext.apply(oldCell, cell);
         }

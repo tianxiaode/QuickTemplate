@@ -26,7 +26,6 @@ Ext.define('Common.localized.Localized', {
 
     constructor(config) {
         let me = this;
-        // this.initConfig(config);
         me.mixins.observable.constructor.call(me, config);
     },
 
@@ -124,8 +123,7 @@ Ext.define('Common.localized.Localized', {
 
     destroy() {
         let me = this;
-        me.destroyMembers('localText', 'resources', 
-            'defaultResourceName', 'languageMap', 'languages');
+        me.destroyMembers('resources', 'defaultResourceName', 'languageMap', 'languages');
         me.callParent();
     },
 
@@ -193,7 +191,6 @@ Ext.define('Common.localized.Localized', {
         me.doOverride();
         me.setLabelSeparator(me.getExtResourceText('LabelSeparator'));
         me.isReady = true;
-        //Ext.fireEvent('localizedReady', me);
         Ext.defer(me.fireEvent, 50, me, ['ready', me])
     },
 

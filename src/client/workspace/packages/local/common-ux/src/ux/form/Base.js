@@ -38,9 +38,13 @@ Ext.define('Common.ux.form.Base', {
     autoLabelAlign: true,
 
     defaults: {
-        errorTarget: 'under',
+        errorTarget: 'qtip',
         userCls: 'mx-1 fixed-field-error-message',
-        separatorAlign: 'field'
+        separatorAlign: 'field',
+        errorTip: {
+            anchor: true,
+            align: 'l-r',
+        }
     },
 
     initialize() {

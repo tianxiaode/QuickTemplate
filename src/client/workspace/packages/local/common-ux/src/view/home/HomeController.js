@@ -96,7 +96,7 @@ Ext.define('Common.view.home.HomeController',{
             ()=>{
                 Ext.Viewport.setMasked(null);
                 me.isLoadConfiguration = true;
-                ACL.init();
+                //ACL.init();
                 action.resume();
             },
             () =>{

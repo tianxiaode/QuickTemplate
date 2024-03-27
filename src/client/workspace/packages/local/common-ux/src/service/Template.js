@@ -2,36 +2,68 @@ Ext.define('Common.service.Template', {
     alternateClassName: 'Template',
     singleton: true,
 
-    templates:{},
-
-    fn:['highlight'],
-    
-
-    flag: '<span class="x-fa fa-flag text-info"></span>',
-
-    checkBoxItem: `
-        <div class="x-checkcell {2} ">
-            <span class="x-checkbox-el x-font-icon " data-value="{0}" data-field="{3}"></span><span>{1}<span>
-        </div>
-    `,
-    
-    spinnerEditor:
-        `
-            <div class="col-2 text-center "><span data-field="{0}" class="editor fs-6 x-fa fa-caret-left {2} "></span> </div>
-            <div class="col-8  text-center">{1}</div>
-            <div class="col-2 text-center "><span data-field="{0}" class="editor fs-6 x-fa fa-caret-right {2} "></span></div>
+    config:{
+        flagTpl: '<span class="x-fa fa-flag text-info"></span>',
+        checkBoxItemTpl: `
+            <div class="x-checkcell {cls} ">
+                <span class="x-checkbox-el x-font-icon " data-value="{value}" data-field="{field}"></span><span>{label}<span>
+            </div>
         `,
-
-            
-    messageList:
-        `
+        messageTpl: `
+            <p class="m-1 text-bold" >{title}</p>
             <ul class="message-tips">
-            <tpl for=".">
-                <li class="danger">{.}</li>
-            </tpl>
+                <tpl for="messages">
+                    <li class="{parent.type} my-1 mx-2">
+                        {.}
+                    </li>
+                </tpl>
             </ul>
         `,
+        spinnerEditor: `
+            <div class="col-2 text-center "><span data-field="{leftField}" class="editor fs-6 x-fa fa-caret-left {leftCls} "></span> </div>
+            <div class="col-8  text-center">{value}</div>
+            <div class="col-2 text-center "><span data-field="{rightField}" class="editor fs-6 x-fa fa-caret-right {rightCls} "></span></div>
+        `
+    },
 
+    constructor(config){
+        this.initConfig(config);
+    },
+
+    applyCheckBoxItemTpl(tpl){
+        return Ext.XTemplate.get(tpl);
+    },
+
+    applyMessageTpl(tpl){
+        return Ext.XTemplate.get(tpl);
+    },
+
+    applySpinnerEditor(tpl){
+        return Ext.XTemplate.get(tpl);
+    },
+
+    // templates:{},
+
+    // fn:['highlight'],
+
+    getCheckBoxItem(title, value, field, label, cls){
+        return this.getCheckBoxItemTpl().apply({
+            title: title,
+            value: value,
+            field: field,
+            label: label,
+            cls: cls
+        });
+    },
+
+    getMessage(title, messages, type){
+        return this.getMessageTpl().apply({
+            title: title,
+            messages: messages, 
+            type: type
+        });
+    },  
+            
     getTplWithScope(config, scope){
         if(config.isXTemplate) return;
         let me = Template;
@@ -52,9 +84,9 @@ Ext.define('Common.service.Template', {
         return template;
     },
 
+
     destroy() {
-        let me = this;
-        me.destroyMembers('templates', 'fn', 'iconCls')
+        this.destroyMembers('flagTpl', 'checkBoxItemTpl', 'messageTpl', 'spinnerEditor')
     },
 
 

@@ -72,7 +72,6 @@ Ext.define('Common.mixin.crud.Button', {
             hasSelected = selections.length > 0,
             allowUpdate = me.allowUpdate(),
             allowDelete = me.allowDelete(hasSelected);
-        Logger.debug(this.refreshButtons, hasSelected, me.getCrudButtons());
         me.setButtonDisabled('update', !allowUpdate);
         me.setButtonDisabled('delete', !allowDelete);
     },

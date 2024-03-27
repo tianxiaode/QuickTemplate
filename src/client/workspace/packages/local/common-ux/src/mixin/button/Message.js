@@ -16,7 +16,7 @@ Ext.define('Common.mixin.button.Message', {
             tooltip: {
                 align: 'b-t',
                 zIndex: 1001,
-                width: 200,
+                minWidth: 200,
                 autoCreate: true,
                 anchor: true,
                 hidden: true,
