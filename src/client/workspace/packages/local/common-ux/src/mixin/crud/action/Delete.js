@@ -7,7 +7,11 @@ Ext.define('Common.mixin.crud.action.Delete', {
 
     config: {
 
-        deleteDialog: {
+        /**
+         * @cfg {Object} deleteOptions
+         * 删除操作的配置项
+         */
+        deleteOptions: {
             /**
             * @cfg {Object} title
             * 删除确认对话框的title
@@ -16,30 +20,30 @@ Ext.define('Common.mixin.crud.action.Delete', {
 
             /**
             * @cfg {Object} url
-            * 删除确认对话框的提交url
+            * 删除操作的url
             * 如果不设置，则使用默认的提交url
             */
 
             /**
             * @cfg {Object} method
-            * 删除确认对话框的提交方法，默认值为DELETE，
+            * 删除提交方法，默认值为DELETE，
             * 如果设置为null，则不提交
             */
             method: 'DELETE',
 
             /**
             * @cfg {Object} success
-            * 删除确认对话框的提交成功回调函数
+            * 删除成功的回调函数
             */
 
             /**
             * @cfg {Object} cancel
-            * 删除确认对话框的取消回调函数
+            * 删除取消的回调函数
             */
 
             /**
             * @cfg {Object} failure
-            * 删除确认对话框的取消回调函数
+            * 删除失败的回调函数
             */
 
             /**
@@ -72,11 +76,10 @@ Ext.define('Common.mixin.crud.action.Delete', {
              */
 
             /**
-             * @cfg {String} isBatch
-             * 是否批量执行删除操作
-             * 默认值为true，使用批量删除
+             * @cfg {String} isConfirm
+             * 是否需要确认
+             * 默认值为true，表示需要确认
              */
-            isBatch: true,
 
             /**
             * @cfg {Object} mask
@@ -87,13 +90,13 @@ Ext.define('Common.mixin.crud.action.Delete', {
 
             /**
             * @cfg {Object} successMessage
-            * 提交成功的提示信息
+            * 删除成功的提示信息
             * 如果不设置，则使用默认的提示信息
             */
 
             /**
             * @cfg {Object} failureMessage
-            * 提交成功的提示信息
+            * 删除失败的提示信息
             * 如果不设置，则使用默认的提示信息
             */
 
@@ -102,95 +105,126 @@ Ext.define('Common.mixin.crud.action.Delete', {
 
     /**
      * 调整删除确认对话框的配置项
-     * @param {object} config 
+     * @param {object} options 
      * @returns 
      */
-    applyDeleteDialog(config) {
+    applyDeleteOptions(options) {
         let me = this,
-            cfg = Ext.apply({
-            url: me.getDefaultUrl(),
-            success: me.onAfterDelete.bind(me),
-            cancel: me.onCancelDelete.bind(me),
-            failure: me.onDeleteFailure.bind(me),
-            messageField: me.getDefaultMessageField(),
-            valueField: 'id',
-            confirmMessage: 'DeleteConfirmMessage',
-            warning: 'DeleteWarningMessage',
-            mask: 'Deleting',
-            itemCls: 'danger',
-            successMessage: 'DeleteSuccessMessage',
-            failureMessage: 'DeleteErrorMessage'
-        }, config);
-        cfg.title = me.getLocalizedText(config.title ?? 'Delete');
-        return cfg;
+            opts = Ext.apply({
+                success: me.onDeleteSuccess.bind(me),
+                cancel: me.onCancelDelete.bind(me),
+                failure: me.onDeleteFailure.bind(me),
+                valueField: 'id',
+                confirmMessage: 'DeleteConfirmMessage',
+                warning: 'DeleteWarningMessage',
+                mask: 'Deleting',
+                itemCls: 'danger',
+                successMessage: 'DeleteSuccessMessage',
+                failureMessage: 'DeleteErrorMessage',
+                isConfirm: true,
+        }, options);
+        opts.title = me.getLocalizedText(options.title ?? 'Delete');
+        return opts;
     },
 
 
 
     /**
     * 单击删除按钮
+    * @param {Boolean} isCurrentRecord 是否为当前记录
     */
     onTrashButtonTap(isCurrentRecord) {
         let me = this,
             deletes = isCurrentRecord === true ? [me.currentRecord] : me.getSelections();
         if (me.onBeforeDelete(deletes) === false) return;
-        Logger.debug(this.onTrashButtonTap, isCurrentRecord, 'deletes:', deletes);
         me.doDelete(deletes);
     },
 
     /**
      * 默认的删除之前操作，检测是否有选择的记录
      * 因为重写onBeforeDelete有可能需要重写这部分代码，所以单独抽出来
-     * @param {记录} records 
+     * @param {Array} records 要删除的记录数组
      * @returns 
      */
-    onDefaultBeforeDelete(deletes) {
-        if (deletes.length > 0) return true;
+    onDefaultBeforeDelete(records) {
+        if (records.length > 0) return true;
         this.showNoSelectionAlert();
         return false;
     },
 
     /**
      * 执行删除操作之前的操作，返回false可取消删除操作
-     * @param {记录数组} deletes 
+     * @param {Array} records 要删除的记录数组
      */
-    onBeforeDelete(deletes) {
-        return this.onDefaultBeforeDelete(deletes);
+    onBeforeDelete(records) {
+        return this.onDefaultBeforeDelete(records);
     },
 
     /**
     * 删除成功后的回调函数，默认刷新列表
-     * @param {响应} response 
-     * @param {批量操作配置项} data 
+     * @param {XMLHttpRequest} response The XMLHttpRequest object containing the response data. See www.w3.org/TR/XMLHttpRequest/ for details about accessing elements of the response.
+     * @param {object} options 删除操作的配置项
     */
-    onAfterDelete(response, data) {
+    onDeleteSuccess(response, options) {
         this.onRefreshStore();
     },
 
     /**
      * 取消删除的回调函数
-     * @param {object} data 
+     * @param {object} options 删除操作的配置项
      */
-    onCancelDelete(data) {},
+    onCancelDelete(options) {},
 
     /**
      * 删除失败后的回调函数
-     * @param {响应} response 
-     * @param {批量操作配置项} data 
+     * @param {XMLHttpRequest} response The XMLHttpRequest object containing the response data. See www.w3.org/TR/XMLHttpRequest/ for details about accessing elements of the response.
+     * @param {object} options 删除操作的配置项
      */
     onDeleteFailure(response, data) {},
 
     /**
      * 执行删除操作
-     * @param {数据} data 
+     * @param {Array} records 要删除的记录数组
      * @returns 
      */
-    doDelete(deletes) {
+    doDelete(records) {
         let me = this,
-            config = me.getDeleteDialog(),
-            data = me.getBatchData(deletes, config);
-        me.doBatch(data);
+            messageField = me.getDefaultMessageField(),
+            defaultOptions = me.getDeleteOptions(),
+            options = Ext.apply(
+                {
+                    url: me.getDeleteUrl(),
+                    messageField: messageField,        
+                }, 
+                me.getDeleteData(records, defaultOptions.valueField, messageField), 
+                defaultOptions);
+        me.onRequest(options);
     },
+
+    /**
+     * 获取删除url
+     * 添加该方法是方便自定义删除url，譬如格式为/api/entity/{id}这样的url
+     * @returns {string}
+     */
+    getDeleteUrl() {
+        return this.getDefaultUrl();
+    },
+
+    /**
+     * 获取删除操作的提交参数
+     * 添加该方法是方便自定义提交参数格式
+     * @param {Array} records 要删除的记录数组
+     * @param {String} valueField 值字段
+     * @param {String} messageField 提示信息字段
+     * @returns {Object}
+     */
+    getDeleteData(records, valueField, messageField) {
+        return this.getRequestData(records, valueField, messageField);
+    },
+
+    doDestroy(){
+        this.destroyMembers('deleteOptions');
+    }
 
 
 

@@ -38,7 +38,7 @@ Ext.define('Common.mixin.crud.action.Create', {
             * 新建对话框的提交方法，默认值为POST，
             * 如果设置为null，则不提交
             */ 
-           method: 'POST',
+           method: 'GET',
 
             /**
             * @cfg {Object} callback

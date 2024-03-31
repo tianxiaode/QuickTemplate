@@ -49,11 +49,9 @@ Ext.define('Common.mixin.crud.action.Base', {
 
     /**
      * 获取默认对话框配置项
-     * @param {操作} action 
-     * @param {记录} record 
      * @returns 
      */
-    getDefaultDialogConfig(action) {
+    getDefaultDialogConfig() {
         let me = this,
             entityName = me.getEntityName(),
             resourceName = me.getResourceName();
@@ -73,8 +71,8 @@ Ext.define('Common.mixin.crud.action.Base', {
     },
 
     /**
-     * 
-     * @returns 获取记录默认值
+     * 获取记录默认值，用于新增记录时的默认值
+     * @returns 
      */
     getRecordDefaultValue() {
         return {};
@@ -82,71 +80,86 @@ Ext.define('Common.mixin.crud.action.Base', {
 
     /**
      * 获取多实体远程操作数据
-     * @param {要获取数据的记录} records
-     * @param {信息字段} messageField 
-     * @param {值字段} valueField 
+     * @param {Array} records 选中的记录
+     * @param {String} messageField 选中记录的提示信息字段
+     * @param {String} valueField  选中记录的value字段 
      */
-    getBatchData(records, config) {
-        let messageField = config.messageField,
-            valueField = config.valueField,
-            data = Ext.apply({ values: [], messages: [] }, config);
+    getRequestData(records, valueField, messageField) {
+        let values = [],
+            messages = [];
+        if (!valueField) Ext.raise('缺少valueField参数');
         //组织数据
         Ext.each(records, (r) => {
-            let message = r.get(messageField),
-                value = r.get(valueField);
-            data.values.push(value);
-            data.messages.push(message);
+            values.push(r.get(valueField));
+            messageField && messages.push(r.get(messageField));
         });
-        return data;
+        return { data: values, messages: messages };
     },
 
+    /**
+     * 显示无选中记录的警告
+     */
     showNoSelectionAlert() {
         Alert.error(I18N.get('NoSelection'));
     },
 
-    doBatch(data) {
+    /**
+     * 执行请求
+     * @param {Object} options 请求操作配置项
+     */
+    onRequest(options) {
         let me = this;
 
+        if (!options.isConfirm) {
+            //如果没有确认，则直接执行操作
+            me.doRequest(options);
+            return;
+        }
         //确认后执行操作
-        Alert.confirm(data.title, me.getConfirmMessage(data))
+        Alert.confirm(options.title, me.getConfirmMessage(options))
             .then(
-                () => {
-                    let client = Http.getClient(data.method);
-                    if (!client) Ext.raise(`未找到${data.method}方法`);
-                    if (data.mask !== false) {
-                        Ext.Viewport.mask(I18N.get(data.mask));
-                    }
-                    client.call(Http, data.url, data.values)
-                        .then(me.onBatchSuccess.bind(me, data),
-                            me.onBatchFailure.bind(me, data));
-                },
-                data.cancel(data)
+                me.doRequest.bind(me, options),
+                options.cancel(options)
             );
+    },
+
+    /**
+     * 发送请求
+     * @param {Object} options 请求操作配置项
+     */
+    doRequest(options) {
+        let me = this,
+            client = Http.getClient(options.method);
+        if (!client) Ext.raise(`未找到${data.method}方法`);
+        if (options.mask !== false) {
+            Ext.Viewport.mask(I18N.get(options.mask));
+        }
+        client.call(Http, options.url + 'dddd', options.data)
+            .then(me.onRequestSuccess.bind(me, options),
+                me.onRequestFailure.bind(me, options));
     },
 
 
     /**
      * 批量操作成功回调
-     * @param {作用域} sender 
-     * @param {响应} response 
-     * @param {批量操作配置项} data 
+     * @param {XMLHttpRequest} response The XMLHttpRequest object containing the response data. See www.w3.org/TR/XMLHttpRequest/ for details about accessing elements of the response.
+     * @param {object} options 删除操作的配置项
      */
-    onBatchSuccess(data, response) {
+    onRequestSuccess(options, response) {
         Ext.Viewport.unmask();
-        Alert.success(I18N.get(data.successMessage));
-        data.success(response, data);
+        Alert.success(I18N.get(options.successMessage));
+        options.success(response, options);
     },
 
     /**
      * 批量操作失败回调
-     * @param {作用域} sender 
-     * @param {响应} response 
-     * @param {批量操作配置项} data 
+     * @param {XMLHttpRequest} response The XMLHttpRequest object containing the response data. See www.w3.org/TR/XMLHttpRequest/ for details about accessing elements of the response.
+     * @param {object} options 删除操作的配置项
      */
-    onBatchFailure(data,response) {
+    onRequestFailure(options, response) {
         Ext.Viewport.unmask();
-        Alert.ajax(I18N.get(data.failureMessage), response);
-        data.failure(response, data);
+        Alert.ajax(I18N.get(options.failureMessage), response);
+        options.failure(response, options);
     },
 
     doDestroy() {
@@ -166,7 +179,7 @@ Ext.define('Common.mixin.crud.action.Base', {
 
         /**
          * 获取默认url，如果有记录则带上记录id
-         * @param {记录} record 
+         * @param {Object} record 需要操作的记录
          * @returns 
          */
         getDefaultUrl(record) {
@@ -181,15 +194,15 @@ Ext.define('Common.mixin.crud.action.Base', {
 
         /**
          * 获取批量操作的警告信息
-         * @param {批量操作配置项} config 
+         * @param {Object} options 请求操作配置项
          * @returns 
          */
-        getConfirmMessage(data) {
+        getConfirmMessage(options) {
             return Template.getMessage(
-                I18N.get(data.confirmMessage),
-                data.messages,
-                data.itemCls,
-                I18N.get(data.warning)
+                I18N.get(options.confirmMessage),
+                options.messages,
+                options.itemCls,
+                I18N.get(options.warning)
             );
         }
     }
