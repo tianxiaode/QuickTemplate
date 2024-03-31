@@ -1,41 +1,14 @@
 Ext.define('Common.mixin.crud.action.Base', {
-    extend: 'Common.mixin.crud.Base',
+    extend: 'Common.mixin.Base',
 
     requires: [
         'Common.ux.dialog.Form'
     ],
 
-    config: {
-        /**
-         * @cfg {String/Object} defaultDialogType
-         * 默认对话框类型
-         */
-        defaultDialogType: 'uxformdialog',
-    },
-
     /**
     * 当前操作记录
     */
     currentRecord: null,
-
-
-    initialize() {
-        let me = this,
-            entityName = me.getEntityName(),
-            createTitle = me.getCreateDialogTitle(),
-            updateTitle = me.getUpdateDialogTitle();
-        if (Ext.isEmpty(createTitle)) {
-            me.setCreateDialogTitle(me.getLocalizedText(['add', entityName]));
-        } else {
-            me.setCreateDialogTitle(me.getLocalizedText(createTitle));
-        }
-        if (Ext.isEmpty(updateTitle)) {
-            me.setUpdateDialogTitle(me.getLocalizedText(['edit', entityName]));
-        } else {
-            me.setUpdateDialogTitle(me.getLocalizedText(updateTitle));
-        }
-
-    },
 
     /**
      * 单击刷新按钮
@@ -83,23 +56,19 @@ Ext.define('Common.mixin.crud.action.Base', {
     getDefaultDialogConfig(action) {
         let me = this,
             entityName = me.getEntityName(),
-            resourceName = me.getResourceName(),
-            record = me.currentRecord,
-            normalizeAction = me.capitalize(action);
+            resourceName = me.getResourceName();
         return {
-            xtype: me.getDefaultDialogType(),
-            action: action,
-            title: action === 'create' ? me.getCreateDialogTitle() : me.getUpdateDialogTitle(),
-            createTitle: me.getCreateDialogTitle(),
-            createHttpMethod: me.getCreateHttpMethod(),
-            createUrl: me.getDialogUrl('create'),
+            xtype: 'uxformdialog',
             entityName: entityName,
             resourceName: resourceName,
-            callback: me[`onAfter${normalizeAction}`].bind(me),
-            cancelCallback: me[`onCancel${normalizeAction}`].bind(me),
-            httpMethod: me.getHttpMethod(action),
-            form: me.getFormConfig(action, record, entityName, resourceName),
-            url: me.getDialogUrl(action, record),
+            messageField: me.getDefaultMessageField(),
+            form: {
+                xtype: `${entityName}form`,
+                entityName: entityName,
+                resourceName: resourceName,
+                recordDefaultValue: me.getRecordDefaultValue(),
+                record: me.currentRecord
+            }
         }
     },
 
@@ -117,39 +86,68 @@ Ext.define('Common.mixin.crud.action.Base', {
      * @param {信息字段} messageField 
      * @param {值字段} valueField 
      */
-    getBatchData(records, action) {
-        let me = this
-            messageField = me[`_${action}MessageField`] || me.getDefaultMessageField(),
-            valueField = me[`_${action}ValueField`] || me.getDefaultValueField(),
-            result = { values: [], messages: [] };
+    getBatchData(records, config) {
+        let messageField = config.messageField,
+            valueField = config.valueField,
+            data = Ext.apply({ values: [], messages: [] }, config);
         //组织数据
         Ext.each(records, (r) => {
             let message = r.get(messageField),
                 value = r.get(valueField);
-            result.values.push(value);
-            result.messages.push(message);
+            data.values.push(value);
+            data.messages.push(message);
         });
-
-        result['url'] = me[`_${action}Url`] || me.getDialogUrl(action);
-
-        result['httpMethod'] = me.getHttpMethod(action);
-
-        result['dialogTitle'] = me[`_${action}DialogTitle`]; 
-
-        result['messageTitle'] = Format.format(I18N.get('ConfirmMessageTitle'), I18N.get(me[`_${action}MessageTitle`]));
-
-        result['messageWarning'] = Format.format(I18N.get('ConfirmMessageWarning'), I18N.get(me[`_${action}MessageWarning`]));
-
-        result['messageType'] = me[`_${action}MessageType`];
-
-        return result;
+        return data;
     },
 
     showNoSelectionAlert() {
         Alert.error(I18N.get('NoSelection'));
     },
 
+    doBatch(data) {
+        let me = this;
 
+        //确认后执行操作
+        Alert.confirm(data.title, me.getConfirmMessage(data))
+            .then(
+                () => {
+                    let client = Http.getClient(data.method);
+                    if (!client) Ext.raise(`未找到${data.method}方法`);
+                    if (data.mask !== false) {
+                        Ext.Viewport.mask(I18N.get(data.mask));
+                    }
+                    client.call(Http, data.url, data.values)
+                        .then(me.onBatchSuccess.bind(me, data),
+                            me.onBatchFailure.bind(me, data));
+                },
+                data.cancel(data)
+            );
+    },
+
+
+    /**
+     * 批量操作成功回调
+     * @param {作用域} sender 
+     * @param {响应} response 
+     * @param {批量操作配置项} data 
+     */
+    onBatchSuccess(data, response) {
+        Ext.Viewport.unmask();
+        Alert.success(I18N.get(data.successMessage));
+        data.success(response, data);
+    },
+
+    /**
+     * 批量操作失败回调
+     * @param {作用域} sender 
+     * @param {响应} response 
+     * @param {批量操作配置项} data 
+     */
+    onBatchFailure(data,response) {
+        Ext.Viewport.unmask();
+        Alert.ajax(I18N.get(data.failureMessage), response);
+        data.failure(response, data);
+    },
 
     doDestroy() {
         this.destroyMembers('createForm', 'updateForm', 'currentRecord')
@@ -159,60 +157,41 @@ Ext.define('Common.mixin.crud.action.Base', {
     privates: {
 
         /**
-         * 根据操作和要操作的记录返回表单配置项
-         * @param {操作} action 
-         * @param {记录} record 
-         */
-        getFormConfig(action, record, entityName, resourceName) {
-            let me = this,
-                config = me[`_${action}Form`];
-            if (Ext.isEmpty(config)) config = { xtype: `${entityName}form` };
-            if (Ext.isString(config)) config = { xtype: config };
-            return Ext.apply({
-                entityName: entityName,
-                resourceName: resourceName,
-                isEdit: action === 'update',
-                recordDefaultValue: me.getRecordDefaultValue(),
-                record: record
-            }, config)
-        },
-
-        /**
-         * 根据操作和记录返回操作url，如果没有自定义，则返回默认值
-         * @param {操作} action 
-         * @param {记录} record 
-         * @returns 
-         */
-        getDialogUrl(action, record) {
-            let me = this,
-                url = me[`_${action}Url`];
-            return Ext.isEmpty(url)
-                ? URI.get(me.getPluralizeEntityName(), action === 'update' ? record.getId() : null)
-                : url;
-        },
-
-        /**
-         * 根据操作返回httpMethod
-         * @param {操作} action 
-         * @returns 
-         */
-        getHttpMethod(action) {
-            let me = this,
-                method = me[`_${action}HttpMethod`];
-            return method;
-        },
-
-        /**
          * 获取默认的提示信息字段
          * @returns 信息字段名称
          */
-        getDefaultMessageField(){
+        getDefaultMessageField() {
             return this.getStore().messageField;
         },
 
+        /**
+         * 获取默认url，如果有记录则带上记录id
+         * @param {记录} record 
+         * @returns 
+         */
+        getDefaultUrl(record) {
+            let params = [this.getPluralizeEntityName()];
+            if (record) {
+                params.push(record.getId());
+            }
+            return URI.get(...params);
+
+        },
 
 
-
+        /**
+         * 获取批量操作的警告信息
+         * @param {批量操作配置项} config 
+         * @returns 
+         */
+        getConfirmMessage(data) {
+            return Template.getMessage(
+                I18N.get(data.confirmMessage),
+                data.messages,
+                data.itemCls,
+                I18N.get(data.warning)
+            );
+        }
     }
 
 

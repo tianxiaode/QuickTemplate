@@ -39,7 +39,7 @@ Ext.define('Common.mixin.field.NewPassword', {
             maxLength:128,
             validators(value){
                 let me = this.up(),
-                    p = me.getNewPassword(),
+                    p = me.getNewPasswordField(),
                     v = p.getValue();
                 if( v !== value ) return I18N.get('PasswordNoEqual');
                 return true;

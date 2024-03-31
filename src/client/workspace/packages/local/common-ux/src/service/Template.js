@@ -10,15 +10,15 @@ Ext.define('Common.service.Template', {
             </div>
         `,
         messageTpl: `
-            <p class="m-1 text-bold" >{title}</p>
+            <p class="message-title " >{title}</p>
             <ul class="message-tips">
                 <tpl for="messages">
-                    <li class="{parent.type} my-1 mx-2">
+                    <li class="{parent.itemCls}">
                         {.}
                     </li>
                 </tpl>
             </ul>
-            <p class="m-1 text-bold warning" >{warning}</p>
+            <p class="message-warning" >{warning}</p>
         `,
         spinnerEditor: `
             <div class="col-2 text-center "><span data-field="{leftField}" class="editor fs-6 x-fa fa-caret-left {leftCls} "></span> </div>
@@ -57,11 +57,11 @@ Ext.define('Common.service.Template', {
         });
     },
 
-    getMessage(title, messages, type, warning){
+    getMessage(title, messages, itemCls, warning){
         return this.getMessageTpl().apply({
             title: title,
             messages: messages, 
-            type: type,
+            itemCls: itemCls,
             warning: warning
         });
     },  

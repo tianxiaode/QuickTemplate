@@ -1,5 +1,5 @@
 Ext.define('Common.mixin.crud.Batch', {
-    extend: 'Common.mixin.crud.Base',
+    extend: 'Common.mixin.Base',
 
     config: {
 

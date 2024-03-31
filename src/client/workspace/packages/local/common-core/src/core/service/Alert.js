@@ -33,11 +33,19 @@ Ext.define('Common.core.service.Alert', {
         Ext.toast(me.getToastConfig(message, cls, opts));
     },
 
-    confirm(title, message){
+    confirm(title, message, data){
         let deferred = new Ext.Deferred()
-        Ext.Msg.confirm(title, message, (buttonId)=>{
-            if(buttonId === 'yes') return deferred.resolve();
-            return deferred.reject();            
+        this.show(message, true, title, {
+            buttons: Ext.MessageBox.YESNO,
+            defaultFocus: '#yes',
+            prompt: false,
+            fn: (btnId) => {
+                if(btnId === 'yes'){
+                    deferred.resolve(data);
+                }else{
+                    deferred.reject(data);
+                }
+            }
         });
         return deferred.promise;
     },
@@ -69,6 +77,7 @@ Ext.define('Common.core.service.Alert', {
         getMessageBoxConfig(message, title, cls, opts){
             return Ext.apply({
                 message: message,
+                minWidth: 300,
                 title: title,
                 header:{                    
                     userCls: cls

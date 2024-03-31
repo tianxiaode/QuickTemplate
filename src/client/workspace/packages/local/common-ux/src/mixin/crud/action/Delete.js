@@ -6,74 +6,135 @@ Ext.define('Common.mixin.crud.action.Delete', {
     ],
 
     config: {
-        /**
-         * @cfg {String} deleteUrl
-         * 删除记录的提交url，默认值为：http://域名/实体名复数
-         */
-        deleteUrl: null,
 
-        /**
-         * @cfg {String} deleteHttpMethod
-         * 删除记录的提交方式
-         */
-        deleteHttpMethod: 'DELETE',
+        deleteDialog: {
+            /**
+            * @cfg {Object} title
+            * 删除确认对话框的title
+            * 如果不设置，则使用默认的标题
+            */
 
-        /**
-         * 用于设置批量操作时获取确认提示信息的字段
-         * @cfg {String} messageField 信息字段
-         */
-        deleteMessageField: null,
+            /**
+            * @cfg {Object} url
+            * 删除确认对话框的提交url
+            * 如果不设置，则使用默认的提交url
+            */
 
-        /**
-         * 用于设置批量操作时获取提交参数的字段         * 
-         * @cfg {String} valueField 值字段
-         */
-        deleteValueField: null,
+            /**
+            * @cfg {Object} method
+            * 删除确认对话框的提交方法，默认值为DELETE，
+            * 如果设置为null，则不提交
+            */
+            method: 'DELETE',
 
-        /**
-         * @cfg {String} deleteConfirmTitle
-         * 删除确认对话框的标题, 默认值为'Delete'
-         */
-        deleteDialogTitle: 'Delete',
+            /**
+            * @cfg {Object} success
+            * 删除确认对话框的提交成功回调函数
+            */
 
-        /**
-         * @cfg {String} deleteConfirmMessageTitle
-         * 删除确认对话框的提示消息标题, 默认值为'Delete'
-         */
-        deleteMessageTitle: 'Delete',
+            /**
+            * @cfg {Object} cancel
+            * 删除确认对话框的取消回调函数
+            */
 
-        /**
-         * @cfg {String} deleteConfirmMessageWarning
-         * 删除确认对话框的提示消息警告,默认值为'Delete'
-         */
-        deleteMessageWarning: 'Delete',
+            /**
+            * @cfg {Object} failure
+            * 删除确认对话框的取消回调函数
+            */
 
-        /**
-         * @cfg {String} deleteConfirmMessageType
-         * 删除确认对话框的提示消息类型, 默认为'danger'
-         */
-        deleteMessageType: 'danger',
+            /**
+            * @cfg {Object} messageField
+            * 用于设置批量操作时获取确认提示信息的字段，
+            * 如果不设置，则使用model中isMessage为true的字段
+            */
 
-        /**
-         * @cfg {String} defaultValueField
-         * 批量操作的默认值字段
-         */
-        defaultValueField: 'id'
+            /**
+             * 用于设置批量操作时获取提交参数的字段         * 
+             * @cfg {String} valueField 值字段，
+             * 如果不设置，则使用model中id为值字段
+             */
+
+            /**
+             * @cfg {String} confirmMessage
+             * 删除确认对话框的提示消息
+             * 如果不设置，则使用默认的标题
+             */
+
+            /**
+             * @cfg {String} warning
+             * 删除确认对话框的警告信息
+             * 如果不设置，则使用默认的警告信息
+             */
+
+            /**
+             * @cfg {String} itemCls
+             * 删除确认对话框的提示消息的详细信息条目的cls, 默认为'danger'
+             */
+
+            /**
+             * @cfg {String} isBatch
+             * 是否批量执行删除操作
+             * 默认值为true，使用批量删除
+             */
+            isBatch: true,
+
+            /**
+            * @cfg {Object} mask
+            * 提交时遮罩层显示的信息
+            * 如果不设置，则使用默认的遮罩层信息
+            * 如果设置为false，则不显示遮罩层
+            */
+
+            /**
+            * @cfg {Object} successMessage
+            * 提交成功的提示信息
+            * 如果不设置，则使用默认的提示信息
+            */
+
+            /**
+            * @cfg {Object} failureMessage
+            * 提交成功的提示信息
+            * 如果不设置，则使用默认的提示信息
+            */
+
+        }
     },
 
     /**
-    * @cfg {String} isBatchDelete
-    * 是否批量删除，默认值为true，使用批量删除
-    */
-    isBatchDelete: true,
+     * 调整删除确认对话框的配置项
+     * @param {object} config 
+     * @returns 
+     */
+    applyDeleteDialog(config) {
+        let me = this,
+            cfg = Ext.apply({
+            url: me.getDefaultUrl(),
+            success: me.onAfterDelete.bind(me),
+            cancel: me.onCancelDelete.bind(me),
+            failure: me.onDeleteFailure.bind(me),
+            messageField: me.getDefaultMessageField(),
+            valueField: 'id',
+            confirmMessage: 'DeleteConfirmMessage',
+            warning: 'DeleteWarningMessage',
+            mask: 'Deleting',
+            itemCls: 'danger',
+            successMessage: 'DeleteSuccessMessage',
+            failureMessage: 'DeleteErrorMessage'
+        }, config);
+        cfg.title = me.getLocalizedText(config.title ?? 'Delete');
+        return cfg;
+    },
+
+
 
     /**
     * 单击删除按钮
     */
     onTrashButtonTap(isCurrentRecord) {
         let me = this,
-            deletes = isCurrentRecord ? [me.currentRecord] : me.getSelections();
-        if (me.onBeforeDelete([]) === false) return;
+            deletes = isCurrentRecord === true ? [me.currentRecord] : me.getSelections();
+        if (me.onBeforeDelete(deletes) === false) return;
+        Logger.debug(this.onTrashButtonTap, isCurrentRecord, 'deletes:', deletes);
         me.doDelete(deletes);
     },
 
@@ -90,11 +151,34 @@ Ext.define('Common.mixin.crud.action.Delete', {
     },
 
     /**
-     * 执行删除操作之前的操作，返回falsle可取消删除操作
+     * 执行删除操作之前的操作，返回false可取消删除操作
+     * @param {记录数组} deletes 
      */
     onBeforeDelete(deletes) {
         return this.onDefaultBeforeDelete(deletes);
     },
+
+    /**
+    * 删除成功后的回调函数，默认刷新列表
+     * @param {响应} response 
+     * @param {批量操作配置项} data 
+    */
+    onAfterDelete(response, data) {
+        this.onRefreshStore();
+    },
+
+    /**
+     * 取消删除的回调函数
+     * @param {object} data 
+     */
+    onCancelDelete(data) {},
+
+    /**
+     * 删除失败后的回调函数
+     * @param {响应} response 
+     * @param {批量操作配置项} data 
+     */
+    onDeleteFailure(response, data) {},
 
     /**
      * 执行删除操作
@@ -103,11 +187,11 @@ Ext.define('Common.mixin.crud.action.Delete', {
      */
     doDelete(deletes) {
         let me = this,
-            data = me.getBatchData(deletes, 'delete');
-        Logger.debug(this.doDelete, data);
-        return;
-        me.doBatch(records, 'delete', me.isBatchDelete);
+            config = me.getDeleteDialog(),
+            data = me.getBatchData(deletes, config);
+        me.doBatch(data);
     },
+
 
 
 });

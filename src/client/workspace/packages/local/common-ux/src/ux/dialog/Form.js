@@ -25,7 +25,7 @@ Ext.define('Common.ux.dialog.Form', {
     initialize() {
         this.callParent(arguments);
         this.resetWidth();
-        Logger.debug(this.initialize, this)
+        this.refreshTitle();
     },
 
     resetWidth(){
@@ -43,6 +43,23 @@ Ext.define('Common.ux.dialog.Form', {
         if(form.getCols){
             me.setWidth(form.getCols() *400);
         }
+    },
+
+    refreshTitle(){
+        let me = this,
+            entityName = me.getEntityName(),
+            title = me.getTitle(),
+            form = me.getForm(),
+            isEdit = form.isEdit,
+            record = form.getRecord();
+        title = me.getLocalizedText(title ?? [ isEdit? 'Edit' : 'Add' , entityName]);
+
+        if(isEdit){
+            title += ` - ${record.get(me.messageField)}`;
+        }
+
+        me.setTitle(title);
+            
     },
 
     getValues() {
@@ -67,7 +84,7 @@ Ext.define('Common.ux.dialog.Form', {
     },
 
     onBeforeSave(values) { 
-        return !this.validateForm();
+        return this.validateForm();
     },
 
     updateHidden(hidden, oldHidden){
@@ -75,8 +92,19 @@ Ext.define('Common.ux.dialog.Form', {
         !hidden && this.getForm().initFocus();
     },
 
+    /**
+     * 新建记录之前执行的操作
+     */
+    onBeforeAddRecord() { },
+
+    /**
+     * 新建记录之后执行的操作
+     */
+    onAfterAddRecord() { },
+
+
     doDestroy() {
-        this.destroyMembers('recordDefaultValue');
+        this.destroyMembers('recordDefaultValue', 'createConfig');
         this.callParent(arguments);
     },
 
@@ -89,8 +117,8 @@ Ext.define('Common.ux.dialog.Form', {
                 form = me.getForm(),
                 url = me.url,
                 values = form.getSubmitValues(),
-                httpClient = Http.getClient(me.httpMethod);
-            if(me.validateForm() === false) return;
+                httpClient = Http.getClient(me.method);
+            Logger.debug(this.doSave, url ,values ,httpClient, me.method);
             if (me.onBeforeSave(values) === false) return;
             if(httpClient){
                 me.mask(I18N.get('Saving'));
@@ -129,29 +157,21 @@ Ext.define('Common.ux.dialog.Form', {
             }
         },
 
-        /**
-         * 新建记录之前执行的操作
-         */
-        onBeforeAddRecord() { },
-
-        /**
-         * 新建记录之后执行的操作
-         */
-        onAfterAddRecord() { },
 
         /**
          * 新建记录
          */
         addRecord() {
             let me = this,
+                createConfig = me.createConfig,
                 form = me.getForm(),
                 record = Ext.create(me.getModelName(), me.recordDefaultValue);
             me.onBeforeAddRecord(record);
-            me.setTitle(me.createTitle);
             form.isEdit = false;
-            me.httpMethod = me.createHttpMethod;
-            me.url = me.createUrl;
+            me.method = createConfig.method;
+            me.url = createConfig.url;
             form.setRecord(record);
+            me.refreshTitle();
             me.onReset();
             me.onAfterAddRecord(record);
         },

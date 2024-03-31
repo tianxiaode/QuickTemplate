@@ -6,30 +6,96 @@ Ext.define('Common.mixin.crud.action.Update', {
     ],
 
     config: {
-        /**
-         * @cfg {String/Object} updateForm
-         * 表单xtype或表单定义，默认值为实体名称加"form",如：userform
-         */
-        updateForm: null,
 
         /**
-         * @cfg {String} updateUrl
-         * 更新记录的提交url，默认值为：http://域名/实体名复数/{id}
+         * @cfg {Object} updateDialog
+         * 更新对话框的配置项，可重写
          */
-        updateUrl: null,
+        updateDialog: {
+            /**
+            * @cfg {Object} xtype
+            * 更新对话框的xtype
+            */
 
-        /**
-         * @cfg {String} updateHttpMethod
-         * 更新记录的提交方式
-         */
-        updateHttpMethod: 'PUT',
+            /**
+            * @cfg {Object} title
+            * 更新对话框的title
+            */
 
-        /**
-         * @cfg {String} updateDialogTitle
-         * 更新记录对话框的标题
-         */
-        updateDialogTitle: null,
+            /**
+            * @cfg {Object/String} form
+            * 更新对话框的form的配置对象或xtype
+            */
+
+            /**
+            * @cfg {Object} url
+            * 更新对话框的提交url
+            * 如果不设置，则使用默认的提交url
+            */
+
+            /**
+            * @cfg {Object} method
+            * 更新对话框的提交方法，默认值为PUT，
+            * 如果设置为null，则不提交
+            */
+            method: 'PUT',
+
+            /**
+            * @cfg {Object} callback
+            * 更新对话框的提交成功回调函数
+            */
+
+            /**
+            * @cfg {Object} cancelCallback
+            * 更新对话框的取消回调函数
+            */
+        },
+
+
     },
+
+    /**
+     * 调整更新对话框的配置项
+     * @param {object} config 
+     * @returns 
+     */
+    applyUpdateDialog(config) {
+        let me = this;
+        config = Ext.clone(config);
+        if (Ext.isString(config.form)) {
+            config.form = { xtype: config.form };
+        }
+        if (!config.callback) {
+            config.callback = me.onAfterUpdate.bind(me);
+        }
+
+        if (!config.cancelCallback) {
+            config.cancelCallback = me.onCancelUpdate.bind(me);
+        }
+        return config;
+    },
+
+    /**
+     * 获取更新对话框配置项
+     * @returns {Object} 创建对话框的配置项
+     */
+    getUpdateDialogConfig() {
+        let me = this,
+            defaultConfig = me.getDefaultDialogConfig(),
+            custom = me.getUpdateDialog(),
+            form = Ext.apply(defaultConfig.form, custom.form),
+            config;
+        form.isEdit = true;
+        config = Ext.apply({
+            xtype: 'uxformdialog',
+            action: 'update',
+            url: me.getDefaultUrl(me.currentRecord),
+            createConfig: me.getCreateConfig(),
+        }, custom, defaultConfig);
+        config.form = form;
+        return config;
+    },
+
 
     /**
     * 单击更新按钮
@@ -63,12 +129,19 @@ Ext.define('Common.mixin.crud.action.Update', {
         return this.onDefaultBeforeUpdate(record);
     },
 
+    /**
+     * 更新成功后的操作
+     */
+
     onAfterUpdate() {
         this.onRefreshStore();
     },
+
+    /**
+     * 取消更新操作
+     */
     onCancelUpdate() {
         Ext.History.back();
-        this.currentRecord = null;
     },
 
     /**
@@ -78,11 +151,15 @@ Ext.define('Common.mixin.crud.action.Update', {
         let me = this,
             id = me.currentRecord.getId();
         Ext.History.add(`${me.getPluralizeEntityName()}/${id}`);
-        let config = me.getDefaultDialogConfig('update');
+        let config = me.getUpdateDialogConfig();
 
         let dialog = Ext.create(config);
         dialog.show();
     },
+
+    doDestroy(){
+        this.destroyMembers('updateDialog');
+    }
 
 
 });

@@ -196,7 +196,11 @@ Ext.define('Common.localized.Localized', {
         let extResource = me.getResource('ExtResource');
         extResource['ConfirmMessageTitle'] = "确认要对以下数据执行{0}操作？";
         extResource['ConfirmMessageWarning'] = "注意：部分数据可能因条件限制{0}不了！";
-
+        extResource["Deleting"] = "正在删除，请稍候...";
+        extResource["DeleteSuccessMessage"] = "数据已删除";
+        extResource["DeleteErrorMessage"] = "删除数据时发生错误，请稍后再试。";
+        extResource["DeleteConfirmMessage"] = "确认要删除所选的数据？";
+        extResource["DeleteWarningMessage"] = "注意：部分数据可能因条件限制删除不了！",
         me.isReady = true;
         Ext.defer(me.fireEvent, 50, me, ['ready', me])
     },

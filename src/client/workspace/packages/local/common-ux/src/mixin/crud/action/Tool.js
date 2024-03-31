@@ -1,4 +1,4 @@
-Ext.define('Common.mixin.crud.ToolAction', {
+Ext.define('Common.mixin.crud.action.Tool', {
     extend: 'Ext.Mixin',
 
     onMultilingualToolTap(grid, context){
