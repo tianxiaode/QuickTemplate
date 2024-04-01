@@ -10,6 +10,16 @@ Ext.define('Common.core.service.WeChat',{
     getWeChatConfig(){
         let url = location.href.split('#')[0];
         return Http.get(URI.get('wechat', 'config'), { url: url});
+    },
+
+    isWeChatBrowser(){
+        let userAgent = Ext.browser.userAgent.toLowerCase(),
+            result = userAgent.includes('MicroMessenger'.toLowerCase());
+        Alert.error(I18N.get('IsMicroMessenger'), true);
+        if(!result)  return false;
+        Alert.error(I18N.get('IsMicroMessenger'), true);
+        return true;
     }
+
 
 });

@@ -200,7 +200,34 @@ Ext.define('Common.localized.Localized', {
         extResource["DeleteSuccessMessage"] = "数据已删除";
         extResource["DeleteErrorMessage"] = "删除数据时发生错误，请稍后再试。";
         extResource["DeleteConfirmMessage"] = "确认要删除所选的数据？";
-        extResource["DeleteWarningMessage"] = "注意：部分数据可能因条件限制删除不了！",
+        extResource["DeleteWarningMessage"] = "注意：部分数据可能因条件限制删除不了！";
+        extResource["Export"] = "导出";
+        extResource["Exporting"] = "正在导出CSV文件，请稍候...";
+        extResource["ExportSelected"] = "导出所选";
+        extResource["ExportSearch"] = "导出查询结果";
+        extResource["ExportAll"] = "导出全部";
+        extResource["ExportingPdf"] = "正在导出PDF, 请稍候...";
+        extResource["ExportingExcel"] = "正在导出Excel文件，请稍候...";
+        extResource["ExportingCsv"] = "正在导出CSV文件，请稍候...";
+        extResource["ConfirmExportSelectedToExcel"] = "确定将所选数据导出为Excel文件？";
+        extResource["ConfirmExportSearchToExcel"] = "确定将查询结果导出为Excel文件？";
+        extResource["ConfirmExportAllToExcel"] = "确定将全部数据导出为Excel文件？";
+        extResource["ConfirmExportSelectedToCsv"] = "确定将所选数据导出为CSV文件？";
+        extResource["ConfirmExportSearchToCsv"] = "确定将查询结果导出为CSV文件？";
+        extResource["ConfirmExportAllToCsv"] = "确定将全部数据导出为CSV文件？";
+        extResource["ConfirmExportSelectedToPdf"] = "确定将所选数据导出为PDF文件？";
+        extResource["ConfirmExportSearchToPdf"] = "确定将查询结果导出为PDF文件？";
+        extResource["ConfirmExportAllToPdf"] = "确定将全部数据导出为PDF文件？";
+        extResource["ExportSuccessMessage"] = "数据已导出";
+        extResource["ExportErrorMessage"] = "导出数据时发生错误，请稍后再试。";
+        extResource["ExportExcel"] = "导出Excel";
+        extResource["ExportExcelMessage"] = "正在导出Excel文件，请稍候...";
+        extResource["ExportExcelSuccessMessage"] = "Excel文件已导出";
+        extResource["ExportExcelErrorMessage"] = "导出Excel文件时发生错误，请稍后再试。";
+        extResource["AsyncExportSuccessMessage"] = "导出请求已收到，文件生成后会以消息的形式通知您，请根据信息下载文件。";
+        extResource["AsyncExportErrorMessage"] = "导出请求失败，请稍后再试。";
+    
+
         me.isReady = true;
         Ext.defer(me.fireEvent, 50, me, ['ready', me])
     },

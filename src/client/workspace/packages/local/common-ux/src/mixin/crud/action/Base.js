@@ -26,13 +26,6 @@ Ext.define('Common.mixin.crud.action.Base', {
     },
 
     /**
-     * 单击导出按钮
-     */
-    onExportButtonTap() {
-        Logger.debug(this.onExportButtonTap, this);
-    },
-
-    /**
      * 单击搜索按钮
      */
     onSearchButtonTap() {
@@ -85,15 +78,15 @@ Ext.define('Common.mixin.crud.action.Base', {
      * @param {String} valueField  选中记录的value字段 
      */
     getRequestData(records, valueField, messageField) {
-        let values = [],
+        let data = [],
             messages = [];
         if (!valueField) Ext.raise('缺少valueField参数');
         //组织数据
         Ext.each(records, (r) => {
-            values.push(r.get(valueField));
+            data.push(r.get(valueField));
             messageField && messages.push(r.get(messageField));
         });
-        return { data: values, messages: messages };
+        return { data: data, messages: messages };
     },
 
     /**
@@ -134,7 +127,7 @@ Ext.define('Common.mixin.crud.action.Base', {
         if (options.mask !== false) {
             Ext.Viewport.mask(I18N.get(options.mask));
         }
-        client.call(Http, options.url + 'dddd', options.data)
+        client.call(Http, options.url, options.data)
             .then(me.onRequestSuccess.bind(me, options),
                 me.onRequestFailure.bind(me, options));
     },

@@ -44,7 +44,7 @@ Ext.define('Common.mixin.crud.action.Export', {
             /**
              * @cfg {String} isConfirm
              * 是否需要确认
-             * 默认值为false，表示不需要确认
+             * 默认值为true，表示需要确认
              */
 
             /**
@@ -88,15 +88,23 @@ Ext.define('Common.mixin.crud.action.Export', {
             */
 
             /**
-            * @cfg {Boolean} isAsync
-            * 是否异步操作
+            * @cfg {Boolean} isAsyncExportSelected
+            * 导出选择是否异步操作
+            * 默认值为false，表示导出选择采用同步操作
             */
             
             /**
-            * @cfg {Boolean} isSelectData
-            * 是否选择数据
+            * @cfg {Boolean} isAsyncExportSearch
+            * 导出查询是否异步操作
+            * 默认值为true，表示导出查询采用异步操作
             */
-        }
+
+            /**
+            * @cfg {Boolean} isAsyncExportAll
+            * 导出全部是否异步操作
+            * 默认值为true，表示导出全部采用异步操作
+            */
+}
     },
 
     /**
@@ -104,41 +112,54 @@ Ext.define('Common.mixin.crud.action.Export', {
      * @param {object} options 
      * @returns 
      */
-    applyDeleteOptions(options) {
+    applyExportOptions(options) {
         let me = this,
             opts = Ext.apply({
                 success: me.onExportSuccess.bind(me),
                 cancel: me.onCancelExport.bind(me),
                 failure: me.onExportFailure.bind(me),
                 valueField: 'id',
-                confirmMessage: 'DeleteConfirmMessage',
-                warning: 'DeleteWarningMessage',
-                isConfirm: false,
+                isConfirm: true,
+                isAsyncExportSelected: false,
+                isAsyncExportSearch: true,
+                isAsyncExportAll: true,
         }, options);
         opts.title = me.getLocalizedText(options.title ?? 'Export');
         return opts;
     },
 
     /**
-    * 单击删除按钮
+     * 单击导出类型菜单项
+     * @param {Ext.menu.RadioItem} sender 导出类型菜单项
+     */
+    onExportTypeButtonTap(sender){
+        this.exportType = sender.exportType;
+    },
+
+    /**
+    * 单击导出按钮
     * @param {Ext.Button/Ext.menu.Item} sender 单击的按钮或菜单项
     */
     onExportButtonTap(sender) {
         let me = this,
-            type = sender.exportType,
-            exports = me.getSelections();
-        if (me.onBeforeExport(exports, type) === false) return;
-        me.doExport(exports, type);
+            type = me.exportType || Constant.EXPORT_TYPE_SELECTED,
+            format = sender.exportFormat,
+            records = me.getSelections();
+        if (me.onBeforeExport(records, type, format) === false) return;
+        me.doExport(records, type , format);
     },
 
     /**
      * 默认的导出之前操作，检测是否有选择的记录
      * 因为重写onBeforeExport有可能需要重写这部分代码，所以单独抽出来
      * @param {Array} records 要导出的记录数组
+     * @param {string} type 导出类型
      * @returns 
      */
-    onDefaultBeforeExport(records) {
-        if (deletes.length > 0) return true;
+    onDefaultBeforeExport(records, type) {
+        //导出类型为非选择类型时，不检查是否有选择的记录
+        if(type !== Constant.EXPORT_TYPE_SELECTED) return true;
+        if (records.length > 0) return true;
         this.showNoSelectionAlert();
         return false;
     },
@@ -147,9 +168,10 @@ Ext.define('Common.mixin.crud.action.Export', {
      * 执行导出操作之前的操作，返回false可取消操作
      * @param {Array} records 要导出的记录数组
      * @param {string} type 导出类型
+     * @param {string} format 导出格式
      */
-    onBeforeExport(records, type) {
-        return this.onDefaultBeforeExport(records);
+    onBeforeExport(records, type, format) {
+        return this.onDefaultBeforeExport(records, type);
     },
 
     /**
@@ -157,7 +179,13 @@ Ext.define('Common.mixin.crud.action.Export', {
      * @param {XMLHttpRequest} response The XMLHttpRequest object containing the response data. See www.w3.org/TR/XMLHttpRequest/ for details about accessing elements of the response.
      * @param {object} options 删除操作的配置项
     */
-    onExportSuccess(response, options) {},
+    onExportSuccess(response, options) {
+        let me = this,
+            data = response.getJson();
+        Logger.debug(this.onExportSuccess, data);
+        if(data.isAsync) return;
+        me.downloadExportFile(data.file, options);
+    },
 
     /**
      * 取消导出的回调函数
@@ -174,23 +202,26 @@ Ext.define('Common.mixin.crud.action.Export', {
 
     /**
      * 执行导出操作
+     * @param {Array} records 要导出的记录数组
      * @param {String} type 导出类型
-     * @returns 
+     * @param {String} format 导出格式
      */
-    doExport(type) {
+    doExport(records, type, format) {
         let me = this,
             defaultOptions = me.getExportOptions(),
-            isAsync = defaultOptions.isAsync,
-            data =  me.getExportData();
+            data =  me.getExportData(records, type, format, defaultOptions);
             options = Ext.apply({
                 type: type,
                 url: me.getExportUrl(),
                 messageField: me.getDefaultMessageField(),
-                mask: me.getExportMaskMessage(isAsync, type),
-                successMessage: me.getExportSuccessMessage(isAsync),
-                failureMessage: me.getFailureMessage(isAsync),                
+                mask: me.getExportMaskMessage(defaultOptions, type, format),
+                confirmMessage: me.getExportConfirmMessage(defaultOptions, type, format),
+                successMessage: me.getExportSuccessMessage(defaultOptions, type, format),
+                failureMessage: me.getFailureMessage(defaultOptions, type, format), 
+                data: data,
                 messages:[]
             }, defaultOptions);
+        Logger.debug(this.doExport, options);
         me.onRequest(options);
     },
 
@@ -207,48 +238,116 @@ Ext.define('Common.mixin.crud.action.Export', {
      * 获取删除操作的提交参数
      * 添加该方法是方便自定义提交参数格式
      * @param {Array} records 要删除的记录数组
+     * @param {String} type 导出类型
+     * @param {String} format 导出格式
      * @param {String} valueField 值字段
-     * @param {String} messageField 提示信息字段
      * @returns {Object}
      */
-    getExportData(records, valueField, messageField) {
-        return this.getRequestData(records, valueField, messageField);
+    getExportData(records, type, format, options) {
+        let data = { format: format, isAll: false, isSelected: false, isSearch: false, isAsync: false };
+        if(type === Constant.EXPORT_TYPE_ALL) {
+            //设置是否异步导出
+            if(options.isAsyncExportAll) data.isAsync = true;
+
+            //设置为导出全部
+            data.isAll = true;
+            return data;
+        }
+        if(type === Constant.EXPORT_TYPE_SELECTED) {
+            //设置是否异步导出
+            if(options.isAsyncExportSelected) data.isAsync = true;
+
+            //设置为导出选择
+            data.isSelected = true;
+
+            //获取选择的记录id
+            data.ids = this.getRequestData(records, options.valueField).data;
+            return data;
+        }
+        if(type === Constant.EXPORT_TYPE_SEARCH) {
+            //设置是否异步导出
+            if(options.isAsyncExportSearch) data.isAsync = true;
+
+            //设置为导出查询
+            data.isSearch = true;
+
+            //调用Searchable的getSearchValues方法获取查询参数并并入提交数据
+            Ext.apply(data, this.getSearchValues());
+            return data;
+        }
+        return data;
     },
 
     
     /**
      * 获取导出mask信息
-     * @param {Boolean} isAsync 是否异步操作
+     * @param {Object} options 导出配置项
      * @param {String} type 导出类型
+     * @param {String} format 导出格式
      * @returns  {string}
      */
-    getExportMaskMessage(isAsync, type) {
-        if(isAsync) return false;
-        if(type === 'pdf') return 'ExportingPdf';
-        if(type === 'excel') return 'ExportingExcel';
-        if(type === 'csv') return 'ExportingCsv';
-        return 'ExportSuccessMessage';
+    getExportMaskMessage(options, type, format) {
+        if(type === Constant.EXPORT_TYPE_ALL && options.isAsyncExportAll) return false;
+        if(type === Constant.EXPORT_TYPE_SELECTED && options.isAsyncExportSelected) return false;
+        if(type === Constant.EXPORT_TYPE_SEARCH && options.isAsyncExportSearch) return false;
+        if(format === Constant.EXPORT_FORMAT_PDF) return 'ExportingPdf';
+        if(format === Constant.EXPORT_FORMAT_EXCEL) return 'ExportingExcel';
+        if(format === Constant.EXPORT_FORMAT_CSV) return 'ExportingCsv';
+        return 'Exporting';
+    },
+
+    /**
+     * 获取导出确认对话框的提示消息
+     * @param {Object} options 导出配置项
+     * @param {String} type 导出类型
+     * @param {String} format 导出格式
+     * @returns {string}
+     */
+    getExportConfirmMessage(options, type, format) {
+        if(type === Constant.EXPORT_TYPE_SELECTED){
+            if(format === Constant.EXPORT_FORMAT_PDF) return 'ConfirmExportSelectedToPdf';
+            if(format === Constant.EXPORT_FORMAT_EXCEL) return 'ConfirmExportSelectedToExcel';
+            if(format === Constant.EXPORT_FORMAT_CSV) return 'ConfirmExportSelectedToCsv';
+        }
+        if(type === Constant.EXPORT_TYPE_ALL){
+            if(format === Constant.EXPORT_FORMAT_PDF) return 'ConfirmExportAllToPdf';
+            if(format === Constant.EXPORT_FORMAT_EXCEL) return 'ConfirmExportAllToExcel';
+            if(format === Constant.EXPORT_FORMAT_CSV) return 'ConfirmExportAllToCsv';
+        }
+        if(type === Constant.EXPORT_TYPE_SEARCH){
+            if(format === Constant.EXPORT_FORMAT_PDF) return 'ConfirmExportSearchToPdf';
+            if(format === Constant.EXPORT_FORMAT_EXCEL) return 'ConfirmExportSearchToExcel';
+            if(format === Constant.EXPORT_FORMAT_CSV) return 'ConfirmExportSearchToCsv';
+        }
+        return 'ConfirmExport';
     },
 
     /**
      * 获取导出成功的提示信息
-     * @param {Boolean} isAsync 是否异步操作
+     * @param {Object} options 导出配置项
+     * @param {String} type 导出类型
+     * @param {String} format 导出格式
      * @returns {string}
      */
-    getExportSuccessMessage(isAsync) {
-        if(isAsync) return "AsyncExportSuccessMessage";
+    getExportSuccessMessage(options, type, format) {
+        if(type === Constant.EXPORT_TYPE_ALL && options.isAsyncExportAll) return "AsyncExportAllSuccessMessage";
+        if(type === Constant.EXPORT_TYPE_SELECTED && options.isAsyncExportSelected) return "AsyncExportSelectedSuccessMessage";
+        if(type === Constant.EXPORT_TYPE_SEARCH && options.isAsyncExportSearch) return "AsyncExportSearchSuccessMessage";
         return "ExportSuccessMessage";
     },
 
     /**
      * 获取导出失败的提示信息
-     * @param {Boolean} isAsync 是否异步操作
+     * @param {Object} options 导出配置项
+     * @param {String} type 导出类型
+     * @param {String} format 导出格式
      * @returns {string}
      */
-    getFailureMessage(isAsync){
-        if(isAsync) return "AsyncExportErrorMessage";
+    getFailureMessage(options, type, format){
+        if(options.isAsyncExportAll || options.isAsyncExportSelected || options.isAsyncExportSearch) return "AsyncExportErrorMessage";
         return "ExportErrorMessage";
     },
+
 
     doDestroy(){
         this.destroyMembers('exportOptions');

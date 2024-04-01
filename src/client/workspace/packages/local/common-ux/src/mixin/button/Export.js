@@ -2,7 +2,9 @@ Ext.define('Common.mixin.button.Export', {
     extend: 'Common.mixin.Component',
 
     requires: [
-        'Ext.menu.RadioItem'
+        'Common.service.Constant',
+        'Ext.menu.RadioItem',
+        'Ext.menu.Separator'
     ],
 
     config: {
@@ -13,59 +15,26 @@ Ext.define('Common.mixin.button.Export', {
         exportButton: null
 
         /**
-        * @cfg {Boolean} excel
-        * exportButton的excel参数
-        * 如果设置，则显示excel下拉菜单
+        * @cfg {Array} format
+        * exportButton的导出格式参数
+        * 如果不设置，则默认导出格式为csv、excel和pdf
         */
 
         /**
-        * @cfg {Boolean} csv
-        * exportButton的csv参数
-        * 如果设置，则显示csv下拉菜单
+        * @cfg {Boolean} isExportAll
+        * exportButton是否显示导出全部数据菜单项
         */
 
-        /**
-        * @cfg {Boolean} pdf
-        * exportButton的pdf参数
-        * 如果设置，则显示pdf下拉菜单
-        */
     },
 
+
     createExportButton(config) {
-        let items = [],
+        let me = this,
+            defaults = me.getDefaults(),
+            queryScope = defaults.queryScope || undefined,
+            typeItems = me.getExportTypeMenuItems(config, queryScope),
+            formatItems = me.getExportFormatMenuItems(config, queryScope),
             cfg;
-        Ext.each(['ExportSelected', 'ExportSearch', 'ExportAll'], (t) => {
-            items.push({
-                exportType: t,
-                langText: t,
-                checked: t === 'ExportSelected',
-                xtype: 'menuradioitem',
-                group: 'exportType',
-                handler: 'onExportTypeButtonTap'
-            });
-        });
-        if(config.excel){
-            items.push({
-                exportFileType: 'excel',
-                text: 'Excel',
-                handler: 'onExportButtonTap'
-            });
-        }
-        if(config.pdf){
-            items.push({
-                exportFileType: 'pdf',
-                text: 'PDF',
-                handler: 'onExportButtonTap'
-            });
-        }
-        if(config.csv){
-            items.push({
-                exportFileType: 'csv',
-                text: 'CSV',
-                handler: 'onExportButtonTap'
-            });
-        }
-        
         cfg = Ext.apply({
             xtype: 'button',
             langTooltip: 'Export',
@@ -75,20 +44,10 @@ Ext.define('Common.mixin.button.Export', {
             exportType: null,
             weight: 600,
             menu:{
-
+                items: [...formatItems, {xtype:'menuseparator'},...typeItems]
             },
             ownerCmp: this
         }, config, this.getDefaults());
-
-        if(items.length > 0){
-            cfg.menu = {
-                xtype:'menu',
-                items: items
-            }
-        }else{
-            cfg.handler = 'onExportButtonTap';
-        }
-
         return cfg;
     },
 
@@ -98,6 +57,46 @@ Ext.define('Common.mixin.button.Export', {
 
     updateExportButton(config) {
         config && this.add(config);
+    },
+
+    /**
+     * 获取导出类型菜单项
+     * @private
+     */
+    getExportTypeMenuItems(config, queryScope) {
+        let types = [Constant.EXPORT_TYPE_SELECTED, Constant.EXPORT_TYPE_SEARCH],
+            items = [];
+        if(config.isExportAll) types.push(Constant.EXPORT_TYPE_ALL);
+        Ext.each(types, (t) => {
+            items.push({
+                exportType: t,
+                langText: t,
+                checked: t === Constant.EXPORT_TYPE_SELECTED,
+                xtype: 'menuradioitem',
+                group: 'exportType',
+                queryScope: queryScope,
+                handler: 'onExportTypeButtonTap'
+            });
+        });
+        return items;
+    },
+
+    /**
+     * 获取导出文件类型菜单项
+     * @private
+     */
+    getExportFormatMenuItems(config, queryScope) {
+        let format = config.format || [Constant.EXPORT_FORMAT_CSV, Constant.EXPORT_FORMAT_EXCEL, Constant.EXPORT_FORMAT_PDF],
+            items = [];
+        Ext.each(format, (f) => {
+            items.push({
+                exportFormat: f,
+                text: f.toUpperCase(),
+                queryScope: queryScope,
+                handler: 'onExportButtonTap'
+            });
+        });
+        return items;
     },
 
     doDestroy(){

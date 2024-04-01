@@ -101,6 +101,7 @@ Ext.define('Common.core.util.MimeType', {
         "csm": "chemical/x-csml",
         "csml": "chemical/x-csml",
         "css": "text/css",
+        "csv": "text/csv",
         "cur": "application/octet-stream",
         "dcm": "x-lml/x-evm",
         "dcr": "application/x-director",

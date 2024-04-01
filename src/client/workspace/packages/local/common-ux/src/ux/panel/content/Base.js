@@ -27,6 +27,7 @@ Ext.define('Common.ux.panel.content.Base', {
         'Common.mixin.crud.action.Create',
         'Common.mixin.crud.action.Update',
         'Common.mixin.crud.action.Delete',
+        'Common.mixin.crud.action.Export',
         'Common.mixin.crud.action.Tool',
         'Common.mixin.Searchable',
         'Common.mixin.plugin.CellEditing',

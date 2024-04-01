@@ -7,6 +7,10 @@ Ext.define('Desktop.view.identity.user.User', {
         'Common.view.identity.user.Form'
     ],
 
+    toolbar: {
+        exportButton: { isExportAll: true }
+    },
+
     list:{
         store:{ type: 'users' },
         columns:[
